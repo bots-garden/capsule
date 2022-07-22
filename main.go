@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// Load then Instantiate a WebAssembly module
-	helloWasm, errLoadWasmModule := os.ReadFile("./functions/samples/01-simple/hello.wasm")
+	helloWasm, errLoadWasmModule := os.ReadFile("./functions/01-simple/hello.wasm")
 	if errLoadWasmModule != nil {
 		log.Panicln("🔴 Error while loading the wasm module", errLoadWasmModule)
 	}
