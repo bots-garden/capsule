@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bots-garden/capsule/helpers"
+	"github.com/bots-garden/capsule/helpers/functions"
 )
 
 // main is required for TinyGo to compile to Wasm.

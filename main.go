@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	helpers "github.com/bots-garden/capsule/helpers/tools"
 	"log"
 	"os"
 
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	// Load then Instantiate a WebAssembly module
-	helloWasm, errLoadWasmModule := os.ReadFile("./functions/01-simple/hello.wasm")
+	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/02-return-string/hello.wasm")
 	if errLoadWasmModule != nil {
 		log.Panicln("🔴 Error while loading the wasm module", errLoadWasmModule)
 	}
@@ -43,7 +44,7 @@ func main() {
 		log.Panicln("🔴 Error while creating module instance ", errInstanceWasmModule)
 	}
 
-	// Get references to WebAssembly function: "add"
+	// 1️⃣ Get references to WebAssembly function: "add"
 	addWasmModuleFunction := mod.ExportedFunction("add")
 
 	// Now, we can call "add", which reads the string we wrote to memory!
@@ -55,8 +56,28 @@ func main() {
 
 	fmt.Println("result:", result[0])
 
+	// 2️⃣ Get a string from wasm
+	helloWorldwasmModuleFunction := mod.ExportedFunction("helloWorld")
+
+	resultArray, errCallFunction := helloWorldwasmModuleFunction.Call(ctx)
+	if errCallFunction != nil {
+		log.Panicln("🔴 Error while calling the function ", errCallFunction)
+	}
+	// Note: This pointer is still owned by TinyGo, so don't try to free it!
+	helloWorldPtr, helloWorldSize := helpers.PtrSizePairFromArray(resultArray)
+
+	// The pointer is a linear memory offset, which is where we write the name.
+	if bytes, ok := mod.Memory().Read(ctx, helloWorldPtr, helloWorldSize); !ok {
+		log.Panicf("🟥 Memory.Read(%d, %d) out of range of memory size %d",
+			helloWorldPtr, helloWorldSize, mod.Memory().Size(ctx))
+	} else {
+		//fmt.Println(bytes)
+		fmt.Println("😃 the string message is:", string(bytes))
+	}
+
 }
 
+// host wasm_modules
 func logString(ctx context.Context, module api.Module, offset, byteCount uint32) {
 	buf, ok := module.Memory().Read(ctx, offset, byteCount)
 	if !ok {
