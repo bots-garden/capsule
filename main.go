@@ -36,8 +36,9 @@ func main() {
 		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
 	}
 
-	// Load then Instantiate a WebAssembly module
+	// Load from file and then Instantiate a WebAssembly module
 	//helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/03-string-as-param/hello.wasm")
+	
 	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/04-host-function/hello.wasm")
 
 	if errLoadWasmModule != nil {
