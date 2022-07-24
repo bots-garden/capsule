@@ -1,0 +1,17 @@
+{
+  "image": "k33g/capsule:0.0.0",
+  "forwardPorts": [8080,3000,5000,7070],
+  "postCreateCommand": "echo 'hello'",
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "golang.go",
+        "pkief.material-icon-theme",
+        "aaron-bond.better-comments",
+      ]
+    }
+  }
+}
+

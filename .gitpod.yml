@@ -1,0 +1,44 @@
+image: k33g/capsule:0.0.0
+
+tasks:
+  - name: initialize
+    before: |
+
+      # ------------------------------------
+      # wasmer
+      # ------------------------------------
+      source /home/gitpod/.wasmer/wasmer.sh
+      wasmer --version
+      # ------------------------------------
+      # wasmtime
+      # ------------------------------------
+      wasmtime --version
+      # ------------------------------------
+      # wasmedge dependencies
+      # ------------------------------------
+      source /home/gitpod/.wasmedge/env
+      wasmedge --version
+
+      #echo 'export BUN_INSTALL="/home/gitpod/.bun"' >> $HOME/.bashrc
+      #echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $HOME/.bashrc
+
+    init: |
+      echo "🚀 initialize"
+      #npm install
+      clear
+
+ports:
+  - port: 8080
+    visibility: public
+  - port: 3000
+    visibility: public
+  - port: 5000
+    visibility: public
+  - port: 7070
+    visibility: public
+
+vscode:
+  extensions:
+    - golang.go
+    - pkief.material-icon-theme
+    - aaron-bond.better-comments
