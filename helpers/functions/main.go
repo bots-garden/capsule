@@ -20,9 +20,34 @@ func hostLogString(ptrPos, size uint32)
 //export hostGetHostInformation
 func hostGetHostInformation(retBuffPtrPos **byte, retBuffSize *int)
 
+//export hostPing
+func hostPing(ptrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+/*
+Call host function: hostPing
+Pass a string as parameter
+Get a string from the host
+*/
+func Ping(message string) string {
+
+	strPtrPos, size := GetStringPtrPositionAndSize(message)
+
+	var bufPtr *byte
+	var bufSize int
+
+	hostPing(strPtrPos, size, &bufPtr, &bufSize)
+
+	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(bufPtr)),
+		Len:  uintptr(bufSize),
+		Cap:  uintptr(bufSize),
+	}))
+
+}
+
 /*
 Call host function: hostGetHostInformation
-Gat a string with the information about the host
+Get a string with the information about the host
 */
 func GetHostInformation() string {
 	var bufPtr *byte

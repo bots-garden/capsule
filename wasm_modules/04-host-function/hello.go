@@ -6,9 +6,11 @@ import (
 
 // main is required for TinyGo to compile to Wasm.
 func main() {
-	helpers.Log("starting")
+	helpers.Log("🚀 ignition...")
 	hostInformation := helpers.GetHostInformation()
 	helpers.Log("👋 message from the wasm module: " + hostInformation)
+
+	helpers.Log(helpers.Ping("✊ knock knock from the wasm module"))
 }
 
 //export add

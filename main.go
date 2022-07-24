@@ -24,6 +24,7 @@ func main() {
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
 		ExportFunction("hostLogString", host_functions.LogString).
 		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
+		ExportFunction("hostPing", host_functions.Ping).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
