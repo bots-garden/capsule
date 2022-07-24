@@ -23,6 +23,7 @@ func main() {
 
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
 		ExportFunction("hostLogString", host_functions.LogString).
+		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
@@ -35,7 +36,9 @@ func main() {
 	}
 
 	// Load then Instantiate a WebAssembly module
-	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/03-string-as-param/hello.wasm")
+	//helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/03-string-as-param/hello.wasm")
+	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/04-host-function/hello.wasm")
+
 	if errLoadWasmModule != nil {
 		log.Panicln("🔴 Error while loading the wasm module", errLoadWasmModule)
 	}
