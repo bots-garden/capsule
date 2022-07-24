@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -20,7 +19,7 @@ type CapsuleFlags struct {
 	mode  string
 	param string
 	wasm string
-	httpPort int
+	httpPort string
 }
 
 func main() {
@@ -40,7 +39,7 @@ func main() {
 	capsuleModePtr := flag.String("mode", "http", "default mode is http else: cli")
 	stringParamPtr := flag.String("param", "hello world", "string parameter for the cli mode")
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
-	httpPortPtr := flag.Int("httpPort", 8080, "http port")
+	httpPortPtr := flag.String("httpPort", "8080", "http port")
 
 	flag.Parse()
 
@@ -94,7 +93,8 @@ func main() {
 
 	switch what := flags.mode; what {
 	case "http":
-		fmt.Println("[http mode] 🚧 in progress", flags.param)
+		//fmt.Println("[http mode] 🚧 in progress", flags.param)
+		capsulehttp.Serve(flags.httpPort, wasmModule, ctx)
 	case "cli":
 		//fmt.Println("[cli mode] 🚧 in progress", flags.param)
 		capsulecli.Execute(flags.param, wasmModule, ctx)
