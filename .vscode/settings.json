@@ -1,0 +1,17 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Cobalt2",
+    "terminal.integrated.fontSize": 16,
+    "editor.fontSize": 16,
+    "go.toolsEnvVars": {
+      "GOOS": "js",
+      "GOARCH": "wasm",
+    },
+    "gopls": {
+      "experimentalWorkspaceModule": true,
+    },
+    "go.useLanguageServer": true,
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000
+  }

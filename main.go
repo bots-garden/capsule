@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	helpers "github.com/bots-garden/capsule/helpers/tools"
 	"log"
 	"os"
 
+	helpers "github.com/bots-garden/capsule/helpers/tools"
+	host_functions "github.com/bots-garden/capsule/host_functions"
+
 	"github.com/tetratelabs/wazero"
-	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
 )
 
@@ -21,7 +22,7 @@ func main() {
 	defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", logString).
+		ExportFunction("hostLogString", host_functions.LogString).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
@@ -64,7 +65,7 @@ func main() {
 		log.Panicln("🔴 Error while calling the function ", errCallFunction)
 	}
 	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	helloWorldPtr, helloWorldSize := helpers.PtrSizePairFromArray(resultArray)
+	helloWorldPtr, helloWorldSize := helpers.GetPackedPtrPositionAndSize(resultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
 	if bytes, ok := mod.Memory().Read(ctx, helloWorldPtr, helloWorldSize); !ok {
@@ -75,13 +76,4 @@ func main() {
 		fmt.Println("😃 the string message is:", string(bytes))
 	}
 
-}
-
-// host wasm_modules
-func logString(ctx context.Context, module api.Module, offset, byteCount uint32) {
-	buf, ok := module.Memory().Read(ctx, offset, byteCount)
-	if !ok {
-		log.Panicf("🟥 Memory.Read(%d, %d) out of range", offset, byteCount)
-	}
-	fmt.Println(string(buf))
 }
