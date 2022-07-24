@@ -14,6 +14,10 @@ import (
 )
 
 func main() {
+
+    //argsWithProg := os.Args
+    wasmModuleFilePath := os.Args[1:][0]
+
 	// Choose the context to use for function calls.
 	ctx := context.Background()
 
@@ -21,6 +25,7 @@ func main() {
 	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
 	defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
+	// 🏠 Add host functions
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
 		ExportFunction("hostLogString", host_functions.LogString).
 		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
@@ -36,22 +41,21 @@ func main() {
 		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
 	}
 
-	// Load from file and then Instantiate a WebAssembly module
-	//helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/03-string-as-param/hello.wasm")
-	
-	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/04-host-function/hello.wasm")
+	// 📂 Load from file and then Instantiate a WebAssembly module
+	wasmFile, errLoadWasmFile := os.ReadFile(wasmModuleFilePath)
 
-	if errLoadWasmModule != nil {
-		log.Panicln("🔴 Error while loading the wasm module", errLoadWasmModule)
+	if errLoadWasmFile != nil {
+		log.Panicln("🔴 Error while loading the wasm file", errLoadWasmFile)
 	}
 
-	mod, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, helloWasm)
+	// 🥚 Instantiate the wasm module (from the wasm file)
+	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
 	if errInstanceWasmModule != nil {
 		log.Panicln("🔴 Error while creating module instance ", errInstanceWasmModule)
 	}
 
 	// 1️⃣ Get references to WebAssembly function: "add"
-	addWasmModuleFunction := mod.ExportedFunction("add")
+	addWasmModuleFunction := wasmModule.ExportedFunction("add")
 
 	// Now, we can call "add", which reads the string we wrote to memory!
 	// result []uint64
@@ -66,7 +70,7 @@ func main() {
 	// 2️⃣ Get a string from wasm
 	// ======================================================
 
-	helloWorldwasmModuleFunction := mod.ExportedFunction("helloWorld")
+	helloWorldwasmModuleFunction := wasmModule.ExportedFunction("helloWorld")
 
 	resultArray, errCallFunction := helloWorldwasmModuleFunction.Call(ctx)
 	if errCallFunction != nil {
@@ -76,9 +80,9 @@ func main() {
 	helloWorldPtr, helloWorldSize := helpers.GetPackedPtrPositionAndSize(resultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if bytes, ok := mod.Memory().Read(ctx, helloWorldPtr, helloWorldSize); !ok {
+	if bytes, ok := wasmModule.Memory().Read(ctx, helloWorldPtr, helloWorldSize); !ok {
 		log.Panicf("🟥 Memory.Read(%d, %d) out of range of memory size %d",
-			helloWorldPtr, helloWorldSize, mod.Memory().Size(ctx))
+			helloWorldPtr, helloWorldSize, wasmModule.Memory().Size(ctx))
 	} else {
 		//fmt.Println(bytes)
 		fmt.Println("😃 the string message is:", string(bytes))
@@ -93,11 +97,11 @@ func main() {
 	nameSize := uint64(len(name))
 
 	// get the function
-	sayHelloWasmModuleFunction := mod.ExportedFunction("sayHello")
+	sayHelloWasmModuleFunction := wasmModule.ExportedFunction("sayHello")
 
 	// These are undocumented, but exported. See tinygo-org/tinygo#2788
-	malloc := mod.ExportedFunction("malloc")
-	free := mod.ExportedFunction("free")
+	malloc := wasmModule.ExportedFunction("malloc")
+	free := wasmModule.ExportedFunction("free")
 
 	// Instead of an arbitrary memory offset, use TinyGo's allocator.
 	// 🖐 Notice there is nothing string-specific in this allocation function.
@@ -112,9 +116,9 @@ func main() {
 	defer free.Call(ctx, namePtrPosition)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if !mod.Memory().Write(ctx, uint32(namePtrPosition), []byte(name)) {
+	if !wasmModule.Memory().Write(ctx, uint32(namePtrPosition), []byte(name)) {
 		log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-			namePtrPosition, nameSize, mod.Memory().Size(ctx))
+			namePtrPosition, nameSize, wasmModule.Memory().Size(ctx))
 	}
 	// Finally, we get the message "👋 hello <name>" printed. This shows how to
 	// read-back something allocated by TinyGo.
@@ -126,9 +130,9 @@ func main() {
 	sayHelloPtrPos, sayHelloSize := helpers.GetPackedPtrPositionAndSize(sayHelloResultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if bytes, ok := mod.Memory().Read(ctx, sayHelloPtrPos, sayHelloSize); !ok {
+	if bytes, ok := wasmModule.Memory().Read(ctx, sayHelloPtrPos, sayHelloSize); !ok {
 		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-		sayHelloPtrPos, sayHelloSize, mod.Memory().Size(ctx))
+		sayHelloPtrPos, sayHelloSize, wasmModule.Memory().Size(ctx))
 	} else {
 		fmt.Println("👋👋👋:", string(bytes)) // the result
 	}
