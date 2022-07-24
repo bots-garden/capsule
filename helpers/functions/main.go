@@ -103,5 +103,6 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 	}))
 }
 
-// TODO: Try to do the same thing with alloc
+// TODO: Try to do the same thing with alloc 🤔
 // TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
+
