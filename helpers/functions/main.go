@@ -103,5 +103,44 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 	}))
 }
 
-// TODO: Try to do the same thing with alloc
+// TODO: Try to do the same thing with alloc 🤔
 // TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
+
+
+var handleFunction func(string) string
+
+func SetHandle(function func(string) string) {
+	handleFunction = function
+}
+
+/*
+
+*/
+// TODO add detailed comments
+//export callHandle
+func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
+	stringParameter := GetStringParam(strPtrPos, size)
+
+	stringReturnByHandleFunction := handleFunction(stringParameter)
+
+	pos, length := GetStringPtrPositionAndSize(stringReturnByHandleFunction)
+
+	return PackPtrPositionAndSize(pos, length)
+}
+
+
+/* Function Samples
+//export helloWorld
+func helloWorld() (strPtrPosSize uint64) {
+	strPtrPos, size := helpers.GetStringPtrPositionAndSize("👋 hello world, I'm very happy to meet you, I love what you are doing my friend")
+	return helpers.PackPtrPositionAndSize(strPtrPos, size)
+}
+
+//export sayHello
+func sayHello(strPtrPos, size uint32) (strPtrPosSize uint64) {
+	name := helpers.GetStringParam(strPtrPos, size)
+	pos, length := helpers.GetStringPtrPositionAndSize("👋 hello " + name)
+
+	return helpers.PackPtrPositionAndSize(pos, length)
+}
+*/

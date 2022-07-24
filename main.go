@@ -54,50 +54,17 @@ func main() {
 		log.Panicln("🔴 Error while creating module instance ", errInstanceWasmModule)
 	}
 
-	// 1️⃣ Get references to WebAssembly function: "add"
-	addWasmModuleFunction := wasmModule.ExportedFunction("add")
-
-	// Now, we can call "add", which reads the string we wrote to memory!
-	// result []uint64
-	result, errCallFunction := addWasmModuleFunction.Call(ctx, 20, 22)
-	if errCallFunction != nil {
-		log.Panicln("🔴 Error while calling the function ", errCallFunction)
-	}
-
-	fmt.Println("result:", result[0])
 
 	// ======================================================
-	// 2️⃣ Get a string from wasm
-	// ======================================================
-
-	helloWorldwasmModuleFunction := wasmModule.ExportedFunction("helloWorld")
-
-	resultArray, errCallFunction := helloWorldwasmModuleFunction.Call(ctx)
-	if errCallFunction != nil {
-		log.Panicln("🔴 Error while calling the function ", errCallFunction)
-	}
-	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	helloWorldPtr, helloWorldSize := helpers.GetPackedPtrPositionAndSize(resultArray)
-
-	// The pointer is a linear memory offset, which is where we write the name.
-	if bytes, ok := wasmModule.Memory().Read(ctx, helloWorldPtr, helloWorldSize); !ok {
-		log.Panicf("🟥 Memory.Read(%d, %d) out of range of memory size %d",
-			helloWorldPtr, helloWorldSize, wasmModule.Memory().Size(ctx))
-	} else {
-		//fmt.Println(bytes)
-		fmt.Println("😃 the string message is:", string(bytes))
-	}
-
-	// ======================================================
-	// 3️⃣ Pass a string param and get a string result
+	//  Pass a string param and get a string result
 	// ======================================================
 
 	// Parameter "setup"
-	name := "Bob Morane 🎉"
-	nameSize := uint64(len(name))
+	stringParameter := "Bob Morane 🎉"
+	stringParameterLength := uint64(len(stringParameter))
 
 	// get the function
-	sayHelloWasmModuleFunction := wasmModule.ExportedFunction("sayHello")
+	wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
 
 	// These are undocumented, but exported. See tinygo-org/tinygo#2788
 	malloc := wasmModule.ExportedFunction("malloc")
@@ -106,35 +73,35 @@ func main() {
 	// Instead of an arbitrary memory offset, use TinyGo's allocator.
 	// 🖐 Notice there is nothing string-specific in this allocation function.
 	// The same function could be used to pass binary serialized data to Wasm.
-	results, err := malloc.Call(ctx, nameSize)
+	results, err := malloc.Call(ctx, stringParameterLength)
 	if err != nil {
 		log.Panicln(err)
 	}
-	namePtrPosition := results[0]
+	stringParameterPtrPosition := results[0]
 	// This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
 	// So, we have to free it when finished
-	defer free.Call(ctx, namePtrPosition)
+	defer free.Call(ctx, stringParameterPtrPosition)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if !wasmModule.Memory().Write(ctx, uint32(namePtrPosition), []byte(name)) {
+	if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
 		log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-			namePtrPosition, nameSize, wasmModule.Memory().Size(ctx))
+			stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
 	}
 	// Finally, we get the message "👋 hello <name>" printed. This shows how to
 	// read-back something allocated by TinyGo.
-	sayHelloResultArray, err := sayHelloWasmModuleFunction.Call(ctx, namePtrPosition, nameSize)
+	handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength)
 	if err != nil {
 		log.Panicln(err)
 	}
 	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	sayHelloPtrPos, sayHelloSize := helpers.GetPackedPtrPositionAndSize(sayHelloResultArray)
+	handleReturnPtrPos, handleReturnSize := helpers.GetPackedPtrPositionAndSize(handleResultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if bytes, ok := wasmModule.Memory().Read(ctx, sayHelloPtrPos, sayHelloSize); !ok {
+	if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-		sayHelloPtrPos, sayHelloSize, wasmModule.Memory().Size(ctx))
+		handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
 	} else {
-		fmt.Println("👋👋👋:", string(bytes)) // the result
+		fmt.Println("🤖:", string(bytes)) // the result
 	}
 	
 
