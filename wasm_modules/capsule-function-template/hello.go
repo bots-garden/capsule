@@ -15,6 +15,12 @@ func main() {
 	helpers.SetHandle(Handle)
 }
 
+/*
+curl -v -X POST \
+  http://localhost:7070 \
+  -H 'content-type: application/json' \
+  -d '{"message": "Golang 💚 wasm"}'
+*/
 
 func Handle(param string) string {
 	helpers.Log("1️⃣ parameter is: " + param)

@@ -4,18 +4,21 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"time"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
+	"github.com/bots-garden/capsule/host_functions"
 	"github.com/gin-gonic/gin"
-	"github.com/tetratelabs/wazero/api"
+	"github.com/tetratelabs/wazero"
+	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
 )
 
 type JsonParameter struct {
 	Message string `json:"message"` // change the name ? 🤔
 }
+
 // TODO add output
 
+// 🚧 this is a work in progress
 func callWasmFunction(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "pong",
@@ -30,10 +33,38 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
-func callPostWasmFunctionHandler(wasmModule api.Module, ctx context.Context) gin.HandlerFunc {
-	
+func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
+
 	fn := func(c *gin.Context) {
-		time.Sleep(time.Millisecond * 5)
+
+		// Choose the context to use for function calls.
+		ctx := context.Background()
+
+		// Create a new WebAssembly Runtime.
+		wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
+		defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
+
+		// 🏠 Add host functions
+		_, errEnv := wasmRuntime.NewModuleBuilder("env").
+			ExportFunction("hostLogString", host_functions.LogString).
+			ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
+			ExportFunction("hostPing", host_functions.Ping).
+			Instantiate(ctx, wasmRuntime)
+
+		if errEnv != nil {
+			log.Panicln("🔴 Error with env module and host function(s):", errEnv)
+		}
+
+		_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
+		if errInstantiate != nil {
+			log.Panicln("🔴 Error with Instantiate:", errInstantiate)
+		}
+
+		// 🥚 Instantiate the wasm module (from the wasm file)
+		wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+		if errInstanceWasmModule != nil {
+			log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
+		}
 
 		var jsonParameter JsonParameter
 
@@ -45,6 +76,7 @@ func callPostWasmFunctionHandler(wasmModule api.Module, ctx context.Context) gin
 		}
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
+		
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
 
@@ -94,11 +126,11 @@ func callPostWasmFunctionHandler(wasmModule api.Module, ctx context.Context) gin
 	return fn
 }
 
-func Serve(httpPort string, wasmModule api.Module, ctx context.Context) {
+func Serve(httpPort string, wasmFile []byte) {
 
 	r := gin.Default()
 	r.GET("/", callWasmFunction)
-	r.POST("/", callPostWasmFunctionHandler(wasmModule, ctx))
+	r.POST("/", callPostWasmFunctionHandler(wasmFile))
 	r.Run(":" + httpPort)
 }
 

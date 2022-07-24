@@ -6,11 +6,43 @@ import (
 	"log"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-	"github.com/tetratelabs/wazero/api"
+	"github.com/bots-garden/capsule/host_functions"
+	"github.com/tetratelabs/wazero"
+	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
 )
 
 // Pass a string param and get a string result
-func Execute(stringParameter string, wasmModule api.Module, ctx context.Context) {
+func Execute(stringParameter string, wasmFile []byte) {
+
+	// Choose the context to use for function calls.
+	ctx := context.Background()
+
+	// Create a new WebAssembly Runtime.
+	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
+	defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
+
+	// 🏠 Add host functions
+	_, errEnv := wasmRuntime.NewModuleBuilder("env").
+		ExportFunction("hostLogString", host_functions.LogString).
+		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
+		ExportFunction("hostPing", host_functions.Ping).
+		Instantiate(ctx, wasmRuntime)
+
+	if errEnv != nil {
+		log.Panicln("🔴 Error with env module and host function(s):", errEnv)
+	}
+
+	_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
+	if errInstantiate != nil {
+		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
+	}
+
+	// 🥚 Instantiate the wasm module (from the wasm file)
+	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+	if errInstanceWasmModule != nil {
+		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
+	}
+
 	// Parameter "setup"
 	//stringParameter := "Bob Morane 🎉"
 	stringParameterLength := uint64(len(stringParameter))
