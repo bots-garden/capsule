@@ -2,6 +2,8 @@ package helpers
 
 import (
 	"unsafe"
+	"reflect"
+
 )
 
 //export hostLogString
@@ -34,3 +36,20 @@ ex: position of a string pointer and the size(length) of the string
 func PackPtrPositionAndSize(ptrPos uint32, size uint32) (packedValue uint64) {
 	return (uint64(ptrPos) << uint64(32)) | uint64(size)
 }
+
+
+/*
+GetStringParam returns a string 
+from WebAssembly compatible numeric types representing its pointer and length.
+*/
+func GetStringParam(ptrPos uint32, size uint32) string {
+	// Get a slice view of the underlying bytes in the stream. We use SliceHeader, not StringHeader
+	// as it allows us to fix the capacity to what was allocated.
+	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: uintptr(ptrPos),
+		Len:  uintptr(size), // Tinygo requires these as uintptrs even if they are int fields.
+		Cap:  uintptr(size), // ^^ See https://github.com/tinygo-org/tinygo/issues/1284
+	}))
+}
+// TODO: Try to do the same thing with alloc
+// TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h 

@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Load then Instantiate a WebAssembly module
-	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/02-return-string/hello.wasm")
+	helloWasm, errLoadWasmModule := os.ReadFile("./wasm_modules/03-string-as-param/hello.wasm")
 	if errLoadWasmModule != nil {
 		log.Panicln("🔴 Error while loading the wasm module", errLoadWasmModule)
 	}
@@ -57,7 +57,10 @@ func main() {
 
 	fmt.Println("result:", result[0])
 
+	// ======================================================
 	// 2️⃣ Get a string from wasm
+	// ======================================================
+
 	helloWorldwasmModuleFunction := mod.ExportedFunction("helloWorld")
 
 	resultArray, errCallFunction := helloWorldwasmModuleFunction.Call(ctx)
@@ -75,5 +78,55 @@ func main() {
 		//fmt.Println(bytes)
 		fmt.Println("😃 the string message is:", string(bytes))
 	}
+
+	// ======================================================
+	// 3️⃣ Pass a string param and get a string result
+	// ======================================================
+
+	// Parameter "setup"
+	name := "Bob Morane 🎉"
+	nameSize := uint64(len(name))
+
+	// get the function
+	sayHelloWasmModuleFunction := mod.ExportedFunction("sayHello")
+
+	// These are undocumented, but exported. See tinygo-org/tinygo#2788
+	malloc := mod.ExportedFunction("malloc")
+	free := mod.ExportedFunction("free")
+
+	// Instead of an arbitrary memory offset, use TinyGo's allocator.
+	// 🖐 Notice there is nothing string-specific in this allocation function.
+	// The same function could be used to pass binary serialized data to Wasm.
+	results, err := malloc.Call(ctx, nameSize)
+	if err != nil {
+		log.Panicln(err)
+	}
+	namePtrPosition := results[0]
+	// This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
+	// So, we have to free it when finished
+	defer free.Call(ctx, namePtrPosition)
+
+	// The pointer is a linear memory offset, which is where we write the name.
+	if !mod.Memory().Write(ctx, uint32(namePtrPosition), []byte(name)) {
+		log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+			namePtrPosition, nameSize, mod.Memory().Size(ctx))
+	}
+	// Finally, we get the message "👋 hello <name>" printed. This shows how to
+	// read-back something allocated by TinyGo.
+	sayHelloResultArray, err := sayHelloWasmModuleFunction.Call(ctx, namePtrPosition, nameSize)
+	if err != nil {
+		log.Panicln(err)
+	}
+	// Note: This pointer is still owned by TinyGo, so don't try to free it!
+	sayHelloPtrPos, sayHelloSize := helpers.GetPackedPtrPositionAndSize(sayHelloResultArray)
+
+	// The pointer is a linear memory offset, which is where we write the name.
+	if bytes, ok := mod.Memory().Read(ctx, sayHelloPtrPos, sayHelloSize); !ok {
+		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
+		sayHelloPtrPos, sayHelloSize, mod.Memory().Size(ctx))
+	} else {
+		fmt.Println("👋👋👋:", string(bytes)) // the result
+	}
+	
 
 }
