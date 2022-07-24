@@ -33,6 +33,7 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
+
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
 	fn := func(c *gin.Context) {
@@ -76,7 +77,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		}
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
-		
+
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
 
@@ -119,6 +120,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		} else {
 			//fmt.Println("🤖:", string(bytes)) // the result
 			c.JSON(http.StatusOK, gin.H{"value": string(bytes)})
+      //c.String(http.StatusOK, `{"value":"`+string(bytes)+`"}`)
 		}
 
 	}
