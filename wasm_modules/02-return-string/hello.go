@@ -25,7 +25,3 @@ func helloWorld() uint64 {
 	strPtrPos, size := helpers.GetStringPtrPositionAndSize("👋 hello world, I'm very happy to meet you, I love what you are doing my friend")
 	return helpers.PackPtrPositionAndSize(strPtrPos, size)
 }
-
-// how to simplify ?
-// here: create an non exportable function
-// helpers/function: an exportable function that call this on
