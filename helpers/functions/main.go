@@ -1,13 +1,65 @@
 package helpers
 
 import (
-	"unsafe"
 	"reflect"
-
+	"unsafe"
 )
 
+//export allocateBuffer
+func allocateBuffer(size uint32) *byte {
+	// Allocate the in-Wasm memory region and returns its pointer to hosts.
+	// The region is supposed to store random strings generated in hosts,
+	// meaning that this is called "inside" of host_get_string.
+	buf := make([]byte, size)
+	return &buf[0]
+}
+
 //export hostLogString
-func hostLogString(ptr, size uint32)
+func hostLogString(ptrPos, size uint32)
+
+//export hostGetHostInformation
+func hostGetHostInformation(retBuffPtrPos **byte, retBuffSize *int)
+
+//export hostPing
+func hostPing(ptrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+/*
+Call host function: hostPing
+Pass a string as parameter
+Get a string from the host
+*/
+func Ping(message string) string {
+
+	strPtrPos, size := GetStringPtrPositionAndSize(message)
+
+	var bufPtr *byte
+	var bufSize int
+
+	hostPing(strPtrPos, size, &bufPtr, &bufSize)
+
+	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(bufPtr)),
+		Len:  uintptr(bufSize),
+		Cap:  uintptr(bufSize),
+	}))
+
+}
+
+/*
+Call host function: hostGetHostInformation
+Get a string with the information about the host
+*/
+func GetHostInformation() string {
+	var bufPtr *byte
+	var bufSize int
+	hostGetHostInformation(&bufPtr, &bufSize)
+
+	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(bufPtr)),
+		Len:  uintptr(bufSize),
+		Cap:  uintptr(bufSize),
+	}))
+}
 
 /*
 Call host function: hostLogString.
@@ -37,9 +89,8 @@ func PackPtrPositionAndSize(ptrPos uint32, size uint32) (packedValue uint64) {
 	return (uint64(ptrPos) << uint64(32)) | uint64(size)
 }
 
-
 /*
-GetStringParam returns a string 
+GetStringParam returns a string
 from WebAssembly compatible numeric types representing its pointer and length.
 */
 func GetStringParam(ptrPos uint32, size uint32) string {
@@ -51,5 +102,6 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 		Cap:  uintptr(size), // ^^ See https://github.com/tinygo-org/tinygo/issues/1284
 	}))
 }
+
 // TODO: Try to do the same thing with alloc
-// TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h 
+// TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
