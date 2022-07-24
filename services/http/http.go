@@ -1,0 +1,5 @@
+package capsulehttp
+
+func Serve() {
+	
+}
