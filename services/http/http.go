@@ -3,7 +3,8 @@ package capsulehttp
 import (
 	"context"
 	"log"
-	"math/rand"
+
+	//"math/rand"
 	"net/http"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
@@ -26,7 +27,7 @@ curl -v -X POST \
 */
 func createWasmRuntime(ctx context.Context) wazero.Runtime {
 
-  wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
+	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
 
 	// 🏠 Add host functions
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
@@ -48,7 +49,7 @@ func createWasmRuntime(ctx context.Context) wazero.Runtime {
 }
 
 func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
-  // Choose the context to use for function calls.
+	// Choose the context to use for function calls.
 	ctx := context.Background()
 
 	wasmRuntime := createWasmRuntime(ctx)
@@ -74,15 +75,22 @@ For removing it:
 sl = sl[:len(sl)-1]
 */
 func getLastElementOfTheWorkerdPool() WasmWorker {
-  return wasmWorkersPool[len(wasmWorkersPool)-1]
+	ww := wasmWorkersPool[len(wasmWorkersPool)-1]
+	return ww
 }
 
-func removeLastElementOfTheWorkerdPool() {
-  wasmWorkersPool = wasmWorkersPool[:len(wasmWorkersPool)-1]
+func removeLastElementFromTheWorkerdPool() {
+	wasmWorkersPool = wasmWorkersPool[:len(wasmWorkersPool)-1]
 }
 
-
-
+func addNewElementToTheWorkerPool(wasmFile []byte) {
+	wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
+	wasmWorkersPool = append(wasmWorkersPool, WasmWorker{
+		wasmRuntime: wasmRuntime,
+		wasmModule:  wasmModule,
+		ctx:         ctx,
+	})
+}
 
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
@@ -96,34 +104,13 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 			return
 		}
 
-
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
 
-		// 👋 get Wasm Module Instance (and Wasm runtime)
-		//wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
-		// defer must always be in the main code (to avoid go routine panic)
-		//defer wasmRuntime.Close(ctx)
 
-    // TODO:
-    // 1- take a worker, use it
-    // 2- run a go routine to create a new worker and add it to the pool
-    // 3- remove the used worker from the pool
-    /*
-    min := 0
-    max := len(wasmWorkersPool)
-    currentIndex := rand.Intn(max - min) + min
-    wasmWorker := wasmWorkersPool[currentIndex]
-    */
-    wasmWorker := getLastElementOfTheWorkerdPool()
-
-    wasmRuntime := wasmWorker.wasmRuntime
-    wasmModule := wasmWorker.wasmModule
-    ctx := wasmWorker.ctx
-    defer wasmRuntime.Close(ctx)
-
-    removeLastElementOfTheWorkerdPool()
+		wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
+		defer wasmRuntime.Close(ctx)
 
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
@@ -168,6 +155,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		} else {
 			c.JSON(http.StatusOK, gin.H{"value": string(bytes)})
 		}
+
 	}
 
 	return fn
@@ -175,22 +163,14 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
 //
 type WasmWorker struct {
-  wasmRuntime wazero.Runtime
-  wasmModule api.Module
-  ctx context.Context
+	wasmRuntime wazero.Runtime
+	wasmModule  api.Module
+	ctx         context.Context
 }
 
 var wasmWorkersPool []WasmWorker
 
 func Serve(httpPort string, wasmFile []byte) {
-  for i := 1; i <= 20; i++ {
-    wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
-    wasmWorkersPool = append(wasmWorkersPool, WasmWorker{
-      wasmRuntime: wasmRuntime,
-      wasmModule: wasmModule,
-      ctx: ctx,
-    })
-  }
 
 	r := gin.Default()
 	r.POST("/", callPostWasmFunctionHandler(wasmFile))

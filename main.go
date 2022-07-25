@@ -5,12 +5,8 @@ import (
 	"log"
 	"os"
 
-  //capsulehttppool "github.com/bots-garden/capsule/services/httppool"
-  //capsulehttpnewpool "github.com/bots-garden/capsule/services/httpnewpool"
   capsulehttp "github.com/bots-garden/capsule/services/http"
-
 	capsulecli "github.com/bots-garden/capsule/services/cli"
-  capsulecli2 "github.com/bots-garden/capsule/services/cli2"
 
 )
 
@@ -63,19 +59,10 @@ func main() {
 
 	switch what := flags.mode; what {
 	case "http":
-		//fmt.Println("[http mode] 🚧 in progress", flags.param)
-    //capsulehttpnewpool.Serve(flags.httpPort, wasmFile)
-		//capsulehttppool.Serve(flags.httpPort, wasmFile)
     capsulehttp.Serve(flags.httpPort, wasmFile)
 
 	case "cli":
-		//fmt.Println("[cli mode] 🚧 in progress", flags.param)
 		capsulecli.Execute(flags.param, wasmFile)
-
-	case "cli2":
-		//fmt.Println("[cli mode] 🚧 in progress", flags.param)
-		capsulecli2.Execute(flags.param, wasmFile)
-    //capsulecli2.Execute(flags.param, wasmFile)
 
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
