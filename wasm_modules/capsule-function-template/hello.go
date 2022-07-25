@@ -6,6 +6,7 @@ import (
 
 // main is required.
 func main() {
+
   /*
 	helpers.Log("🚀 ignition...")
 	hostInformation := helpers.GetHostInformation()

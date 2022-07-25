@@ -5,8 +5,9 @@ import (
 	"log"
 	"os"
 
-  capsulehttpfast "github.com/bots-garden/capsule/services/httpfast"
+  capsulehttp "github.com/bots-garden/capsule/services/http"
 	capsulecli "github.com/bots-garden/capsule/services/cli"
+
 )
 
 type CapsuleFlags struct {
@@ -58,11 +59,11 @@ func main() {
 
 	switch what := flags.mode; what {
 	case "http":
-		//fmt.Println("[http mode] 🚧 in progress", flags.param)
-		capsulehttpfast.Serve(flags.httpPort, wasmFile)
+    capsulehttp.Serve(flags.httpPort, wasmFile)
+
 	case "cli":
-		//fmt.Println("[cli mode] 🚧 in progress", flags.param)
 		capsulecli.Execute(flags.param, wasmFile)
+
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
 	}
