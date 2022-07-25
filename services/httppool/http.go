@@ -16,17 +16,6 @@ type JsonParameter struct {
 	Message string `json:"message"` // change the name ? 🤔
 }
 
-// TODO add output
-
-// 🚧 this is a work in progress
-func callWasmFunction(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
-}
-
-//TODO handle all errors
-//TODO handle errors from the wasm module too
 /*
 curl -v -X POST \
   http://localhost:7070 \
@@ -34,9 +23,7 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
-
-	fn := func(c *gin.Context) {
+func createAndRunWasmWorker(stringParameter string, stringParameterLength uint64, wasmFile []byte) ([]byte, bool) {
 
 		// Choose the context to use for function calls.
 		ctx := context.Background()
@@ -67,17 +54,6 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 			log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
 		}
 
-		var jsonParameter JsonParameter
-
-		// Call BindJSON to bind the received JSON to
-		// jsonParameter.
-		if err := c.BindJSON(&jsonParameter); err != nil {
-			// TODO: DO SOMETHING WITH THE ERROR
-			return
-		}
-		// Parameter "setup"
-		stringParameterLength := uint64(len(jsonParameter.Message))
-
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
 
@@ -100,7 +76,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		defer free.Call(ctx, stringParameterPtrPosition)
 
 		// The pointer is a linear memory offset, which is where we write the name.
-		if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(jsonParameter.Message)) {
+		if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
 			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
 				stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
 		}
@@ -117,12 +93,36 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
+        return nil, false
 		} else {
 			//fmt.Println("🤖:", string(bytes)) // the result
-			c.JSON(http.StatusOK, gin.H{"value": string(bytes)})
+			return bytes, true
       //c.String(http.StatusOK, `{"value":"`+string(bytes)+`"}`)
 		}
 
+}
+
+
+func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
+
+	fn := func(c *gin.Context) {
+
+		var jsonParameter JsonParameter
+		// Call BindJSON to bind the received JSON to
+		// jsonParameter.
+    // TODO: handle json errors
+		if err := c.BindJSON(&jsonParameter); err != nil {
+			return
+		}
+
+		// Parameter "setup"
+		stringParameterLength := uint64(len(jsonParameter.Message))
+    stringParameter := jsonParameter.Message
+
+    bytes, ok := createAndRunWasmWorker(stringParameter, stringParameterLength, wasmFile)
+    if ok {
+      c.JSON(http.StatusOK, gin.H{"value": string(bytes)})
+    }
 	}
 
 	return fn
@@ -130,8 +130,11 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
 func Serve(httpPort string, wasmFile []byte) {
 
+
+
+
+
 	r := gin.Default()
-	r.GET("/", callWasmFunction)
 	r.POST("/", callPostWasmFunctionHandler(wasmFile))
 	r.Run(":" + httpPort)
 }
