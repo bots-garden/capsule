@@ -66,6 +66,24 @@ func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 // removeTheLastWorkerFromThePool
 // addNewWorkerToThePool
 
+/*
+For just reading the last element of a slice:
+ sl[len(sl)-1]
+For removing it:
+
+sl = sl[:len(sl)-1]
+*/
+func getLastElementOfTheWorkerdPool() WasmWorker {
+  return wasmWorkersPool[len(wasmWorkersPool)-1]
+}
+
+func removeLastElementOfTheWorkerdPool() {
+  wasmWorkersPool = wasmWorkersPool[:len(wasmWorkersPool)-1]
+}
+
+
+
+
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
 	fn := func(c *gin.Context) {
@@ -92,14 +110,20 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
     // 1- take a worker, use it
     // 2- run a go routine to create a new worker and add it to the pool
     // 3- remove the used worker from the pool
+    /*
     min := 0
     max := len(wasmWorkersPool)
     currentIndex := rand.Intn(max - min) + min
     wasmWorker := wasmWorkersPool[currentIndex]
+    */
+    wasmWorker := getLastElementOfTheWorkerdPool()
+
     wasmRuntime := wasmWorker.wasmRuntime
     wasmModule := wasmWorker.wasmModule
     ctx := wasmWorker.ctx
     defer wasmRuntime.Close(ctx)
+
+    removeLastElementOfTheWorkerdPool()
 
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
