@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-  capsulehttpfast "github.com/bots-garden/capsule/services/httpfast"
+  capsulehttppool "github.com/bots-garden/capsule/services/httppool"
 	capsulecli "github.com/bots-garden/capsule/services/cli"
 )
 
@@ -59,7 +59,7 @@ func main() {
 	switch what := flags.mode; what {
 	case "http":
 		//fmt.Println("[http mode] 🚧 in progress", flags.param)
-		capsulehttpfast.Serve(flags.httpPort, wasmFile)
+		capsulehttppool.Serve(flags.httpPort, wasmFile)
 	case "cli":
 		//fmt.Println("[cli mode] 🚧 in progress", flags.param)
 		capsulecli.Execute(flags.param, wasmFile)
