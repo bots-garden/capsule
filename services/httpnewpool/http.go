@@ -25,7 +25,7 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-type WasmObjectsSet struct {
+type WasmWorker struct {
 	Index          int
 	Context        context.Context
 	Runtime        wazero.Runtime
@@ -34,17 +34,17 @@ type WasmObjectsSet struct {
 	Free           bool
 }
 
-var wasmPool []WasmObjectsSet
+var wasmWorkersPool []WasmWorker
 
 func callPostWasmFunctionHandler() gin.HandlerFunc {
 
 	fn := func(c *gin.Context) {
 
     min := 0
-    max := len(wasmPool)
+    max := len(wasmWorkersPool)
     currentIndex := rand.Intn(max - min) + min
 
-    wasmWorker := wasmPool[currentIndex]
+    wasmWorker := wasmWorkersPool[currentIndex]
 
 		var jsonParameter JsonParameter
 
@@ -105,12 +105,12 @@ func callPostWasmFunctionHandler() gin.HandlerFunc {
 	return fn
 }
 
-
+// first factorise => createWasmWorker
 
 
 func Serve(httpPort string, wasmFile []byte) {
 
-	for i := 1; i <= 100; i++ {
+	for i := 1; i <= 10; i++ {
 		// Choose the context to use for function calls.
 		ctx := context.Background()
 
@@ -143,7 +143,7 @@ func Serve(httpPort string, wasmFile []byte) {
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
 
-		wasmPool = append(wasmPool, WasmObjectsSet{
+		wasmWorkersPool = append(wasmWorkersPool, WasmWorker{
       Index: i,
 			Context:        ctx,
 			Runtime:        wasmRuntime,
