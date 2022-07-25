@@ -3,7 +3,6 @@ package capsulehttp
 import (
 	"context"
 	"log"
-	"math/rand"
 	"net/http"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
@@ -24,9 +23,8 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
-func createWasmRuntime(ctx context.Context) wazero.Runtime {
-
-  wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
+func getWasmRuntime(ctx context.Context) wazero.Runtime {
+	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
 
 	// 🏠 Add host functions
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
@@ -47,11 +45,13 @@ func createWasmRuntime(ctx context.Context) wazero.Runtime {
 	return wasmRuntime
 }
 
-func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
+
+
+func getWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
   // Choose the context to use for function calls.
 	ctx := context.Background()
 
-	wasmRuntime := createWasmRuntime(ctx)
+	wasmRuntime := getWasmRuntime(ctx)
 	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
@@ -61,10 +61,6 @@ func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 	}
 	return wasmRuntime, wasmModule, ctx
 }
-
-// getTheLastWorkerFromThePool
-// removeTheLastWorkerFromThePool
-// addNewWorkerToThePool
 
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
@@ -78,28 +74,16 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 			return
 		}
 
-
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
 
-		// 👋 get Wasm Module Instance (and Wasm runtime)
-		//wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
-		// defer must always be in the main code (to avoid go routine panic)
-		//defer wasmRuntime.Close(ctx)
 
-    // TODO:
-    // 1- take a worker, use it
-    // 2- run a go routine to create a new worker and add it to the pool
-    // 3- remove the used worker from the pool
-    min := 0
-    max := len(wasmWorkersPool)
-    currentIndex := rand.Intn(max - min) + min
-    wasmWorker := wasmWorkersPool[currentIndex]
-    wasmRuntime := wasmWorker.wasmRuntime
-    wasmModule := wasmWorker.wasmModule
-    ctx := wasmWorker.ctx
-    defer wasmRuntime.Close(ctx)
+		// 👋 get Wasm Module Instance (and Wasm runtime)
+		wasmRuntime, wasmModule, ctx := getWasmRuntimeAndModuleInstances(wasmFile)
+		// defer must always be in the main code (to avoid go routine panic)
+		defer wasmRuntime.Close(ctx)
+
 
 		// get the function
 		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
@@ -149,24 +133,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 	return fn
 }
 
-//
-type WasmWorker struct {
-  wasmRuntime wazero.Runtime
-  wasmModule api.Module
-  ctx context.Context
-}
-
-var wasmWorkersPool []WasmWorker
-
 func Serve(httpPort string, wasmFile []byte) {
-  for i := 1; i <= 20; i++ {
-    wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
-    wasmWorkersPool = append(wasmWorkersPool, WasmWorker{
-      wasmRuntime: wasmRuntime,
-      wasmModule: wasmModule,
-      ctx: ctx,
-    })
-  }
 
 	r := gin.Default()
 	r.POST("/", callPostWasmFunctionHandler(wasmFile))

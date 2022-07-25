@@ -1,5 +1,4 @@
-package capsulecli
-
+package capsulecli2
 
 import (
 	"context"
