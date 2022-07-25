@@ -1,4 +1,4 @@
-package capsulehttpoldpool
+package capsulehttnewpool
 
 import (
 	"context"
@@ -104,6 +104,9 @@ func callPostWasmFunctionHandler() gin.HandlerFunc {
 
 	return fn
 }
+
+
+
 
 func Serve(httpPort string, wasmFile []byte) {
 
