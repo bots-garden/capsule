@@ -26,7 +26,7 @@ curl -v -X POST \
 */
 
 func Handle(param string) string {
-	//helpers.Log("1️⃣ parameter is: " + param)
+	helpers.Log("1️⃣ parameter is: " + param)
 	ret := "👋 you sent me this: " + param
 	return ret
 }
