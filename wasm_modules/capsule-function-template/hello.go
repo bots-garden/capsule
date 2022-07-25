@@ -6,8 +6,9 @@ import (
 
 // main is required.
 func main() {
+
+	//helpers.Log("🚀 ignition...")
   /*
-	helpers.Log("🚀 ignition...")
 	hostInformation := helpers.GetHostInformation()
 	helpers.Log("👋 message from the wasm module: " + hostInformation)
 
