@@ -4,6 +4,7 @@ package hf
 import "strings"
 
 //export hostHttp
+//go:linkname hostHttp
 func hostHttp(urlOffset, urlByteCount, methodOffSet, methodByteCount, headersOffSet, headersMethodByteCount, bodyOffset, bodyByteCount uint32, retBuffPtrPos **byte, retBuffSize *int)
 
 func Http(url, method string, headers []string, body string) string {
