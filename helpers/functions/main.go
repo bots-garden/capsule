@@ -7,6 +7,7 @@ import (
 )
 
 //export allocateBuffer
+//go:linkname allocateBuffer
 func allocateBuffer(size uint32) *byte {
 	// Allocate the in-Wasm memory region and returns its pointer to hosts.
 	// The region is supposed to store random strings generated in hosts,
@@ -16,12 +17,15 @@ func allocateBuffer(size uint32) *byte {
 }
 
 //export hostLogString
+//go:linkname hostLogString
 func hostLogString(ptrPos, size uint32)
 
 //export hostGetHostInformation
+//go:linkname hostGetHostInformation
 func hostGetHostInformation(retBuffPtrPos **byte, retBuffSize *int)
 
 //export hostPing
+//go:linkname hostPing
 func hostPing(ptrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
 
 /*
@@ -108,15 +112,13 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 // TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
 
 func GetStringResult(bufPtr *byte, bufSize int) string {
-  result := *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+	result := *(*string)(unsafe.Pointer(&reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(bufPtr)),
 		Len:  uintptr(bufSize),
 		Cap:  uintptr(bufSize),
 	}))
-  return result
+	return result
 }
-
-
 
 var handleFunction func(string) string
 
@@ -126,9 +128,10 @@ func SetHandle(function func(string) string) {
 
 /*
 
-*/
+ */
 // TODO add detailed comments
 //export callHandle
+//go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringParameter := GetStringParam(strPtrPos, size)
 
@@ -138,7 +141,6 @@ func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 
 	return PackPtrPositionAndSize(pos, length)
 }
-
 
 /* Function Samples
 //export helloWorld
