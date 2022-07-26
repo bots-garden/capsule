@@ -2,6 +2,10 @@ package hostfunctions
 
 import (
 	"context"
+	"fmt"
+	"strings"
+
+	//"github.com/go-resty/resty/v2"
 	//"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
 )
@@ -18,8 +22,11 @@ func Http(ctx context.Context, module api.Module,
 	methodStr := ReadStringFromMemory(ctx, module, methodOffSet, methodByteCount)
 
 	// get headers string from the wasm module function (from memory)
-	// headers => strings.Join(headers[:], "|")
+	// 🖐 headers => Accept:application/json|Content-Type: text/html; charset=UTF-8
 	headersStr := ReadStringFromMemory(ctx, module, headersOffSet, headersByteCount)
+
+    headersSlice := strings.Split(headersStr, "|") //TODO: choose another separator: °
+    fmt.Println(headersSlice)
 
 	// get body string from the wasm module function (from memory)
 	bodyStr := ReadStringFromMemory(ctx, module, bodyOffSet, bodyByteCount)
