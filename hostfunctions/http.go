@@ -42,7 +42,7 @@ func Http(ctx context.Context, module api.Module,
 
 	stringMessageFromHost := "🌍 http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
   // 👋 Implementation: Start
-
+  
 
   // 👋 Implementation: End
 
