@@ -65,12 +65,12 @@ func Http(ctx context.Context, module api.Module,
 		stringMessageFromHost = "🌍 (POST)http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
 
 	default:
-		stringMessageFromHost = CreateStringError("🔴 not implemented: 🚧 wip", 999)
+		stringMessageFromHost = CreateStringError("🔴" + methodStr +" is not yet implemented: 🚧 wip", 0)
 	}
 	// 👋 Implementation: End
     //=========================================================================
 
-    
+
 	// write the new string stringMessageFromHost to the "shared memory"
 	// (host write string result of the funcyion to memory)
 	WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
