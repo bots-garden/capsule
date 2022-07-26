@@ -8,8 +8,8 @@ import (
 )
 
 func Http(ctx context.Context, module api.Module,
-  urlOffset, urlByteCount, methodOffSet, methodByteCount, headersOffSet, headersByteCount, bodyOffSet, bodyByteCount,
-  retBufPtrPos, retBufSize uint32) {
+	urlOffset, urlByteCount, methodOffSet, methodByteCount, headersOffSet, headersByteCount, bodyOffSet, bodyByteCount,
+	retBufPtrPos, retBufSize uint32) {
 	// get url string from the wasm module function (from memory)
 	urlBuf, ok := module.Memory().Read(ctx, urlOffset, urlByteCount)
 	if !ok {
@@ -31,9 +31,9 @@ func Http(ctx context.Context, module api.Module,
 	}
 	headersStr := string(headersBuf)
 
-  // headers => strings.Join(headers[:], "|")
+	// headers => strings.Join(headers[:], "|")
 
-  // get body string from the wasm module function (from memory)
+	// get body string from the wasm module function (from memory)
 	bodyBuf, ok := module.Memory().Read(ctx, bodyOffSet, bodyByteCount)
 	if !ok {
 		log.Panicf("🟥 Memory.Read(%d, %d) out of range", bodyOffSet, bodyByteCount)
@@ -41,10 +41,9 @@ func Http(ctx context.Context, module api.Module,
 	bodyStr := string(bodyBuf)
 
 	stringMessageFromHost := "🌍 http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
-  // 👋 Implementation: Start
-  
+	// 👋 Implementation: Start
 
-  // 👋 Implementation: End
+	// 👋 Implementation: End
 
 	// write the new string to the "shared memory"
 	lengthOfTheMessage := len(stringMessageFromHost)

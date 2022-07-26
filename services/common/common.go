@@ -20,7 +20,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostLogString", hostfunctions.LogString).
 		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
 		ExportFunction("hostPing", hostfunctions.Ping).
-    ExportFunction("hostHttp", hostfunctions.Http).
+		ExportFunction("hostHttp", hostfunctions.Http).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {

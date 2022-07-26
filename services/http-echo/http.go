@@ -1,14 +1,13 @@
 package capsulehttpecho
 
 import (
-
 	"log"
 
+	"github.com/labstack/echo/v4"
 	"net/http"
-  "github.com/labstack/echo/v4"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-  capsulecommon "github.com/bots-garden/capsule/services/common"
+	capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -16,8 +15,8 @@ type JsonParameter struct {
 }
 
 type JsonResult struct {
-  Value string `json:"value"`
-  Error string `json:"error"`
+	Value string `json:"value"`
+	Error string `json:"error"`
 }
 
 /*
@@ -27,24 +26,21 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-
 func Serve(httpPort string, wasmFile []byte) {
 
 	e := echo.New()
 
-  e.POST("/", func(c echo.Context) error {
-    jsonParameter :=  new(JsonParameter)
+	e.POST("/", func(c echo.Context) error {
+		jsonParameter := new(JsonParameter)
 		if err := c.Bind(jsonParameter); err != nil {
 			return err
 		}
 
-    jsonResult := new(JsonResult)
+		jsonResult := new(JsonResult)
 
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
-
-
 
 		wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
@@ -88,21 +84,21 @@ func Serve(httpPort string, wasmFile []byte) {
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-      jsonResult.Value = ""
-      jsonResult.Error = "out of range of memory size"
-      return c.JSON(http.StatusConflict, jsonResult)
+			jsonResult.Value = ""
+			jsonResult.Error = "out of range of memory size"
+			return c.JSON(http.StatusConflict, jsonResult)
 		} else {
-      jsonResult.Value = string(bytes)
-      jsonResult.Error = ""
+			jsonResult.Value = string(bytes)
+			jsonResult.Error = ""
 			return c.JSON(http.StatusOK, jsonResult)
 		}
 
-  })
-  //https://echo.labstack.com/guide/customization/
-  e.HideBanner = true
-  e.Start(":" + httpPort)
+	})
+	//https://echo.labstack.com/guide/customization/
+	e.HideBanner = true
+	e.Start(":" + httpPort)
 
-  //e.Logger.Info(e.Start(":" + httpPort))
+	//e.Logger.Info(e.Start(":" + httpPort))
 	//e.Logger.Fatal(e.Start(":" + httpPort))
 
 }

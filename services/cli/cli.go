@@ -5,8 +5,7 @@ import (
 	"log"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-  capsulecommon "github.com/bots-garden/capsule/services/common"
-
+	capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
 // Pass a string param and get a string result
@@ -15,11 +14,10 @@ func Execute(stringParameter string, wasmFile []byte) {
 	// Choose the context to use for function calls.
 	//ctx := context.Background()
 
-  // 👋 get Wasm Module Instance (and Wasm runtime)
-  wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
-  // defer must always be in the main code (to avoid go routine panic)
-  defer wasmRuntime.Close(ctx)
-
+	// 👋 get Wasm Module Instance (and Wasm runtime)
+	wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
+	// defer must always be in the main code (to avoid go routine panic)
+	defer wasmRuntime.Close(ctx)
 
 	// Parameter "setup" / stringParameter comes from argument
 	stringParameterLength := uint64(len(stringParameter))

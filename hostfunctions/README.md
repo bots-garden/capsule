@@ -5,6 +5,7 @@
 In `hostfunctions` directory, create a file `function_name.go` (use this package: `package hostfunctions`)
 
 > Example: `http.go`
+
 ```golang
 package hostfunctions
 
@@ -23,6 +24,7 @@ func Http(ctx context.Context, module api.Module, urlOffset, urlByteCount, metho
 In `services/common/common.go` add the host funtion to the runtime:
 
 > Example: `common.go`
+
 ```golang
 // 🏠 Add host functions
 _, errEnv := wasmRuntime.NewModuleBuilder("env").
@@ -36,6 +38,7 @@ _, errEnv := wasmRuntime.NewModuleBuilder("env").
 In `helpers/functions` directory, create a file `function_name.go` (use this package: `package helpers`
 
 > Example: `http.go`
+
 ```golang
 // host functions
 package hf

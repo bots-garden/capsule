@@ -3,12 +3,11 @@ package capsulehttp
 import (
 	"log"
 
+	"github.com/gin-gonic/gin"
 	"net/http"
-  "github.com/gin-gonic/gin"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-  capsulecommon "github.com/bots-garden/capsule/services/common"
-
+	capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -21,7 +20,6 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
-
 
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
@@ -38,7 +36,6 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
-
 
 		wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)

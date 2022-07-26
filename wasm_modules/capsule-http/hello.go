@@ -18,7 +18,7 @@ curl -v -X POST \
 
 func Handle(param string) string {
 	hf.Log("1️⃣ parameter is: " + param)
-	ret := hf.Http("http://google.com", "GET", []string{"one","two"}, "tada")
+	ret := hf.Http("http://google.com", "GET", []string{"one", "two"}, "tada")
 	return ret
 }
 

@@ -1,6 +1,11 @@
 {
   "image": "k33g/capsule:0.0.0",
-  "forwardPorts": [8080,3000,5000,7070],
+  "forwardPorts": [
+    8080,
+    3000,
+    5000,
+    7070
+  ],
   "postCreateCommand": "echo 'hello'",
   "customizations": {
     // Configure properties specific to VS Code.
@@ -9,7 +14,7 @@
       "extensions": [
         "golang.go",
         "pkief.material-icon-theme",
-        "aaron-bond.better-comments",
+        "aaron-bond.better-comments"
       ]
     }
   }
