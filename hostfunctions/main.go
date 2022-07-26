@@ -21,7 +21,6 @@ func LogString(ctx context.Context, module api.Module, offset, byteCount uint32)
 
 // return information about the host
 func GetHostInformation(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
-
 	// TODO: return something more interesting
 	// TODO: cpu usage, memory,...
 	message := "💊 Capsule [wasm launcher] v0.0.0"
@@ -40,7 +39,6 @@ func GetHostInformation(ctx context.Context, module api.Module, retBuffPtrPos, r
 
 	// add the message to the memory of the module
 	module.Memory().Write(ctx, offset, []byte(message))
-
 }
 
 func Ping(ctx context.Context, module api.Module, offset, byteCount, retBuffPtrPos, retBuffSize uint32) {

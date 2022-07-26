@@ -3,6 +3,8 @@ package hostfunctions
 import (
 	"context"
 	"log"
+	"strconv"
+
 	"github.com/tetratelabs/wazero/api"
 )
 
@@ -36,4 +38,11 @@ func ReadStringFromMemory(ctx context.Context, module api.Module, contentOffset,
 	}
 	contentStr := string(contentBuff)
   return contentStr
+}
+
+func CreateStringError(message string, code int) string {
+    return "[ERR]["+strconv.Itoa(code)+"]:"+message
+    // "[ERR][200]:hello world"
+    // message: e.split("]:")[1]
+    // code: e.split("]")[1].split("[")[1]
 }

@@ -3,6 +3,7 @@ package hf
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 )
 
@@ -22,21 +23,19 @@ func Http(url, method string, headers []string, body string) (string, error) {
 	var buffPtr *byte
 	var buffSize int
 
-  // call the host function
+	// call the host function
 	hostHttp(urlStrPos, urlStrSize, methodStrPos, methodStrSize, headersStrPos, headersStrSize, bodyStrPos, bodyStrSize, &buffPtr, &buffSize)
 
-  var resultStr = ""
-  var err error
+	var resultStr = ""
+	var err error
 	valueStr := GetStringResult(buffPtr, buffSize)
-  //TODO: change management error (code etc...)
-  if(strings.HasPrefix(valueStr, "[ERR]")) {
 
-    errorMessage := strings.Split(valueStr,"[ERR]")[1]
-
-    err = errors.New(errorMessage)
-  } else {
-    resultStr = valueStr
-  }
-
+    // check the return value
+	if IsStringError(valueStr) {
+		errorMessage, errorCode := GetStringErrorInfo(valueStr)
+		err = errors.New(errorMessage+"("+strconv.Itoa(errorCode)+")")
+	} else {
+		resultStr = valueStr
+	}
 	return resultStr, err
 }
