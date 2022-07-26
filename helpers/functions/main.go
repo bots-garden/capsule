@@ -37,15 +37,15 @@ func Ping(message string) string {
 
 	strPtrPos, size := GetStringPtrPositionAndSize(message)
 
-	var bufPtr *byte
-	var bufSize int
+	var buffPtr *byte
+	var buffSize int
 
-	hostPing(strPtrPos, size, &bufPtr, &bufSize)
+	hostPing(strPtrPos, size, &buffPtr, &buffSize)
 
 	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(bufPtr)),
-		Len:  uintptr(bufSize),
-		Cap:  uintptr(bufSize),
+		Data: uintptr(unsafe.Pointer(buffPtr)),
+		Len:  uintptr(buffSize),
+		Cap:  uintptr(buffSize),
 	}))
 
 }
@@ -55,14 +55,14 @@ Call host function: hostGetHostInformation
 Get a string with the information about the host
 */
 func GetHostInformation() string {
-	var bufPtr *byte
-	var bufSize int
-	hostGetHostInformation(&bufPtr, &bufSize)
+	var buffPtr *byte
+	var buffSize int
+	hostGetHostInformation(&buffPtr, &buffSize)
 
 	return *(*string)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(bufPtr)),
-		Len:  uintptr(bufSize),
-		Cap:  uintptr(bufSize),
+		Data: uintptr(unsafe.Pointer(buffPtr)),
+		Len:  uintptr(buffSize),
+		Cap:  uintptr(buffSize),
 	}))
 }
 
@@ -80,10 +80,10 @@ It returns a pointer and size pair for the given string
 in a way compatible with WebAssembly numeric types.
 */
 func GetStringPtrPositionAndSize(text string) (stringPointerPosition uint32, stringSize uint32) {
-	buf := []byte(text)
-	ptr := &buf[0]
+	buff := []byte(text)
+	ptr := &buff[0]
 	unsafePtr := uintptr(unsafe.Pointer(ptr))
-	return uint32(unsafePtr), uint32(len(buf))
+	return uint32(unsafePtr), uint32(len(buff))
 }
 
 /*
@@ -111,11 +111,11 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 // TODO: Try to do the same thing with alloc 🤔
 // TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
 
-func GetStringResult(bufPtr *byte, bufSize int) string {
+func GetStringResult(buffPtr *byte, buffSize int) string {
 	result := *(*string)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(bufPtr)),
-		Len:  uintptr(bufSize),
-		Cap:  uintptr(bufSize),
+		Data: uintptr(unsafe.Pointer(buffPtr)),
+		Len:  uintptr(buffSize),
+		Cap:  uintptr(buffSize),
 	}))
 	return result
 }

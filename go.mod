@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/tetratelabs/wazero v0.0.0-20220722080120-866fac2e969c
 )
