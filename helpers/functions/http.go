@@ -28,6 +28,7 @@ func Http(url, method string, headers []string, body string) (string, error) {
   var resultStr = ""
   var err error
 	valueStr := GetStringResult(buffPtr, buffSize)
+  //TODO: change management error (code etc...)
   if(strings.HasPrefix(valueStr, "[ERR]")) {
 
     errorMessage := strings.Split(valueStr,"[ERR]")[1]
