@@ -1,3 +1,4 @@
+// wasm module
 package main
 
 import (
@@ -9,14 +10,6 @@ func main() {
 	hf.SetHandle(Handle)
 }
 
-/*
-curl -v -X POST \
-  http://localhost:7070 \
-  -H 'content-type: application/json' \
-  -d '{"message": "Golang 💚 wasm"}'
-*/
-
-//TODO: handle error return
 func Handle(param string) string {
 
 	hf.Log("1️⃣ parameter is: " + param)
@@ -30,7 +23,7 @@ func Handle(param string) string {
         hf.Log("1️⃣ From module: " + ret)
     }
 
-	ret2, err2 := hf.Http("https://httpbin.nowhere/get", "GET", headers, "tada")
+	ret2, err2 := hf.Http("https://httpbin.nowhere/get", "GET", headers, "🎉")
 	if err2 != nil {
 		hf.Log("😡 This is an error:" + err2.Error())
 	} else {
@@ -41,3 +34,9 @@ func Handle(param string) string {
 }
 
 // ? HandleJson, Handle<>, ...
+/*
+curl -v -X POST \
+  http://localhost:7070 \
+  -H 'content-type: application/json' \
+  -d '{"message": "Golang 💚 wasm"}'
+*/
