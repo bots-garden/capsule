@@ -4,7 +4,6 @@ package hf
 import (
 	"errors"
 	"strconv"
-	"strings"
 )
 
 //export hostHttp
@@ -17,12 +16,18 @@ func Http(url, method string, headers map[string]string, body string) (string, e
 	urlStrPos, urlStrSize := GetStringPtrPositionAndSize(url)
 	methodStrPos, methodStrSize := GetStringPtrPositionAndSize(method)
 
-    var headersStringSlice []string
-    for field, value := range headers {
-        headersStringSlice = append(headersStringSlice, field+":"+value)
-    }
+    /*
+        headers := map[string]string{"Accept": "application/json", "Content-Type": " text/html; charset=UTF-8"}
 
-    headersStrPos, headersStrSize := GetStringPtrPositionAndSize(strings.Join(headersStringSlice[:], "|"))
+        headersStringSlice => ["Accept:application/json", ”Content-Type:text/html; charset=UTF-8"]
+
+        headerString => "Accept:application/json|Content-Type:text/html; charset=UTF-8"
+    */
+
+    headersStringSlice := CreateSliceFromMap(headers)
+    headerString := CreateStringFromSlice(headersStringSlice, "|")
+
+    headersStrPos, headersStrSize := GetStringPtrPositionAndSize(headerString)
 
     bodyStrPos, bodyStrSize := GetStringPtrPositionAndSize(body)
 
@@ -30,7 +35,8 @@ func Http(url, method string, headers map[string]string, body string) (string, e
 	var buffPtr *byte
 	var buffSize int
 
-	// call the host function
+	// 🖐 call the host function
+    // buffPtr, buffSize allows to retrieve the result of the function call
 	hostHttp(urlStrPos, urlStrSize, methodStrPos, methodStrSize, headersStrPos, headersStrSize, bodyStrPos, bodyStrSize, &buffPtr, &buffSize)
 
 	var resultStr = ""
@@ -40,7 +46,12 @@ func Http(url, method string, headers map[string]string, body string) (string, e
     // check the return value
 	if IsStringError(valueStr) {
 		errorMessage, errorCode := GetStringErrorInfo(valueStr)
-		err = errors.New(errorMessage+"("+strconv.Itoa(errorCode)+")")
+        if errorCode == 0 {
+            err = errors.New(errorMessage)
+        } else {
+            err = errors.New(errorMessage+"("+strconv.Itoa(errorCode)+")")
+        }
+
 	} else {
 		resultStr = valueStr
 	}
