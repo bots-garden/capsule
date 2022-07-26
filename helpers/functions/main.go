@@ -1,4 +1,5 @@
-package helpers
+// host functions
+package hf
 
 import (
 	"reflect"
@@ -105,6 +106,16 @@ func GetStringParam(ptrPos uint32, size uint32) string {
 
 // TODO: Try to do the same thing with alloc 🤔
 // TODO: see https://www.wasm.builders/k33g_org/an-essay-on-the-bi-directional-exchange-of-strings-between-the-wasm-module-with-tinygo-and-nodejs-with-wasi-support-3i9h
+
+func GetStringResult(bufPtr *byte, bufSize int) string {
+  result := *(*string)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(bufPtr)),
+		Len:  uintptr(bufSize),
+		Cap:  uintptr(bufSize),
+	}))
+  return result
+}
+
 
 
 var handleFunction func(string) string

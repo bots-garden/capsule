@@ -6,15 +6,6 @@ import (
 
 // main is required.
 func main() {
-
-  /*
-	hf.Log("🚀 ignition...")
-	hostInformation := hf.GetHostInformation()
-	hf.Log("👋 message from the wasm module: " + hostInformation)
-
-	hf.Log(helpers.Ping("✊ knock knock from the wasm module"))
-  */
-
 	hf.SetHandle(Handle)
 }
 
@@ -27,7 +18,7 @@ curl -v -X POST \
 
 func Handle(param string) string {
 	hf.Log("1️⃣ parameter is: " + param)
-	ret := "👋 you sent me this: " + param
+	ret := hf.Http("http://google.com", "GET", []string{"one","two"}, "tada")
 	return ret
 }
 

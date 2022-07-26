@@ -1,56 +1,13 @@
 package capsulecli
 
-
 import (
-	"context"
 	"fmt"
 	"log"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-	"github.com/bots-garden/capsule/host_functions"
-	"github.com/tetratelabs/wazero"
-	"github.com/tetratelabs/wazero/api"
-	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
+  capsulecommon "github.com/bots-garden/capsule/services/common"
+
 )
-
-// if it works, try with a pool of wasmRuntime or WasmModule
-func getWasmRuntime(ctx context.Context) wazero.Runtime {
-	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
-
-	// 🏠 Add host functions
-	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", host_functions.LogString).
-		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
-		ExportFunction("hostPing", host_functions.Ping).
-		Instantiate(ctx, wasmRuntime)
-
-	if errEnv != nil {
-		log.Panicln("🔴 Error with env module and host function(s):", errEnv)
-	}
-
-	_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
-	if errInstantiate != nil {
-		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
-	}
-
-	return wasmRuntime
-}
-
-
-func getWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
-  // Choose the context to use for function calls.
-	ctx := context.Background()
-
-	wasmRuntime := getWasmRuntime(ctx)
-	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
-
-	// 🥚 Instantiate the wasm module (from the wasm file)
-	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
-	if errInstanceWasmModule != nil {
-		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
-	}
-	return wasmRuntime, wasmModule, ctx
-}
 
 // Pass a string param and get a string result
 func Execute(stringParameter string, wasmFile []byte) {
@@ -59,7 +16,7 @@ func Execute(stringParameter string, wasmFile []byte) {
 	//ctx := context.Background()
 
   // 👋 get Wasm Module Instance (and Wasm runtime)
-  wasmRuntime, wasmModule, ctx := getWasmRuntimeAndModuleInstances(wasmFile)
+  wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
   // defer must always be in the main code (to avoid go routine panic)
   defer wasmRuntime.Close(ctx)
 

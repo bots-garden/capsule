@@ -1,4 +1,4 @@
-package host_functions
+package hostfunctions
 
 import (
 	"context"
@@ -52,19 +52,18 @@ func Ping(ctx context.Context, module api.Module, offset, byteCount, retBufPtrPo
 	  }
 	stringMessageFromFunction := string(buf)
 	stringMessageFromHost :=  "🏓 pong: " + stringMessageFromFunction
-  
+
 	// write the new string to the "shared memory"
 	lengthOfTheMessage := len(stringMessageFromHost)
 	results, err := module.ExportedFunction("allocateBuffer").Call(ctx, uint64(lengthOfTheMessage))
 	if err != nil {
 	  log.Panicln(err)
 	}
-  
+
 	retOffset := uint32(results[0])
 	module.Memory().WriteUint32Le(ctx, retBufPtrPos, retOffset)
 	module.Memory().WriteUint32Le(ctx, retBufSize, uint32(lengthOfTheMessage))
-  
+
 	// add the message to the memory of the module
 	module.Memory().Write(ctx, retOffset, []byte(stringMessageFromHost))
   }
-  

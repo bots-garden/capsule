@@ -59,7 +59,7 @@ func main() {
 	}
 
 	switch what := flags.mode; what {
-	case "http":
+	case "http-gin":
     capsulehttp.Serve(flags.httpPort, wasmFile)
 
   case "http-echo":

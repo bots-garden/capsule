@@ -1,23 +1,18 @@
 package capsulehttpecho
 
 import (
-	"context"
+
 	"log"
 
-	//"math/rand"
 	"net/http"
   "github.com/labstack/echo/v4"
 
 	helpers "github.com/bots-garden/capsule/helpers/tools"
-	"github.com/bots-garden/capsule/host_functions"
-
-	"github.com/tetratelabs/wazero"
-	"github.com/tetratelabs/wazero/api"
-	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
+  capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
-	Message string `json:"message"` // change the name ? 🤔
+	Message string `json:"message"` // change the na
 }
 
 type JsonResult struct {
@@ -31,43 +26,7 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
-func createWasmRuntime(ctx context.Context) wazero.Runtime {
 
-	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
-
-	// 🏠 Add host functions
-	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", host_functions.LogString).
-		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
-		ExportFunction("hostPing", host_functions.Ping).
-		Instantiate(ctx, wasmRuntime)
-
-	if errEnv != nil {
-		log.Panicln("🔴 Error with env module and host function(s):", errEnv)
-	}
-
-	_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
-	if errInstantiate != nil {
-		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
-	}
-
-	return wasmRuntime
-}
-
-func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
-	// Choose the context to use for function calls.
-	ctx := context.Background()
-
-	wasmRuntime := createWasmRuntime(ctx)
-	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
-
-	// 🥚 Instantiate the wasm module (from the wasm file)
-	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
-	if errInstanceWasmModule != nil {
-		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
-	}
-	return wasmRuntime, wasmModule, ctx
-}
 
 func Serve(httpPort string, wasmFile []byte) {
 
@@ -85,7 +44,9 @@ func Serve(httpPort string, wasmFile []byte) {
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
 
-		wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
+
+
+		wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		// get the function
