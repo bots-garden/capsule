@@ -2,8 +2,7 @@ package main
 
 import (
 	"errors"
-
-	hf "github.com/bots-garden/capsule/helpers/functions"
+	hf "github.com/bots-garden/capsule/wasmhostfunctions"
 )
 
 // main is required.
