@@ -57,6 +57,11 @@ func main() {
 		log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
 	}
 
+	//var envVariables = make(map[string]string)
+	// https://gobyexample.com/environment-variables
+	// just provide the reading access with: os.Getenv("")
+	// provide some other env var for httpport wasmurl?
+
 	switch what := flags.mode; what {
 	case "http-gin":
 		capsulehttp.Serve(flags.httpPort, wasmFile)

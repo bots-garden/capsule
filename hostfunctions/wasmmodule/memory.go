@@ -21,11 +21,11 @@ It returns a pointer and size pair for the given string
 in a way compatible with WebAssembly numeric types.
 */
 func GetStringPtrPositionAndSize(text string) (stringPointerPosition uint32, stringSize uint32) {
-    if text=="" {
-        text="empty"
-        //!: strange trick to avoid error when passing empty body string to hf.Http:
-        //!: hf.Http("https://httpbin.org/get", "GET", headers, "")
-    }
+	if text == "" {
+		text = "empty"
+		//!: strange trick to avoid error when passing empty body string to hf.Http:
+		//!: hf.Http("https://httpbin.org/get", "GET", headers, "")
+	}
 	buff := []byte(text)
 	ptr := &buff[0]
 	unsafePtr := uintptr(unsafe.Pointer(ptr))
@@ -39,7 +39,6 @@ ex: position of a string pointer and the size(length) of the string
 func PackPtrPositionAndSize(ptrPos uint32, size uint32) (packedValue uint64) {
 	return (uint64(ptrPos) << uint64(32)) | uint64(size)
 }
-
 
 /*
 GetStringParam returns a string

@@ -2,7 +2,7 @@ package main
 
 import (
 	//"errors"
-	hf "github.com/bots-garden/capsule/wasmhostfunctions"
+	"github.com/bots-garden/capsule/hostfunctions/wasmmodule"
 )
 
 // main is required.
@@ -24,23 +24,31 @@ curl -v -X POST \
 */
 
 func Handle(param string) (string, error) {
+
+	message, err := hf.GetEnv("MESSAGE")
+	if err != nil {
+		hf.Log(err.Error())
+	} else {
+		hf.Log("MESSAGE=" + message)
+	}
+
 	hf.Log("1️⃣ parameter is: " + param)
 
-    txt, err := hf.ReadFile("about.txt")
-    if err != nil {
-        hf.Log(err.Error())
-    }
-    hf.Log(txt)
+	txt, err := hf.ReadFile("about.txt")
+	if err != nil {
+		hf.Log(err.Error())
+	}
+	hf.Log(txt)
 
-    newFile, err := hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
-    if err != nil {
-        hf.Log(err.Error())
-    }
-    hf.Log(newFile)
+	newFile, err := hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
+	if err != nil {
+		hf.Log(err.Error())
+	}
+	hf.Log(newFile)
 
 	ret := "👋 you sent me this: " + param
 	//return ret, errors.New("😡 ouch")
-    return ret, nil
+	return ret, nil
 }
 
 // ? HandleJson, Handle<>, ...
