@@ -1,9 +1,11 @@
+// host functions
 package hf
 
 import (
 	"strconv"
 	"strings"
 )
+
 
 func IsStringError(str string) bool {
 	return strings.HasPrefix(str, "[ERR]")

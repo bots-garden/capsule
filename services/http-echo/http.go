@@ -19,6 +19,10 @@ type JsonResult struct {
 	Error string `json:"error"`
 }
 
+//TODO: return more things from JsonResult (eg type of the response)
+//! I should do this from the Handle function
+//! I need to have several Handle function, or the handle function returns an interface{} (or a result object)
+
 /*
 curl -v -X POST \
   http://localhost:7070 \

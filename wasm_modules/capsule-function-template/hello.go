@@ -7,13 +7,10 @@ import (
 // main is required.
 func main() {
 
-	/*
-		hf.Log("🚀 ignition...")
-		hostInformation := hf.GetHostInformation()
-		hf.Log("👋 message from the wasm module: " + hostInformation)
-
-		hf.Log(helpers.Ping("✊ knock knock from the wasm module"))
-	*/
+	hf.Log("🚀 ignition...")
+	hostInformation := hf.GetHostInformation()
+	hf.Log("👋 message from the wasm module: " + hostInformation)
+	hf.Log(hf.Ping("✊ knock knock from the wasm module"))
 
 	hf.SetHandle(Handle)
 }
