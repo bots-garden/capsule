@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
@@ -29,13 +28,13 @@ func Http(ctx context.Context, module api.Module,
     //TODO: choose another separator: °
 	headersSlice := CreateSliceFromString(headersStr, "|")
 
-	fmt.Println(headersSlice)
+	//fmt.Println(headersSlice)
 
     headersMap := CreateMapFromSlice(headersSlice, ":")
 
-    fmt.Println(headersMap)
-    fmt.Println(headersMap["Accept"])
-    fmt.Println(headersMap["Content-Type"])
+    //fmt.Println(headersMap)
+    //fmt.Println(headersMap["Accept"])
+    //fmt.Println(headersMap["Content-Type"])
 
 	// get body string from the wasm module function (from memory)
     bodyStr := ReadStringFromMemory(ctx, module, bodyOffSet, bodyByteCount)

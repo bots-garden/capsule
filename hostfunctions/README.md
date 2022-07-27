@@ -2,6 +2,8 @@
 
 ## Add an host function
 
+> this is the function executed by the host
+
 In `hostfunctions` directory, create a file `function_name.go` (use this package: `package hostfunctions`)
 
 > Example: `http.go`
@@ -35,7 +37,7 @@ _, errEnv := wasmRuntime.NewModuleBuilder("env").
   Instantiate(ctx, wasmRuntime)
 ```
 
-In `helpers/functions` directory, create a file `function_name.go` (use this package: `package helpers`
+In `wasmhostfunctions` directory, create a file `function_name.go` (use this package: `package helpers`
 
 > Example: `http.go`
 
