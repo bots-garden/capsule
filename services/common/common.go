@@ -2,9 +2,8 @@ package capsule
 
 import (
 	"context"
+	"github.com/bots-garden/capsule/hostfunctions/host"
 	"log"
-
-	"github.com/bots-garden/capsule/hostfunctions"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
@@ -19,7 +18,6 @@ func GetPackedPtrPositionAndSize(result []uint64) (ptrPos uint32, size uint32) {
 	return uint32(result[0] >> 32), uint32(result[0])
 }
 
-
 func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
 	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
@@ -30,8 +28,8 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
 		ExportFunction("hostPing", hostfunctions.Ping).
 		ExportFunction("hostHttp", hostfunctions.Http).
-        ExportFunction("hostReadFile", hostfunctions.ReadFile).
-        ExportFunction("hostWriteFile", hostfunctions.WriteFile).
+		ExportFunction("hostReadFile", hostfunctions.ReadFile).
+		ExportFunction("hostWriteFile", hostfunctions.WriteFile).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {

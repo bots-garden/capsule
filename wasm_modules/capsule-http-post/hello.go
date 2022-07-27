@@ -2,7 +2,7 @@
 package main
 
 import (
-	hf "github.com/bots-garden/capsule/wasmhostfunctions"
+	"github.com/bots-garden/capsule/hostfunctions/wasmmodule"
 )
 
 // main is required.
@@ -20,8 +20,8 @@ func Handle(param string) (string, error) {
 	if err != nil {
 		hf.Log("😡 error:" + err.Error())
 	} else {
-        hf.Log("💊👋 Return value from the module: " + ret)
-    }
+		hf.Log("💊👋 Return value from the module: " + ret)
+	}
 
 	return ret, err
 }

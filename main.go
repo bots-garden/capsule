@@ -15,7 +15,6 @@ type CapsuleFlags struct {
 	param    string
 	wasm     string
 	httpPort string
-
 }
 
 func main() {
@@ -58,10 +57,10 @@ func main() {
 		log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
 	}
 
-    var envVariables = make(map[string]string)
-    // https://gobyexample.com/environment-variables
-    // just provide the reading access with: os.Getenv("")
-    // provide some other env var for httpport wasmurl?
+	//var envVariables = make(map[string]string)
+	// https://gobyexample.com/environment-variables
+	// just provide the reading access with: os.Getenv("")
+	// provide some other env var for httpport wasmurl?
 
 	switch what := flags.mode; what {
 	case "http-gin":
@@ -70,7 +69,7 @@ func main() {
 	case "http-echo":
 		capsulehttpecho.Serve(flags.httpPort, wasmFile)
 
-    case "cli":
+	case "cli":
 		capsulecli.Execute(flags.param, wasmFile)
 
 	default:
