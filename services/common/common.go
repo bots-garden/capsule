@@ -1,4 +1,4 @@
-package capsulecommon
+package capsule
 
 import (
 	"context"

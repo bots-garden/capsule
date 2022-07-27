@@ -39,7 +39,7 @@ func Http(ctx context.Context, module api.Module,
 
 	// get body string from the wasm module function (from memory)
     bodyStr := ReadStringFromMemory(ctx, module, bodyOffSet, bodyByteCount)
-    fmt.Println("==>", bodyStr)
+    //fmt.Println("==>", bodyStr)
 
     //=========================================================================
 	// 👋 Implementation: Start
@@ -62,7 +62,16 @@ func Http(ctx context.Context, module api.Module,
         }
 
 	case "POST":
-		stringMessageFromHost = "🌍 (POST)http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
+
+        resp, err := client.R().EnableTrace().SetBody(bodyStr).Post(urlStr)
+        if err != nil {
+            stringMessageFromHost = CreateStringError(err.Error(), 0)
+            // if code 0 don't display code in the error message
+        } else {
+            stringMessageFromHost = resp.String()
+        }
+
+		//stringMessageFromHost = "🌍 (POST)http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
 
 	default:
 		stringMessageFromHost = CreateStringError("🔴" + methodStr +" is not yet implemented: 🚧 wip", 0)

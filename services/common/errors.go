@@ -1,5 +1,5 @@
 // host functions
-package capsulecommon
+package capsule
 
 import (
 	"strconv"
@@ -14,7 +14,6 @@ func CreateStringError(message string, code int) string {
     // code: e.split("]")[1].split("[")[1]
 }
 
-
 func IsStringError(str string) bool {
 	return strings.HasPrefix(str, "[ERR]")
 }
@@ -22,6 +21,5 @@ func IsStringError(str string) bool {
 func GetStringErrorInfo(str string) (string, int) {
 	errorMessage := strings.Split(str, "]:")[1]
 	errorCode, _ := strconv.Atoi(strings.Split(strings.Split(str, "]")[1], "[")[1])
-
 	return errorMessage, errorCode
 }

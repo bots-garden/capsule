@@ -1,5 +1,11 @@
 #!/bin/bash
 go run main.go \
-   -wasm=./wasm_modules/capsule-http/hello.wasm \
+   -wasm=./wasm_modules/capsule-http-get/hello.wasm \
    -mode=cli \
-   -param="👋 hello world 🌍🎃"
+   -param="[GET]👋 hello world 🌍"
+
+
+go run main.go \
+   -wasm=./wasm_modules/capsule-http-post/hello.wasm \
+   -mode=cli \
+   -param="[POST]👋 hello world 🌍"

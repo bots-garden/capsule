@@ -5,7 +5,7 @@ import (
 	"log"
 	"strconv"
 
-	capsulecommon "github.com/bots-garden/capsule/services/common"
+	"github.com/bots-garden/capsule/services/common"
 )
 
 // Pass a string param and get a string result
@@ -15,7 +15,7 @@ func Execute(stringParameter string, wasmFile []byte) {
 	//ctx := context.Background()
 
 	// 👋 get Wasm Module Instance (and Wasm runtime)
-	wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
+	wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
 	// defer must always be in the main code (to avoid go routine panic)
 	defer wasmRuntime.Close(ctx)
 
@@ -53,7 +53,7 @@ func Execute(stringParameter string, wasmFile []byte) {
 		log.Panicln(err)
 	}
 	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	handleReturnPtrPos, handleReturnSize := capsulecommon.GetPackedPtrPositionAndSize(handleResultArray)
+	handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
 	if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
@@ -63,8 +63,8 @@ func Execute(stringParameter string, wasmFile []byte) {
 
 		valueStr := string(bytes)
 		// check the return value
-		if capsulecommon.IsStringError(valueStr) {
-			errorMessage, errorCode := capsulecommon.GetStringErrorInfo(valueStr)
+		if capsule.IsStringError(valueStr) {
+			errorMessage, errorCode := capsule.GetStringErrorInfo(valueStr)
 			if errorCode == 0 {
 				valueStr = errorMessage
 			} else {

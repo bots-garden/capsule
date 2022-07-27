@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	capsulecommon "github.com/bots-garden/capsule/services/common"
+	"github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -36,7 +36,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
 
-		wasmRuntime, wasmModule, ctx := capsulecommon.CreateWasmRuntimeAndModuleInstances(wasmFile)
+		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		// get the function
@@ -72,7 +72,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 			log.Panicln(err)
 		}
 		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := capsulecommon.GetPackedPtrPositionAndSize(handleResultArray)
+		handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
 
 		// The pointer is a linear memory offset, which is where we write the name.
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
