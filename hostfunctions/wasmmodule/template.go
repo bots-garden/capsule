@@ -8,17 +8,17 @@ import (
 )
 
 /*
-   1- rename hostFunctionName
-   2- rename FunctionName
+   1- rename hostGetEnv
+   2- rename GetEnv
 
 */
 
-//export hostFunctionName
-//go:linkname hostFunctionName
+//export hostGetEnv
+//go:linkname hostGetEnv
 func hostFunctionName(paramPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-// FunctionName :
-// Call host function: hostFunctionName
+// GetEnv :
+// Call host function: hostGetEnv
 // Pass a string as parameter
 // Get a string from the host
 // This function is called by the wasm module

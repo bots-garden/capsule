@@ -11,11 +11,10 @@ import (
 //go:linkname hostWriteFile
 func hostWriteFile(filePathPtrPos uint32, size uint32, contentPtrPos uint32, contentSize uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-/*
-Call host function: hostReadFile
-Pass a string as parameter
-Get a string from the host
-*/
+// WriteFile : Call host function: hostReadFile
+// Pass a string as parameter
+//Get a string from the host
+
 func WriteFile(filePath string, content string) (string, error) {
 
 	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)

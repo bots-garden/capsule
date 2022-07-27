@@ -22,7 +22,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
 	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
 
-	// 🏠 Add host functions
+	// 🏠 Add host functions to the wasmModule (to be availale from the module)
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
 		ExportFunction("hostLogString", hostfunctions.LogString).
 		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
@@ -30,6 +30,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostHttp", hostfunctions.Http).
 		ExportFunction("hostReadFile", hostfunctions.ReadFile).
 		ExportFunction("hostWriteFile", hostfunctions.WriteFile).
+		ExportFunction("hostGetEnv", hostfunctions.GetEnv).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {

@@ -24,6 +24,14 @@ curl -v -X POST \
 */
 
 func Handle(param string) (string, error) {
+
+	message, err := hf.GetEnv("MESSAGE")
+	if err != nil {
+		hf.Log(err.Error())
+	} else {
+		hf.Log("MESSAGE=" + message)
+	}
+
 	hf.Log("1️⃣ parameter is: " + param)
 
 	txt, err := hf.ReadFile("about.txt")
