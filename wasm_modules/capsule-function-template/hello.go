@@ -1,21 +1,19 @@
 package main
 
 import (
-	helpers "github.com/bots-garden/capsule/helpers/functions"
+	"errors"
+	hf "github.com/bots-garden/capsule/wasmhostfunctions"
 )
 
 // main is required.
 func main() {
 
-  /*
-	helpers.Log("🚀 ignition...")
-	hostInformation := helpers.GetHostInformation()
-	helpers.Log("👋 message from the wasm module: " + hostInformation)
+	hf.Log("🚀 ignition...")
+	hostInformation := hf.GetHostInformation()
+	hf.Log("👋 message from the wasm module: " + hostInformation)
+	hf.Log(hf.Ping("✊ knock knock from the wasm module"))
 
-	helpers.Log(helpers.Ping("✊ knock knock from the wasm module"))
-  */
-
-	helpers.SetHandle(Handle)
+	hf.SetHandle(Handle)
 }
 
 /*
@@ -25,10 +23,10 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-func Handle(param string) string {
-	helpers.Log("1️⃣ parameter is: " + param)
+func Handle(param string) (string, error) {
+	hf.Log("1️⃣ parameter is: " + param)
 	ret := "👋 you sent me this: " + param
-	return ret
+	return ret, errors.New("😡 ouch")
 }
 
 // ? HandleJson, Handle<>, ...

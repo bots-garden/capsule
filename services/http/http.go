@@ -1,18 +1,12 @@
 package capsulehttp
 
 import (
-	"context"
 	"log"
 
-	//"math/rand"
+	"github.com/gin-gonic/gin"
 	"net/http"
 
-	helpers "github.com/bots-garden/capsule/helpers/tools"
-	"github.com/bots-garden/capsule/host_functions"
-	"github.com/gin-gonic/gin"
-	"github.com/tetratelabs/wazero"
-	"github.com/tetratelabs/wazero/api"
-	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
+	"github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -25,72 +19,6 @@ curl -v -X POST \
   -H 'content-type: application/json' \
   -d '{"message": "Golang 💚 wasm"}'
 */
-func createWasmRuntime(ctx context.Context) wazero.Runtime {
-
-	wasmRuntime := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithWasmCore2())
-
-	// 🏠 Add host functions
-	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", host_functions.LogString).
-		ExportFunction("hostGetHostInformation", host_functions.GetHostInformation).
-		ExportFunction("hostPing", host_functions.Ping).
-		Instantiate(ctx, wasmRuntime)
-
-	if errEnv != nil {
-		log.Panicln("🔴 Error with env module and host function(s):", errEnv)
-	}
-
-	_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
-	if errInstantiate != nil {
-		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
-	}
-
-	return wasmRuntime
-}
-
-func createWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
-	// Choose the context to use for function calls.
-	ctx := context.Background()
-
-	wasmRuntime := createWasmRuntime(ctx)
-	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
-
-	// 🥚 Instantiate the wasm module (from the wasm file)
-	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
-	if errInstanceWasmModule != nil {
-		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
-	}
-	return wasmRuntime, wasmModule, ctx
-}
-
-// getTheLastWorkerFromThePool
-// removeTheLastWorkerFromThePool
-// addNewWorkerToThePool
-
-/*
-For just reading the last element of a slice:
- sl[len(sl)-1]
-For removing it:
-
-sl = sl[:len(sl)-1]
-*/
-func getLastElementOfTheWorkerdPool() WasmWorker {
-	ww := wasmWorkersPool[len(wasmWorkersPool)-1]
-	return ww
-}
-
-func removeLastElementFromTheWorkerdPool() {
-	wasmWorkersPool = wasmWorkersPool[:len(wasmWorkersPool)-1]
-}
-
-func addNewElementToTheWorkerPool(wasmFile []byte) {
-	wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
-	wasmWorkersPool = append(wasmWorkersPool, WasmWorker{
-		wasmRuntime: wasmRuntime,
-		wasmModule:  wasmModule,
-		ctx:         ctx,
-	})
-}
 
 func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 
@@ -108,8 +36,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		stringParameterLength := uint64(len(jsonParameter.Message))
 		stringParameter := jsonParameter.Message
 
-
-		wasmRuntime, wasmModule, ctx := createWasmRuntimeAndModuleInstances(wasmFile)
+		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		// get the function
@@ -145,7 +72,7 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 			log.Panicln(err)
 		}
 		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := helpers.GetPackedPtrPositionAndSize(handleResultArray)
+		handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
 
 		// The pointer is a linear memory offset, which is where we write the name.
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
@@ -161,22 +88,9 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 	return fn
 }
 
-//
-type WasmWorker struct {
-	wasmRuntime wazero.Runtime
-	wasmModule  api.Module
-	ctx         context.Context
-}
-
-var wasmWorkersPool []WasmWorker
-
 func Serve(httpPort string, wasmFile []byte) {
 
 	r := gin.Default()
 	r.POST("/", callPostWasmFunctionHandler(wasmFile))
 	r.Run(":" + httpPort)
 }
-
-/*
-see https://github.com/bots-garden/procyon/blob/main/procyon-reverse-proxy/main.go
-*/

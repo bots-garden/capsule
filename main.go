@@ -5,10 +5,9 @@ import (
 	"log"
 	"os"
 
-  capsulehttp "github.com/bots-garden/capsule/services/http"
-  capsulehttpecho "github.com/bots-garden/capsule/services/http-echo"
 	capsulecli "github.com/bots-garden/capsule/services/cli"
-
+	capsulehttp "github.com/bots-garden/capsule/services/http"
+	capsulehttpecho "github.com/bots-garden/capsule/services/http-echo"
 )
 
 type CapsuleFlags struct {
@@ -59,11 +58,11 @@ func main() {
 	}
 
 	switch what := flags.mode; what {
-	case "http":
-    capsulehttp.Serve(flags.httpPort, wasmFile)
+	case "http-gin":
+		capsulehttp.Serve(flags.httpPort, wasmFile)
 
-  case "http-echo":
-    capsulehttpecho.Serve(flags.httpPort, wasmFile)
+	case "http-echo":
+		capsulehttpecho.Serve(flags.httpPort, wasmFile)
 
 	case "cli":
 		capsulecli.Execute(flags.param, wasmFile)
