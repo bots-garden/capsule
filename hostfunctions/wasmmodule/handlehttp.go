@@ -1,26 +1,33 @@
 // host functions
 package hf
 
-var handleFunction func(string) (string, error)
+var handleHttpFunction func(string, map[string]string) (string, error)
 
-func SetHandle(function func(string) (string, error)) {
-	handleFunction = function
+func SetHandleHttp(function func(string, map[string]string) (string, error)) {
+	handleHttpFunction = function
 }
 
 // TODO add detailed comments
-//export callHandle
-//go:linkname callHandle
-func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
+//export callHandleHttp
+//go:linkname callHandleHttp
+func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (strPtrPosSize uint64) {
+	//posted JSON data
 	stringParameter := GetStringParam(strPtrPos, size)
+	headersParameter := GetStringParam(headersPtrPos, headersSize)
+
+	headersSlice := CreateSliceFromString(headersParameter, "|")
+	headers := CreateMapFromSlice(headersSlice, ":")
 
 	var result string
-	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
+	stringReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
 
 	if errorReturnByHandleFunction != nil {
 		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
 	} else {
 		result = stringReturnByHandleFunction
 	}
+	//TODO: CreateJsonString
+	//TODO: CreateTxtString
 
 	pos, length := GetStringPtrPositionAndSize(result)
 

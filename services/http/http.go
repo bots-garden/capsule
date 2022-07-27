@@ -1,10 +1,14 @@
 package capsulehttp
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
+	"strconv"
+
+	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"net/http"
 
 	"github.com/bots-garden/capsule/services/common"
 )
@@ -29,27 +33,59 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
+/*
+curl -XPOST -H "content-type:application/json" -d '{"hoge": 1, "fuga": [2,3,4,5]}' localhost:1323
+
+		if err := c.Bind(&json); err != nil {
+			return err
+		}
+		return c.String(http.StatusOK, fmt.Sprintf("%v", json))
+*/
+
 func Serve(httpPort string, wasmFile []byte) {
 
 	e := echo.New()
 
+    //TODO: post Raw data
+
 	e.POST("/", func(c echo.Context) error {
-		jsonParameter := new(JsonParameter)
-		if err := c.Bind(jsonParameter); err != nil {
+
+        jsonMap := make(map[string]interface{})
+
+		if err := c.Bind(&jsonMap); err != nil {
 			return err
 		}
 
-		jsonResult := new(JsonResult)
+        // Convert map to json string
+        jsonStr, err := json.Marshal(jsonMap)
+        if err != nil {
+            fmt.Println(err)
+        }
+        // TODO handle Error
 
-		// Parameter "setup"
-		stringParameterLength := uint64(len(jsonParameter.Message))
-		stringParameter := jsonParameter.Message
+		// Parameters "setup"
+        // Payload
+		stringParameterLength := uint64(len(jsonStr))
+		stringParameter := jsonStr
+
+        // Headers
+        //headers := (map[string][]string) c.Request().Header
+        var headersMap = make(map[string]string)
+        for key, values := range c.Request().Header {
+            headersMap[key]=values[0]
+        }
+        headersSlice := CreateSliceFromMap(headersMap)
+
+        headersParameter := CreateStringFromSlice(headersSlice, "|")
+        headersParameterLength := uint64(len(headersParameter))
 
 		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		// get the function
-		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
+		//wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
+        wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
+
 
 		// These are undocumented, but exported. See tinygo-org/tinygo#2788
 		malloc := wasmModule.ExportedFunction("malloc")
@@ -74,9 +110,26 @@ func Serve(httpPort string, wasmFile []byte) {
 			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
 				stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
 		}
-		// Finally, we get the message "👋 hello <name>" printed. This shows how to
+
+        // Headers
+        resultsHeader, err := malloc.Call(ctx, headersParameterLength)
+		if err != nil {
+			log.Panicln("💥 out of bounds memory access", err)
+		}
+		headersParameterPtrPosition := resultsHeader[0]
+
+		defer free.Call(ctx, headersParameterPtrPosition)
+
+		if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
+			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+            headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
+		}
+        // End of Headers
+
+
+		// Finally, This shows how to
 		// read-back something allocated by TinyGo.
-		handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength)
+		handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength, headersParameterPtrPosition, headersParameterLength)
 		if err != nil {
 			log.Panicln(err)
 		}
@@ -87,13 +140,25 @@ func Serve(httpPort string, wasmFile []byte) {
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-			jsonResult.Value = ""
-			jsonResult.Error = "out of range of memory size"
-			return c.JSON(http.StatusConflict, jsonResult)
+                return c.String(500, "out of range of memory size")
 		} else {
-			jsonResult.Value = string(bytes)
-			jsonResult.Error = ""
-			return c.JSON(http.StatusOK, jsonResult)
+
+            valueStr := string(bytes)
+            // check the return value
+            if capsule.IsStringError(valueStr) {
+                errorMessage, errorCode := capsule.GetStringErrorInfo(valueStr)
+                if errorCode == 0 {
+                    valueStr = errorMessage
+                } else {
+                    valueStr = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+                }
+
+                return c.String(500, valueStr)
+            } else {
+                // TODO: how to check id JSON or RAW (do something like with error)
+                return c.String(http.StatusOK, valueStr)
+            }
+
 		}
 
 	})
