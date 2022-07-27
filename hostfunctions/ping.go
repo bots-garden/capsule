@@ -11,6 +11,7 @@ import (
 
 // string parameter, return string
 func Ping(ctx context.Context, module api.Module, offset, byteCount, retBuffPtrPos, retBuffSize uint32) {
+
 	// get string from the wasm module function (from memory)
 	buf, ok := module.Memory().Read(ctx, offset, byteCount)
 	if !ok {

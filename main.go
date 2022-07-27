@@ -15,6 +15,7 @@ type CapsuleFlags struct {
 	param    string
 	wasm     string
 	httpPort string
+
 }
 
 func main() {
@@ -57,6 +58,8 @@ func main() {
 		log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
 	}
 
+    var envVariables = make(map[string]string)
+
 	switch what := flags.mode; what {
 	case "http-gin":
 		capsulehttp.Serve(flags.httpPort, wasmFile)
@@ -64,7 +67,7 @@ func main() {
 	case "http-echo":
 		capsulehttpecho.Serve(flags.httpPort, wasmFile)
 
-	case "cli":
+    case "cli":
 		capsulecli.Execute(flags.param, wasmFile)
 
 	default:
