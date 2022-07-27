@@ -6,23 +6,24 @@ import (
 	"strconv"
 )
 
-//export hostReadFile
-//go:linkname hostReadFile
-func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
+//export hostWriteFile
+//go:linkname hostWriteFile
+func hostWriteFile(filePathPtrPos uint32, size uint32, contentPtrPos uint32, contentSize uint32, retBuffPtrPos **byte, retBuffSize *int)
 
 /*
 Call host function: hostReadFile
 Pass a string as parameter
 Get a string from the host
 */
-func ReadFile(filePath string) (string, error) {
+func WriteFile(filePath string, content string) (string, error) {
 
 	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)
+    contentPtrPos, contentSize := GetStringPtrPositionAndSize(content)
 
 	var buffPtr *byte
 	var buffSize int
 
-	hostReadFile(filePathPtrPos, size, &buffPtr, &buffSize)
+	hostWriteFile(filePathPtrPos, size, contentPtrPos, contentSize,  &buffPtr, &buffSize)
 
     var resultStr = ""
 	var err error
