@@ -49,7 +49,7 @@ func Http(url, method string, headers map[string]string, body string) (string, e
         if errorCode == 0 {
             err = errors.New(errorMessage)
         } else {
-            err = errors.New(errorMessage+"("+strconv.Itoa(errorCode)+")")
+            err = errors.New(errorMessage+" ("+strconv.Itoa(errorCode)+")")
         }
 
 	} else {

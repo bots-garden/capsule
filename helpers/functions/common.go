@@ -2,21 +2,8 @@
 package hf
 
 import (
-	"strconv"
 	"strings"
 )
-
-
-func IsStringError(str string) bool {
-	return strings.HasPrefix(str, "[ERR]")
-}
-
-func GetStringErrorInfo(str string) (string, int) {
-	errorMessage := strings.Split(str, "]:")[1]
-	errorCode, _ := strconv.Atoi(strings.Split(strings.Split(str, "]")[1], "[")[1])
-
-	return errorMessage, errorCode
-}
 
 func CreateSliceFromMap(strMap map[string]string) []string {
 	var strSlice []string

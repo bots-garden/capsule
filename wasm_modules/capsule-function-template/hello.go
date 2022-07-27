@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	hf "github.com/bots-garden/capsule/helpers/functions"
 )
 
@@ -22,10 +24,10 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-func Handle(param string) string {
+func Handle(param string) (string, error) {
 	hf.Log("1️⃣ parameter is: " + param)
 	ret := "👋 you sent me this: " + param
-	return ret
+	return ret, errors.New("😡 ouch")
 }
 
 // ? HandleJson, Handle<>, ...

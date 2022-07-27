@@ -3,8 +3,8 @@ package capsulecli
 import (
 	"fmt"
 	"log"
+	"strconv"
 
-	helpers "github.com/bots-garden/capsule/helpers/tools"
 	capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
@@ -53,14 +53,28 @@ func Execute(stringParameter string, wasmFile []byte) {
 		log.Panicln(err)
 	}
 	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	handleReturnPtrPos, handleReturnSize := helpers.GetPackedPtrPositionAndSize(handleResultArray)
+	handleReturnPtrPos, handleReturnSize := capsulecommon.GetPackedPtrPositionAndSize(handleResultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
 	if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 			handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
 	} else {
-		fmt.Println("🤖:", string(bytes)) // the result
+
+		valueStr := string(bytes)
+		// check the return value
+		if capsulecommon.IsStringError(valueStr) {
+			errorMessage, errorCode := capsulecommon.GetStringErrorInfo(valueStr)
+			if errorCode == 0 {
+				valueStr = errorMessage
+			} else {
+				valueStr = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+			}
+
+		}
+
+		// fmt.Println("🤖:", string(bytes)) // the result
+		fmt.Println(valueStr) // the result
 	}
 
 }

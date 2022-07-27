@@ -10,7 +10,7 @@ func main() {
 	hf.SetHandle(Handle)
 }
 
-func Handle(param string) string {
+func Handle(param string) (string, error) {
 
 	hf.Log("1️⃣ parameter is: " + param)
 
@@ -30,7 +30,7 @@ func Handle(param string) string {
         hf.Log("2️⃣ From module: " + ret2)
     }
 
-	return ret
+	return ret, nil
 }
 
 // ? HandleJson, Handle<>, ...

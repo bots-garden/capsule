@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 
-	helpers "github.com/bots-garden/capsule/helpers/tools"
 	capsulecommon "github.com/bots-garden/capsule/services/common"
 )
 
@@ -82,7 +81,7 @@ func Serve(httpPort string, wasmFile []byte) {
 			log.Panicln(err)
 		}
 		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := helpers.GetPackedPtrPositionAndSize(handleResultArray)
+		handleReturnPtrPos, handleReturnSize := capsulecommon.GetPackedPtrPositionAndSize(handleResultArray)
 
 		// The pointer is a linear memory offset, which is where we write the name.
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {

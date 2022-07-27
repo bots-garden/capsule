@@ -1,9 +1,9 @@
 // host functions
 package hf
 
-var handleFunction func(string) string
+var handleFunction func(string) (string, error)
 
-func SetHandle(function func(string) string) {
+func SetHandle(function func(string) (string, error)) {
 	handleFunction = function
 }
 
@@ -14,9 +14,17 @@ func SetHandle(function func(string) string) {
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringParameter := GetStringParam(strPtrPos, size)
 
-	stringReturnByHandleFunction := handleFunction(stringParameter)
+    var result string
+	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
 
-	pos, length := GetStringPtrPositionAndSize(stringReturnByHandleFunction)
+    if errorReturnByHandleFunction != nil {
+        result = CreateStringError(errorReturnByHandleFunction.Error(),0)
+    } else {
+        result = stringReturnByHandleFunction
+    }
+
+
+	pos, length := GetStringPtrPositionAndSize(result)
 
 	return PackPtrPositionAndSize(pos, length)
 }
