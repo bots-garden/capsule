@@ -9,7 +9,7 @@ import (
 
 // host functions for the wasm module
 
-// return information about the host
+// GetHostInformation returns information about the host
 func GetHostInformation(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
 	// TODO: return something more interesting
 	// TODO: cpu usage, memory,...

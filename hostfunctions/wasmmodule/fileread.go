@@ -1,4 +1,4 @@
-// host functions
+// Package hf host functions
 package hf
 
 import (
@@ -11,11 +11,11 @@ import (
 //go:linkname hostReadFile
 func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-/*
-Call host function: hostReadFile
-Pass a string as parameter
-Get a string from the host
-*/
+// ReadFile :
+// Call host function: hostReadFile
+// Pass a string as parameter
+// Get a string from the host
+
 func ReadFile(filePath string) (string, error) {
 
 	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)

@@ -1,4 +1,4 @@
-// host functions
+// Package hf host functions
 package hf
 
 import (
