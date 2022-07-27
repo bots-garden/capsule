@@ -3,15 +3,24 @@ package capsulehttp
 import (
 	"log"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"net/http"
 
 	"github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
-	Message string `json:"message"` // change the name ? 🤔
+	Message string `json:"message"` // change the na
 }
+
+type JsonResult struct {
+	Value string `json:"value"`
+	Error string `json:"error"`
+}
+
+//TODO: return more things from JsonResult (eg type of the response)
+//! I should do this from the Handle function
+//! I need to have several Handle function, or the handle function returns an interface{} (or a result object)
 
 /*
 curl -v -X POST \
@@ -20,17 +29,17 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
+func Serve(httpPort string, wasmFile []byte) {
 
-	fn := func(c *gin.Context) {
+	e := echo.New()
 
-		var jsonParameter JsonParameter
-		// Call BindJSON to bind the received JSON to
-		// jsonParameter.
-		// TODO: handle json errors
-		if err := c.BindJSON(&jsonParameter); err != nil {
-			return
+	e.POST("/", func(c echo.Context) error {
+		jsonParameter := new(JsonParameter)
+		if err := c.Bind(jsonParameter); err != nil {
+			return err
 		}
+
+		jsonResult := new(JsonResult)
 
 		// Parameter "setup"
 		stringParameterLength := uint64(len(jsonParameter.Message))
@@ -78,19 +87,21 @@ func callPostWasmFunctionHandler(wasmFile []byte) gin.HandlerFunc {
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-
+			jsonResult.Value = ""
+			jsonResult.Error = "out of range of memory size"
+			return c.JSON(http.StatusConflict, jsonResult)
 		} else {
-			c.JSON(http.StatusOK, gin.H{"value": string(bytes)})
+			jsonResult.Value = string(bytes)
+			jsonResult.Error = ""
+			return c.JSON(http.StatusOK, jsonResult)
 		}
 
-	}
+	})
+	//https://echo.labstack.com/guide/customization/
+	e.HideBanner = true
+	e.Start(":" + httpPort)
 
-	return fn
-}
+	//e.Logger.Info(e.Start(":" + httpPort))
+	//e.Logger.Fatal(e.Start(":" + httpPort))
 
-func Serve(httpPort string, wasmFile []byte) {
-
-	r := gin.Default()
-	r.POST("/", callPostWasmFunctionHandler(wasmFile))
-	r.Run(":" + httpPort)
 }

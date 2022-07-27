@@ -7,7 +7,6 @@ import (
 
 	capsulecli "github.com/bots-garden/capsule/services/cli"
 	capsulehttp "github.com/bots-garden/capsule/services/http"
-	capsulehttpecho "github.com/bots-garden/capsule/services/http-echo"
 )
 
 type CapsuleFlags struct {
@@ -63,11 +62,8 @@ func main() {
 	// provide some other env var for httpport wasmurl?
 
 	switch what := flags.mode; what {
-	case "http-gin":
+	case "http":
 		capsulehttp.Serve(flags.httpPort, wasmFile)
-
-	case "http-echo":
-		capsulehttpecho.Serve(flags.httpPort, wasmFile)
 
 	case "cli":
 		capsulecli.Execute(flags.param, wasmFile)
