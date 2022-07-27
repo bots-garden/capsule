@@ -4,6 +4,7 @@ package hf
 import (
 	"errors"
 	"strconv"
+	_ "unsafe"
 )
 
 //export hostWriteFile
@@ -18,25 +19,25 @@ Get a string from the host
 func WriteFile(filePath string, content string) (string, error) {
 
 	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)
-    contentPtrPos, contentSize := GetStringPtrPositionAndSize(content)
+	contentPtrPos, contentSize := GetStringPtrPositionAndSize(content)
 
 	var buffPtr *byte
 	var buffSize int
 
-	hostWriteFile(filePathPtrPos, size, contentPtrPos, contentSize,  &buffPtr, &buffSize)
+	hostWriteFile(filePathPtrPos, size, contentPtrPos, contentSize, &buffPtr, &buffSize)
 
-    var resultStr = ""
+	var resultStr = ""
 	var err error
-    valueStr := GetStringResult(buffPtr, buffSize)
+	valueStr := GetStringResult(buffPtr, buffSize)
 
-    // check the return value
+	// check the return value
 	if IsStringError(valueStr) {
 		errorMessage, errorCode := GetStringErrorInfo(valueStr)
-        if errorCode == 0 {
-            err = errors.New(errorMessage)
-        } else {
-            err = errors.New(errorMessage+" ("+strconv.Itoa(errorCode)+")")
-        }
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
 
 	} else {
 		resultStr = valueStr

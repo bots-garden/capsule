@@ -1,6 +1,8 @@
 // host functions
 package hf
 
+import _ "unsafe"
+
 //export hostLogString
 //go:linkname hostLogString
 func hostLogString(ptrPos, size uint32)

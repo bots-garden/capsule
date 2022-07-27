@@ -1,6 +1,8 @@
 // host functions
 package hf
 
+import _ "unsafe"
+
 //export hostPing
 //go:linkname hostPing
 func hostPing(ptrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)

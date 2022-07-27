@@ -1,6 +1,8 @@
 // host functions
 package hf
 
+import _ "unsafe"
+
 //export hostGetHostInformation
 //go:linkname hostGetHostInformation
 func hostGetHostInformation(retBuffPtrPos **byte, retBuffSize *int)
@@ -15,6 +17,6 @@ func GetHostInformation() string {
 
 	hostGetHostInformation(&buffPtr, &buffSize)
 
-    // return the string result of the host function calling
-    return GetStringResult(buffPtr, buffSize)
+	// return the string result of the host function calling
+	return GetStringResult(buffPtr, buffSize)
 }

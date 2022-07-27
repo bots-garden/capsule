@@ -4,6 +4,7 @@ package hf
 import (
 	"errors"
 	"strconv"
+	_ "unsafe"
 )
 
 //export hostHttp
@@ -16,41 +17,41 @@ func Http(url, method string, headers map[string]string, body string) (string, e
 	urlStrPos, urlStrSize := GetStringPtrPositionAndSize(url)
 	methodStrPos, methodStrSize := GetStringPtrPositionAndSize(method)
 
-    /*
-        headers := map[string]string{"Accept": "application/json", "Content-Type": " text/html; charset=UTF-8"}
+	/*
+	   headers := map[string]string{"Accept": "application/json", "Content-Type": " text/html; charset=UTF-8"}
 
-        headersStringSlice => ["Accept:application/json", ”Content-Type:text/html; charset=UTF-8"]
+	   headersStringSlice => ["Accept:application/json", ”Content-Type:text/html; charset=UTF-8"]
 
-        headerString => "Accept:application/json|Content-Type:text/html; charset=UTF-8"
-    */
+	   headerString => "Accept:application/json|Content-Type:text/html; charset=UTF-8"
+	*/
 
-    headersStringSlice := CreateSliceFromMap(headers)
-    headerString := CreateStringFromSlice(headersStringSlice, "|")
+	headersStringSlice := CreateSliceFromMap(headers)
+	headerString := CreateStringFromSlice(headersStringSlice, "|")
 
-    headersStrPos, headersStrSize := GetStringPtrPositionAndSize(headerString)
+	headersStrPos, headersStrSize := GetStringPtrPositionAndSize(headerString)
 
-    bodyStrPos, bodyStrSize := GetStringPtrPositionAndSize(body)
+	bodyStrPos, bodyStrSize := GetStringPtrPositionAndSize(body)
 
 	// This will be used to retrieve the return value (result)
 	var buffPtr *byte
 	var buffSize int
 
 	// 🖐 call the host function
-    // buffPtr, buffSize allows to retrieve the result of the function call
+	// buffPtr, buffSize allows to retrieve the result of the function call
 	hostHttp(urlStrPos, urlStrSize, methodStrPos, methodStrSize, headersStrPos, headersStrSize, bodyStrPos, bodyStrSize, &buffPtr, &buffSize)
 
 	var resultStr = ""
 	var err error
 	valueStr := GetStringResult(buffPtr, buffSize)
 
-    // check the return value
+	// check the return value
 	if IsStringError(valueStr) {
 		errorMessage, errorCode := GetStringErrorInfo(valueStr)
-        if errorCode == 0 {
-            err = errors.New(errorMessage)
-        } else {
-            err = errors.New(errorMessage+" ("+strconv.Itoa(errorCode)+")")
-        }
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
 
 	} else {
 		resultStr = valueStr
