@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/bots-garden/capsule/services/common"
+	capsule "github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -46,46 +47,45 @@ func Serve(httpPort string, wasmFile []byte) {
 
 	e := echo.New()
 
-    //TODO: post Raw data
+	//TODO: post Raw data
 
 	e.POST("/", func(c echo.Context) error {
 
-        jsonMap := make(map[string]interface{})
+		jsonMap := make(map[string]interface{})
 
 		if err := c.Bind(&jsonMap); err != nil {
 			return err
 		}
 
-        // Convert map to json string
-        jsonStr, err := json.Marshal(jsonMap)
-        if err != nil {
-            fmt.Println(err)
-        }
-        // TODO handle Error
+		// Convert map to json string
+		jsonStr, err := json.Marshal(jsonMap)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// TODO handle Error
 
 		// Parameters "setup"
-        // Payload
+		// Payload
 		stringParameterLength := uint64(len(jsonStr))
 		stringParameter := jsonStr
 
-        // Headers
-        //headers := (map[string][]string) c.Request().Header
-        var headersMap = make(map[string]string)
-        for key, values := range c.Request().Header {
-            headersMap[key]=values[0]
-        }
-        headersSlice := CreateSliceFromMap(headersMap)
+		// Headers
+		//headers := (map[string][]string) c.Request().Header
+		var headersMap = make(map[string]string)
+		for key, values := range c.Request().Header {
+			headersMap[key] = values[0]
+		}
+		headersSlice := CreateSliceFromMap(headersMap)
 
-        headersParameter := CreateStringFromSlice(headersSlice, "|")
-        headersParameterLength := uint64(len(headersParameter))
+		headersParameter := CreateStringFromSlice(headersSlice, "|")
+		headersParameterLength := uint64(len(headersParameter))
 
 		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		// get the function
 		//wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
-        wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
-
+		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
 
 		// These are undocumented, but exported. See tinygo-org/tinygo#2788
 		malloc := wasmModule.ExportedFunction("malloc")
@@ -111,8 +111,8 @@ func Serve(httpPort string, wasmFile []byte) {
 				stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
 		}
 
-        // Headers
-        resultsHeader, err := malloc.Call(ctx, headersParameterLength)
+		// Headers
+		resultsHeader, err := malloc.Call(ctx, headersParameterLength)
 		if err != nil {
 			log.Panicln("💥 out of bounds memory access", err)
 		}
@@ -122,10 +122,9 @@ func Serve(httpPort string, wasmFile []byte) {
 
 		if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
 			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-            headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
+				headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
 		}
-        // End of Headers
-
+		// End of Headers
 
 		// Finally, This shows how to
 		// read-back something allocated by TinyGo.
@@ -140,25 +139,80 @@ func Serve(httpPort string, wasmFile []byte) {
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
 			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-                return c.String(500, "out of range of memory size")
+			return c.String(500, "out of range of memory size")
 		} else {
 
-            valueStr := string(bytes)
-            // check the return value
-            if capsule.IsStringError(valueStr) {
-                errorMessage, errorCode := capsule.GetStringErrorInfo(valueStr)
-                if errorCode == 0 {
-                    valueStr = errorMessage
-                } else {
-                    valueStr = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
-                }
+			response := strings.Split(string(bytes), "[HEADERS]")
+			valueStr := response[0]
+			headersStr := response[1]
 
-                return c.String(500, valueStr)
-            } else {
-                // TODO: how to check id JSON or RAW (do something like with error)
-                return c.String(http.StatusOK, valueStr)
+			headers := GetHeadersMapFromString(headersStr)
+
+            //add headers to echo context response
+            for key, value := range headers {
+                //fmt.Println("-->", key, value)
+                c.Response().Header().Add(key, value)
             }
 
+			//fmt.Println("👋 headers", headers)
+			/*
+			   if error:
+			     ERR][0]:😡 oups I did it again[HEADERS]Content-Type:application/json; charset=utf-8
+			   else:
+			     [BODY]{"message": "👋 you sent me this:{"message":"Golang 💚 wasm"}"}[HEADERS]Content-Type:application/json; charset=utf-8
+			*/
+
+			// check the return value
+			if capsule.IsErrorString(valueStr) {
+				var returnValue string
+				errorMessage, errorCode := capsule.GetErrorStringInfo(valueStr)
+				if errorCode == 0 {
+					returnValue = errorMessage
+				} else {
+					returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+				}
+				// check content type
+				if IsJsonContentType(headers) {
+                    jsonMap := make(map[string]interface{})
+                    jsonMap["error"] = returnValue
+					return c.JSON(500, jsonMap)
+				} else {
+					return c.String(500, returnValue)
+				}
+
+			} else {
+				if IsBodyString(valueStr) {
+					// check content type
+					if IsJsonContentType(headers) {
+						// an arbitrary json string
+
+						jsonString := GetBodyString(valueStr)
+
+						var jsonMap map[string]interface{}
+
+						err := json.Unmarshal([]byte(jsonString), &jsonMap)
+						if err != nil {
+							//fmt.Println(err.Error())
+                            jsonMap = make(map[string]interface{})
+							jsonMap["error"] = "JSON string bad format"
+                            return c.JSON(500, jsonMap)
+						} else {
+							//return c.JSON(http.StatusOK, jsonString)
+							return c.JSON(http.StatusOK, jsonMap)
+						}
+					} else {
+						return c.String(http.StatusOK, GetBodyString(valueStr))
+					}
+
+				} else {
+					//🤔 this shouldn't happen
+					if IsJsonContentType(headers) {
+						return c.JSON(http.StatusOK, valueStr)
+					} else {
+						return c.String(http.StatusOK, valueStr)
+					}
+				}
+			}
 		}
 
 	})

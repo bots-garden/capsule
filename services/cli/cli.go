@@ -5,7 +5,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/bots-garden/capsule/services/common"
+	capsule "github.com/bots-garden/capsule/services/common"
 )
 
 // Pass a string param and get a string result
@@ -63,8 +63,8 @@ func Execute(stringParameter string, wasmFile []byte) {
 
 		valueStr := string(bytes)
 		// check the return value
-		if capsule.IsStringError(valueStr) {
-			errorMessage, errorCode := capsule.GetStringErrorInfo(valueStr)
+		if capsule.IsErrorString(valueStr) {
+			errorMessage, errorCode := capsule.GetErrorStringInfo(valueStr)
 			if errorCode == 0 {
 				valueStr = errorMessage
 			} else {
