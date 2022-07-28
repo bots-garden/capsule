@@ -3,7 +3,7 @@ PATH=$PATH:/opt/couchbase/bin
 # ------------------------------------
 # Create documents
 # ------------------------------------
-
+# Create primari index ?
 script1='CREATE SCOPE `wasm-data`.data'
 script2='CREATE COLLECTION `wasm-data`.data.docs'
 script3='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key1", { "type" : "info", "name" : "this is an info" });'

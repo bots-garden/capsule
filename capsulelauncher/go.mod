@@ -3,6 +3,7 @@ module github.com/bots-garden/capsule/capsulelauncher
 go 1.18
 
 require (
+	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/labstack/echo/v4 v4.7.2
@@ -11,7 +12,10 @@ require (
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/couchbase/gocbcore/v10 v10.1.4 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
