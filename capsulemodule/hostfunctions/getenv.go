@@ -1,5 +1,5 @@
 // Package hf host functions
-package hf
+package hostfunctions
 
 import (
 	"errors"

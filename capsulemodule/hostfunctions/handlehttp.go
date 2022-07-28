@@ -1,5 +1,5 @@
 // host functions
-package hf
+package hostfunctions
 
 var handleHttpFunction func(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error)
 
@@ -21,7 +21,7 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 	var result string
 	stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
 
-    returnHeaderString := CreateStringFromSlice(CreateSliceFromMap(headersReturnByHandleFunction),"|")
+	returnHeaderString := CreateStringFromSlice(CreateSliceFromMap(headersReturnByHandleFunction), "|")
 
 	if errorReturnByHandleFunction != nil {
 		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
@@ -35,10 +35,9 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 }
 
 func CreateBodyString(message string) string {
-    return "[BODY]"+message
+	return "[BODY]" + message
 }
 
 func CreateResponseString(result, headers string) string {
-    return result+"[HEADERS]"+headers
+	return result + "[HEADERS]" + headers
 }
-

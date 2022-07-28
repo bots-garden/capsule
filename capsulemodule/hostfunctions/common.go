@@ -1,5 +1,5 @@
 // host functions
-package hf
+package hostfunctions
 
 import (
 	"strings"
@@ -22,15 +22,16 @@ func CreateStringFromSlice(strSlice []string, separator string) string {
 // code: e.split("]")[1].split("[")[1]
 
 func CreateSliceFromString(str string, separator string) []string {
-    return strings.Split(str, separator)
+	return strings.Split(str, separator)
 }
 
 func CreateMapFromSlice(strSlice []string, separator string) map[string]string {
-    strMap := make(map[string]string)
-    for _, item := range strSlice {
-        res := strings.Split(item, separator)
-        strMap[res[0]] = res[1]
-    }
-    return strMap
+	strMap := make(map[string]string)
+	for _, item := range strSlice {
+		res := strings.Split(item, separator)
+		strMap[res[0]] = res[1]
+	}
+	return strMap
 }
+
 // TODO refactor

@@ -1,5 +1,5 @@
 // host functions
-package hf
+package hostfunctions
 
 import (
 	"strconv"

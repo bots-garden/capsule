@@ -1,5 +1,5 @@
-// host functions
-package hf
+// Package hf host functions
+package hostfunctions
 
 import (
 	"errors"
@@ -7,23 +7,23 @@ import (
 	_ "unsafe"
 )
 
-//export hostWriteFile
-//go:linkname hostWriteFile
-func hostWriteFile(filePathPtrPos uint32, size uint32, contentPtrPos uint32, contentSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+//export hostReadFile
+//go:linkname hostReadFile
+func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-// WriteFile : Call host function: hostReadFile
+// ReadFile :
+// Call host function: hostReadFile
 // Pass a string as parameter
-//Get a string from the host
+// Get a string from the host
 
-func WriteFile(filePath string, content string) (string, error) {
+func ReadFile(filePath string) (string, error) {
 
 	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)
-	contentPtrPos, contentSize := GetStringPtrPositionAndSize(content)
 
 	var buffPtr *byte
 	var buffSize int
 
-	hostWriteFile(filePathPtrPos, size, contentPtrPos, contentSize, &buffPtr, &buffSize)
+	hostReadFile(filePathPtrPos, size, &buffPtr, &buffSize)
 
 	var resultStr = ""
 	var err error
