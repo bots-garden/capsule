@@ -3,14 +3,6 @@ FROM gitpod/workspace-full
 #RUN sudo apt-get update && \
 #    sudo apt-get install gettext libncurses5 libxkbcommon0 libtinfo5 -y
 
-USER gitpod
-
-RUN brew install httpie && \
-    brew install bat && \
-    brew install exa && \
-    brew install hey && \
-    brew install redis
-
 # ------------------------------------
 # Install Couchbase
 # ------------------------------------
@@ -19,6 +11,16 @@ RUN curl -O https://packages.couchbase.com/releases/couchbase-release/couchbase-
     sudo apt-get update && \
     sudo apt-get install couchbase-server-community -y && \
     rm ./couchbase-release-1.0-amd64.deb
+
+USER gitpod
+
+RUN brew install httpie && \
+    brew install bat && \
+    brew install exa && \
+    brew install hey && \
+    brew install redis
+
+
 
 # ------------------------------------
 # Install TinyGo
