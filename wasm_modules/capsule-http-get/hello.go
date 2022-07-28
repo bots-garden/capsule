@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/bots-garden/capsule/hostfunctions/wasmmodule"
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
 )
 
 // main is required.

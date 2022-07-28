@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-hello
+module github.com/bots-garden/capsule/wasm_modules/capsule-http-post
 
 go 1.18
 
