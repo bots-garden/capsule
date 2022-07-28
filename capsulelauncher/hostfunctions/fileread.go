@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 
+	"github.com/bots-garden/capsule/commons"
+
 	"github.com/tetratelabs/wazero/api"
 )
 
@@ -24,7 +26,7 @@ func ReadFile(ctx context.Context, module api.Module, fileOffset, fileByteCount,
 	var stringMessageFromHost = ""
 	dat, err := os.ReadFile(filePathStr)
 	if err != nil {
-		stringMessageFromHost = CreateStringError(err.Error(), 0)
+		stringMessageFromHost = commons.CreateStringError(err.Error(), 0)
 		// if code 0 don't display code in the error message
 	} else {
 		stringMessageFromHost = string(dat)
