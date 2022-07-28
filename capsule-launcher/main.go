@@ -2,11 +2,10 @@ package main
 
 import (
 	"flag"
-	"log"
-	"os"
-
 	capsulecli "github.com/bots-garden/capsule/services/cli"
 	capsulehttp "github.com/bots-garden/capsule/services/http"
+	"log"
+	"os"
 )
 
 type CapsuleFlags struct {
@@ -21,12 +20,12 @@ func main() {
 	//flags
 	/*
 		go run main.go \
-			-wasm=./wasm_modules/capsule-function-template/hello.wasm \
+			-wasm=./wasm_modules/capsule-launcher-function-template/hello.wasm \
 			-mode=cli \
 			-param="👋 hello world 🌍"
 
 		go run main.go \
-			-wasm=./wasm_modules/capsule-function-template/hello.wasm \
+			-wasm=./wasm_modules/capsule-launcher-function-template/hello.wasm \
 			-mode=http \
 			-httpPort=7070
 	*/

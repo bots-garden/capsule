@@ -1,6 +1,6 @@
 > test it:
 
 ```bash
-docker run -it capsule bash
-#docker run -it capsule /bin/sh
+docker run -it capsule-launcher bash
+#docker run -it capsule-launcher /bin/sh
 ```
