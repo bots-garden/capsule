@@ -1,4 +1,4 @@
-image: k33g/capsulelauncher:0.0.0
+image: k33g/capsule:0.0.1
 
 tasks:
   - name: initialize
