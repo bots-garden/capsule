@@ -33,6 +33,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostGetEnv", hostfunctions.GetEnv).
         ExportFunction("hostRedisSet", hostfunctions.RedisSet).
         ExportFunction("hostRedisGet", hostfunctions.RedisGet).
+        ExportFunction("hostCouchBaseQuery", hostfunctions.CouchBaseQuery).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {

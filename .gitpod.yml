@@ -16,6 +16,8 @@ ports:
     visibility: public
   - port: 7070
     visibility: public
+  - port: 8091
+    visibility: public
 
 vscode:
   extensions:

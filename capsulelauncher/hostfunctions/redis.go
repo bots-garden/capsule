@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"context"
-	"os"
 	"strconv"
 
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
@@ -14,20 +13,14 @@ import (
 
 var redisDb *redis.Client
 
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
-}
 
 func InitRedisCli() {
     if redisDb==nil {
-        defaultDb, _ := strconv.Atoi(getEnv("REDIS_DEFAULTDB", "0"))
+        defaultDb, _ := strconv.Atoi(commons.GetEnv("REDIS_DEFAULTDB", "0"))
         //fmt.Println("📦 redisdb connection ...")
         redisDb = redis.NewClient(&redis.Options{
-            Addr:     getEnv("REDIS_ADDR", "localhost:6379"),
-            Password: getEnv("REDIS_PWD", ""), // no password set
+            Addr:     commons.GetEnv("REDIS_ADDR", "localhost:6379"),
+            Password: commons.GetEnv("REDIS_PWD", ""), // no password set
             DB:       defaultDb,               // use default DB
         })
     }
