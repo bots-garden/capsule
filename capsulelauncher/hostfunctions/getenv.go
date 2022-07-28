@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/tetratelabs/wazero/api"
 	"os"
+
+	"github.com/bots-garden/capsule/commons"
 )
 
 // GetEnv :
@@ -24,7 +26,7 @@ func GetEnv(ctx context.Context, module api.Module, varNameOffset, varNameByteCo
 	// and that uses the parameter(`varNameStr`)
 	variableValue := os.Getenv(varNameStr)
 	if variableValue == "" {
-		stringResultFromHost = CreateStringError(varNameStr+" is empty", 0)
+		stringResultFromHost = commons.CreateStringError(varNameStr+" is empty", 0)
 	} else {
 		stringResultFromHost = variableValue
 	}

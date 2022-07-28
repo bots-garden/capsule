@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
+
+	"github.com/bots-garden/capsule/commons"
 )
 
 func Http(ctx context.Context, module api.Module,
@@ -53,7 +55,7 @@ func Http(ctx context.Context, module api.Module,
 
 		resp, err := client.R().EnableTrace().Get(urlStr)
 		if err != nil {
-			stringMessageFromHost = CreateStringError(err.Error(), 0)
+			stringMessageFromHost = commons.CreateStringError(err.Error(), 0)
 			// if code 0 don't display code in the error message
 		} else {
 			stringMessageFromHost = resp.String()
@@ -63,7 +65,7 @@ func Http(ctx context.Context, module api.Module,
 
 		resp, err := client.R().EnableTrace().SetBody(bodyStr).Post(urlStr)
 		if err != nil {
-			stringMessageFromHost = CreateStringError(err.Error(), 0)
+			stringMessageFromHost = commons.CreateStringError(err.Error(), 0)
 			// if code 0 don't display code in the error message
 		} else {
 			stringMessageFromHost = resp.String()
@@ -72,7 +74,7 @@ func Http(ctx context.Context, module api.Module,
 		//stringMessageFromHost = "🌍 (POST)http: " + urlStr + " method: " + methodStr + " headers: " + headersStr + " body: " + bodyStr
 
 	default:
-		stringMessageFromHost = CreateStringError("🔴"+methodStr+" is not yet implemented: 🚧 wip", 0)
+		stringMessageFromHost = commons.CreateStringError("🔴"+methodStr+" is not yet implemented: 🚧 wip", 0)
 	}
 	// 👋 Implementation: End
 	//=========================================================================
