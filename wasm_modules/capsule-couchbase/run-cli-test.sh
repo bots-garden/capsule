@@ -6,4 +6,4 @@ COUCHBASE_PWD="ilovepandas" \
 go run main.go \
    -wasm=../wasm_modules/capsule-couchbase/hello.wasm \
    -mode=cli
-   
+

@@ -2,6 +2,7 @@ package hostfunctions
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	//"os"
@@ -22,6 +23,7 @@ var couchBaseCluster *gocb.Cluster
 
 func InitCouchBaseCluster() {
 	if couchBaseCluster == nil {
+        fmt.Println("✅ cluster")
 		//bucketName := commons.GetEnv("COUCHBASE_BUCKET", "wasm-data")
 		username := commons.GetEnv("COUCHBASE_USER", "admin")
 		password := commons.GetEnv("COUCHBASE_PWD", "ilovepandas")
@@ -33,10 +35,17 @@ func InitCouchBaseCluster() {
 				Username: username,
 				Password: password,
 			},
+            SecurityConfig: gocb.SecurityConfig{
+                //TLSRootCAs: roots,
+                // WARNING: Do not set this to true in production, only use this for testing!
+                TLSSkipVerify: true,
+            },
 		})
 		if err != nil {
 			log.Fatal(err)
-		}
+		} else {
+            fmt.Println("✅ cluster connected")
+        }
         couchBaseCluster = cluster
         //couchBaseBucket := cluster.Bucket(bucketName)
         /*
@@ -78,19 +87,23 @@ func CouchBaseQuery(ctx context.Context, module api.Module, queryOffset, queryBy
 	//=========================================================
 	queryStr := memory.ReadStringFromMemory(ctx, module, queryOffset, queryByteCount)
 
+    fmt.Println("✅ query:", queryStr)
+
 	//==[👋 Implementation: Start]=============================
 	// Perform a N1QL Query
 	queryResults, err := getCouchBaseCluster().Query(queryStr, nil)
-
+    fmt.Println("✅ queryResults:", queryResults)
 	var stringResultFromHost = ""
 
     var records []string
     var record interface{}
+
 	for queryResults.Next() {
 		err := queryResults.Row(&record)
 		if err != nil {
 			panic(err)
 		}
+        fmt.Println("=>", record)
 		records = append(records, record.(string))
 	}
 

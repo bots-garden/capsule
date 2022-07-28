@@ -13,8 +13,8 @@ func main() {
 }
 
 func Handle(params []string) (string, error) {
-    
-    res, err := hf.CouchBaseQuery("SELECT * FROM `wasm-data`.data.docs")
+    hf.Log("👋")
+    res, err := hf.CouchBaseQuery("SELECT * FROM \\`wasm-data\\`.data.docs")
 
     if err != nil {
         hf.Log(err.Error())
