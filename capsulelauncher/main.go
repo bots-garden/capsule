@@ -20,12 +20,12 @@ func main() {
 	//flags
 	/*
 		go run main.go \
-			-wasm=./wasm_modules/capsule-launcher-function-template/hello.wasm \
+			-wasm=./wasm_modules/capsulelauncher-function-template/hello.wasm \
 			-mode=cli \
 			-param="👋 hello world 🌍"
 
 		go run main.go \
-			-wasm=./wasm_modules/capsule-launcher-function-template/hello.wasm \
+			-wasm=./wasm_modules/capsulelauncher-function-template/hello.wasm \
 			-mode=http \
 			-httpPort=7070
 	*/

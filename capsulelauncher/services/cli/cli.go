@@ -2,7 +2,7 @@ package capsulecli
 
 import (
 	"fmt"
-	capsule "github.com/bots-garden/capsule/capsule-launcher/services/common"
+	capsule "github.com/bots-garden/capsule/capsulelauncher/services/common"
 	"log"
 	"strconv"
 )
@@ -62,8 +62,8 @@ func Execute(stringParameter string, wasmFile []byte) {
 
 		valueStr := string(bytes)
 		// check the return value
-		if capsule2.IsErrorString(valueStr) {
-			errorMessage, errorCode := capsule2.GetErrorStringInfo(valueStr)
+		if capsule.IsErrorString(valueStr) {
+			errorMessage, errorCode := capsule.GetErrorStringInfo(valueStr)
 			if errorCode == 0 {
 				valueStr = errorMessage
 			} else {

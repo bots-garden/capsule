@@ -3,7 +3,7 @@ package capsulehttp
 import (
 	"encoding/json"
 	"fmt"
-	capsule "github.com/bots-garden/capsule/capsule-launcher/services/common"
+	capsule "github.com/bots-garden/capsule/capsulelauncher/services/common"
 	"github.com/labstack/echo/v4"
 	"log"
 	"strconv"

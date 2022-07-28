@@ -5,5 +5,5 @@ go run main.go \
    -mode=http \
    -httpPort=7070
 
-# -wasm=./wasm_modules/capsule-launcher-function-template/hello.wasm \
-# -wasm=./wasm_modules/capsule-launcher-http/hello.wasm \
+# -wasm=./wasm_modules/capsulelauncher-function-template/hello.wasm \
+# -wasm=./wasm_modules/capsulelauncher-http/hello.wasm \
