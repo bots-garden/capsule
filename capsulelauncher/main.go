@@ -2,10 +2,11 @@ package main
 
 import (
 	"flag"
-	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
-	capsulehttp "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	"log"
 	"os"
+
+	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
+	capsulehttp "github.com/bots-garden/capsule/capsulelauncher/services/http"
 )
 
 type CapsuleFlags struct {

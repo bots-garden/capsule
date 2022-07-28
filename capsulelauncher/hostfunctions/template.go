@@ -25,7 +25,7 @@ import (
 		Instantiate(ctx, wasmRuntime)
     ```
     3- Implement the feature
-    4- look at `./wasmmodule/template.go`
+    4- look at `./capsulemodule/hostfunctions/template.go`
 */
 
 // FunctionName :

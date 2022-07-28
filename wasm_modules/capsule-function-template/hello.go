@@ -12,6 +12,7 @@ func main() {
     hostInformation := hf.GetHostInformation()
     hf.Log("👋 message from the wasm module: " + hostInformation)
     hf.Log(hf.Ping("✊ knock knock from the wasm module"))
+    hf.Log(hf.Ping("✊ knock knock from the wasm module"))
 
     hf.SetHandle(Handle)
 }
