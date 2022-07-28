@@ -6,9 +6,9 @@ import (
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 
-var handleFunction func(string) (string, error)
+var handleFunction func([]string) (string, error)
 
-func SetHandle(function func(string) (string, error)) {
+func SetHandle(function func([]string) (string, error)) {
 	handleFunction = function
 }
 
@@ -17,9 +17,10 @@ func SetHandle(function func(string) (string, error)) {
 //go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringParameter := memory.GetStringParam(strPtrPos, size)
-
+	//TODO change the separator
+	stringParameters := commons.CreateSliceFromString(stringParameter, "°")
 	var result string
-	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
+	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameters)
 
 	if errorReturnByHandleFunction != nil {
 		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
