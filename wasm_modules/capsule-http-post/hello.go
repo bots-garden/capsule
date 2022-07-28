@@ -10,13 +10,13 @@ func main() {
 	hf.SetHandle(Handle)
 }
 
-func Handle(param string) (string, error) {
+func Handle(params []string) (string, error) {
 
-	hf.Log("💊 Get sample: parameter is: " + param)
+	hf.Log("💊 Get sample: parameter is: " + params[0])
 
 	headers := map[string]string{"Accept": "application/json", "Content-Type": "text/html; charset=UTF-8"}
 
-	ret, err := hf.Http("https://httpbin.org/post", "POST", headers, param)
+	ret, err := hf.Http("https://httpbin.org/post", "POST", headers, params[0])
 	if err != nil {
 		hf.Log("😡 error:" + err.Error())
 	} else {
