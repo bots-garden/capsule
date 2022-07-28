@@ -12,6 +12,15 @@ RUN brew install httpie && \
     brew install redis
 
 # ------------------------------------
+# Install Couchbase
+# ------------------------------------
+RUN curl -O https://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-amd64.deb && \
+    sudo dpkg -i ./couchbase-release-1.0-amd64.deb && \
+    sudo apt-get update && \
+    sudo apt-get install couchbase-server-community -y && \
+    rm ./couchbase-release-1.0-amd64.deb
+
+# ------------------------------------
 # Install TinyGo
 # ------------------------------------
 ARG TINYGO_VERSION="0.24.0"

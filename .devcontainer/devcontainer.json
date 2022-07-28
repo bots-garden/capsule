@@ -1,10 +1,11 @@
 {
-  "image": "k33g/capsule:0.0.1",
+  "image": "k33g/capsule:0.0.2",
   "forwardPorts": [
     8080,
     3000,
     5000,
-    7070
+    7070,
+    8091
   ],
   "postCreateCommand": "echo 'hello'",
   "customizations": {
