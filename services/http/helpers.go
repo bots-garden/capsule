@@ -1,5 +1,4 @@
-// host functions
-package hf
+package capsulehttp
 
 import (
 	"strings"
@@ -17,9 +16,6 @@ func CreateStringFromSlice(strSlice []string, separator string) string {
 	return strings.Join(strSlice[:], separator)
 }
 
-// "[ERR][200]:hello world"
-// message: e.split("]:")[1]
-// code: e.split("]")[1].split("[")[1]
 
 func CreateSliceFromString(str string, separator string) []string {
     return strings.Split(str, separator)
@@ -33,4 +29,3 @@ func CreateMapFromSlice(strSlice []string, separator string) map[string]string {
     }
     return strMap
 }
-// TODO refactor

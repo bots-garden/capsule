@@ -7,22 +7,20 @@ func SetHandle(function func(string) (string, error)) {
 	handleFunction = function
 }
 
-
 // TODO add detailed comments
 //export callHandle
 //go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringParameter := GetStringParam(strPtrPos, size)
 
-    var result string
+	var result string
 	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
 
-    if errorReturnByHandleFunction != nil {
-        result = CreateStringError(errorReturnByHandleFunction.Error(),0)
-    } else {
-        result = stringReturnByHandleFunction
-    }
-
+	if errorReturnByHandleFunction != nil {
+		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
+	} else {
+		result = stringReturnByHandleFunction
+	}
 
 	pos, length := GetStringPtrPositionAndSize(result)
 
