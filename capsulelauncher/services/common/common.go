@@ -2,9 +2,8 @@ package capsule
 
 import (
 	"context"
+	"github.com/bots-garden/capsule/capsulelauncher/services/hostfunctions"
 	"log"
-
-	"github.com/bots-garden/capsule/hostfunctions/host"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"

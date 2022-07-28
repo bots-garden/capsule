@@ -3,7 +3,6 @@ package hostfunctions
 import (
 	"context"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
 )
 
