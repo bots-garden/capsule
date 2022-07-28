@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	capsulecli "github.com/bots-garden/capsule/capsule-launcher/services/cli"
-	capsulehttp "github.com/bots-garden/capsule/capsule-launcher/services/http"
+	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
+	capsulehttp "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	"log"
 	"os"
 )

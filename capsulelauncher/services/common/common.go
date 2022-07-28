@@ -2,7 +2,7 @@ package capsule
 
 import (
 	"context"
-	"github.com/bots-garden/capsule/capsulelauncher/services/hostfunctions"
+	hostfunctions2 "github.com/bots-garden/capsule/capsulelauncher/hostfunctions"
 	"log"
 
 	"github.com/tetratelabs/wazero"
@@ -24,13 +24,13 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
 	// 🏠 Add host functions to the wasmModule (to be availale from the module)
 	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", hostfunctions.LogString).
-		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
-		ExportFunction("hostPing", hostfunctions.Ping).
-		ExportFunction("hostHttp", hostfunctions.Http).
-		ExportFunction("hostReadFile", hostfunctions.ReadFile).
-		ExportFunction("hostWriteFile", hostfunctions.WriteFile).
-		ExportFunction("hostGetEnv", hostfunctions.GetEnv).
+		ExportFunction("hostLogString", hostfunctions2.LogString).
+		ExportFunction("hostGetHostInformation", hostfunctions2.GetHostInformation).
+		ExportFunction("hostPing", hostfunctions2.Ping).
+		ExportFunction("hostHttp", hostfunctions2.Http).
+		ExportFunction("hostReadFile", hostfunctions2.ReadFile).
+		ExportFunction("hostWriteFile", hostfunctions2.WriteFile).
+		ExportFunction("hostGetEnv", hostfunctions2.GetEnv).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
