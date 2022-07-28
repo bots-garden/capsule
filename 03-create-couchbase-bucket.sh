@@ -5,7 +5,7 @@ PATH=$PATH:/opt/couchbase/bin
 # ------------------------------------
 couchbase-cli bucket-create -c 127.0.0.1:8091 \
 --username admin \
---password ilovepanda \
+--password ilovepandas \
 --bucket wasm-data \
 --bucket-type couchbase \
 --bucket-ramsize 1024
