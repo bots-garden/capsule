@@ -8,8 +8,12 @@ import (
 	"strconv"
 )
 
+// Execute :
 // Pass a string param and get a string result
-func Execute(stringParameter string, wasmFile []byte) {
+func Execute(args []string, wasmFile []byte) {
+
+	//TODO change the separator (same for headers etc...)
+	stringParameter := commons.CreateStringFromSlice(args, "°")
 
 	// Choose the context to use for function calls.
 	//ctx := context.Background()

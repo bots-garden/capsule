@@ -45,7 +45,7 @@ func main() {
 	//fmt.Println(flags)
 
 	//argsWithProg := os.Args
-	//wasmModuleFilePath := os.Args[1:][0]
+	//args := os.Args[1:]
 	wasmModuleFilePath := flags.wasm
 
 	// 📂 Load from file and then Instantiate a WebAssembly module
@@ -65,7 +65,12 @@ func main() {
 		capsulehttp.Serve(flags.httpPort, wasmFile)
 
 	case "cli":
-		capsulecli.Execute(flags.param, wasmFile)
+		/*
+			for idx, arg := range flag.Args() {
+				fmt.Println(idx, "==>", arg)
+			}
+		*/
+		capsulecli.Execute(flag.Args(), wasmFile)
 
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
