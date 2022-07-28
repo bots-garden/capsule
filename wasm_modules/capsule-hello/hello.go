@@ -17,15 +17,19 @@ curl -v -X POST \
   -d '{"message": "Golang 💚 wasm"}'
 */
 
-func Handle(param string, headers map[string]string) (string, error) {
+func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
 
-    hf.Log("param: " + param)
-    hf.Log("Content-Type: " + headers["Content-Type"])
-    hf.Log("Content-Length: " + headers["Content-Length"])
-    hf.Log("User-Agent: " + headers["User-Agent"])
+    hf.Log("param: " + bodyReq)
+    hf.Log("Content-Type: " + headersReq["Content-Type"])
+    hf.Log("Content-Length: " + headersReq["Content-Length"])
+    hf.Log("User-Agent: " + headersReq["User-Agent"])
 
-	return "Hello, you send me this: " + param, nil
-    //TODO: return a contentType
+    headersResp = map[string]string{"Content-Type": "application/json; charset=utf-8"}
+
+    bodyResp = `{"message": "👋 you sent me this:`+bodyReq+`"}`
+
+	return bodyResp, headersResp , nil
+
+    // [BODY]{"message": "👋 you sent me this:{"message":"Golang 💚 wasm"}"}[HEADERS]
 }
-
-// ? HandleJson, Handle<>, ...
+// TODO: helpers: SetHeader() ...

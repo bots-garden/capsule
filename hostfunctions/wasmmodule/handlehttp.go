@@ -1,9 +1,9 @@
 // host functions
 package hf
 
-var handleHttpFunction func(string, map[string]string) (string, error)
+var handleHttpFunction func(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error)
 
-func SetHandleHttp(function func(string, map[string]string) (string, error)) {
+func SetHandleHttp(function func(string, map[string]string) (string, map[string]string, error)) {
 	handleHttpFunction = function
 }
 
@@ -19,33 +19,26 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 	headers := CreateMapFromSlice(headersSlice, ":")
 
 	var result string
-	stringReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
+	stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
+
+    returnHeaderString := CreateStringFromSlice(CreateSliceFromMap(headersReturnByHandleFunction),"|")
 
 	if errorReturnByHandleFunction != nil {
 		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
 	} else {
-		result = stringReturnByHandleFunction
+		result = CreateBodyString(stringReturnByHandleFunction)
 	}
-	//TODO: CreateJsonString
-	//TODO: CreateTxtString
 
-	pos, length := GetStringPtrPositionAndSize(result)
+	pos, length := GetStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
 
 	return PackPtrPositionAndSize(pos, length)
 }
 
-/* Function Samples
-//export helloWorld
-func helloWorld() (strPtrPosSize uint64) {
-	strPtrPos, size := helpers.GetStringPtrPositionAndSize("👋 hello world, I'm very happy to meet you, I love what you are doing my friend")
-	return helpers.PackPtrPositionAndSize(strPtrPos, size)
+func CreateBodyString(message string) string {
+    return "[BODY]"+message
 }
 
-//export sayHello
-func sayHello(strPtrPos, size uint32) (strPtrPosSize uint64) {
-	name := helpers.GetStringParam(strPtrPos, size)
-	pos, length := helpers.GetStringPtrPositionAndSize("👋 hello " + name)
-
-	return helpers.PackPtrPositionAndSize(pos, length)
+func CreateResponseString(result, headers string) string {
+    return result+"[HEADERS]"+headers
 }
-*/
+
