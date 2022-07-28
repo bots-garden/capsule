@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strconv"
 
@@ -25,7 +24,7 @@ func getEnv(key, fallback string) string {
 func InitRedisCli() {
     if redisDb==nil {
         defaultDb, _ := strconv.Atoi(getEnv("REDIS_DEFAULTDB", "0"))
-        fmt.Println("📦 redisdb connection ...")
+        //fmt.Println("📦 redisdb connection ...")
         redisDb = redis.NewClient(&redis.Options{
             Addr:     getEnv("REDIS_ADDR", "localhost:6379"),
             Password: getEnv("REDIS_PWD", ""), // no password set

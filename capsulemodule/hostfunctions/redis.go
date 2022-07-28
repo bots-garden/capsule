@@ -10,12 +10,6 @@ import (
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 
-/*
-   1- rename hostGetEnv
-   2- rename GetEnv
-
-*/
-
 //export hostRedisSet
 //go:linkname hostRedisSet
 func hostRedisSet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int)

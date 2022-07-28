@@ -15,7 +15,7 @@ func main() {
 func Handle(params []string) (string, error) {
 
     // add a key, value
-    res1, err := hf.RedisSet("001", "Hello World")
+    res1, err := hf.RedisSet("greetings", "Hello World")
     if err != nil {
         hf.Log(err.Error())
     } else {
@@ -23,7 +23,7 @@ func Handle(params []string) (string, error) {
     }
 
     // read the value
-    res2, err := hf.RedisGet("001")
+    res2, err := hf.RedisGet("greetings")
     if err != nil {
         hf.Log(err.Error())
     } else {
@@ -33,5 +33,3 @@ func Handle(params []string) (string, error) {
     return res2, nil
 
 }
-
-// ? HandleJson, Handle<>, ...
