@@ -2,10 +2,9 @@ package capsulecli
 
 import (
 	"fmt"
+	capsule "github.com/bots-garden/capsule/capsulelauncher/services/common"
 	"log"
 	"strconv"
-
-	capsule "github.com/bots-garden/capsule/services/common"
 )
 
 // Pass a string param and get a string result
@@ -53,7 +52,7 @@ func Execute(stringParameter string, wasmFile []byte) {
 		log.Panicln(err)
 	}
 	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
+	handleReturnPtrPos, handleReturnSize := capsule2.GetPackedPtrPositionAndSize(handleResultArray)
 
 	// The pointer is a linear memory offset, which is where we write the name.
 	if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {

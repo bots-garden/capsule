@@ -3,15 +3,13 @@ package capsulehttp
 import (
 	"encoding/json"
 	"fmt"
+	capsule "github.com/bots-garden/capsule/capsulelauncher/services/common"
+	"github.com/labstack/echo/v4"
 	"log"
 	"strconv"
 	"strings"
 
 	"net/http"
-
-	"github.com/labstack/echo/v4"
-
-	capsule "github.com/bots-garden/capsule/services/common"
 )
 
 type JsonParameter struct {
@@ -133,7 +131,7 @@ func Serve(httpPort string, wasmFile []byte) {
 			log.Panicln(err)
 		}
 		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
+		handleReturnPtrPos, handleReturnSize := capsule2.GetPackedPtrPositionAndSize(handleResultArray)
 
 		// The pointer is a linear memory offset, which is where we write the name.
 		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
@@ -148,11 +146,11 @@ func Serve(httpPort string, wasmFile []byte) {
 
 			headers := GetHeadersMapFromString(headersStr)
 
-            //add headers to echo context response
-            for key, value := range headers {
-                //fmt.Println("-->", key, value)
-                c.Response().Header().Add(key, value)
-            }
+			//add headers to echo context response
+			for key, value := range headers {
+				//fmt.Println("-->", key, value)
+				c.Response().Header().Add(key, value)
+			}
 
 			//fmt.Println("👋 headers", headers)
 			/*
@@ -163,9 +161,9 @@ func Serve(httpPort string, wasmFile []byte) {
 			*/
 
 			// check the return value
-			if capsule.IsErrorString(valueStr) {
+			if capsule2.IsErrorString(valueStr) {
 				var returnValue string
-				errorMessage, errorCode := capsule.GetErrorStringInfo(valueStr)
+				errorMessage, errorCode := capsule2.GetErrorStringInfo(valueStr)
 				if errorCode == 0 {
 					returnValue = errorMessage
 				} else {
@@ -173,8 +171,8 @@ func Serve(httpPort string, wasmFile []byte) {
 				}
 				// check content type
 				if IsJsonContentType(headers) {
-                    jsonMap := make(map[string]interface{})
-                    jsonMap["error"] = returnValue
+					jsonMap := make(map[string]interface{})
+					jsonMap["error"] = returnValue
 					return c.JSON(500, jsonMap)
 				} else {
 					return c.String(500, returnValue)
@@ -193,9 +191,9 @@ func Serve(httpPort string, wasmFile []byte) {
 						err := json.Unmarshal([]byte(jsonString), &jsonMap)
 						if err != nil {
 							//fmt.Println(err.Error())
-                            jsonMap = make(map[string]interface{})
+							jsonMap = make(map[string]interface{})
 							jsonMap["error"] = "JSON string bad format"
-                            return c.JSON(500, jsonMap)
+							return c.JSON(500, jsonMap)
 						} else {
 							//return c.JSON(http.StatusOK, jsonString)
 							return c.JSON(http.StatusOK, jsonMap)
