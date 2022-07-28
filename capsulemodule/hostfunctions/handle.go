@@ -1,7 +1,10 @@
 // host functions
 package hostfunctions
 
-import "github.com/bots-garden/capsule/capsulemodule/commons"
+import (
+	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
+)
 
 var handleFunction func(string) (string, error)
 
@@ -13,7 +16,7 @@ func SetHandle(function func(string) (string, error)) {
 //export callHandle
 //go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
-	stringParameter := GetStringParam(strPtrPos, size)
+	stringParameter := memory.GetStringParam(strPtrPos, size)
 
 	var result string
 	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
@@ -24,9 +27,9 @@ func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 		result = stringReturnByHandleFunction
 	}
 
-	pos, length := GetStringPtrPositionAndSize(result)
+	pos, length := memory.GetStringPtrPositionAndSize(result)
 
-	return PackPtrPositionAndSize(pos, length)
+	return memory.PackPtrPositionAndSize(pos, length)
 }
 
 /* Function Samples

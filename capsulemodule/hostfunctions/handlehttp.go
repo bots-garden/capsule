@@ -1,7 +1,10 @@
 // host functions
 package hostfunctions
 
-import "github.com/bots-garden/capsule/capsulemodule/commons"
+import (
+	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
+)
 
 var handleHttpFunction func(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error)
 
@@ -14,16 +17,16 @@ func SetHandleHttp(function func(string, map[string]string) (string, map[string]
 //go:linkname callHandleHttp
 func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (strPtrPosSize uint64) {
 	//posted JSON data
-	stringParameter := GetStringParam(strPtrPos, size)
-	headersParameter := GetStringParam(headersPtrPos, headersSize)
+	stringParameter := memory.GetStringParam(strPtrPos, size)
+	headersParameter := memory.GetStringParam(headersPtrPos, headersSize)
 
-	headersSlice := CreateSliceFromString(headersParameter, "|")
-	headers := CreateMapFromSlice(headersSlice, ":")
+	headersSlice := commons.CreateSliceFromString(headersParameter, "|")
+	headers := commons.CreateMapFromSlice(headersSlice, ":")
 
 	var result string
 	stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
 
-	returnHeaderString := CreateStringFromSlice(CreateSliceFromMap(headersReturnByHandleFunction), "|")
+	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(headersReturnByHandleFunction), "|")
 
 	if errorReturnByHandleFunction != nil {
 		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
@@ -31,9 +34,9 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 		result = CreateBodyString(stringReturnByHandleFunction)
 	}
 
-	pos, length := GetStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
+	pos, length := memory.GetStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
 
-	return PackPtrPositionAndSize(pos, length)
+	return memory.PackPtrPositionAndSize(pos, length)
 }
 
 func CreateBodyString(message string) string {

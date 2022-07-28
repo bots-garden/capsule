@@ -4,6 +4,7 @@ package hostfunctions
 import (
 	"errors"
 	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"strconv"
 	_ "unsafe"
 )
@@ -19,7 +20,7 @@ func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retB
 
 func ReadFile(filePath string) (string, error) {
 
-	filePathPtrPos, size := GetStringPtrPositionAndSize(filePath)
+	filePathPtrPos, size := memory.GetStringPtrPositionAndSize(filePath)
 
 	var buffPtr *byte
 	var buffSize int
@@ -28,7 +29,7 @@ func ReadFile(filePath string) (string, error) {
 
 	var resultStr = ""
 	var err error
-	valueStr := GetStringResult(buffPtr, buffSize)
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {

@@ -1,7 +1,10 @@
 // host functions
 package hostfunctions
 
-import _ "unsafe"
+import (
+	"github.com/bots-garden/capsule/capsulemodule/memory"
+	_ "unsafe"
+)
 
 //export hostPing
 //go:linkname hostPing
@@ -14,7 +17,7 @@ Get a string from the host
 */
 func Ping(message string) string {
 
-	strPtrPos, size := GetStringPtrPositionAndSize(message)
+	strPtrPos, size := memory.GetStringPtrPositionAndSize(message)
 
 	var buffPtr *byte
 	var buffSize int
@@ -22,6 +25,6 @@ func Ping(message string) string {
 	hostPing(strPtrPos, size, &buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return GetStringResult(buffPtr, buffSize)
+	return memory.GetStringResult(buffPtr, buffSize)
 
 }

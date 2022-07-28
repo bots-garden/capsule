@@ -4,6 +4,7 @@ package hostfunctions
 import (
 	"errors"
 	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"strconv"
 	_ "unsafe"
 )
@@ -20,7 +21,7 @@ func hostGetEnv(varNamePtrPos uint32, size uint32, retBuffPtrPos **byte, retBuff
 func GetEnv(varName string) (string, error) {
 
 	// transform the parameter for the host function
-	varNamePtrPos, size := GetStringPtrPositionAndSize(varName)
+	varNamePtrPos, size := memory.GetStringPtrPositionAndSize(varName)
 
 	var buffPtr *byte
 	var buffSize int
@@ -32,7 +33,7 @@ func GetEnv(varName string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := GetStringResult(buffPtr, buffSize)
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
 	//Log("✅ " + valueStr)
 
 	// check the return value

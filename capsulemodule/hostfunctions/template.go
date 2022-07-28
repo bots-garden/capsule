@@ -4,6 +4,7 @@ package hostfunctions
 import (
 	"errors"
 	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"strconv"
 	_ "unsafe"
 )
@@ -26,7 +27,7 @@ func hostFunctionName(paramPtrPos uint32, size uint32, retBuffPtrPos **byte, ret
 func FunctionName(param string) (string, error) {
 
 	// transform the parameter for the host function
-	paramPtrPos, size := GetStringPtrPositionAndSize(param)
+	paramPtrPos, size := memory.GetStringPtrPositionAndSize(param)
 
 	var buffPtr *byte
 	var buffSize int
@@ -38,7 +39,7 @@ func FunctionName(param string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := GetStringResult(buffPtr, buffSize)
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
