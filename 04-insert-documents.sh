@@ -11,10 +11,13 @@ script4='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key2", { "type"
 script5='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key3", { "type" : "message", "name" : "👋 hello world 🌍" });'
 script6='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key4", { "type" : "message", "name" : "👋 greetings 🎉" });'
 
+script7='CREATE PRIMARY INDEX `#primary` ON `wasm-data`.`data`.`docs`'
+
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script1"
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script2"
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script3"
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script4"
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script5"
 cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script6"
+cbq -u admin -p ilovepandas -e "http://localhost:8091" --script="$script7"
 
