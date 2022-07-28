@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/bots-garden/capsule/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 
 	"github.com/tetratelabs/wazero/api"
 )

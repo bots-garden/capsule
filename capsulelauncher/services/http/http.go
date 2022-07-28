@@ -3,7 +3,8 @@ package capsulehttp
 import (
 	"encoding/json"
 	"fmt"
-	capsule "github.com/bots-garden/capsule/capsulelauncher/services/common"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
 	"github.com/labstack/echo/v4"
 	"log"
 	"strconv"
@@ -161,9 +162,9 @@ func Serve(httpPort string, wasmFile []byte) {
 			*/
 
 			// check the return value
-			if capsule.IsErrorString(valueStr) {
+			if commons.IsErrorString(valueStr) {
 				var returnValue string
-				errorMessage, errorCode := capsule.GetErrorStringInfo(valueStr)
+				errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
 				if errorCode == 0 {
 					returnValue = errorMessage
 				} else {
