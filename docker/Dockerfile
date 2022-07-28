@@ -8,7 +8,8 @@ USER gitpod
 RUN brew install httpie && \
     brew install bat && \
     brew install exa && \
-    brew install hey
+    brew install hey && \
+    brew install redis
 
 # ------------------------------------
 # Install TinyGo

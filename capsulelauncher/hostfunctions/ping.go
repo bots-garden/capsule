@@ -3,21 +3,27 @@ package hostfunctions
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/tetratelabs/wazero/api"
 )
 
 // host functions for the wasm module
 
+var counter = 0
+
 // string parameter, return string
 func Ping(ctx context.Context, module api.Module, offset, byteCount, retBuffPtrPos, retBuffSize uint32) {
+
 	// get string from the wasm module function (from memory)
 	buf, ok := module.Memory().Read(ctx, offset, byteCount)
 	if !ok {
 		log.Panicf("🟥 Memory.Read(%d, %d) out of range", offset, byteCount)
 	}
+    counter+=1
 	stringMessageFromFunction := string(buf)
-	stringMessageFromHost := "🏓 pong: " + stringMessageFromFunction
+	stringMessageFromHost := "🏓 pong: " + stringMessageFromFunction + " : " + strconv.Itoa(counter)
+
 
 	// write the new string to the "shared memory"
 	lengthOfTheMessage := len(stringMessageFromHost)

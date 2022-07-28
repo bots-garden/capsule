@@ -7,5 +7,5 @@ This wasm module is used by the `cli` mode
 go run main.go \
    -wasm=../wasm_modules/capsule-http-post/hello.wasm \
    -mode=cli \
-   -param="[POST]👋 hello world 🌍"
+   "[POST]👋 hello world 🌍"
 ```
