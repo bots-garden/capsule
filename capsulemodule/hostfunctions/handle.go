@@ -1,6 +1,8 @@
 // host functions
 package hostfunctions
 
+import "github.com/bots-garden/capsule/capsulemodule/commons"
+
 var handleFunction func(string) (string, error)
 
 func SetHandle(function func(string) (string, error)) {
@@ -17,7 +19,7 @@ func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameter)
 
 	if errorReturnByHandleFunction != nil {
-		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
+		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
 	} else {
 		result = stringReturnByHandleFunction
 	}

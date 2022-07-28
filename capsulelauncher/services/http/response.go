@@ -1,4 +1,4 @@
-package capsulehttp
+package commons
 
 import (
 	"strings"

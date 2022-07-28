@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"github.com/tetratelabs/wazero/api"
 )
 
@@ -37,7 +38,7 @@ func FunctionName(ctx context.Context, module api.Module, paramOffset, paramByte
 	//=========================================================
 	// get string from the wasm module function (from memory)
 
-	paramStr := ReadStringFromMemory(ctx, module, paramOffset, paramByteCount)
+	paramStr := memory.ReadStringFromMemory(ctx, module, paramOffset, paramByteCount)
 
 	//==[👋 Implementation: Start]=============================
 	var stringResultFromHost = ""
@@ -56,5 +57,5 @@ func FunctionName(ctx context.Context, module api.Module, paramOffset, paramByte
 	//==[👋 Implementation: End]===============================
 
 	// Write the new string stringResultFromHost to the "shared memory"
-	WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }

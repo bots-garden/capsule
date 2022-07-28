@@ -1,4 +1,4 @@
-package capsulehttp
+package commons
 
 import (
 	"encoding/json"
@@ -74,9 +74,9 @@ func Serve(httpPort string, wasmFile []byte) {
 		for key, values := range c.Request().Header {
 			headersMap[key] = values[0]
 		}
-		headersSlice := CreateSliceFromMap(headersMap)
+		headersSlice := commons.CreateSliceFromMap(headersMap)
 
-		headersParameter := CreateStringFromSlice(headersSlice, "|")
+		headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
 		headersParameterLength := uint64(len(headersParameter))
 
 		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)

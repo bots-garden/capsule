@@ -2,6 +2,7 @@ package hostfunctions
 
 import (
 	"context"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"os"
 
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
@@ -17,7 +18,7 @@ func ReadFile(ctx context.Context, module api.Module, fileOffset, fileByteCount,
 	//=========================================================
 	// get string from the wasm module function (from memory)
 
-	filePathStr := ReadStringFromMemory(ctx, module, fileOffset, fileByteCount)
+	filePathStr := memory.ReadStringFromMemory(ctx, module, fileOffset, fileByteCount)
 
 	//fmt.Println("📝 filePathStr:", filePathStr)
 
@@ -37,5 +38,5 @@ func ReadFile(ctx context.Context, module api.Module, fileOffset, fileByteCount,
 
 	// write the new string stringMessageFromHost to the "shared memory"
 	// (host write string result of the function to memory)
-	WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	memory.WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }

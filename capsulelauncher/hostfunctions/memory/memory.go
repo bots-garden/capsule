@@ -1,23 +1,22 @@
-package hostfunctions
+package memory
 
 import (
-	"context"
-	"log"
-	"strings"
-
-	"github.com/tetratelabs/wazero/api"
+    "context"
+    "github.com/tetratelabs/wazero/api"
+    "log"
 )
 
+// WriteStringToMemory :
 // Write string to the memory of the module
 // The Host writes to memory
 func WriteStringToMemory(text string, ctx context.Context, module api.Module,
-	retBuffPtrPos, retBuffSize uint32){
+    retBuffPtrPos, retBuffSize uint32) {
 
     stringMessageFromHost := text
     lengthOfTheMessage := len(stringMessageFromHost)
     results, err := module.ExportedFunction("allocateBuffer").Call(ctx, uint64(lengthOfTheMessage))
     if err != nil {
-      log.Panicln(err)
+        log.Panicln(err)
     }
 
     retOffset := uint32(results[0])
@@ -29,26 +28,15 @@ func WriteStringToMemory(text string, ctx context.Context, module api.Module,
 
 }
 
+// ReadStringFromMemory :
 // Get string from the module's memory (written by the module)
 // (argument of a function)
 func ReadStringFromMemory(ctx context.Context, module api.Module, contentOffset, contentByteCount uint32) string {
-  contentBuff, ok := module.Memory().Read(ctx, contentOffset, contentByteCount)
-	if !ok {
-		log.Panicf("🟥 Memory.Read(%d, %d) out of range", contentOffset, contentByteCount)
-	}
-	contentStr := string(contentBuff)
-  return contentStr
-}
-
-func CreateSliceFromString(str string, separator string) []string {
-    return strings.Split(str, separator)
-}
-
-func CreateMapFromSlice(strSlice []string, separator string) map[string]string {
-    strMap := make(map[string]string)
-    for _, item := range strSlice {
-        res := strings.Split(item, separator)
-        strMap[res[0]] = res[1]
+    contentBuff, ok := module.Memory().Read(ctx, contentOffset, contentByteCount)
+    if !ok {
+        log.Panicf("🟥 Memory.Read(%d, %d) out of range", contentOffset, contentByteCount)
     }
-    return strMap
+    contentStr := string(contentBuff)
+    return contentStr
 }
+

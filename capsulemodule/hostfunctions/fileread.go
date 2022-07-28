@@ -3,6 +3,7 @@ package hostfunctions
 
 import (
 	"errors"
+	"github.com/bots-garden/capsule/capsulemodule/commons"
 	"strconv"
 	_ "unsafe"
 )
@@ -30,8 +31,8 @@ func ReadFile(filePath string) (string, error) {
 	valueStr := GetStringResult(buffPtr, buffSize)
 
 	// check the return value
-	if IsErrorString(valueStr) {
-		errorMessage, errorCode := GetErrorStringInfo(valueStr)
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
 		if errorCode == 0 {
 			err = errors.New(errorMessage)
 		} else {

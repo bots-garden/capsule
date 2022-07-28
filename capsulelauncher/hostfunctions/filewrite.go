@@ -3,6 +3,7 @@ package hostfunctions
 import (
 	"context"
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"os"
 
 	"github.com/tetratelabs/wazero/api"
@@ -16,8 +17,8 @@ func WriteFile(ctx context.Context, module api.Module, filePathOffset, filePathB
 	//=========================================================
 	// get string from the wasm module function (from memory)
 
-	filePathStr := ReadStringFromMemory(ctx, module, filePathOffset, filePathByteCount)
-	contentStr := ReadStringFromMemory(ctx, module, contentOffset, contentByteCount)
+	filePathStr := memory.ReadStringFromMemory(ctx, module, filePathOffset, filePathByteCount)
+	contentStr := memory.ReadStringFromMemory(ctx, module, contentOffset, contentByteCount)
 
 	//fmt.Println("📝 filePathStr:", filePathStr)
 
@@ -41,5 +42,5 @@ func WriteFile(ctx context.Context, module api.Module, filePathOffset, filePathB
 
 	// write the new string stringMessageFromHost to the "shared memory"
 	// (host write string result of the function to memory)
-	WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	memory.WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }

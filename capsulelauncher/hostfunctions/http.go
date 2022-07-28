@@ -2,6 +2,7 @@ package hostfunctions
 
 import (
 	"context"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
 
@@ -17,28 +18,28 @@ func Http(ctx context.Context, module api.Module,
 	//=========================================================
 
 	// get url string from the wasm module function (from memory)
-	urlStr := ReadStringFromMemory(ctx, module, urlOffset, urlByteCount)
+	urlStr := memory.ReadStringFromMemory(ctx, module, urlOffset, urlByteCount)
 
 	// get method string from the wasm module function (from memory)
-	methodStr := ReadStringFromMemory(ctx, module, methodOffSet, methodByteCount)
+	methodStr := memory.ReadStringFromMemory(ctx, module, methodOffSet, methodByteCount)
 
 	// get headers string from the wasm module function (from memory)
 	// 🖐 headers => Accept:application/json|Content-Type: text/html; charset=UTF-8
-	headersStr := ReadStringFromMemory(ctx, module, headersOffSet, headersByteCount)
+	headersStr := memory.ReadStringFromMemory(ctx, module, headersOffSet, headersByteCount)
 
 	//TODO: choose another separator: °
-	headersSlice := CreateSliceFromString(headersStr, "|")
+	headersSlice := commons.CreateSliceFromString(headersStr, "|")
 
 	//fmt.Println(headersSlice)
 
-	headersMap := CreateMapFromSlice(headersSlice, ":")
+	headersMap := commons.CreateMapFromSlice(headersSlice, ":")
 
 	//fmt.Println(headersMap)
 	//fmt.Println(headersMap["Accept"])
 	//fmt.Println(headersMap["Content-Type"])
 
 	// get body string from the wasm module function (from memory)
-	bodyStr := ReadStringFromMemory(ctx, module, bodyOffSet, bodyByteCount)
+	bodyStr := memory.ReadStringFromMemory(ctx, module, bodyOffSet, bodyByteCount)
 	//fmt.Println("==>", bodyStr)
 
 	//=========================================================================
@@ -81,6 +82,6 @@ func Http(ctx context.Context, module api.Module,
 
 	// write the new string stringMessageFromHost to the "shared memory"
 	// (host write string result of the funcyion to memory)
-	WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	memory.WriteStringToMemory(stringMessageFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 
 }

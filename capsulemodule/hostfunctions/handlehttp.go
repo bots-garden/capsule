@@ -1,6 +1,8 @@
 // host functions
 package hostfunctions
 
+import "github.com/bots-garden/capsule/capsulemodule/commons"
+
 var handleHttpFunction func(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error)
 
 func SetHandleHttp(function func(string, map[string]string) (string, map[string]string, error)) {
@@ -24,7 +26,7 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 	returnHeaderString := CreateStringFromSlice(CreateSliceFromMap(headersReturnByHandleFunction), "|")
 
 	if errorReturnByHandleFunction != nil {
-		result = CreateErrorString(errorReturnByHandleFunction.Error(), 0)
+		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
 	} else {
 		result = CreateBodyString(stringReturnByHandleFunction)
 	}

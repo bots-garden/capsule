@@ -2,6 +2,7 @@ package hostfunctions
 
 import (
 	"context"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"github.com/tetratelabs/wazero/api"
 	"os"
 
@@ -18,7 +19,7 @@ func GetEnv(ctx context.Context, module api.Module, varNameOffset, varNameByteCo
 	//=========================================================
 	// get string from the wasm module function (from memory)
 
-	varNameStr := ReadStringFromMemory(ctx, module, varNameOffset, varNameByteCount)
+	varNameStr := memory.ReadStringFromMemory(ctx, module, varNameOffset, varNameByteCount)
 
 	//==[👋 Implementation: Start]=============================
 	var stringResultFromHost = ""
@@ -35,5 +36,5 @@ func GetEnv(ctx context.Context, module api.Module, varNameOffset, varNameByteCo
 	//==[👋 Implementation: End]===============================
 
 	// Write the new string stringResultFromHost to the "shared memory"
-	WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }
