@@ -13,8 +13,9 @@ func main() {
 }
 
 func Handle(params []string) (string, error) {
-    hf.Log("👋")
-    res, err := hf.CouchBaseQuery("SELECT * FROM \\`wasm-data\\`.data.docs")
+    //query := "INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES (\"key100\", { \"type\" : \"info\", \"name\" : \"this is an info\" });"
+    query := "SELECT * FROM `wasm-data`.data.docs"
+    res, err := hf.CouchBaseQuery(query)
 
     if err != nil {
         hf.Log(err.Error())

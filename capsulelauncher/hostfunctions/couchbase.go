@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	//"os"
 	//"strconv"
@@ -23,11 +24,12 @@ var couchBaseCluster *gocb.Cluster
 
 func InitCouchBaseCluster() {
 	if couchBaseCluster == nil {
-        fmt.Println("✅ cluster")
-		//bucketName := commons.GetEnv("COUCHBASE_BUCKET", "wasm-data")
+        fmt.Println("✅ initialize cluster connection")
+        //TODO: pass the bucketname as a parameter ?
+		bucketName := commons.GetEnv("COUCHBASE_BUCKET", "wasm-data")
 		username := commons.GetEnv("COUCHBASE_USER", "admin")
 		password := commons.GetEnv("COUCHBASE_PWD", "ilovepandas")
-        clusterUrl := commons.GetEnv("COUCHBASE_CLUSTER", "couchbases://127.0.0.1")
+        clusterUrl := commons.GetEnv("COUCHBASE_CLUSTER", "couchbase://127.0.0.1")
 
 		// Initialize the Connection
 		cluster, err := gocb.Connect(clusterUrl, gocb.ClusterOptions{
@@ -42,18 +44,24 @@ func InitCouchBaseCluster() {
             },
 		})
 		if err != nil {
+            fmt.Println("😡 when connecting to the cluster", err.Error())
 			log.Fatal(err)
 		} else {
-            fmt.Println("✅ cluster connected")
+            couchBaseCluster = cluster
+            fmt.Println("✅ cluster connected", couchBaseCluster)
         }
-        couchBaseCluster = cluster
-        //couchBaseBucket := cluster.Bucket(bucketName)
-        /*
+
+        couchBaseBucket := cluster.Bucket(bucketName)
+
         err = couchBaseBucket.WaitUntilReady(5*time.Second, nil)
         if err != nil {
+            fmt.Println("😡 when connecting to the bucket:", bucketName , err.Error())
             log.Fatal(err)
+        } else {
+            fmt.Println("✅ bucket connected", couchBaseBucket)
+
         }
-        */
+
 	}
 
 }
@@ -64,15 +72,7 @@ func getCouchBaseCluster() *gocb.Cluster {
 	return couchBaseCluster
 }
 /*
-
 SELECT * FROM `wasm-data`.data.docs
-
-script1='CREATE SCOPE `wasm-data`.data'
-script2='CREATE COLLECTION `wasm-data`.data.docs'
-script3='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key1", { "type" : "info", "name" : "this is an info" });'
-script4='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key2", { "type" : "info", "name" : "this is another info" });'
-script5='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key3", { "type" : "message", "name" : "👋 hello world 🌍" });'
-script6='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key4", { "type" : "message", "name" : "👋 greetings 🎉" });'
 */
 
 // CouchBaseQuery :
@@ -81,6 +81,8 @@ script6='INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES ("key4", { "type"
 func CouchBaseQuery(ctx context.Context, module api.Module, queryOffset, queryByteCount, retBuffPtrPos, retBuffSize uint32) {
 
 	InitCouchBaseCluster()
+
+    gocb.SetLogger(gocb.VerboseStdioLogger())
 	//=========================================================
 	// Read arguments values of the function call
 	// get strings from the wasm module function (from memory)
@@ -92,26 +94,42 @@ func CouchBaseQuery(ctx context.Context, module api.Module, queryOffset, queryBy
 	//==[👋 Implementation: Start]=============================
 	// Perform a N1QL Query
 	queryResults, err := getCouchBaseCluster().Query(queryStr, nil)
-    fmt.Println("✅ queryResults:", queryResults)
+
 	var stringResultFromHost = ""
 
     var records []string
     var record interface{}
+
+    fmt.Println("✅ queryResults:", queryResults)
+    if err != nil {
+        records = []string{""}
+        fmt.Println("😡", err.Error())
+        log.Fatalf("%v", err)
+    }
+
 
 	for queryResults.Next() {
 		err := queryResults.Row(&record)
 		if err != nil {
 			panic(err)
 		}
-        fmt.Println("=>", record)
-		records = append(records, record.(string))
+        fmt.Println("📝:", record)
+        //TODO: map conversion to string
+        /*
+            interface conversion: interface {} is map[string]interface {}, not string (recovered by wazero)
+            map[docs:map[name:👋 hello world 🌍 type:message]]
+        */
+		//records = append(records, record.(string))
 	}
 
 	if err != nil {
 		stringResultFromHost = commons.CreateStringError(err.Error(), 0)
 		// if code 0 don't display code in the error message
 	} else {
+        fmt.Println("🅰️ records:", records)
 		stringResultFromHost = commons.CreateStringFromSlice(records, "|")
+        if len(stringResultFromHost) == 0 {stringResultFromHost="empty"}
+        fmt.Println("🆎 stringResultFromHost:", stringResultFromHost)
 	}
 	//==[👋 Implementation: End]===============================
 
