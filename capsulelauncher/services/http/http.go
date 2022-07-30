@@ -26,27 +26,15 @@ type JsonResult struct {
 //! I should do this from the Handle function
 //! I need to have several Handle function, or the handle function returns an interface{} (or a result object)
 
-/*
-curl -v -X POST \
-  http://localhost:7070 \
-  -H 'content-type: application/json' \
-  -d '{"message": "Golang 💚 wasm"}'
-*/
 
-/*
-curl -XPOST -H "content-type:application/json" -d '{"hoge": 1, "fuga": [2,3,4,5]}' localhost:1323
-
-		if err := c.Bind(&json); err != nil {
-			return err
-		}
-		return c.String(http.StatusOK, fmt.Sprintf("%v", json))
-*/
 
 func Serve(httpPort string, wasmFile []byte) {
 
 	e := echo.New()
 
-	//TODO: post Raw data
+    e.GET("/", func(c echo.Context) error {
+        
+    }
 
 	e.POST("/", func(c echo.Context) error {
 
