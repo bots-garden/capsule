@@ -1,16 +1,13 @@
 package main
 
-// TinyGo wasm module
 import (
 	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-	"github.com/bots-garden/capsule/capsulemodule/hostfunctions/console"
-	"github.com/bots-garden/capsule/capsulemodule/hostfunctions/files"
 )
 
 // main is required.
 func main() {
 
-	hf_console.Log("🚀 ignition...")
+	hf.Log("🚀 ignition...")
 	hostInformation := hf.GetHostInformation()
 	hf.Log("👋 message from the wasm module: " + hostInformation)
 	hf.Log(hf.Ping("✊ knock knock from the wasm module"))
@@ -32,13 +29,13 @@ func Handle(params []string) (string, error) {
 		hf.Log("- parameter is: " + param)
 	}
 
-	txt, err := hf_files.ReadFile("about.txt")
+	txt, err := hf.ReadFile("about.txt")
 	if err != nil {
 		hf.Log(err.Error())
 	}
 	hf.Log(txt)
 
-	newFile, err := hf_files.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
+	newFile, err := hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
 	if err != nil {
 		hf.Log(err.Error())
 	}

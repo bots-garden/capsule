@@ -1,4 +1,4 @@
-package hf_console
+package hostfunctions
 
 import (
 	"github.com/bots-garden/capsule/capsulemodule/memory"
