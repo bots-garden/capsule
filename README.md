@@ -352,7 +352,7 @@ if err != nil {
 
 ### Make CouchBase N1QL Query
 
-You need to run **Capsule** with these two environment variables:
+You need to run **Capsule** with these four environment variables:
 ```bash
 COUCHBASE_CLUSTER="couchbase://localhost"
 COUCHBASE_USER="admin"
