@@ -1,8 +1,6 @@
 package main
 
-import (
-	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-)
+import hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
 
 // main is required.
 func main() {

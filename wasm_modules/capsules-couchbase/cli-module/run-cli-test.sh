@@ -7,4 +7,3 @@ COUCHBASE_BUCKET="wasm-data" \
 go run main.go \
    -wasm=../wasm_modules/capsules-couchbase/cli-module/hello.wasm \
    -mode=cli
-

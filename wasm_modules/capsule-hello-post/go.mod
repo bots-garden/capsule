@@ -3,7 +3,7 @@ module github.com/bots-garden/capsule/wasm_modules/capsule-hello-post
 go 1.18
 
 require (
-	github.com/bots-garden/capsule v0.0.0-20220728070309-46c44a73a3d1
+	github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730130303-2f1fc7ff9b42
 	github.com/tidwall/gjson v1.14.1
 	github.com/tidwall/sjson v1.2.4
 )
