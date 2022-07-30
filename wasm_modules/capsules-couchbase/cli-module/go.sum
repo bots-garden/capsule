@@ -2,3 +2,9 @@ github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220728222127-2f95800fd92
 github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220728222127-2f95800fd92a/go.mod h1:TDT2/rdIpnE6OhX839pCq/pRFjQfkjkkbAbdQYENXNg=
 github.com/bots-garden/capsule/capsulemodule v0.0.0-20220728222127-2f95800fd92a h1:MZ2ZSSElsJTSt2csOYGHt4F9VARwuDb7U8AHY42a+MM=
 github.com/bots-garden/capsule/capsulemodule v0.0.0-20220728222127-2f95800fd92a/go.mod h1:Jfr80DRo5cX0VRebVcS9R802zH/uKcljiE6uC2iNUyo=
+github.com/tidwall/gjson v1.14.1 h1:iymTbGkQBhveq21bEvAQ81I0LEBork8BFe1CUZXdyuo=
+github.com/tidwall/gjson v1.14.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
+github.com/tidwall/match v1.1.1 h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=
+github.com/tidwall/match v1.1.1/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
+github.com/tidwall/pretty v1.2.0 h1:RWIZEg2iJ8/g6fDDYzMpobmaoGh5OLl4AXtGUGPcqCs=
+github.com/tidwall/pretty v1.2.0/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=

@@ -174,6 +174,7 @@ func Serve(httpPort string, wasmFile []byte) {
 				if IsJsonContentType(headers) {
 					jsonMap := make(map[string]interface{})
 					jsonMap["error"] = returnValue
+                    jsonMap["from"] = "host"
 					return c.JSON(500, jsonMap)
 				} else {
 					return c.String(500, returnValue)
@@ -187,18 +188,42 @@ func Serve(httpPort string, wasmFile []byte) {
 
 						jsonString := GetBodyString(valueStr)
 
-						var jsonMap map[string]interface{}
+                        // check if it's an array
 
-						err := json.Unmarshal([]byte(jsonString), &jsonMap)
-						if err != nil {
-							//fmt.Println(err.Error())
-							jsonMap = make(map[string]interface{})
-							jsonMap["error"] = "JSON string bad format"
-							return c.JSON(500, jsonMap)
-						} else {
-							//return c.JSON(http.StatusOK, jsonString)
-							return c.JSON(http.StatusOK, jsonMap)
-						}
+                        if IsJsonArray(jsonString) {
+                            var jsonMap map[string]interface{}
+                            var jsonMapArray []map[string]interface{}
+                            err := json.Unmarshal([]byte(jsonString), &jsonMapArray)
+
+                            if err != nil {
+                                //fmt.Println(err.Error())
+                                jsonMap = make(map[string]interface{})
+                                jsonMap["error"] = "JSON string bad format"
+                                jsonMap["from"] = "host"
+                                return c.JSON(500, jsonMap)
+                            } else {
+                                //return c.JSON(http.StatusOK, jsonString)
+                                return c.JSON(http.StatusOK, jsonMapArray)
+                            }
+
+                        } else {
+                            var jsonMap map[string]interface{}
+
+                            err := json.Unmarshal([]byte(jsonString), &jsonMap)
+                            if err != nil {
+                                //fmt.Println(err.Error())
+                                jsonMap = make(map[string]interface{})
+                                jsonMap["error"] = "JSON string bad format"
+                                jsonMap["from"] = "host"
+                                return c.JSON(500, jsonMap)
+                            } else {
+                                //return c.JSON(http.StatusOK, jsonString)
+                                return c.JSON(http.StatusOK, jsonMap)
+                            }
+                        }
+
+
+
 					} else {
 						return c.String(http.StatusOK, GetBodyString(valueStr))
 					}
