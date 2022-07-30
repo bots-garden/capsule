@@ -7,6 +7,7 @@ import (
 
 	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
 	capsulehttp "github.com/bots-garden/capsule/capsulelauncher/services/http"
+	"github.com/go-resty/resty/v2"
 )
 
 type CapsuleFlags struct {
@@ -14,6 +15,7 @@ type CapsuleFlags struct {
 	param    string
 	wasm     string
 	httpPort string
+	url      string
 }
 
 func main() {
@@ -35,6 +37,8 @@ func main() {
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
 	httpPortPtr := flag.String("httpPort", "8080", "http port")
 
+	wasmFileUrlPtr := flag.String("url", "", "url for downloading wasm module file")
+
 	flag.Parse()
 
 	flags := CapsuleFlags{
@@ -42,18 +46,38 @@ func main() {
 		*stringParamPtr,
 		*wasmFilePathPtr,
 		*httpPortPtr,
+		*wasmFileUrlPtr,
 	}
 	//fmt.Println(flags)
 
 	//argsWithProg := os.Args
 	//args := os.Args[1:]
-	wasmModuleFilePath := flags.wasm
+
+	//wasmModuleFilePath := flags.wasm
+	var wasmFile []byte
 
 	// 📂 Load from file and then Instantiate a WebAssembly module
-	wasmFile, errLoadWasmFile := os.ReadFile(wasmModuleFilePath)
+	loadWasmFile := func(path string) []byte {
+		wasmFileToLoad, errLoadWasmFile := os.ReadFile(path)
 
-	if errLoadWasmFile != nil {
-		log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+		if errLoadWasmFile != nil {
+			log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+		}
+		return wasmFileToLoad
+	}
+
+	if len(flags.url) == 0 {
+		wasmFile = loadWasmFile(flags.wasm)
+	} else {
+		client := resty.New()
+		_, errLoadWasmFileFromUrl := client.R().
+			SetOutput(flags.wasm).
+			Get(flags.url)
+
+		if errLoadWasmFileFromUrl != nil {
+			log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+		}
+		wasmFile = loadWasmFile(flags.wasm)
 	}
 
 	//var envVariables = make(map[string]string)
