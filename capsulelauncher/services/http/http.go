@@ -31,12 +31,30 @@ func Serve(httpPort string, wasmFile []byte) {
     e := echo.New()
 
     e.GET("/health", func(c echo.Context) error {
+        stringParameter := "OK"
+        stringParameterLength := uint64(len(stringParameter))
+
         wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
         defer wasmRuntime.Close(ctx)
 
         wasmModuleHandleFunction := wasmModule.ExportedFunction("health")
 
-        handleResultArray, err := wasmModuleHandleFunction.Call(ctx)
+        malloc := wasmModule.ExportedFunction("malloc")
+        free := wasmModule.ExportedFunction("free")
+
+        results, err := malloc.Call(ctx, stringParameterLength)
+        if err != nil {
+            log.Panicln("💥 out of bounds memory access", err)
+        }
+        stringParameterPtrPosition := results[0]
+        defer free.Call(ctx, stringParameterPtrPosition)
+
+        if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
+            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+                stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
+        }
+
+        handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength)
         if err != nil {
             log.Panicln(err)
         }

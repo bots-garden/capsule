@@ -1,11 +1,14 @@
 package hostfunctions
 
-import "github.com/bots-garden/capsule/capsulemodule/memory"
+import (
+    "github.com/bots-garden/capsule/capsulemodule/memory"
+)
 
 //export health
 //go:linkname health
-func health() (strPtrPosSize uint64) {
-	strPtrPos, size := memory.GetStringPtrPositionAndSize(`{"health":"ok"}`)
-	Log("👋👋👋👋👋👋")
-	return memory.PackPtrPositionAndSize(strPtrPos, size)
+func health(strPtrPos, size uint32) (strPtrPosSize uint64) {
+    stringParameter := memory.GetStringParam(strPtrPos, size)
+    result := stringParameter
+    pos, length := memory.GetStringPtrPositionAndSize(result)
+    return memory.PackPtrPositionAndSize(pos, length)
 }
