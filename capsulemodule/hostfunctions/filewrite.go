@@ -1,4 +1,3 @@
-// host functions
 package hostfunctions
 
 import (

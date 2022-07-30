@@ -1,4 +1,3 @@
-// Package hf host functions
 package hostfunctions
 
 import (
