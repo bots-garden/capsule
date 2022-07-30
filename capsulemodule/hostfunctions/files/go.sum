@@ -1,0 +1,4 @@
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220730124301-0e930e538482 h1:UxZAqWqZQ+NBr4Y/uTQzMXBezemx8aHHpAdm5yjgmRk=
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220730124301-0e930e538482/go.mod h1:gRPL1+9f/hOXbIlKmR9Is5G6xSjst25usbLGEWP3hTU=
+github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730124301-0e930e538482 h1:oG2DGvkrpJWbm8v/1NGYw4hep/nVuWYk9fWlEnvug+c=
+github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730124301-0e930e538482/go.mod h1:7nVCReywM6j8KVxCVjtQKWSKUPbgkM+WBXw+uXZWgqg=
