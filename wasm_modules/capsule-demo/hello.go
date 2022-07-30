@@ -3,12 +3,12 @@ package main
 // TinyGo wasm module
 import (
     hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-
+    hf_files "github.com/bots-garden/capsule/capsulemodule/hostfunctions/files"
 )
 
 // main is required.
 func main() {
-
+    
     hf.Log("🚀 ignition...")
     hostInformation := hf.GetHostInformation()
     hf.Log("👋 message from the wasm module: " + hostInformation)

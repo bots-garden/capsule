@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/labstack/echo/v4 v4.7.2
-	github.com/tetratelabs/wazero v0.0.0-20220728064507-c5daf5a21843
+	github.com/tetratelabs/wazero v0.0.0-20220730093334-76c5d9878695
 )
 
 require (
