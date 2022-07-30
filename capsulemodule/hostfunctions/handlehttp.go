@@ -1,6 +1,6 @@
-// host functions
 package hostfunctions
 
+// TODO: move this to another package: exposedFunctions
 import (
 	"github.com/bots-garden/capsule/capsulemodule/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
