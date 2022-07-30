@@ -25,3 +25,4 @@ jobs:
           binary_name: "capsule"
           ldflags: "-s -w"
           extra_files: ./capsulelauncher/README.md
+          goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
