@@ -1,4 +1,4 @@
-github.com/bots-garden/capsule v0.0.0-20220728070309-46c44a73a3d1 h1:t/lTDzIEco1iWQbKVRfqWFs+rD3bSJQjuutMC0qbhr0=
-github.com/bots-garden/capsule v0.0.0-20220728070309-46c44a73a3d1/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
-github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730130303-2f1fc7ff9b42 h1:riAchPaItxFGUp9v1b35fT3Uvgm9DhiH2p51mn3Is0o=
-github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730130303-2f1fc7ff9b42/go.mod h1:Jfr80DRo5cX0VRebVcS9R802zH/uKcljiE6uC2iNUyo=
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220730130303-2f1fc7ff9b42 h1:kKuAszSBijZengtPIVapkk049SXE5wzklcP64v42zHw=
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220730130303-2f1fc7ff9b42/go.mod h1:At1Ce+IGheweU8baD/ZvD0DS64O7fpNZzrXFuQjDO8I=
+github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730132531-d288ee6b97a4 h1:px42oVTpc/FntKs4fCcbfzLk7z6PorlUTlxRivd/Tvo=
+github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730132531-d288ee6b97a4/go.mod h1:CFuO1UNMvehwFZImG7hyN8rEpX+rE8fSazyvUNaueEQ=
