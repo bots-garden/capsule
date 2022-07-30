@@ -7,10 +7,11 @@ import (
     capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
     "github.com/labstack/echo/v4"
     "log"
+    "net/http"
     "strconv"
     "strings"
 
-    "net/http"
+    "github.com/shirou/gopsutil/v3/mem"
 )
 
 type JsonParameter struct {
@@ -27,8 +28,17 @@ type JsonResult struct {
 //! I need to have several Handle function, or the handle function returns an interface{} (or a result object)
 
 func Serve(httpPort string, wasmFile []byte) {
+    v, _ := mem.VirtualMemory()
 
     e := echo.New()
+
+    e.GET("/host-metrics", func(c echo.Context) error {
+
+        jsonMap := make(map[string]interface{})
+        json.Unmarshal([]byte(v.String()), &jsonMap)
+
+        return c.JSON(http.StatusOK, jsonMap)
+    })
 
     e.GET("/health", func(c echo.Context) error {
         return c.String(http.StatusOK, "OK")

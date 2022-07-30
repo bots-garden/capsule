@@ -3,7 +3,7 @@ package main
 // TinyGo wasm module
 import (
     hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-	"github.com/tidwall/gjson"
+    "github.com/tidwall/gjson"
 )
 
 func main() {
@@ -12,8 +12,8 @@ func main() {
 
 func Handle(params []string) (string, error) {
     bucketName, err := hf.GetEnv("COUCHBASE_BUCKET")
-    query := "SELECT * FROM `" + bucketName +"`.data.docs"
-    
+    query := "SELECT * FROM `" + bucketName + "`.data.docs"
+
     jsonStrArray, err := hf.CouchBaseQuery(query)
 
     if err != nil {
@@ -24,9 +24,10 @@ func Handle(params []string) (string, error) {
             hf.Log("📝: " + jsonDoc.String())
         }
     }
-    return jsonStrArray, nil
+    return jsonStrArray, err
 }
+
 /* insert a document:
-    query := "INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES (\"key100\", { \"type\" : \"info\", \"name\" : \"this is an info\" });"
+   query := "INSERT INTO `wasm-data`.data.docs (KEY, VALUE) VALUES (\"key100\", { \"type\" : \"info\", \"name\" : \"this is an info\" });"
 */
 
