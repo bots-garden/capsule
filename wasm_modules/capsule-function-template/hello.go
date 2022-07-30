@@ -3,18 +3,18 @@ package main
 // TinyGo wasm module
 import (
     hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-    hf_files "github.com/bots-garden/capsule/capsulemodule/hostfunctions/files"
+    hf_console "github.com/bots-garden/capsule/capsulemodule/hostfunctions/console"
 
 )
 
 // main is required.
 func main() {
 
-    hf.Log("🚀 ignition...")
+    hf_console.Log("🚀 ignition...")
     hostInformation := hf.GetHostInformation()
-    hf.Log("👋 message from the wasm module: " + hostInformation)
-    hf.Log(hf.Ping("✊ knock knock from the wasm module"))
-    hf.Log(hf.Ping("✊ knock knock from the wasm module"))
+    hf_console.Log("👋 message from the wasm module: " + hostInformation)
+    hf_console.Log(hf.Ping("✊ knock knock from the wasm module"))
+    hf_console.Log(hf.Ping("✊ knock knock from the wasm module"))
 
     hf.SetHandle(Handle)
 }
@@ -23,26 +23,26 @@ func Handle(params []string) (string, error) {
 
     message, err := hf.GetEnv("MESSAGE")
     if err != nil {
-        hf.Log(err.Error())
+        hf_console.Log(err.Error())
     } else {
-        hf.Log("MESSAGE=" + message)
+        hf_console.Log("MESSAGE=" + message)
     }
 
     for _, param := range params {
-        hf.Log("- parameter is: " + param)
+        hf_console.Log("- parameter is: " + param)
     }
 
-    txt, err := hf_files.ReadFile("about.txt")
+    txt, err := hf.ReadFile("about.txt")
     if err != nil {
-        hf.Log(err.Error())
+        hf_console.Log(err.Error())
     }
-    hf.Log(txt)
+    hf_console.Log(txt)
 
-    newFile, err := hf_files.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
+    newFile, err := hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")
     if err != nil {
-        hf.Log(err.Error())
+        hf_console.Log(err.Error())
     }
-    hf.Log(newFile)
+    hf_console.Log(newFile)
 
     ret := "👋 you sent me this: " + params[0]
     //return ret, errors.New("😡 ouch")
