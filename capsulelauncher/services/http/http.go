@@ -1,25 +1,26 @@
 package commons
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
-	capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
-	"github.com/labstack/echo/v4"
-	"log"
-	"strconv"
-	"strings"
+    "encoding/json"
+    "fmt"
+    "github.com/bots-garden/capsule/capsulelauncher/commons"
+    capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
+    "github.com/labstack/echo/v4"
+    "log"
+    "net/http"
+    "strconv"
+    "strings"
 
-	"net/http"
+    "github.com/shirou/gopsutil/v3/mem"
 )
 
 type JsonParameter struct {
-	Message string `json:"message"` // change the na
+    Message string `json:"message"` // change the na
 }
 
 type JsonResult struct {
-	Value string `json:"value"`
-	Error string `json:"error"`
+    Value string `json:"value"`
+    Error string `json:"error"`
 }
 
 //TODO: return more things from JsonResult (eg type of the response)
@@ -27,393 +28,398 @@ type JsonResult struct {
 //! I need to have several Handle function, or the handle function returns an interface{} (or a result object)
 
 func Serve(httpPort string, wasmFile []byte) {
+    v, _ := mem.VirtualMemory()
 
-	e := echo.New()
+    e := echo.New()
 
-	e.GET("/metrics", func(c echo.Context) error {
-		return c.String(http.StatusOK, "OK")
-	})
+    e.GET("/host-metrics", func(c echo.Context) error {
 
-	e.GET("/health", func(c echo.Context) error {
-		return c.String(http.StatusOK, "OK")
-	})
+        jsonMap := make(map[string]interface{})
+        json.Unmarshal([]byte(v.String()), &jsonMap)
 
-	//TODO: be able to get the query string from the wasm module
-	e.GET("/", func(c echo.Context) error {
-		// we need to be able to return json, html, txt
+        return c.JSON(http.StatusOK, jsonMap)
+    })
 
-		// Parameters "setup"
-		// Payload
-		stringParameter := "empty"
-		stringParameterLength := uint64(len(stringParameter))
+    e.GET("/health", func(c echo.Context) error {
+        return c.String(http.StatusOK, "OK")
+    })
 
-		// Headers
-		var headersMap = make(map[string]string)
-		for key, values := range c.Request().Header {
-			headersMap[key] = values[0]
-		}
-		// Transform headers to make them available from the wasm module
-		headersSlice := commons.CreateSliceFromMap(headersMap)
-		headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
-		headersParameterLength := uint64(len(headersParameter))
+    //TODO: be able to get the query string from the wasm module
+    e.GET("/", func(c echo.Context) error {
+        // we need to be able to return json, html, txt
 
-		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
-		defer wasmRuntime.Close(ctx)
+        // Parameters "setup"
+        // Payload
+        stringParameter := "empty"
+        stringParameterLength := uint64(len(stringParameter))
 
-		// get the wasm module exposed function
-		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
+        // Headers
+        var headersMap = make(map[string]string)
+        for key, values := range c.Request().Header {
+            headersMap[key] = values[0]
+        }
+        // Transform headers to make them available from the wasm module
+        headersSlice := commons.CreateSliceFromMap(headersMap)
+        headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
+        headersParameterLength := uint64(len(headersParameter))
 
-		// This comes from the Wazero documentation
-		// These are undocumented, but exported. See tinygo-org/tinygo#2788
-		malloc := wasmModule.ExportedFunction("malloc")
-		free := wasmModule.ExportedFunction("free")
+        wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
+        defer wasmRuntime.Close(ctx)
 
-		// Instead of an arbitrary memory offset, use TinyGo's allocator.
-		// 🖐 Notice there is nothing string-specific in this allocation function.
-		// The same function could be used to pass binary serialized data to Wasm.
-		results, err := malloc.Call(ctx, stringParameterLength)
-		if err != nil {
-			log.Panicln("💥 out of bounds memory access", err)
-		}
-		stringParameterPtrPosition := results[0]
-		// This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
-		// So, we have to free it when finished
-		defer free.Call(ctx, stringParameterPtrPosition)
+        // get the wasm module exposed function
+        wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
 
-		// The pointer is a linear memory offset, which is where we write the name.
-		if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
-			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-				stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
-		}
+        // This comes from the Wazero documentation
+        // These are undocumented, but exported. See tinygo-org/tinygo#2788
+        malloc := wasmModule.ExportedFunction("malloc")
+        free := wasmModule.ExportedFunction("free")
 
-		// Headers
-		resultsHeader, err := malloc.Call(ctx, headersParameterLength)
-		if err != nil {
-			log.Panicln("💥 out of bounds memory access", err)
-		}
-		headersParameterPtrPosition := resultsHeader[0]
+        // Instead of an arbitrary memory offset, use TinyGo's allocator.
+        // 🖐 Notice there is nothing string-specific in this allocation function.
+        // The same function could be used to pass binary serialized data to Wasm.
+        results, err := malloc.Call(ctx, stringParameterLength)
+        if err != nil {
+            log.Panicln("💥 out of bounds memory access", err)
+        }
+        stringParameterPtrPosition := results[0]
+        // This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
+        // So, we have to free it when finished
+        defer free.Call(ctx, stringParameterPtrPosition)
 
-		defer free.Call(ctx, headersParameterPtrPosition)
+        // The pointer is a linear memory offset, which is where we write the name.
+        if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
+            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+                stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
+        }
 
-		if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
-			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-				headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
-		}
-		// End of Headers
+        // Headers
+        resultsHeader, err := malloc.Call(ctx, headersParameterLength)
+        if err != nil {
+            log.Panicln("💥 out of bounds memory access", err)
+        }
+        headersParameterPtrPosition := resultsHeader[0]
 
-		// Finally, This shows how to
-		// read-back something allocated by TinyGo.
-		handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength, headersParameterPtrPosition, headersParameterLength)
-		if err != nil {
-			log.Panicln(err)
-		}
-		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
+        defer free.Call(ctx, headersParameterPtrPosition)
 
-		// The pointer is a linear memory offset, which is where we write the name.
-		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
-			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-			return c.String(500, "out of range of memory size")
-		} else {
+        if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
+            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+                headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
+        }
+        // End of Headers
 
-			response := strings.Split(string(bytes), "[HEADERS]")
-			valueStr := response[0]
-			headersStr := response[1]
+        // Finally, This shows how to
+        // read-back something allocated by TinyGo.
+        handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength, headersParameterPtrPosition, headersParameterLength)
+        if err != nil {
+            log.Panicln(err)
+        }
+        // Note: This pointer is still owned by TinyGo, so don't try to free it!
+        handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
 
-			headers := GetHeadersMapFromString(headersStr)
+        // The pointer is a linear memory offset, which is where we write the name.
+        if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
+            log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
+                handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
+            return c.String(500, "out of range of memory size")
+        } else {
 
-			//add headers to echo context response
-			for key, value := range headers {
-				c.Response().Header().Add(key, value)
-			}
+            response := strings.Split(string(bytes), "[HEADERS]")
+            valueStr := response[0]
+            headersStr := response[1]
 
-			// check the return value
-			if commons.IsErrorString(valueStr) {
-				var returnValue string
-				errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
-				if errorCode == 0 {
-					returnValue = errorMessage
-				} else {
-					returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
-				}
-				// check content type
-				if IsJsonContentType(headers) {
-					jsonMap := make(map[string]interface{})
-					jsonMap["error"] = returnValue
-					jsonMap["from"] = "host"
-					return c.JSON(500, jsonMap)
-				} else {
-					return c.String(500, returnValue)
-				}
+            headers := GetHeadersMapFromString(headersStr)
 
-			} else {
-				if IsBodyString(valueStr) {
-					// check content type
-					body := GetBodyString(valueStr)
+            //add headers to echo context response
+            for key, value := range headers {
+                c.Response().Header().Add(key, value)
+            }
 
-					switch contentType := GetContentType(headers); contentType {
-					case "text/plain":
-						return c.String(http.StatusOK, body)
-					case "text/html":
-						return c.HTML(http.StatusOK, body)
-					case "application/json":
-						// TODO: to be refactored (see the POST version)
-						if IsJsonContentType(headers) {
-							// an arbitrary json string
+            // check the return value
+            if commons.IsErrorString(valueStr) {
+                var returnValue string
+                errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+                if errorCode == 0 {
+                    returnValue = errorMessage
+                } else {
+                    returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+                }
+                // check content type
+                if IsJsonContentType(headers) {
+                    jsonMap := make(map[string]interface{})
+                    jsonMap["error"] = returnValue
+                    jsonMap["from"] = "host"
+                    return c.JSON(500, jsonMap)
+                } else {
+                    return c.String(500, returnValue)
+                }
 
-							jsonString := GetBodyString(valueStr)
+            } else {
+                if IsBodyString(valueStr) {
+                    // check content type
+                    body := GetBodyString(valueStr)
 
-							// check if it's an array
+                    switch contentType := GetContentType(headers); contentType {
+                    case "text/plain":
+                        return c.String(http.StatusOK, body)
+                    case "text/html":
+                        return c.HTML(http.StatusOK, body)
+                    case "application/json":
+                        // TODO: to be refactored (see the POST version)
+                        if IsJsonContentType(headers) {
+                            // an arbitrary json string
 
-							if IsJsonArray(jsonString) {
-								var jsonMap map[string]interface{}
-								var jsonMapArray []map[string]interface{}
-								err := json.Unmarshal([]byte(jsonString), &jsonMapArray)
+                            jsonString := GetBodyString(valueStr)
 
-								if err != nil {
-									//fmt.Println(err.Error())
-									jsonMap = make(map[string]interface{})
-									jsonMap["error"] = "JSON string bad format"
-									jsonMap["from"] = "host"
-									return c.JSON(500, jsonMap)
-								} else {
-									//return c.JSON(http.StatusOK, jsonString)
-									return c.JSON(http.StatusOK, jsonMapArray)
-								}
+                            // check if it's an array
 
-							} else {
-								var jsonMap map[string]interface{}
+                            if IsJsonArray(jsonString) {
+                                var jsonMap map[string]interface{}
+                                var jsonMapArray []map[string]interface{}
+                                err := json.Unmarshal([]byte(jsonString), &jsonMapArray)
 
-								err := json.Unmarshal([]byte(jsonString), &jsonMap)
-								if err != nil {
-									//fmt.Println(err.Error())
-									jsonMap = make(map[string]interface{})
-									jsonMap["error"] = "JSON string bad format"
-									jsonMap["from"] = "host"
-									return c.JSON(500, jsonMap)
-								} else {
-									//return c.JSON(http.StatusOK, jsonString)
-									return c.JSON(http.StatusOK, jsonMap)
-								}
-							}
-						} else {
-							return c.String(http.StatusOK, GetBodyString(valueStr))
-						}
+                                if err != nil {
+                                    //fmt.Println(err.Error())
+                                    jsonMap = make(map[string]interface{})
+                                    jsonMap["error"] = "JSON string bad format"
+                                    jsonMap["from"] = "host"
+                                    return c.JSON(500, jsonMap)
+                                } else {
+                                    //return c.JSON(http.StatusOK, jsonString)
+                                    return c.JSON(http.StatusOK, jsonMapArray)
+                                }
 
-					default:
-						message := "🔴 something bad is happening..."
-						log.Panicln(message)
-						return c.String(500, message)
-					}
+                            } else {
+                                var jsonMap map[string]interface{}
 
-				} else {
-					//🤔 this shouldn't happen
-					if IsJsonContentType(headers) {
-						return c.JSON(http.StatusOK, valueStr)
-					} else {
-						return c.String(http.StatusOK, valueStr)
-					}
-				}
-			}
-		}
-	})
+                                err := json.Unmarshal([]byte(jsonString), &jsonMap)
+                                if err != nil {
+                                    //fmt.Println(err.Error())
+                                    jsonMap = make(map[string]interface{})
+                                    jsonMap["error"] = "JSON string bad format"
+                                    jsonMap["from"] = "host"
+                                    return c.JSON(500, jsonMap)
+                                } else {
+                                    //return c.JSON(http.StatusOK, jsonString)
+                                    return c.JSON(http.StatusOK, jsonMap)
+                                }
+                            }
+                        } else {
+                            return c.String(http.StatusOK, GetBodyString(valueStr))
+                        }
 
-	e.POST("/", func(c echo.Context) error {
+                    default:
+                        message := "🔴 something bad is happening..."
+                        log.Panicln(message)
+                        return c.String(500, message)
+                    }
 
-		jsonMap := make(map[string]interface{})
+                } else {
+                    //🤔 this shouldn't happen
+                    if IsJsonContentType(headers) {
+                        return c.JSON(http.StatusOK, valueStr)
+                    } else {
+                        return c.String(http.StatusOK, valueStr)
+                    }
+                }
+            }
+        }
+    })
 
-		if err := c.Bind(&jsonMap); err != nil {
-			return err
-		}
+    e.POST("/", func(c echo.Context) error {
 
-		// Convert map to json string
-		jsonStr, err := json.Marshal(jsonMap)
-		if err != nil {
-			fmt.Println(err)
-		}
-		// TODO handle Error
+        jsonMap := make(map[string]interface{})
 
-		// Parameters "setup"
-		// Payload
-		stringParameterLength := uint64(len(jsonStr))
-		stringParameter := jsonStr
+        if err := c.Bind(&jsonMap); err != nil {
+            return err
+        }
 
-		// Headers
-		//headers := (map[string][]string) c.Request().Header
-		var headersMap = make(map[string]string)
-		for key, values := range c.Request().Header {
-			headersMap[key] = values[0]
-		}
-		headersSlice := commons.CreateSliceFromMap(headersMap)
+        // Convert map to json string
+        jsonStr, err := json.Marshal(jsonMap)
+        if err != nil {
+            fmt.Println(err)
+        }
+        // TODO handle Error
 
-		headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
-		headersParameterLength := uint64(len(headersParameter))
+        // Parameters "setup"
+        // Payload
+        stringParameterLength := uint64(len(jsonStr))
+        stringParameter := jsonStr
 
-		wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
-		defer wasmRuntime.Close(ctx)
+        // Headers
+        //headers := (map[string][]string) c.Request().Header
+        var headersMap = make(map[string]string)
+        for key, values := range c.Request().Header {
+            headersMap[key] = values[0]
+        }
+        headersSlice := commons.CreateSliceFromMap(headersMap)
 
-		// get the function
-		//wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
-		wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
+        headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
+        headersParameterLength := uint64(len(headersParameter))
 
-		// These are undocumented, but exported. See tinygo-org/tinygo#2788
-		malloc := wasmModule.ExportedFunction("malloc")
-		free := wasmModule.ExportedFunction("free")
-		// https://github.com/tinygo-org/tinygo/issues/2788
-		// https://github.com/tinygo-org/tinygo/issues/2787
+        wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
+        defer wasmRuntime.Close(ctx)
 
-		// Instead of an arbitrary memory offset, use TinyGo's allocator.
-		// 🖐 Notice there is nothing string-specific in this allocation function.
-		// The same function could be used to pass binary serialized data to Wasm.
-		results, err := malloc.Call(ctx, stringParameterLength)
-		if err != nil {
-			log.Panicln("💥 out of bounds memory access", err)
-		}
-		stringParameterPtrPosition := results[0]
-		// This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
-		// So, we have to free it when finished
-		defer free.Call(ctx, stringParameterPtrPosition)
+        // get the function
+        //wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
+        wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandleHttp")
 
-		// The pointer is a linear memory offset, which is where we write the name.
-		if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
-			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-				stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
-		}
+        // These are undocumented, but exported. See tinygo-org/tinygo#2788
+        malloc := wasmModule.ExportedFunction("malloc")
+        free := wasmModule.ExportedFunction("free")
+        // https://github.com/tinygo-org/tinygo/issues/2788
+        // https://github.com/tinygo-org/tinygo/issues/2787
 
-		// Headers
-		resultsHeader, err := malloc.Call(ctx, headersParameterLength)
-		if err != nil {
-			log.Panicln("💥 out of bounds memory access", err)
-		}
-		headersParameterPtrPosition := resultsHeader[0]
+        // Instead of an arbitrary memory offset, use TinyGo's allocator.
+        // 🖐 Notice there is nothing string-specific in this allocation function.
+        // The same function could be used to pass binary serialized data to Wasm.
+        results, err := malloc.Call(ctx, stringParameterLength)
+        if err != nil {
+            log.Panicln("💥 out of bounds memory access", err)
+        }
+        stringParameterPtrPosition := results[0]
+        // This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
+        // So, we have to free it when finished
+        defer free.Call(ctx, stringParameterPtrPosition)
 
-		defer free.Call(ctx, headersParameterPtrPosition)
+        // The pointer is a linear memory offset, which is where we write the name.
+        if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
+            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+                stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
+        }
 
-		if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
-			log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-				headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
-		}
-		// End of Headers
+        // Headers
+        resultsHeader, err := malloc.Call(ctx, headersParameterLength)
+        if err != nil {
+            log.Panicln("💥 out of bounds memory access", err)
+        }
+        headersParameterPtrPosition := resultsHeader[0]
 
-		// Finally, This shows how to
-		// read-back something allocated by TinyGo.
-		handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength, headersParameterPtrPosition, headersParameterLength)
-		if err != nil {
-			log.Panicln(err)
-		}
-		// Note: This pointer is still owned by TinyGo, so don't try to free it!
-		handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
+        defer free.Call(ctx, headersParameterPtrPosition)
 
-		// The pointer is a linear memory offset, which is where we write the name.
-		if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
-			log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-				handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-			return c.String(500, "out of range of memory size")
-		} else {
+        if !wasmModule.Memory().Write(ctx, uint32(headersParameterPtrPosition), []byte(headersParameter)) {
+            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
+                headersParameterPtrPosition, headersParameterLength, wasmModule.Memory().Size(ctx))
+        }
+        // End of Headers
 
-			response := strings.Split(string(bytes), "[HEADERS]")
-			valueStr := response[0]
-			headersStr := response[1]
+        // Finally, This shows how to
+        // read-back something allocated by TinyGo.
+        handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength, headersParameterPtrPosition, headersParameterLength)
+        if err != nil {
+            log.Panicln(err)
+        }
+        // Note: This pointer is still owned by TinyGo, so don't try to free it!
+        handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
 
-			headers := GetHeadersMapFromString(headersStr)
+        // The pointer is a linear memory offset, which is where we write the name.
+        if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
+            log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
+                handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
+            return c.String(500, "out of range of memory size")
+        } else {
 
-			//add headers to echo context response
-			for key, value := range headers {
-				//fmt.Println("-->", key, value)
-				c.Response().Header().Add(key, value)
-			}
+            response := strings.Split(string(bytes), "[HEADERS]")
+            valueStr := response[0]
+            headersStr := response[1]
 
-			//fmt.Println("👋 headers", headers)
-			/*
-			   if error:
-			     ERR][0]:😡 oups I did it again[HEADERS]Content-Type:application/json; charset=utf-8
-			   else:
-			     [BODY]{"message": "👋 you sent me this:{"message":"Golang 💚 wasm"}"}[HEADERS]Content-Type:application/json; charset=utf-8
-			*/
+            headers := GetHeadersMapFromString(headersStr)
 
-			// check the return value
-			if commons.IsErrorString(valueStr) {
-				var returnValue string
-				errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
-				if errorCode == 0 {
-					returnValue = errorMessage
-				} else {
-					returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
-				}
-				// check content type
-				if IsJsonContentType(headers) {
-					jsonMap := make(map[string]interface{})
-					jsonMap["error"] = returnValue
-					jsonMap["from"] = "host"
-					return c.JSON(500, jsonMap)
-				} else {
-					return c.String(500, returnValue)
-				}
+            //add headers to echo context response
+            for key, value := range headers {
+                //fmt.Println("-->", key, value)
+                c.Response().Header().Add(key, value)
+            }
 
-			} else {
-				if IsBodyString(valueStr) {
-					// check content type
-					if IsJsonContentType(headers) {
-						// an arbitrary json string
+            //fmt.Println("👋 headers", headers)
+            /*
+               if error:
+                 ERR][0]:😡 oups I did it again[HEADERS]Content-Type:application/json; charset=utf-8
+               else:
+                 [BODY]{"message": "👋 you sent me this:{"message":"Golang 💚 wasm"}"}[HEADERS]Content-Type:application/json; charset=utf-8
+            */
 
-						jsonString := GetBodyString(valueStr)
+            // check the return value
+            if commons.IsErrorString(valueStr) {
+                var returnValue string
+                errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+                if errorCode == 0 {
+                    returnValue = errorMessage
+                } else {
+                    returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+                }
+                // check content type
+                if IsJsonContentType(headers) {
+                    jsonMap := make(map[string]interface{})
+                    jsonMap["error"] = returnValue
+                    jsonMap["from"] = "host"
+                    return c.JSON(500, jsonMap)
+                } else {
+                    return c.String(500, returnValue)
+                }
 
-						// check if it's an array
+            } else {
+                if IsBodyString(valueStr) {
+                    // check content type
+                    if IsJsonContentType(headers) {
+                        // an arbitrary json string
 
-						if IsJsonArray(jsonString) {
-							var jsonMap map[string]interface{}
-							var jsonMapArray []map[string]interface{}
-							err := json.Unmarshal([]byte(jsonString), &jsonMapArray)
+                        jsonString := GetBodyString(valueStr)
 
-							if err != nil {
-								//fmt.Println(err.Error())
-								jsonMap = make(map[string]interface{})
-								jsonMap["error"] = "JSON string bad format"
-								jsonMap["from"] = "host"
-								return c.JSON(500, jsonMap)
-							} else {
-								//return c.JSON(http.StatusOK, jsonString)
-								return c.JSON(http.StatusOK, jsonMapArray)
-							}
+                        // check if it's an array
 
-						} else {
-							var jsonMap map[string]interface{}
+                        if IsJsonArray(jsonString) {
+                            var jsonMap map[string]interface{}
+                            var jsonMapArray []map[string]interface{}
+                            err := json.Unmarshal([]byte(jsonString), &jsonMapArray)
 
-							err := json.Unmarshal([]byte(jsonString), &jsonMap)
-							if err != nil {
-								//fmt.Println(err.Error())
-								jsonMap = make(map[string]interface{})
-								jsonMap["error"] = "JSON string bad format"
-								jsonMap["from"] = "host"
-								return c.JSON(500, jsonMap)
-							} else {
-								//return c.JSON(http.StatusOK, jsonString)
-								return c.JSON(http.StatusOK, jsonMap)
-							}
-						}
+                            if err != nil {
+                                //fmt.Println(err.Error())
+                                jsonMap = make(map[string]interface{})
+                                jsonMap["error"] = "JSON string bad format"
+                                jsonMap["from"] = "host"
+                                return c.JSON(500, jsonMap)
+                            } else {
+                                //return c.JSON(http.StatusOK, jsonString)
+                                return c.JSON(http.StatusOK, jsonMapArray)
+                            }
 
-					} else {
-						return c.String(http.StatusOK, GetBodyString(valueStr))
-					}
+                        } else {
+                            var jsonMap map[string]interface{}
 
-				} else {
-					//🤔 this shouldn't happen
-					if IsJsonContentType(headers) {
-						return c.JSON(http.StatusOK, valueStr)
-					} else {
-						return c.String(http.StatusOK, valueStr)
-					}
-				}
-			}
-		}
+                            err := json.Unmarshal([]byte(jsonString), &jsonMap)
+                            if err != nil {
+                                //fmt.Println(err.Error())
+                                jsonMap = make(map[string]interface{})
+                                jsonMap["error"] = "JSON string bad format"
+                                jsonMap["from"] = "host"
+                                return c.JSON(500, jsonMap)
+                            } else {
+                                //return c.JSON(http.StatusOK, jsonString)
+                                return c.JSON(http.StatusOK, jsonMap)
+                            }
+                        }
 
-	})
-	//https://echo.labstack.com/guide/customization/
-	e.HideBanner = true
-	e.Start(":" + httpPort)
+                    } else {
+                        return c.String(http.StatusOK, GetBodyString(valueStr))
+                    }
 
-	//e.Logger.Info(e.Start(":" + httpPort))
-	//e.Logger.Fatal(e.Start(":" + httpPort))
+                } else {
+                    //🤔 this shouldn't happen
+                    if IsJsonContentType(headers) {
+                        return c.JSON(http.StatusOK, valueStr)
+                    } else {
+                        return c.String(http.StatusOK, valueStr)
+                    }
+                }
+            }
+        }
+
+    })
+    //https://echo.labstack.com/guide/customization/
+    e.HideBanner = true
+    e.Start(":" + httpPort)
+
+    //e.Logger.Info(e.Start(":" + httpPort))
+    //e.Logger.Fatal(e.Start(":" + httpPort))
 
 }
