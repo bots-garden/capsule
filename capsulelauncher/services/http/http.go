@@ -31,43 +31,7 @@ func Serve(httpPort string, wasmFile []byte) {
     e := echo.New()
 
     e.GET("/health", func(c echo.Context) error {
-        stringParameter := "OK"
-        stringParameterLength := uint64(len(stringParameter))
-
-        wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
-        defer wasmRuntime.Close(ctx)
-
-        wasmModuleHandleFunction := wasmModule.ExportedFunction("health")
-
-        malloc := wasmModule.ExportedFunction("malloc")
-        free := wasmModule.ExportedFunction("free")
-
-        results, err := malloc.Call(ctx, stringParameterLength)
-        if err != nil {
-            log.Panicln("💥 out of bounds memory access", err)
-        }
-        stringParameterPtrPosition := results[0]
-        defer free.Call(ctx, stringParameterPtrPosition)
-
-        if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
-            log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-                stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
-        }
-
-        handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength)
-        if err != nil {
-            log.Panicln(err)
-        }
-        handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
-
-        if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
-            log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-                handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-            return c.String(500, "out of range of memory size")
-        } else {
-            return c.String(http.StatusOK, string(bytes))
-        }
-
+        return c.String(http.StatusOK, "OK")
     })
 
     //TODO: be able to get the query string from the wasm module
