@@ -6,6 +6,7 @@ import (
 	"unsafe"
 )
 
+// 🤔 TODO: is it used ?
 //export allocateBuffer
 //go:linkname allocateBuffer
 func allocateBuffer(size uint32) *byte {
