@@ -16,7 +16,7 @@ What is **Capsule**?
 
 ## First CLI function
 
-Create a `go.mod` file:
+Create a `go.mod` file: (`go mod init cli-say-hello`)
 ```
 module cli-say-hello
 
@@ -79,7 +79,7 @@ The first parameter is: 👋 hello world 🌍🎃
 
 ## First HTTP function
 
-Create a `go.mod` file:
+Create a `go.mod` file: (`go mod init http-say-hello`)
 ```
 module http-say-hello
 
