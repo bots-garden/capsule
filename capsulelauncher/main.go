@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	reverse_proxy "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy"
 	"log"
 	"os"
 
@@ -54,30 +55,34 @@ func main() {
 	//args := os.Args[1:]
 
 	//wasmModuleFilePath := flags.wasm
-	var wasmFile []byte
 
-	// 📂 Load from file and then Instantiate a WebAssembly module
-	loadWasmFile := func(path string) []byte {
-		wasmFileToLoad, errLoadWasmFile := os.ReadFile(path)
+	getWasmFile := func() []byte {
+		var wasmFile []byte
 
-		if errLoadWasmFile != nil {
-			log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+		// 📂 Load from file and then Instantiate a WebAssembly module
+		loadWasmFile := func(path string) []byte {
+			wasmFileToLoad, errLoadWasmFile := os.ReadFile(path)
+
+			if errLoadWasmFile != nil {
+				log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+			}
+			return wasmFileToLoad
 		}
-		return wasmFileToLoad
-	}
 
-	if len(flags.url) == 0 {
-		wasmFile = loadWasmFile(flags.wasm)
-	} else {
-		client := resty.New()
-		_, errLoadWasmFileFromUrl := client.R().
-			SetOutput(flags.wasm).
-			Get(flags.url)
+		if len(flags.url) == 0 {
+			wasmFile = loadWasmFile(flags.wasm)
+		} else {
+			client := resty.New()
+			_, errLoadWasmFileFromUrl := client.R().
+				SetOutput(flags.wasm).
+				Get(flags.url)
 
-		if errLoadWasmFileFromUrl != nil {
-			log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+			if errLoadWasmFileFromUrl != nil {
+				log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+			}
+			wasmFile = loadWasmFile(flags.wasm)
 		}
-		wasmFile = loadWasmFile(flags.wasm)
+		return wasmFile
 	}
 
 	//var envVariables = make(map[string]string)
@@ -87,15 +92,16 @@ func main() {
 
 	switch what := flags.mode; what {
 	case "http":
-		capsulehttp.Serve(flags.httpPort, wasmFile)
+		capsulehttp.Serve(flags.httpPort, getWasmFile())
 	case "cli":
 		/*
 			for idx, arg := range flag.Args() {
 				fmt.Println(idx, "==>", arg)
 			}
 		*/
-		capsulecli.Execute(flag.Args(), wasmFile)
-
+		capsulecli.Execute(flag.Args(), getWasmFile())
+	case "reverse-proxy":
+		reverse_proxy.Serve(flags.httpPort)
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
 	}
