@@ -88,7 +88,6 @@ func main() {
 	switch what := flags.mode; what {
 	case "http":
 		capsulehttp.Serve(flags.httpPort, wasmFile)
-
 	case "cli":
 		/*
 			for idx, arg := range flag.Args() {

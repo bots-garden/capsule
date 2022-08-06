@@ -1,4 +1,4 @@
-package commons
+package capsulehttp
 
 import (
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
@@ -44,16 +44,15 @@ func IsTxtContentType(headers map[string]string) bool {
 }
 
 func GetContentType(headers map[string]string) string {
-    if IsTxtContentType(headers) {
-        return "text/plain"
-    }
-    if IsJsonContentType(headers) {
-        return "application/json"
-    }
-    if IsHtmlContentType(headers) {
-        return "text/html"
-    } else {
-        return "text/plain"
-    }
+	if IsTxtContentType(headers) {
+		return "text/plain"
+	}
+	if IsJsonContentType(headers) {
+		return "application/json"
+	}
+	if IsHtmlContentType(headers) {
+		return "text/html"
+	} else {
+		return "text/plain"
+	}
 }
-

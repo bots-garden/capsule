@@ -1,5 +1,7 @@
 github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730130303-2f1fc7ff9b42 h1:riAchPaItxFGUp9v1b35fT3Uvgm9DhiH2p51mn3Is0o=
 github.com/bots-garden/capsule/capsulemodule v0.0.0-20220730130303-2f1fc7ff9b42/go.mod h1:Jfr80DRo5cX0VRebVcS9R802zH/uKcljiE6uC2iNUyo=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/tidwall/gjson v1.12.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.14.1 h1:iymTbGkQBhveq21bEvAQ81I0LEBork8BFe1CUZXdyuo=
 github.com/tidwall/gjson v1.14.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=

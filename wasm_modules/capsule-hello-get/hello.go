@@ -18,7 +18,7 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 
         <body>
             <h1>👋 Hello World 🌍</h1>
-            <h2>Served with 💜 with Capsule 💊</h2>
+            <h2>Served with 💚💜 with Capsule 💊</h2>
         </body>
 
     </html>

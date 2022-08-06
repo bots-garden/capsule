@@ -1,84 +1,46 @@
 package capsulecli
 
 import (
-	"fmt"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
-	capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
-	"log"
-	"strconv"
+    "fmt"
+    "github.com/bots-garden/capsule/capsulelauncher/commons"
+    capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
+    "log"
+    "strconv"
 )
 
 // Execute :
 // Pass a string param and get a string result
 func Execute(args []string, wasmFile []byte) {
 
-	//TODO change the separator (same for headers etc...)
-	stringParameter := commons.CreateStringFromSlice(args, "°")
+    // 👋 get Wasm Module Instance (and Wasm runtime)
+    wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntime(wasmFile)
+    // defer must always be in the main code (to avoid go routine panic)
+    defer wasmRuntime.Close(ctx)
 
-	// Choose the context to use for function calls.
-	//ctx := context.Background()
+    // TODO change the separator (same for headers etc...)
+    // the string is built with args of main
+    params := commons.CreateStringFromSlice(args, "°")
 
-	// 👋 get Wasm Module Instance (and Wasm runtime)
-	wasmRuntime, wasmModule, ctx := capsule.CreateWasmRuntimeAndModuleInstances(wasmFile)
-	// defer must always be in the main code (to avoid go routine panic)
-	defer wasmRuntime.Close(ctx)
+    paramsPos, paramsLen, free, err := capsule.ReserveMemorySpaceFor(params, wasmModule, ctx)
+    defer free.Call(ctx, paramsPos)
 
-	// Parameter "setup" / stringParameter comes from argument
-	stringParameterLength := uint64(len(stringParameter))
+    // get the callHandle function
+    bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, paramsPos, paramsLen)
 
-	// get the callHandle function
-	wasmModuleHandleFunction := wasmModule.ExportedFunction("callHandle")
+    if err != nil {
+        log.Panicf("out of range of memory size")
+    }
 
-	// These are undocumented, but exported. See tinygo-org/tinygo#2788
-	malloc := wasmModule.ExportedFunction("malloc")
-	free := wasmModule.ExportedFunction("free")
+    returnValue := string(bytes)
+    // check the return value
+    if commons.IsErrorString(returnValue) {
+        errorMessage, errorCode := commons.GetErrorStringInfo(returnValue)
+        if errorCode == 0 {
+            returnValue = errorMessage
+        } else {
+            returnValue = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
+        }
+    }
 
-	// Instead of an arbitrary memory offset, use TinyGo's allocator.
-	// 🖐 Notice there is nothing string-specific in this allocation function.
-	// The same function could be used to pass binary serialized data to Wasm.
-	results, err := malloc.Call(ctx, stringParameterLength)
-	if err != nil {
-		log.Panicln(err)
-	}
-	stringParameterPtrPosition := results[0]
-	// This pointer is managed by TinyGo, but TinyGo is unaware of external usage.
-	// So, we have to free it when finished
-	defer free.Call(ctx, stringParameterPtrPosition)
-
-	// The pointer is a linear memory offset, which is where we write the name.
-	if !wasmModule.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(stringParameter)) {
-		log.Panicf("🟥 Memory.Write(%d, %d) out of range of memory size %d",
-			stringParameterPtrPosition, stringParameterLength, wasmModule.Memory().Size(ctx))
-	}
-	// Finally, we get the message "👋 hello <name>" printed. This shows how to
-	// read-back something allocated by TinyGo.
-	handleResultArray, err := wasmModuleHandleFunction.Call(ctx, stringParameterPtrPosition, stringParameterLength)
-	if err != nil {
-		log.Panicln(err)
-	}
-	// Note: This pointer is still owned by TinyGo, so don't try to free it!
-	handleReturnPtrPos, handleReturnSize := capsule.GetPackedPtrPositionAndSize(handleResultArray)
-
-	// The pointer is a linear memory offset, which is where we write the name.
-	if bytes, ok := wasmModule.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize); !ok {
-		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
-			handleReturnPtrPos, handleReturnSize, wasmModule.Memory().Size(ctx))
-	} else {
-
-		valueStr := string(bytes)
-		// check the return value
-		if commons.IsErrorString(valueStr) {
-			errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
-			if errorCode == 0 {
-				valueStr = errorMessage
-			} else {
-				valueStr = errorMessage + " (" + strconv.Itoa(errorCode) + ")"
-			}
-
-		}
-
-		// fmt.Println("🤖:", string(bytes)) // the result
-		fmt.Println(valueStr) // the result
-	}
-
+    fmt.Println(returnValue) // the result
 }
