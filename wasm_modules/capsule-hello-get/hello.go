@@ -7,6 +7,7 @@ import (
 
 func main() {
 	hf.SetHandleHttp(Handle)
+	hf.Log("🖖" + hf.GetHostInformation())
 }
 
 func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {

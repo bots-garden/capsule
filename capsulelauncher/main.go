@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
+	capsulehttp_next "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	reverse_proxy "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy"
 	"log"
 	"os"
 
 	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
-	capsulehttp "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -102,7 +102,7 @@ func main() {
 
 	switch what := flags.mode; what {
 	case "http":
-		capsulehttp.Serve(flags.httpPort, getWasmFile())
+		capsulehttp_next.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 	case "cli":
 		/*
 			for idx, arg := range flag.Args() {

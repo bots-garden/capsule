@@ -7,16 +7,14 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
-// host functions for the wasm module
+var HostInformation = ""
 
 // GetHostInformation returns information about the host
 func GetHostInformation(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
-	// TODO: return something more interesting
-	// TODO: cpu usage, memory,...
-	message := "💊 Capsule [wasm launcher] v0.0.0"
+
+	message := HostInformation
 	lengthOfTheMessage := len(message)
 
-	// TODO: create an helper from this
 	// Allocate buffer in the wasm module memory
 	results, err := module.ExportedFunction("allocateBuffer").Call(ctx, uint64(lengthOfTheMessage))
 	if err != nil {

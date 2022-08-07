@@ -21,7 +21,7 @@ func IsJsonContentType(headers map[string]string) bool {
 	}
 }
 
-// Content-Type: text/html; charset=UTF-8
+// IsHtmlContentType : Content-Type: text/html; charset=UTF-8
 func IsHtmlContentType(headers map[string]string) bool {
 	// ! case of key and value
 	// TODO: handle the case issue
@@ -32,7 +32,7 @@ func IsHtmlContentType(headers map[string]string) bool {
 	}
 }
 
-// Content-Type: text/plain; charset=UTF-8
+// IsTxtContentType : Content-Type: text/plain; charset=UTF-8
 func IsTxtContentType(headers map[string]string) bool {
 	// ! case of key and value
 	// TODO: handle the case issue

@@ -2,34 +2,42 @@ package capsulehttp
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions"
 	capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/shirou/gopsutil/v3/mem"
 	"net/http"
 )
 
-func Serve(httpPort string, wasmFile []byte) {
+func Serve(httpPort string, wasmFile []byte, crt, key string) {
+
+	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `}`
 
 	v, _ := mem.VirtualMemory()
 
-	e := echo.New()
+	if commons.GetEnv("DEBUG", "false") == "false" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 
-	e.GET("/host-metrics", func(c echo.Context) error {
+	router := gin.New()
 
+	router.GET("/host-metrics", func(c *gin.Context) {
 		jsonMap := make(map[string]interface{})
 		json.Unmarshal([]byte(v.String()), &jsonMap)
-
-		return c.JSON(http.StatusOK, jsonMap)
+		c.JSON(http.StatusOK, jsonMap)
 	})
 
-	e.GET("/health", func(c echo.Context) error {
-		return c.String(http.StatusOK, "OK")
+	router.GET("/health", func(c *gin.Context) {
+		c.String(http.StatusOK, "OK")
 	})
 
 	//TODO: be able to get the query string from the wasm module
 	// we need to be able to return json, html, txt
-	e.GET("/", func(c echo.Context) error {
+	router.GET("/", func(c *gin.Context) {
 		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
@@ -43,24 +51,22 @@ func Serve(httpPort string, wasmFile []byte) {
 
 		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, queryPos, queryLen, headersStrPos, headersStrLen)
 		if err != nil {
-			return c.String(500, "out of range of memory size")
+			c.String(500, "out of range of memory size")
 		}
 		bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
 		// check the return value
 		if commons.IsErrorString(bodyStr) {
-			return SendErrorMessage(bodyStr, headers, c)
+			SendErrorMessage(bodyStr, headers, c)
+		} else if IsBodyString(bodyStr) {
+			SendBodyMessage(bodyStr, headers, c)
+		} else {
+			c.String(http.StatusOK, bodyStr)
 		}
-
-		if IsBodyString(bodyStr) {
-			return SendBodyMessage(bodyStr, headers, c)
-		}
-
-		return c.String(http.StatusOK, bodyStr)
 
 	})
 
-	e.POST("/", func(c echo.Context) error {
+	router.POST("/", func(c *gin.Context) {
 
 		// Parameters "setup"
 		jsonStr, _ := GetJsonStringFromPayloadRequest(c)
@@ -83,28 +89,33 @@ func Serve(httpPort string, wasmFile []byte) {
 		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, headersStrPos, headersStrLen)
 
 		if err != nil {
-			return c.String(500, "out of range of memory size")
+			c.String(500, "out of range of memory size")
 		}
 
 		bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
 		// check the return value
 		if commons.IsErrorString(bodyStr) {
-			return SendErrorMessage(bodyStr, headers, c)
+			SendErrorMessage(bodyStr, headers, c)
+		} else if IsBodyString(bodyStr) {
+			SendJsonMessage(bodyStr, headers, c)
+		} else {
+			c.String(http.StatusOK, bodyStr)
 		}
 
-		if IsBodyString(bodyStr) {
-			return SendJsonMessage(bodyStr, headers, c)
-		}
-
-		return c.String(http.StatusOK, bodyStr)
+		//c.String(http.StatusOK, bodyStr)
 
 	})
-	//https://echo.labstack.com/guide/customization/
-	e.HideBanner = true
-	e.Start(":" + httpPort)
 
-	//e.Logger.Info(e.Start(":" + httpPort))
-	//e.Logger.Fatal(e.Start(":" + httpPort))
+	if crt != "" {
+		// certs/procyon-registry.local.crt
+		// certs/procyon-registry.local.key
+		fmt.Println("💊 Capsule http server is listening on:", httpPort, "🔐🌍")
+
+		router.RunTLS(":"+httpPort, crt, key)
+	} else {
+		fmt.Println("💊 Capsule http server is listening on:", httpPort, "🌍")
+		router.Run(":" + httpPort)
+	}
 
 }
