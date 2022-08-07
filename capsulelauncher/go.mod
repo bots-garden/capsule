@@ -10,6 +10,7 @@ require (
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/shirou/gopsutil/v3 v3.22.6
 	github.com/tetratelabs/wazero v0.0.0-20220730093334-76c5d9878695
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

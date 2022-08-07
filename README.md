@@ -367,3 +367,49 @@ query := "SELECT * FROM `" + bucketName + "`.data.docs"
 jsonStringArray, err := hf.CouchBaseQuery(query)
 ```
 
+## Use Capsule as a reverse proxy
+
+You can use **Capsule** as a reverse proxy. Then, you can call a function by its name:
+```bash
+http://localhost:8888/functions/hola
+```
+> *The reverse proxy will serve the **default** version of the `hola` function*
+
+Or, you can use a revision of the function (for example, if you use several version of the function):
+```bash
+http://localhost:8888/functions/hola/orange
+```
+> - *The reverse proxy will serve the `orange` revision of the `hola` function*
+> - *The `default` revision is the `default` version of the function (http://localhost:8888/functions/hola)*
+
+To run **Capsule** as a reverse proxy, run it like this:
+```bash
+./capsule \
+   -mode=reverse-proxy \
+   -config=./config.yaml \
+   -httpPort=8888
+```
+> *You have to define a configuration yaml file.*
+
+### Define the routes in a yaml file
+
+*config.yaml*
+```yaml
+hello:
+    default:
+        - http://localhost:9091
+        - http://localhost:7071
+
+hey:
+    default:
+        - http://localhost:9092
+
+hola:
+    default:
+        - http://localhost:9093
+    orange:
+        - http://localhost:6061
+    yellow:
+        - http://localhost:6062
+```
+> *A revision can be a set of URLs. In this case, the Capsule reverse-proxy will use randomly one of the URLs.*
