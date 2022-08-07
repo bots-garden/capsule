@@ -24,6 +24,7 @@ func getEnv(key, fallback string) string {
 
 func redirect(functionUrls []interface{}, c *gin.Context) {
     var functionUrl = ""
+
     if len(functionUrls) == 1 {
         functionUrl = functionUrls[0].(string)
     } else {
@@ -58,7 +59,11 @@ func proxy(c *gin.Context) {
     functionName := c.Param("function_name")
     functionUrls := functions[functionName]["default"]
 
-    redirect(functionUrls.([]interface{}), c)
+    if functionUrls != nil {
+        redirect(functionUrls.([]interface{}), c)
+    } else {
+        c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
+    }
 
 }
 
@@ -67,8 +72,12 @@ func proxyRevision(c *gin.Context) {
     functionName := c.Param("function_name")
     functionRevision := c.Param("function_revision")
     functionUrls := functions[functionName][functionRevision]
-    redirect(functionUrls.([]interface{}), c)
 
+    if functionUrls != nil {
+        redirect(functionUrls.([]interface{}), c)
+    } else {
+        c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
+    }
 }
 
 var functions = make(map[interface{}]map[interface{}]interface{})
@@ -100,13 +109,6 @@ func Serve(httpPort, config, crt, key string) {
         fmt.Println("👋 routes are defined in memory")
     }
 
-    /*
-       ErrorHandler := func(c *gin.Context) {
-           c.Next()
-           c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
-       }
-    */
-
     if getEnv("DEBUG", "false") == "false" {
         gin.SetMode(gin.ReleaseMode)
     } else {
@@ -115,13 +117,15 @@ func Serve(httpPort, config, crt, key string) {
     //router := gin.Default()
     router := gin.New()
 
-    //router.Use(ErrorHandler)
-
     /*
-       router.NoRoute(func(c *gin.Context) {
-           c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
-       })
+       TODO:
+       - add API to register a function
+       - add API to unregister a function
     */
+
+    router.NoRoute(func(c *gin.Context) {
+        c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
+    })
 
     router.Any("/functions/:function_name", proxy)
     router.Any("/functions/:function_name/:function_revision", proxyRevision)
