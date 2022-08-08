@@ -394,7 +394,7 @@ To run **Capsule** as a reverse proxy, run it like this:
 ```
 > *You have to define a configuration yaml file.*
 
-### Define the routes in a yaml file
+### Define the routes in a yaml file (static mode)
 
 *config.yaml*
 ```yaml
@@ -416,3 +416,141 @@ hola:
         - http://localhost:6062
 ```
 > *A revision can be a set of URLs. In this case, the Capsule reverse-proxy will use randomly one of the URLs.*
+
+### Use the "in memory" dynamic mode of the reverse-proxy
+
+With the reverse proxy mode of Capsule, you gain an **API** that allows to define routes dynamically (in memory). You can keep the yaml config file (it is loaded in memory at startup).
+
+To run **Capsule** as a reverse proxy, with the "in memory" dynamic mode, add this flag: `-backend="memory"`:
+```bash
+./capsule \
+   -mode=reverse-proxy \
+   -config=./config.yaml \
+   -backend="memory" \
+   -httpPort=8888
+```
+
+#### Registration API
+
+##### Register a function (add a new route to a function)
+
+```bash
+curl -v -X POST \
+  http://localhost:8888/memory/functions/registration \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"function": "morgen", "revision": "default", "url": "http://localhost:5050"}'
+```
+> - This will add a new entry to the routes list with a `default` revision, with one url `http://localhost:5050`
+> - You can call the function with this url: http://localhost:8888/function/morgen
+
+The routes list (it's a map) will look like that:
+
+```json
+{
+    "morgen": {
+        "default": [
+            "http://localhost:5050"
+        ]
+    }
+}
+```
+
+You can create a new function registration with a named revision:
+
+```bash
+curl -v -X POST \
+  http://localhost:8888/memory/functions/registration \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"function": "morgen", "revision": "magenta", "url": "http://localhost:5051"}'
+```
+> - This will add a new entry to the routes list with a `magenta` revision, with one url `http://localhost:5051`
+> - You can call the function with this url: http://localhost:8888/function/morgen/magenta
+
+
+##### Remove the registration
+
+```bash
+curl -v -X DELETE \
+  http://localhost:8888/memory/functions/registration \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"function": "morgen"}'
+```
+
+
+#### Revision API
+
+##### Add a revision to the function registration
+
+```bash
+curl -v -X POST \
+  http://localhost:8888/memory/functions/morgen/revision \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"revision": "blue", "url": "http://localhost:5051"}'
+```
+> - The function already exists
+> - The name of the function is set in the url `http://localhost:8888/memory/functions/:function_name/revision`
+
+The routes list will look like that:
+
+```json
+{
+    "morgen": {
+        "blue": [
+            "http://localhost:5051"
+        ],
+        "default": [
+            "http://localhost:5050"
+        ]
+    }
+
+}
+```
+
+##### Remove a revision from the function registration
+
+```bash
+curl -v -X DELETE \
+  http://localhost:8888/memory/functions/morgen/revision \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"revision": "blue"}'
+```
+
+#### URL API
+
+##### Add a URL to the revision of a function
+
+```bash
+curl -v -X POST \
+  http://localhost:8888/memory/functions/morgen/blue/url \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"url": "http://localhost:5053"}'
+```
+> - The revision already exists
+> - The name of the function and of the revision are set in the url `http://localhost:8888/memory/functions/:function_name/:function_revision/url`
+
+The routes list will look like that:
+
+```json
+{
+    "morgen": {
+        "blue": [
+            "http://localhost:5051",
+            "http://localhost:5053"
+        ],
+        "default": [
+            "http://localhost:5050"
+        ]
+    }
+
+}
+```
+
+##### Remove a URL from the function revision
+
+```bash
+curl -v -X DELETE \
+  http://localhost:8888/memory/functions/morgen/blue/url \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"url": "http://localhost:5053"}'
+```
+
