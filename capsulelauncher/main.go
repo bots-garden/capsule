@@ -17,9 +17,10 @@ type CapsuleFlags struct {
 	wasm     string
 	httpPort string
 	url      string
-	config   string
-	crt      string
-	key      string
+	config   string // config file
+	crt      string // https (certificate)
+	key      string // https (key)
+	backend  string // backend for reverse proxy (and/or service discovery)
 }
 
 func main() {
@@ -43,6 +44,7 @@ func main() {
 
 	wasmFileUrlPtr := flag.String("url", "", "url for downloading wasm module file")
 	configPtr := flag.String("config", "", "config file (reverse proxy)")
+	backendPtr := flag.String("backend", "yaml", "backend for reverse proxy, registration, discovery")
 
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
@@ -58,6 +60,7 @@ func main() {
 		*configPtr,
 		*crtPtr,
 		*keyPtr,
+		*backendPtr,
 	}
 	//fmt.Println(flags)
 
@@ -104,14 +107,9 @@ func main() {
 	case "http":
 		capsulehttp_next.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 	case "cli":
-		/*
-			for idx, arg := range flag.Args() {
-				fmt.Println(idx, "==>", arg)
-			}
-		*/
 		capsulecli.Execute(flag.Args(), getWasmFile())
 	case "reverse-proxy":
-		reverse_proxy.Serve(flags.httpPort, flags.config, flags.crt, flags.key)
+		reverse_proxy.Serve(flags.httpPort, flags.config, flags.backend, flags.crt, flags.key)
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
 	}
