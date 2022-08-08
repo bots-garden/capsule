@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	capsulehttp_next "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	reverse_proxy "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy"
 	"log"
@@ -21,6 +23,7 @@ type CapsuleFlags struct {
 	crt      string // https (certificate)
 	key      string // https (key)
 	backend  string // backend for reverse proxy (and/or service discovery)
+	version  string
 }
 
 func main() {
@@ -49,6 +52,8 @@ func main() {
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
 
+	versionPtr := flag.String("version", "", "version")
+
 	flag.Parse()
 
 	flags := CapsuleFlags{
@@ -61,6 +66,7 @@ func main() {
 		*crtPtr,
 		*keyPtr,
 		*backendPtr,
+		*versionPtr,
 	}
 	//fmt.Println(flags)
 
@@ -110,6 +116,9 @@ func main() {
 		capsulecli.Execute(flag.Args(), getWasmFile())
 	case "reverse-proxy":
 		reverse_proxy.Serve(flags.httpPort, flags.config, flags.backend, flags.crt, flags.key)
+	case "version":
+		fmt.Println(commons.CapsuleVersion())
+
 	default:
 		log.Panicln("🔴 bad mode", *capsuleModePtr)
 	}

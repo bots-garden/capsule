@@ -110,11 +110,11 @@ func Serve(httpPort string, wasmFile []byte, crt, key string) {
 	if crt != "" {
 		// certs/procyon-registry.local.crt
 		// certs/procyon-registry.local.key
-		fmt.Println("💊 Capsule http server is listening on:", httpPort, "🔐🌍")
+		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🔐🌍")
 
 		router.RunTLS(":"+httpPort, crt, key)
 	} else {
-		fmt.Println("💊 Capsule http server is listening on:", httpPort, "🌍")
+		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🌍")
 		router.Run(":" + httpPort)
 	}
 

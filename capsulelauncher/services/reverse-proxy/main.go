@@ -152,11 +152,11 @@ func Serve(httpPort, config, backend, crt, key string) {
 	if crt != "" {
 		// certs/procyon-registry.local.crt
 		// certs/procyon-registry.local.key
-		fmt.Println("💊 Capsule Reverse-Proxy is listening on:", httpPort, "🔐🌍")
+		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🔐🌍")
 
 		router.RunTLS(":"+httpPort, crt, key)
 	} else {
-		fmt.Println("💊 Capsule Reverse-Proxy is listening on:", httpPort, "🌍")
+		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🌍")
 		router.Run(":" + httpPort)
 	}
 
