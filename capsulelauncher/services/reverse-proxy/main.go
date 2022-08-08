@@ -167,13 +167,13 @@ func Serve(httpPort, config, backend, crt, key string) {
 	         }
 	      Curl Query
 	       curl -v -X POST \
-	         http://localhost:8888/memory/functions/register \
+	         http://localhost:8888/memory/functions/registration \
 	         -H 'content-type: application/json; charset=utf-8' \
 	         -d '{"function": "morgen", "revision": "default", "url": "http://localhost:5050"}'
 	       echo ""
 
 	*/
-	router.POST("memory/functions/register", func(c *gin.Context) {
+	router.POST("memory/functions/registration", func(c *gin.Context) {
 		//TODO: add an authentication token
 		jsonMap := make(map[string]interface{})
 		if err := c.Bind(&jsonMap); err != nil {
@@ -204,6 +204,10 @@ func Serve(httpPort, config, backend, crt, key string) {
 				"revision": revisionName,
 				"url":      firstUrl})
 		}
+
+	})
+	//TODO: remove a function
+	router.DELETE("memory/functions/registration", func(c *gin.Context) {
 
 	})
 
@@ -243,7 +247,7 @@ func Serve(httpPort, config, backend, crt, key string) {
 				"code":    "ERROR_FUNCTION_NOT_FOUND",
 				"message": functionName + " does not exist"})
 		} else {
-			// id the revision already exists we cannot add it
+			// if the revision already exists we cannot add it
 			if functions[functionName][revisionName] != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"code":    "ERROR_REVISION_ALREADY_EXISTS",
@@ -261,6 +265,11 @@ func Serve(httpPort, config, backend, crt, key string) {
 			}
 		}
 	})
+	//TODO: remove a revision from a function
+	router.DELETE("memory/functions/:function_name/revision", func(c *gin.Context) {
+
+	})
+
 	/*
 	   ======================================
 	   Add a URL to an existing revision
@@ -275,6 +284,7 @@ func Serve(httpPort, config, backend, crt, key string) {
 	         -H 'content-type: application/json; charset=utf-8' \
 	         -d '{"url": "http://localhost:5053"}'
 	       echo ""
+	       Remark: it's like a scale
 	*/
 	router.POST("memory/functions/:function_name/:function_revision/url", func(c *gin.Context) {
 		functionName := c.Param("function_name")
@@ -297,7 +307,7 @@ func Serve(httpPort, config, backend, crt, key string) {
 				"code":    "ERROR_FUNCTION_NOT_FOUND",
 				"message": functionName + " does not exist"})
 		} else {
-			// id the revision does not exist we cannot add an url to it
+			// if the revision does not exist we cannot add an url to it
 			if functions[functionName][revisionName] == nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"code":    "ERROR_REVISION_NOT_FOUND",
@@ -318,9 +328,73 @@ func Serve(httpPort, config, backend, crt, key string) {
 		}
 
 	})
-	//TODO: remove a revision from a function
-	//TODO: remove an URL from a revision
-	//TODO: remove a function
+
+	/*
+	   =======================================
+	   Remove a URL from an existing revision
+	   =======================================
+	      Payload
+	         {
+	           "url": "http://localhost:5053"
+	         }
+	      Curl Query
+	       curl -v -X DELETE \
+	         http://localhost:8888/memory/functions/morgen/blue/url \
+	         -H 'content-type: application/json; charset=utf-8' \
+	         -d '{"url": "http://localhost:5053"}'
+	       echo ""
+	       Remark: it's like a scale
+	*/
+	router.DELETE("memory/functions/:function_name/:function_revision/url", func(c *gin.Context) {
+
+		functionName := c.Param("function_name")
+		revisionName := c.Param("function_revision")
+
+		//TODO: add an authentication token
+		jsonMap := make(map[string]interface{})
+		if err := c.Bind(&jsonMap); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    "ERROR_JSON_BINDING",
+				"message": err.Error()})
+		}
+
+		//TODO: check if the values are empty or not
+		urlToRemove := jsonMap["url"].(string)
+
+		// if the function does not exist, we cannot remove an url from a revision
+		if functions[functionName] == nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    "ERROR_FUNCTION_NOT_FOUND",
+				"message": functionName + " does not exist"})
+		} else {
+			// if the revision does not exist we cannot remove an url from it
+			if functions[functionName][revisionName] == nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR_REVISION_NOT_FOUND",
+					"message": revisionName + " does not exist"})
+			} else {
+				// Remove the url from the revision
+				currentUrlsList := functions[functionName][revisionName].([]string)
+
+				for index, url := range currentUrlsList {
+					if url == urlToRemove {
+						currentUrlsList = append(currentUrlsList[:index], currentUrlsList[index+1:]...)
+						break
+					}
+				}
+
+				functions[functionName][revisionName] = currentUrlsList
+
+				c.JSON(http.StatusAccepted, gin.H{
+					"code":     "OK",
+					"message":  "URL removed from the revision",
+					"function": functionName,
+					"revision": revisionName,
+					"url":      urlToRemove})
+			}
+		}
+
+	})
 
 	router.Any("/functions/:function_name", proxy)
 	router.Any("/functions/:function_name/:function_revision", proxyRevision)
