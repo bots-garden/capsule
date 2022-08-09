@@ -23,16 +23,17 @@ func getEnv(key, fallback string) string {
 }
 */
 
-func redirect(functionUrls []interface{}, c *gin.Context) {
+func redirect(functionUrls []string, c *gin.Context) {
+	//fmt.Println("🟢🖐", functionUrls)
 	var functionUrl = ""
 
 	if len(functionUrls) == 1 {
-		functionUrl = functionUrls[0].(string)
+		functionUrl = functionUrls[0]
 	} else {
 		//TODO better repartition handling
 		min := 0
 		max := len(functionUrls) - 1
-		functionUrl = functionUrls[rand.Intn(max-min)+min].(string)
+		functionUrl = functionUrls[rand.Intn(max-min)+min]
 	}
 
 	remote, err := url.Parse(functionUrl)
@@ -60,8 +61,19 @@ func proxy(c *gin.Context) {
 	functionName := c.Param("function_name")
 	functionUrls := functions[functionName]["default"]
 
+	//fmt.Println("👋functionName", functionName)
+	//fmt.Println("👋functionUrls", functionUrls)
+
 	if functionUrls != nil {
-		redirect(functionUrls.([]interface{}), c)
+		/*
+		   2022/08/09 14:11:44 http: panic serving 127.0.0.1:65399:
+		   interface conversion: interface {} is []string, not []interface {}
+
+		*/
+
+		//redirect(functionUrls.([]interface{}), c)
+		redirect(functionUrls.([]string), c)
+
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
 	}
@@ -75,7 +87,7 @@ func proxyRevision(c *gin.Context) {
 	functionUrls := functions[functionName][functionRevision]
 
 	if functionUrls != nil {
-		redirect(functionUrls.([]interface{}), c)
+		redirect(functionUrls.([]string), c)
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
 	}
