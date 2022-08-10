@@ -614,3 +614,7 @@ curl http://localhost:4999/info/k33g/hola/0.0.0
 ```bash
 curl http://localhost:4999/modules
 ```
+
+## Use Capsule as Worker(s)
+
+Then you will get an api to start functions remotely

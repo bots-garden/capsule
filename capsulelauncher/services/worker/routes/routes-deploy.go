@@ -14,7 +14,7 @@ import (
 )
 
 var httpPortCounter = 10000 //TODO: the starting number could be a parameter
-var pidCounter = 0
+//var pidCounter = 0
 
 // AddRunningWasmModuleToRevision updates the functions map
 func AddRunningWasmModuleToRevision(functionName, revisionName string, wasmModule models.RunningWasmModule, functions map[string]models.Function) {
@@ -53,6 +53,78 @@ func AddFunctionWithRevisionWithWasmModule(functionName, revisionName, wasmModul
     }
 }
 
+// StartFunction : Start a function
+func StartFunction(wasmModuleUrl string, httpPortCounter int) (pid int, processStatus, tmpFileName string) {
+
+    tmpFileName = uuid.New().String() + ".wasm"
+    cmd := exec.Command(
+        "./capsule", //TODO: this must be a parameter
+        "-url="+wasmModuleUrl,
+        "-mode=http",
+        "-httpPort="+strconv.Itoa(httpPortCounter),
+        "-wasm=./tmp/"+tmpFileName) //TODO: record this in the list of modules to clean when undeploy
+    cmd.Env = os.Environ()
+
+    // TODO: environment variables
+    //cmd.Env = append(cmd.Env, "MY_VAR=some_value")
+
+    err := cmd.Start()
+
+    //var processStatus string
+    if err != nil {
+        fmt.Println("😡 when starting the capsule process", err.Error())
+        processStatus = "NOT_STARTED"
+    } else {
+        processStatus = "STARTED"
+    }
+
+    fmt.Println("🚀 service started, process Id:", cmd.Process.Pid)
+
+    return cmd.Process.Pid, processStatus, tmpFileName
+}
+
+// RegisterFunction : Register a function to the reverse proxy
+func RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus string) string {
+    client := resty.New()
+    bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
+    resp, err := client.
+        R().
+        EnableTrace().
+        SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetBody(bodyStr).
+        Post(reverseProxy + "/" + backend + "/functions/registration")
+
+    if err != nil {
+        fmt.Println("😡 when registering the url to the reverse proxy", err.Error())
+        //fmt.Println(bodyStr)
+        processStatus += "[NOT_REGISTERED]"
+    } else {
+        fmt.Println(resp)
+    }
+    return processStatus
+}
+
+func RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus string) string {
+    client := resty.New()
+    bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
+    resp, err := client.
+        R().
+        EnableTrace().
+        SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetBody(bodyStr).
+        Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
+
+    // http://localhost:8888/memory/functions/hola/revision
+    if err != nil {
+        fmt.Println("😡 when registering the url to the reverse proxy", err.Error())
+        //fmt.Println(bodyStr)
+        processStatus += "[NOT_REGISTERED]"
+    } else {
+        fmt.Println(resp)
+    }
+    return processStatus
+}
+
 func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function, workerDomain, reverseProxy, backend string) {
 
     /*
@@ -89,10 +161,6 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
             wasmModuleUrl := jsonMap["downloadUrl"].(string) // the downloadUrl to download the module from the registry
             envVariables := jsonMap["envVariables"]
 
-            //fmt.Println("🚀[envVariables]:", envVariables)
-            //fmt.Println("🚀🚀🚀", envVariables == nil)
-            //fmt.Println("🚀🚀🚀", envVariables)
-
             var wasmEnvVariables = make(map[string]string)
             if envVariables == nil {
                 wasmEnvVariables = map[string]string{}
@@ -111,7 +179,7 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
             fmt.Println("⏳ downloading from:", wasmModuleUrl)
             fmt.Println("🚀 starting on http port:", httpPortCounter)
             httpPortCounter += 1
-            pidCounter += 1 //TODO: this is temporary
+            //pidCounter += 1 //TODO: this is temporary
 
             //🖐 we need the IP address of the worker (for the registration with the reverse proxy)
             //or domain name
@@ -137,119 +205,63 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
 
             fmt.Println("👨🏻‍💻 updating the list of the functions")
 
+            // Start a function
+            pid, processStatus, tmpFileName := StartFunction(wasmModuleUrl, httpPortCounter)
+
             if models.IsFunctionExist(functionName, functions) == true {
+                // Register a Revision to the reverse proxy
+                processStatus = RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
+
                 // the function already exists
                 if models.IsRevisionExist(functionName, revisionName, functions) == true {
+
                     // The revision already exists
                     // Then we will add a new running wasm module (scale)
                     wasmModule := models.RunningWasmModule{
-                        Pid:          pidCounter, // at the end pid counter will be the id of the process
-                        Status:       "🚧wip-not used",
+                        Pid:          pid, // at the end pid counter will be the id of the process
+                        Status:       processStatus,
                         LocalUrl:     moduleServerUrl,
                         RemoteUrl:    reverseProxy + "/functions/" + functionName + "/" + revisionName,
                         EnvVariables: wasmEnvVariables,
+                        TmpFileName:  tmpFileName,
                     }
                     AddRunningWasmModuleToRevision(functionName, revisionName, wasmModule, functions)
 
                 } else {
+
+                    // Start a function
+                    //pid, processStatus, tmpFileName := StartFunction(wasmModuleUrl, httpPortCounter)
+
+                    // Register a function to the reverse proxy
+                    //processStatus = RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
+
                     // The revision does not exist
                     // Then Create a new revision for the function
                     // With a running wasm module
                     wasmModule := models.RunningWasmModule{
-                        Pid:          pidCounter, // at the end pid counter will be the id of the process
-                        Status:       "🚧wip-not used",
+                        Pid:          pid, // at the end pid counter will be the id of the process
+                        Status:       processStatus,
                         LocalUrl:     moduleServerUrl,
                         RemoteUrl:    reverseProxy + "/functions/" + functionName + "/" + revisionName,
                         EnvVariables: wasmEnvVariables,
+                        TmpFileName:  tmpFileName,
                     }
                     AddRevisionWithWasmModuleToFunction(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
 
                 }
             } else {
 
-                /*
-                   cmd := &exec.Cmd{
-                       Path:   "./capsule",
-                       Args:   []string{"-url=" + wasmModuleUrl, "-mode=http", "-httpPort=" + strconv.Itoa(httpPortCounter), "-wasm=./tmp/" + uuid.New().String() + ".wasm"},
-                       Stdout: os.Stdout,
-                       Stderr: os.Stdout,
-                   }
-                */
-                /* =========================================
-                   Start a function
-                  ========================================= */
-                tmpFileName := uuid.New().String() + ".wasm"
-                cmd := exec.Command(
-                    "./capsule",
-                    "-url="+wasmModuleUrl,
-                    "-mode=http",
-                    "-httpPort="+strconv.Itoa(httpPortCounter),
-                    "-wasm=./tmp/"+tmpFileName) //TODO: record this in the list of modules to clean when undeploy
-                cmd.Env = os.Environ()
-                err := cmd.Start()
+                // Start a function
+                //pid, processStatus, tmpFileName := StartFunction(wasmModuleUrl, httpPortCounter)
 
-                var processStatus string
-                if err != nil {
-                    fmt.Println("😡 when starting the capsule process", err.Error())
-                    processStatus = "NOT_STARTED"
-                } else {
-                    processStatus = "STARTED"
-                }
-
-                fmt.Println("🚀 service started, process Id:", cmd.Process.Pid)
-
-                // TODO: environment variables
-                //cmd.Env = append(cmd.Env, "MY_VAR=some_value")
-
-                /* =========================================
-                   Register a function to the reverse proxy
-                  ========================================= */
-
-                /*
-
-                   # Register the function with the 0.0.0 revision
-                   curl -v -X POST \
-                     http://localhost:8888/memory/functions/registration \
-                     -H 'content-type: application/json; charset=utf-8' \
-                     -d '{"function": "hola", "revision": "0.0.0", "url": "http://localhost:7070"}'
-
-                   # Add the default revision
-                   curl -v -X POST \
-                     http://localhost:8888/memory/functions/hola/revision \
-                     -H 'content-type: application/json; charset=utf-8' \
-                     -d '{"function": "hola", "revision": "default", "url": "http://localhost:7070"}'
-
-
-                   # Add the 0.0.1 revision
-                   curl -v -X POST \
-                     http://localhost:8888/memory/functions/hola/revision \
-                     -H 'content-type: application/json; charset=utf-8' \
-                     -d '{"function": "hola", "revision": "0.0.1", "url": "http://localhost:7071"}'
-
-                */
-
-                client := resty.New()
-                bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
-                resp, err := client.
-                    R().
-                    EnableTrace().
-                    SetHeader("Content-Type", "application/json; charset=utf-8").
-                    SetBody(bodyStr).
-                    Post(reverseProxy + "/" + backend + "/functions/registration")
-
-                if err != nil {
-                    fmt.Println("😡 when registering the url to the reverse proxy", err.Error())
-                    //fmt.Println(bodyStr)
-                    processStatus += "[NOT_REGISTERED]"
-                } else {
-                    fmt.Println(resp)
-                }
+                // Register a function to the reverse proxy
+                processStatus = RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
 
                 // The function does not exist: this is the first deployment of the function
                 // The revision does not exist
                 // Then, create the function and the revision
                 wasmModule := models.RunningWasmModule{
-                    Pid:          cmd.Process.Pid, // at the end pid counter will be the id of the process
+                    Pid:          pid,
                     Status:       processStatus,
                     LocalUrl:     moduleServerUrl,
                     RemoteUrl:    reverseProxy + "/functions/" + functionName + "/" + revisionName,
@@ -257,11 +269,9 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
                     TmpFileName:  tmpFileName,
                 }
                 AddFunctionWithRevisionWithWasmModule(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
-
             }
 
-            //TODO: do the job for real
-
+            //TODO: return more information (url, etc...)
             c.JSON(http.StatusAccepted, gin.H{
                 "code":     "OK",
                 "message":  "Function deployed",
