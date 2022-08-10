@@ -8,22 +8,26 @@ import (
 	capsulehttp_next "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	"github.com/bots-garden/capsule/capsulelauncher/services/registry"
 	reverse_proxy "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy"
+	"github.com/bots-garden/capsule/capsulelauncher/services/worker"
 	"github.com/go-resty/resty/v2"
 	"log"
 	"os"
 )
 
 type CapsuleFlags struct {
-	mode     string // cli, http, reverse-proxy, registry
-	param    string
-	wasm     string // wasm file location
-	httpPort string
-	url      string // to download the wasm file
-	config   string // config file for the reverse proxy
-	crt      string // https (certificate)
-	key      string // https (key)
-	backend  string // backend for reverse proxy (and/or service discovery)
-	files    string // root location of the wasm modules (for the registry)
+	mode         string // cli, http, reverse-proxy, registry
+	param        string
+	wasm         string // wasm file location
+	httpPort     string
+	url          string // to download the wasm file
+	config       string // config file for the reverse proxy
+	crt          string // https (certificate)
+	key          string // https (key)
+	backend      string // backend for reverse proxy (and/or service discovery)
+	files        string // root location of the wasm modules (for the registry)
+	registry     string // url to the registry
+	reverseProxy string // url to the reverse proxy
+	workerDomain string // domain or ip address
 }
 
 func main() {
@@ -45,6 +49,11 @@ func main() {
 
 		filesPtr := flag.String("files", "", "root location of the wasm modules (for the registry)")
 
+		registryPtr := flag.String("registry", "", "url of the wasm registry")
+		reverseProxyPtr := flag.String("reverseProxy", "", "url of the reverse proxy")
+
+		workerDomainPtr := flag.String("workerDomain", "localhost", "domain or ip address of the worker")
+
 		crtPtr := flag.String("crt", "", "certificate")
 		keyPtr := flag.String("key", "", "key")
 
@@ -61,6 +70,9 @@ func main() {
 			*keyPtr,
 			*backendPtr,
 			*filesPtr,
+			*registryPtr,
+			*reverseProxyPtr,
+			*workerDomainPtr,
 		}
 
 		getWasmFile := func() []byte {
@@ -100,6 +112,9 @@ func main() {
 			reverse_proxy.Serve(flags.httpPort, flags.config, flags.backend, flags.crt, flags.key)
 		case "registry":
 			registry.Serve(flags.httpPort, flags.files, flags.crt, flags.key)
+		case "worker":
+			worker.Serve(flags.httpPort, flags.reverseProxy, flags.workerDomain, flags.crt, flags.key)
+
 		default:
 			log.Panicln("🔴 bad mode", *capsuleModePtr)
 		}

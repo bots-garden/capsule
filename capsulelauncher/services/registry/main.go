@@ -104,7 +104,7 @@ func Serve(httpPort, filesPath, crt, key string) {
 		// single file
 		file, _ := c.FormFile("file")
 		info, _ := c.GetPostForm("info")
-		log.Println(file.Filename)
+		log.Println(file.Filename, userOrg, wasmModule, tag)
 
 		// Upload the file to specific destination.
 		errMkdir := os.MkdirAll(filesPath+"/"+userOrg+"/"+wasmModule+"/"+tag, os.ModePerm)

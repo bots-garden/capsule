@@ -50,6 +50,7 @@ func DefineUrlsRoutes(router *gin.Engine, functions map[interface{}]map[interfac
 					"code":    "ERROR_REVISION_NOT_FOUND",
 					"message": revisionName + " does not exist"})
 			} else {
+				// TODO: check if the url already exists
 				// add the url to the revision
 				currentUrlsList := functions[functionName][revisionName].([]string)
 				currentUrlsList = append(currentUrlsList, urlToAdd)
