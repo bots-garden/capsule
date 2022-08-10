@@ -6,4 +6,5 @@ cd ../../capsulelauncher
 go run main.go \
    -mode=worker \
    -reverseProxy=http://localhost:8888 \
+   -backend="memory" \
    -httpPort=9999

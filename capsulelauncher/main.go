@@ -113,7 +113,7 @@ func main() {
 		case "registry":
 			registry.Serve(flags.httpPort, flags.files, flags.crt, flags.key)
 		case "worker":
-			worker.Serve(flags.httpPort, flags.reverseProxy, flags.workerDomain, flags.crt, flags.key)
+			worker.Serve(flags.httpPort, flags.reverseProxy, flags.workerDomain, flags.backend, flags.crt, flags.key)
 
 		default:
 			log.Panicln("🔴 bad mode", *capsuleModePtr)

@@ -13,7 +13,7 @@ import (
 
 var functions = make(map[string]models.Function)
 
-func Serve(httpPort, reverseProxy, workerDomain, crt, key string) {
+func Serve(httpPort, reverseProxy, workerDomain, backend, crt, key string) {
 
 	if commons.GetEnv("DEBUG", "false") == "false" {
 		gin.SetMode(gin.ReleaseMode)
@@ -27,7 +27,7 @@ func Serve(httpPort, reverseProxy, workerDomain, crt, key string) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
 	})
 
-	routes.DefineDeployRoute(router, functions, workerDomain, reverseProxy)
+	routes.DefineDeployRoute(router, functions, workerDomain, reverseProxy, backend)
 
 	//TODO: 🚧 WIP cf JsonFuncList
 	router.GET("functions/list", func(c *gin.Context) {
@@ -37,9 +37,15 @@ func Serve(httpPort, reverseProxy, workerDomain, crt, key string) {
 
 		// Unmarshal or Decode the JSON to the interface.
 		err := json.Unmarshal([]byte(helpers.JsonFuncList(functions)), &result)
-		fmt.Println(err)
+		if err != nil {
+			//fmt.Println(err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    "JSON_PARSE_ERROR",
+				"message": err.Error()})
+		} else {
+			c.JSON(http.StatusAccepted, result)
+		}
 
-		c.JSON(http.StatusAccepted, result)
 	})
 
 	if crt != "" {

@@ -3,10 +3,12 @@ package models
 import "reflect"
 
 type RunningWasmModule struct {
-	Pid       int
-	Status    string // for future feature(s)
-	LocalUrl  string
-	RemoteUrl string
+	Pid          int
+	Status       string // for future feature(s)
+	LocalUrl     string
+	RemoteUrl    string
+	EnvVariables map[string]string
+	TmpFileName  string
 }
 
 type Revision struct {

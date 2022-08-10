@@ -36,13 +36,23 @@ func JsonFuncList(funcList map[string]models.Function) string {
 
 				jsonString += `"` + strconv.Itoa(wasmModuleElement.Pid) + `":{`
 				jsonString += `"localUrl":"` + wasmModuleElement.LocalUrl + `",`
-				jsonString += `"remoteUrl":"` + wasmModuleElement.RemoteUrl + `"`
+				jsonString += `"remoteUrl":"` + wasmModuleElement.RemoteUrl + `",`
 
 				fmt.Println("        ->", wasmModuleElement.Pid, "key:", idOfProcess)
 				fmt.Println("          - localUrl", wasmModuleElement.LocalUrl)
 				fmt.Println("          - remoteUrl", wasmModuleElement.RemoteUrl)
 
-				jsonString += `},` // end of running module
+				// Environment Variables
+				fmt.Println("          - envVariables", wasmModuleElement.EnvVariables)
+
+				jsonString += `"envVariables":{`
+				for varName, varValue := range wasmModuleElement.EnvVariables {
+					jsonString += `"` + varName + `":"` + varValue + `",`
+				}
+				// remove the last ","
+				jsonString = strings.TrimSuffix(jsonString, ",")
+
+				jsonString += `}},` // end of running module
 			}
 			// remove the last ","
 			jsonString = strings.TrimSuffix(jsonString, ",")
