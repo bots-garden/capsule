@@ -10,6 +10,8 @@ func main() {
 }
 
 func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+	message, _ := hf.GetEnv("MESSAGE")
+	token, _ := hf.GetEnv("TOKEN")
 	html := `
     <html>
         <head>
@@ -20,6 +22,8 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
             <h1>👋 Hola Mundo 🌍</h1>
             <h2>Served with 💚💜 with Capsule 💊</h2>
             <h1>🟢🟢🟢🟢🟢</h1>
+            <h2>` + message + `</h2>
+            <h2>` + token + `</h2>
         </body>
 
     </html>

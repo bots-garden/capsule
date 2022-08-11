@@ -8,7 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -23,6 +22,8 @@ func getEnv(key, fallback string) string {
 }
 */
 
+var lastUrlIndex = 0
+
 func redirect(functionUrls []string, c *gin.Context) {
 	//fmt.Println("🟢🖐", functionUrls)
 	var functionUrl = ""
@@ -30,10 +31,16 @@ func redirect(functionUrls []string, c *gin.Context) {
 	if len(functionUrls) == 1 {
 		functionUrl = functionUrls[0]
 	} else {
-		//TODO better repartition handling
-		min := 0
-		max := len(functionUrls) - 1
-		functionUrl = functionUrls[rand.Intn(max-min)+min]
+		//TODO better repartition (load balancing) handling
+		lastUrlIndex += 1
+		if lastUrlIndex == len(functionUrls) {
+			lastUrlIndex = 0
+		}
+
+		functionUrl = functionUrls[lastUrlIndex]
+
+		//fmt.Println("🛑 kind of load balancing", lastUrlIndex)
+		//fmt.Println("🌍", functionUrl)
 	}
 
 	remote, err := url.Parse(functionUrl)

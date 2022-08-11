@@ -10,7 +10,7 @@ http://localhost:9999/functions/deploy \
     "revision": "green",
     "downloadUrl": "http://localhost:4999/k33g/hola/0.0.2/hola.wasm",
     "envVariables": {
-        "MESSAGE": "this is a message",
+        "MESSAGE": "🟢 Green revision of Hola",
         "TOKEN": "this is not a header token"
     }
 }

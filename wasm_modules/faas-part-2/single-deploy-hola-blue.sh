@@ -10,11 +10,10 @@ http://localhost:9999/functions/deploy \
     "revision": "blue",
     "downloadUrl": "http://localhost:4999/k33g/hola/0.0.1/hola.wasm",
     "envVariables": {
-        "MESSAGE": "this is a message",
+        "MESSAGE": "🔵 Blue revision of Hola",
         "TOKEN": "this is not a header token"
     }
 }
 EOF
-#-d '{"function": "hello", "revision": "default", "downloadUrl": "http://localhost:4999/k33g/hello/0.0.0/hello.wasm"}'
 echo ""
 

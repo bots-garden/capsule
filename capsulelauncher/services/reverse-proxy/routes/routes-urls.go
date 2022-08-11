@@ -27,7 +27,7 @@ func DefineUrlsRoutes(router *gin.Engine, functions map[interface{}]map[interfac
 		functionName := c.Param("function_name")
 		revisionName := c.Param("function_revision")
 
-		//TODO: add an authentication token
+		// TODO: add an authentication token
 		jsonMap := make(map[string]interface{})
 		if err := c.Bind(&jsonMap); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -35,7 +35,7 @@ func DefineUrlsRoutes(router *gin.Engine, functions map[interface{}]map[interfac
 				"message": err.Error()})
 		}
 
-		//TODO: check if the values are empty or not
+		// TODO: check if the values are empty or not
 		urlToAdd := jsonMap["url"].(string)
 
 		// if the function does not exist, we cannot add an url to a revision

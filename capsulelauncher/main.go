@@ -15,19 +15,21 @@ import (
 )
 
 type CapsuleFlags struct {
-	mode         string // cli, http, reverse-proxy, registry
-	param        string
-	wasm         string // wasm file location
-	httpPort     string
-	url          string // to download the wasm file
-	config       string // config file for the reverse proxy
-	crt          string // https (certificate)
-	key          string // https (key)
-	backend      string // backend for reverse proxy (and/or service discovery)
-	files        string // root location of the wasm modules (for the registry)
-	registry     string // url to the registry
-	reverseProxy string // url to the reverse proxy
-	workerDomain string // domain or ip address
+	mode            string // cli, http, reverse-proxy, registry
+	param           string
+	wasm            string // wasm file location
+	httpPort        string
+	url             string // to download the wasm file
+	config          string // config file for the reverse proxy
+	crt             string // https (certificate)
+	key             string // https (key)
+	backend         string // backend for reverse proxy (and/or service discovery)
+	files           string // root location of the wasm modules (for the registry)
+	registry        string // url to the registry
+	reverseProxy    string // url to the reverse proxy
+	workerDomain    string // domain or ip address
+	capsulePath     string // where is the capsule executable
+	httpPortCounter int    // to attribute a http port to a running module
 }
 
 func main() {
@@ -45,7 +47,7 @@ func main() {
 
 		wasmFileUrlPtr := flag.String("url", "", "url for downloading wasm module file")
 		configPtr := flag.String("config", "", "config file (reverse proxy)")
-		backendPtr := flag.String("backend", "yaml", "backend for reverse proxy, registration, discovery")
+		backendPtr := flag.String("backend", "memory", "backend for reverse proxy, registration, discovery")
 
 		filesPtr := flag.String("files", "", "root location of the wasm modules (for the registry)")
 
@@ -53,6 +55,10 @@ func main() {
 		reverseProxyPtr := flag.String("reverseProxy", "", "url of the reverse proxy")
 
 		workerDomainPtr := flag.String("workerDomain", "localhost", "domain or ip address of the worker")
+
+		capsulePathPtr := flag.String("capsulePath", "capsule", "path to capsule (it could be a cmd)")
+
+		httpPortCounterPtr := flag.Int("httpPortCounter", 10000, "httpPortCounter is used for the wasm module server (incremented at every new function deployment)")
 
 		crtPtr := flag.String("crt", "", "certificate")
 		keyPtr := flag.String("key", "", "key")
@@ -73,6 +79,8 @@ func main() {
 			*registryPtr,
 			*reverseProxyPtr,
 			*workerDomainPtr,
+			*capsulePathPtr,
+			*httpPortCounterPtr,
 		}
 
 		getWasmFile := func() []byte {
@@ -113,7 +121,7 @@ func main() {
 		case "registry":
 			registry.Serve(flags.httpPort, flags.files, flags.crt, flags.key)
 		case "worker":
-			worker.Serve(flags.httpPort, flags.reverseProxy, flags.workerDomain, flags.backend, flags.crt, flags.key)
+			worker.Serve(flags.httpPort, flags.capsulePath, flags.httpPortCounter, flags.reverseProxy, flags.workerDomain, flags.backend, flags.crt, flags.key)
 
 		default:
 			log.Panicln("🔴 bad mode", *capsuleModePtr)

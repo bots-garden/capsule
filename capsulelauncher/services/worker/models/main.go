@@ -13,7 +13,7 @@ type RunningWasmModule struct {
 
 type Revision struct {
 	Name string // optional
-
+	//IsDefault       bool
 	WasmRegistryUrl string
 	WasmModules     map[int]RunningWasmModule
 }

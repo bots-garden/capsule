@@ -26,6 +26,7 @@ func JsonFuncList(funcList map[string]models.Function) string {
 
 			jsonString += `"` + revisionName + `":{`
 			jsonString += `"wasmRegistryUrl":"` + revisionElement.WasmRegistryUrl + `",`
+			jsonString += `"isDefaultRevision":"` + "🚧 to be implemented" + `",`
 			jsonString += `"wasmModules":{`
 
 			fmt.Println("    ->", revisionElement.Name, "key:", revisionName)
