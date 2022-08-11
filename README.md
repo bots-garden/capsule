@@ -617,4 +617,4 @@ curl http://localhost:4999/modules
 
 ## Use Capsule as Worker(s)
 
-Then you will get an api to start functions remotely
+Then you will get an api to start functions remotely. For more details, see `/capsulelauncher/services/worker/README.md`
