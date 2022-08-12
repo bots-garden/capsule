@@ -2,7 +2,7 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 
@@ -23,7 +23,7 @@ func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameters)
 
 	if errorReturnByHandleFunction != nil {
-		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
+		result = commons.CreateStringError(errorReturnByHandleFunction.Error(), 0)
 	} else {
 		result = stringReturnByHandleFunction
 	}

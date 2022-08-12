@@ -6,14 +6,13 @@ import (
 	"strconv"
 	_ "unsafe"
 
-	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 
 //export hostCouchBaseQuery
 //go:linkname hostCouchBaseQuery
 func hostCouchBaseQuery(queryPtrPos, querySize uint32, retBuffPtrPos **byte, retBuffSize *int)
-
 
 // CouchBaseQuery :
 // This function is called by the wasm module

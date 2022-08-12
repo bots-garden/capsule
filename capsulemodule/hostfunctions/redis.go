@@ -6,7 +6,7 @@ import (
 	"strconv"
 	_ "unsafe"
 
-	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 

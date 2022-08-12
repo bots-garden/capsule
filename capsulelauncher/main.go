@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/bots-garden/capsule/capsulelauncher/commons"
-	capsulecli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
-	capsulehttp_next "github.com/bots-garden/capsule/capsulelauncher/services/http"
+	capsule_cli "github.com/bots-garden/capsule/capsulelauncher/services/cli"
+	capsule_http "github.com/bots-garden/capsule/capsulelauncher/services/http"
 	"github.com/bots-garden/capsule/capsulelauncher/services/registry"
 	reverse_proxy "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy"
 	"github.com/bots-garden/capsule/capsulelauncher/services/worker"
@@ -113,9 +113,9 @@ func main() {
 
 		switch what := flags.mode; what {
 		case "http":
-			capsulehttp_next.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
+			capsule_http.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 		case "cli":
-			capsulecli.Execute(flag.Args(), getWasmFile())
+			capsule_cli.Execute(flag.Args(), getWasmFile())
 		case "reverse-proxy":
 			reverse_proxy.Serve(flags.httpPort, flags.config, flags.backend, flags.crt, flags.key)
 		case "registry":

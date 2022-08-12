@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// to not display an error code at the end of the error message, code == 0
+// CreateErrorString : to not display an error code at the end of the error message, code == 0
 func CreateErrorString(message string, code int) string {
 	return "[ERR][" + strconv.Itoa(code) + "]:" + message
 	// "[ERR][200]:hello world"

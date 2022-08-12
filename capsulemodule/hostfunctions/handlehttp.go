@@ -2,7 +2,7 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"github.com/bots-garden/capsule/capsulemodule/commons"
+	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
 )
 
@@ -29,7 +29,7 @@ func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (
 	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(headersReturnByHandleFunction), "|")
 
 	if errorReturnByHandleFunction != nil {
-		result = commons.CreateErrorString(errorReturnByHandleFunction.Error(), 0)
+		result = commons.CreateStringError(errorReturnByHandleFunction.Error(), 0)
 	} else {
 		result = CreateBodyString(stringReturnByHandleFunction)
 	}
