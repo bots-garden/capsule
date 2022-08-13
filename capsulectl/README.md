@@ -1,0 +1,2 @@
+# Capsule CLI: `capsulectl`
+

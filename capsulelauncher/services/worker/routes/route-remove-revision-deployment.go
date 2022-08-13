@@ -9,8 +9,6 @@ import (
 	"syscall"
 )
 
-// delete(functions[functionName].Revisions, revisionName)
-
 func RemoveRevisionFromReverseProxy(functionName, revisionName, reverseProxy, backend string) (status string) {
 	/* add revision to a function
 	   curl -v -X DELETE \

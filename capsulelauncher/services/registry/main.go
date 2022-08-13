@@ -101,6 +101,7 @@ func Serve(httpPort, filesPath, crt, key string) {
 		wasmModule := c.Param("wasm_module") // without extension
 		tag := c.Param("tag")
 
+		//TODO: handle errors here (format of posted data)
 		// single file
 		file, _ := c.FormFile("file")
 		info, _ := c.GetPostForm("info")

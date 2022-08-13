@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-redis
+module github.com/bots-garden/capsule-faas-demo/hello
 
 go 1.18
 

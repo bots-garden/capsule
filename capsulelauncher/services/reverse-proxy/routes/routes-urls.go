@@ -81,7 +81,7 @@ func DefineUrlsRoutes(router *gin.Engine, functions map[interface{}]map[interfac
 	         -H 'content-type: application/json; charset=utf-8' \
 	         -d '{"url": "http://localhost:5053"}'
 	       echo ""
-	       Remark: it's like a scale
+	       Remark: it's like a downscale
 	*/
 	router.DELETE("memory/functions/:function_name/:function_revision/url", func(c *gin.Context) {
 
