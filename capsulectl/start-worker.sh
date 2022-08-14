@@ -4,6 +4,9 @@ cd ../capsulelauncher
 ./build.sh
 cp capsule ../capsulectl/capsule
 
+#DEBUG="true"
+CAPSULE_REVERSE_PROXY_ADMIN_TOKEN="1234567890" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go \
    -mode=worker \
    -reverseProxy=http://localhost:8888 \

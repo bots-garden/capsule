@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"fmt"
-	"github.com/bots-garden/capsule/capsulelauncher/services/worker/models"
-	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
-	"net/http"
+    "fmt"
+    "github.com/bots-garden/capsule/capsulelauncher/services/worker/models"
+    "github.com/gin-gonic/gin"
+    "github.com/go-resty/resty/v2"
+    "net/http"
 )
 
 // don't remove the revision
@@ -69,172 +69,190 @@ echo ""
 */
 
 func ChangeDefaultRevisionFlag() {
-	// worker side
+    // worker side
 }
 
 // CreateDefaultRevisionWithFirstModuleUrl : reverse-proxy side
-func CreateDefaultRevisionWithFirstModuleUrl(functionName, revisionName, moduleServerUrl, reverseProxy, backend string) (status string) {
-	/* add revision to a function
-	   curl -v -X POST \
-	     http://localhost:8888/memory/functions/morgen/revision \
-	     -H 'content-type: application/json; charset=utf-8' \
-	     -d '{"revision": "blue", "url": "http://localhost:5051"}'
-	   echo ""
-	*/
+func CreateDefaultRevisionWithFirstModuleUrl(functionName, revisionName, moduleServerUrl, reverseProxy, backend, reverseProxyAdminToken string) (status string) {
+    /* add revision to a function
+       curl -v -X POST \
+         http://localhost:8888/memory/functions/morgen/revision \
+         -H 'content-type: application/json; charset=utf-8' \
+         -d '{"revision": "blue", "url": "http://localhost:5051"}'
+       echo ""
+    */
 
-	client := resty.New()
-	bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetBody(bodyStr).
-		Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
+    client := resty.New()
+    bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
+    resp, err := client.
+        R().
+        EnableTrace().
+        SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
+        SetBody(bodyStr).
+        Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
 
-	if err != nil {
-		fmt.Println("😡 when registering the revision to the reverse proxy", err.Error())
-		//fmt.Println(bodyStr)
-		status = "DEFAULT_REVISION_NOT_REGISTERED"
-	} else {
-		fmt.Println("🖐[CreateDefaultRevisionWithFirstModuleUrl]", resp)
-		status = "DEFAULT_REVISION_REGISTERED"
-	}
-	return status
+    if err != nil {
+        fmt.Println("😡 when registering the revision to the reverse proxy", err.Error())
+        //fmt.Println(bodyStr)
+        status = "DEFAULT_REVISION_NOT_REGISTERED"
+    } else {
+        fmt.Println("🖐[CreateDefaultRevisionWithFirstModuleUrl]", resp)
+        status = "DEFAULT_REVISION_REGISTERED"
+    }
+    return status
 }
 
 // RemoveDefaultRevisionFromReverseProxy : remove the default revision from the reverse proxy
-func RemoveDefaultRevisionFromReverseProxy(functionName, reverseProxy, backend string) (status string) {
-	/* add revision to a function
-	   curl -v -X DELETE \
-	     http://localhost:8888/memory/functions/morgen/revision \
-	     -H 'content-type: application/json; charset=utf-8' \
-	     -d '{"revision": "blue"}'
-	   echo ""
-	*/
-	revisionName := "default"
+func RemoveDefaultRevisionFromReverseProxy(functionName, reverseProxy, backend, reverseProxyAdminToken string) (status string) {
+    /* add revision to a function
+       curl -v -X DELETE \
+         http://localhost:8888/memory/functions/morgen/revision \
+         -H 'content-type: application/json; charset=utf-8' \
+         -d '{"revision": "blue"}'
+       echo ""
+    */
+    revisionName := "default"
 
-	client := resty.New()
-	bodyStr := `{"revision":"` + revisionName + `"}`
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetBody(bodyStr).
-		Delete(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
+    client := resty.New()
+    bodyStr := `{"revision":"` + revisionName + `"}`
+    resp, err := client.
+        R().
+        EnableTrace().
+        SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
+        SetBody(bodyStr).
+        Delete(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
 
-	if err != nil {
-		fmt.Println("😡 when removing the revision from the reverse proxy", err.Error())
-		//fmt.Println(bodyStr)
-		status = "DEFAULT_REVISION_NOT_REMOVED"
-	} else {
-		fmt.Println("🖐[RemoveDefaultRevisionFromReverseProxy]", resp)
-		status = "DEFAULT_REVISION_REMOVED"
-	}
-	return status
+    if err != nil {
+        fmt.Println("😡 when removing the revision from the reverse proxy", err.Error())
+        //fmt.Println(bodyStr)
+        status = "DEFAULT_REVISION_NOT_REMOVED"
+    } else {
+        fmt.Println("🖐[RemoveDefaultRevisionFromReverseProxy]", resp)
+        status = "DEFAULT_REVISION_REMOVED"
+    }
+    return status
 }
 
-func AddUrlToRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend string) (status string) {
-	/* add url to a revision
-	   curl -v -X POST \
-	   http://localhost:8888/memory/functions/hola/default/url \
-	   -H 'content-type: application/json; charset=utf-8' \
-	   -d '{"url": "http://localhost:10003"}'
-	   echo ""
-	*/
-	fmt.Println("🟢", functionName, revisionName, moduleServerUrl)
+func AddUrlToRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, reverseProxyAdminToken string) (status string) {
+    /* add url to a revision
+       curl -v -X POST \
+       http://localhost:8888/memory/functions/hola/default/url \
+       -H 'content-type: application/json; charset=utf-8' \
+       -d '{"url": "http://localhost:10003"}'
+       echo ""
+    */
+    fmt.Println("🟢", functionName, revisionName, moduleServerUrl)
 
-	client := resty.New()
-	bodyStr := `{"url":"` + moduleServerUrl + `"}`
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetBody(bodyStr).
-		Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/" + revisionName + "/url")
+    client := resty.New()
+    bodyStr := `{"url":"` + moduleServerUrl + `"}`
+    resp, err := client.
+        R().
+        EnableTrace().
+        SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
+        SetBody(bodyStr).
+        Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/" + revisionName + "/url")
 
-	if err != nil {
-		fmt.Println("😡 when registering the url to the reverse proxy", err.Error())
-		//fmt.Println(bodyStr)
-		status = "URL_NOT_REGISTERED"
-	} else {
-		fmt.Println("🖐[AddUrlToRevision]", resp)
-		status = "URL_REGISTERED"
-	}
-	return status
+    if err != nil {
+        fmt.Println("😡 when registering the url to the reverse proxy", err.Error())
+        //fmt.Println(bodyStr)
+        status = "URL_NOT_REGISTERED"
+    } else {
+        fmt.Println("🖐[AddUrlToRevision]", resp)
+        status = "URL_REGISTERED"
+    }
+    return status
 }
 
-func DefineSwitchRoutes(router *gin.Engine, functions map[string]models.Function, capsulePath string, httpPortCounter int, workerDomain, reverseProxy, backend string) {
-	//Delete on the reverse-proxy-side
-	router.DELETE("functions/remove_default_revision", func(c *gin.Context) {
-		//TODO: add an authentication token
+func DefineSwitchRoutes(router *gin.Engine, functions map[string]models.Function, capsulePath string, httpPortCounter int, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken string) {
+    //Delete on the reverse-proxy-side
+    router.DELETE("functions/remove_default_revision", func(c *gin.Context) {
+        //TODO: check if there is a better practice to handle authentication token
+        if len(workerAdminToken) == 0 || c.GetHeader("CAPSULE_WORKER_ADMIN_TOKEN") == workerAdminToken {
+            // check json payload parameters
+            jsonMap := make(map[string]interface{})
+            if err := c.Bind(&jsonMap); err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{
+                    "code":    "JSON_PARSE_ERROR",
+                    "message": err.Error()})
+            } else {
 
-		// check json payload parameters
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "JSON_PARSE_ERROR",
-				"message": err.Error()})
-		} else {
+                //TODO: check if the values are empty or not
+                functionName := jsonMap["function"].(string)
+                RemoveDefaultRevisionFromReverseProxy(functionName, reverseProxy, backend, reverseProxyAdminToken)
 
-			//TODO: check if the values are empty or not
-			functionName := jsonMap["function"].(string)
-			RemoveDefaultRevisionFromReverseProxy(functionName, reverseProxy, backend)
+                //TODO: better error handling
+                c.JSON(http.StatusAccepted, gin.H{
+                    "code":     "DEFAULT_REVISION_REMOVED",
+                    "message":  "Default revision removed",
+                    "function": functionName})
 
-			//TODO: better error handling
-			c.JSON(http.StatusAccepted, gin.H{
-				"code":     "DEFAULT_REVISION_REMOVED",
-				"message":  "Default revision removed",
-				"function": functionName})
+            }
+        } else {
+            c.JSON(http.StatusForbidden, gin.H{
+                "code":    "KO",
+                "from":    "worker",
+                "message": "Forbidden"})
+        }
 
-		}
-	})
+    })
 
-	router.POST("functions/set_default_revision", func(c *gin.Context) {
-		//TODO: add an authentication token
+    router.POST("functions/set_default_revision", func(c *gin.Context) {
+        //TODO: check if there is a better practice to handle authentication token
+        if len(workerAdminToken) == 0 || c.GetHeader("CAPSULE_WORKER_ADMIN_TOKEN") == workerAdminToken {
 
-		// check json payload parameters
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "JSON_PARSE_ERROR",
-				"message": err.Error()})
-		} else {
+            // check json payload parameters
+            jsonMap := make(map[string]interface{})
+            if err := c.Bind(&jsonMap); err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{
+                    "code":    "JSON_PARSE_ERROR",
+                    "message": err.Error()})
+            } else {
 
-			//TODO: check if the values are empty or not
-			functionName := jsonMap["function"].(string)
-			currentRevisionName := jsonMap["revision"].(string)
+                //TODO: check if the values are empty or not
+                functionName := jsonMap["function"].(string)
+                currentRevisionName := jsonMap["revision"].(string)
 
-			//🖐 a revision can have several modules
-			wasmModulesOfTheRevision := functions[functionName].Revisions[currentRevisionName].WasmModules
+                //🖐 a revision can have several modules
+                wasmModulesOfTheRevision := functions[functionName].Revisions[currentRevisionName].WasmModules
 
-			var urlList []string
-			for _, wasmModule := range wasmModulesOfTheRevision {
-				urlList = append(urlList, wasmModule.LocalUrl)
-			}
-			moduleServerUrl := urlList[0]
+                var urlList []string
+                for _, wasmModule := range wasmModulesOfTheRevision {
+                    urlList = append(urlList, wasmModule.LocalUrl)
+                }
+                moduleServerUrl := urlList[0]
 
-			//TODO 🖐 remove the flag isDefault revision from the Revision structure and retrieve the information from the reverse-proxy
+                //TODO 🖐 remove the flag isDefault revision from the Revision structure and retrieve the information from the reverse-proxy
 
-			status := CreateDefaultRevisionWithFirstModuleUrl(functionName, "default", moduleServerUrl, reverseProxy, backend)
-			fmt.Println(status)
+                status := CreateDefaultRevisionWithFirstModuleUrl(functionName, "default", moduleServerUrl, reverseProxy, backend, reverseProxyAdminToken)
+                fmt.Println(status)
 
-			// Add the other module urls to the revision
+                // Add the other module urls to the revision
 
-			if len(urlList) > 1 {
-				for idx, url := range urlList {
-					if idx != 0 {
-						AddUrlToRevision(functionName, "default", url, reverseProxy, backend)
-					}
-				}
-			}
-			//TODO: better error handling (get status)
-			c.JSON(http.StatusAccepted, gin.H{
-				"code":     "DEFAULT_REVISION_REGISTERED",
-				"message":  "Default revision registered",
-				"revision": currentRevisionName,
-				"function": functionName,
-				"url":      reverseProxy + "/functions/" + functionName})
-		}
-	})
+                if len(urlList) > 1 {
+                    for idx, url := range urlList {
+                        if idx != 0 {
+                            AddUrlToRevision(functionName, "default", url, reverseProxy, backend, reverseProxyAdminToken)
+                        }
+                    }
+                }
+                //TODO: better error handling (get status)
+                c.JSON(http.StatusAccepted, gin.H{
+                    "code":     "DEFAULT_REVISION_REGISTERED",
+                    "message":  "Default revision registered",
+                    "revision": currentRevisionName,
+                    "function": functionName,
+                    "url":      reverseProxy + "/functions/" + functionName})
+            }
+        } else {
+            c.JSON(http.StatusForbidden, gin.H{
+                "code":    "KO",
+                "from":    "worker",
+                "message": "Forbidden"})
+        }
+
+    })
 
 }

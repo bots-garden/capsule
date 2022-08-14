@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func DefineDeploymentsListRoute(router *gin.Engine, functions map[string]models.Function, reverseProxy, backend string) {
+func DefineDeploymentsListRoute(router *gin.Engine, functions map[string]models.Function, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken string) {
 	router.GET("functions/list", func(c *gin.Context) {
 
 		// Declared an empty map interface

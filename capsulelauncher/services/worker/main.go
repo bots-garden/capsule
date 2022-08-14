@@ -29,15 +29,25 @@ func Serve(httpPort, capsulePath string, httpPortCounterStart int, reverseProxy,
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
 	})
 
-	routes.DefineDeployRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
+	/*
+	   You need to use a header with this key: CAPSULE_REVERSE_PROXY_ADMIN_TOKEN
+	*/
+	reverseProxyAdminToken := commons.GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "")
 
-	routes.DefineSwitchRoutes(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
+	/*
+	   You need to use a header with this key: CAPSULE_WORKER_ADMIN_TOKEN
+	*/
+	workerAdminToken := commons.GetEnv("CAPSULE_WORKER_ADMIN_TOKEN", "")
 
-	routes.DefineDeploymentsListRoute(router, functions, reverseProxy, backend)
+	routes.DefineDeployRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken)
 
-	routes.DefineRemoveRevisionDeploymentRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
+	routes.DefineSwitchRoutes(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken)
 
-	routes.DefineDownscaleRevisionDeploymentRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
+	routes.DefineDeploymentsListRoute(router, functions, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken)
+
+	routes.DefineRemoveRevisionDeploymentRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken)
+
+	routes.DefineDownscaleRevisionDeploymentRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken)
 
 	if crt != "" {
 		// certs/procyon-registry.local.crt

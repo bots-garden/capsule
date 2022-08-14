@@ -57,6 +57,8 @@ func redirect(functionUrls []string, c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.Path = c.Param("proxyPath")
+
+		//fmt.Println("🔴", c.Request.Header)
 	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
@@ -160,9 +162,14 @@ func Serve(httpPort, config, backend, crt, key string) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
 	})
 
-	reverse_proxy_memory_routes.DefineFunctionsRoutes(router, functions)
-	reverse_proxy_memory_routes.DefineRevisionsRoutes(router, functions)
-	reverse_proxy_memory_routes.DefineUrlsRoutes(router, functions)
+	/*
+	   You need to use a header with this key: CAPSULE_REVERSE_PROXY_ADMIN_TOKEN
+	*/
+	reverseProxyAdminToken := commons.GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "")
+
+	reverse_proxy_memory_routes.DefineFunctionsRoutes(router, functions, reverseProxyAdminToken)
+	reverse_proxy_memory_routes.DefineRevisionsRoutes(router, functions, reverseProxyAdminToken)
+	reverse_proxy_memory_routes.DefineUrlsRoutes(router, functions, reverseProxyAdminToken)
 
 	// Call the functions
 	router.Any("/functions/:function_name", proxy)

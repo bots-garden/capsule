@@ -3,6 +3,7 @@
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_REVERSE_PROXY_URL="http://localhost:8888" \
 CAPSULE_BACKEND="memory" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go deploy \
 -function=hello \
 -revision=blue \
@@ -12,6 +13,7 @@ go run main.go deploy \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_REVERSE_PROXY_URL="http://localhost:8888" \
 CAPSULE_BACKEND="memory" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go deploy \
 -function=hello \
 -revision=green \
@@ -21,6 +23,7 @@ go run main.go deploy \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_REVERSE_PROXY_URL="http://localhost:8888" \
 CAPSULE_BACKEND="memory" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go deploy \
 -function=hello \
 -revision=orange \
@@ -30,6 +33,7 @@ go run main.go deploy \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_REVERSE_PROXY_URL="http://localhost:8888" \
 CAPSULE_BACKEND="memory" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go deploy \
 -function=hello \
 -revision=orange \
@@ -39,6 +43,7 @@ go run main.go deploy \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_REVERSE_PROXY_URL="http://localhost:8888" \
 CAPSULE_BACKEND="memory" \
+CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 go run main.go deploy \
 -function=hello \
 -revision=orange \

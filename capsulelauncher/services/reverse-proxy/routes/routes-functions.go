@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[interface{}]interface{}) {
+func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[interface{}]interface{}, reverseProxyAdminToken string) {
 
 	// Get the list of the registered functions
 	router.GET("/memory/functions/list", func(c *gin.Context) {
@@ -41,36 +41,45 @@ func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	       echo ""
 
 	*/
+
 	router.POST("memory/functions/registration", func(c *gin.Context) {
-		//TODO: add an authentication token
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR",
-				"message": err.Error()})
-		}
+		//TODO: check if there is a better practice to handle authentication token
+		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
 
-		//TODO: check if the values are empty or not
-		functionName := jsonMap["function"].(string)
-		revisionName := jsonMap["revision"].(string)
-		firstUrl := jsonMap["url"].(string)
+			jsonMap := make(map[string]interface{})
+			if err := c.Bind(&jsonMap); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR",
+					"message": err.Error()})
+			}
 
-		if functions[functionName] != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_FUNCTION_ALREADY_EXISTS",
-				"message": functionName + " already exists"})
+			//TODO: check if the values are empty or not
+			functionName := jsonMap["function"].(string)
+			revisionName := jsonMap["revision"].(string)
+			firstUrl := jsonMap["url"].(string)
+
+			if functions[functionName] != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR_FUNCTION_ALREADY_EXISTS",
+					"message": functionName + " already exists"})
+			} else {
+				functions[functionName] = map[interface{}]interface{}{revisionName: []string{firstUrl}}
+
+				//add a revision to a function
+				//functions["sandbox"]["green"] = []string{"http://localhost:5052"}
+
+				c.JSON(http.StatusAccepted, gin.H{
+					"code":     "OK",
+					"message":  "Function created",
+					"function": functionName,
+					"revision": revisionName,
+					"url":      firstUrl})
+			}
 		} else {
-			functions[functionName] = map[interface{}]interface{}{revisionName: []string{firstUrl}}
-
-			//add a revision to a function
-			//functions["sandbox"]["green"] = []string{"http://localhost:5052"}
-
-			c.JSON(http.StatusAccepted, gin.H{
-				"code":     "OK",
-				"message":  "Function created",
-				"function": functionName,
-				"revision": revisionName,
-				"url":      firstUrl})
+			c.JSON(http.StatusForbidden, gin.H{
+				"code":    "KO",
+				"from":    "reverse-proxy",
+				"message": "Forbidden"})
 		}
 
 	})
@@ -92,29 +101,39 @@ func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 
 	*/
 	router.DELETE("memory/functions/registration", func(c *gin.Context) {
-		//TODO: add an authentication token
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR",
-				"message": err.Error()})
-		}
+		//TODO: check if there is a better practice to handle authentication token
+		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
 
-		//TODO: check if the values are empty or not
-		functionName := jsonMap["function"].(string)
+			jsonMap := make(map[string]interface{})
+			if err := c.Bind(&jsonMap); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR",
+					"message": err.Error()})
+			}
 
-		if functions[functionName] == nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_FUNCTION_NOT_FOUND",
-				"message": functionName + " does not exist"})
+			//TODO: check if the values are empty or not
+			functionName := jsonMap["function"].(string)
+
+			if functions[functionName] == nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR_FUNCTION_NOT_FOUND",
+					"message": functionName + " does not exist"})
+			} else {
+
+				delete(functions, functionName)
+
+				c.JSON(http.StatusAccepted, gin.H{
+					"code":     "OK",
+					"message":  "Function removed",
+					"function": functionName})
+			}
+
 		} else {
-
-			delete(functions, functionName)
-
-			c.JSON(http.StatusAccepted, gin.H{
-				"code":     "OK",
-				"message":  "Function removed",
-				"function": functionName})
+			c.JSON(http.StatusForbidden, gin.H{
+				"code":    "KO",
+				"from":    "reverse-proxy",
+				"message": "Forbidden"})
 		}
+
 	})
 }

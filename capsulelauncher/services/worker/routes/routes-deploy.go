@@ -60,8 +60,12 @@ func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmM
         "-mode=http",
         "-httpPort="+strconv.Itoa(httpPortCounter),
         "-wasm=./tmp/"+tmpFileName) //TODO: record this in the list of modules to clean when undeploy
+
     //TODO: add this tmpFileName to the function list
     cmd.Env = os.Environ()
+
+    cmd.Stdout = os.Stdout
+    cmd.Stderr = os.Stderr
 
     for varName, varValue := range wasmEnvVariables {
         cmd.Env = append(cmd.Env, varName+`=`+varValue)
@@ -92,13 +96,14 @@ func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmM
 }
 
 // RegisterFunction : Register a function to the reverse proxy
-func RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus string) string {
+func RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken string) string {
     client := resty.New()
     bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
     resp, err := client.
         R().
         EnableTrace().
         SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
         SetBody(bodyStr).
         Post(reverseProxy + "/" + backend + "/functions/registration")
 
@@ -112,7 +117,7 @@ func RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy,
     return processStatus
 }
 
-func RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus string) string {
+func RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken string) string {
     //TODO: prevent creating "default" revision
     client := resty.New()
     bodyStr := `{"function":"` + functionName + `", "revision":"` + revisionName + `", "url":"` + moduleServerUrl + `"}`
@@ -120,6 +125,7 @@ func RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy,
         R().
         EnableTrace().
         SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
         SetBody(bodyStr).
         Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/revision")
 
@@ -134,13 +140,14 @@ func RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy,
     return processStatus
 }
 
-func RegisterURL(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus string) string {
+func RegisterURL(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken string) string {
     client := resty.New()
     bodyStr := `{"url":"` + moduleServerUrl + `"}`
     resp, err := client.
         R().
         EnableTrace().
         SetHeader("Content-Type", "application/json; charset=utf-8").
+        SetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", reverseProxyAdminToken).
         SetBody(bodyStr).
         Post(reverseProxy + "/" + backend + "/functions/" + functionName + "/" + revisionName + "/url")
 
@@ -154,7 +161,7 @@ func RegisterURL(functionName, revisionName, moduleServerUrl, reverseProxy, back
     return processStatus
 }
 
-func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function, capsulePath string, httpPortCounter int, workerDomain, reverseProxy, backend string) {
+func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function, capsulePath string, httpPortCounter int, workerDomain, reverseProxy, backend, reverseProxyAdminToken, workerAdminToken string) {
 
     /*
         ==============================================================
@@ -174,73 +181,110 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
        If I call it 2 times, it scales
     */
     router.POST("functions/deploy", func(c *gin.Context) {
-        //TODO: add an authentication token
+        //TODO: check if there is a better practice to handle authentication token
+        if len(workerAdminToken) == 0 || c.GetHeader("CAPSULE_WORKER_ADMIN_TOKEN") == workerAdminToken {
 
-        // check json payload parameters
-        jsonMap := make(map[string]interface{})
+            // check json payload parameters
+            jsonMap := make(map[string]interface{})
 
-        if err := c.Bind(&jsonMap); err != nil {
-            c.JSON(http.StatusInternalServerError, gin.H{
-                "code":    "JSON_PARSE_ERROR",
-                "message": err.Error()})
-        } else {
-
-            //TODO: check if the values are empty or not
-            functionName := jsonMap["function"].(string)
-            revisionName := jsonMap["revision"].(string)
-            wasmModuleUrl := jsonMap["downloadUrl"].(string) // the downloadUrl to download the module from the registry
-            envVariables := jsonMap["envVariables"]
-
-            var wasmEnvVariables = make(map[string]string)
-            if envVariables == nil {
-                wasmEnvVariables = map[string]string{}
+            if err := c.Bind(&jsonMap); err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{
+                    "code":    "JSON_PARSE_ERROR",
+                    "message": err.Error()})
             } else {
-                for key, value := range envVariables.(map[string]interface{}) {
-                    strKey := fmt.Sprintf("%v", key)
-                    strValue := fmt.Sprintf("%v", value)
-                    wasmEnvVariables[strKey] = strValue
+
+                //TODO: check if the values are empty or not
+                functionName := jsonMap["function"].(string)
+                revisionName := jsonMap["revision"].(string)
+                wasmModuleUrl := jsonMap["downloadUrl"].(string) // the downloadUrl to download the module from the registry
+                envVariables := jsonMap["envVariables"]
+
+                var wasmEnvVariables = make(map[string]string)
+                if envVariables == nil {
+                    wasmEnvVariables = map[string]string{}
+                } else {
+                    for key, value := range envVariables.(map[string]interface{}) {
+                        strKey := fmt.Sprintf("%v", key)
+                        strValue := fmt.Sprintf("%v", value)
+                        wasmEnvVariables[strKey] = strValue
+                    }
+
+                    //wasmEnvVariables = envVariables.(map[string]string)
                 }
+                fmt.Println("🚀[envVariables]:", wasmEnvVariables)
 
-                //wasmEnvVariables = envVariables.(map[string]string)
-            }
-            fmt.Println("🚀[envVariables]:", wasmEnvVariables)
+                fmt.Println("⏳ downloading from:", wasmModuleUrl)
+                fmt.Println("🚀 starting on http port:", httpPortCounter)
 
-            fmt.Println("⏳ downloading from:", wasmModuleUrl)
-            fmt.Println("🚀 starting on http port:", httpPortCounter)
+                // Increment the httpPort counter
+                httpPortCounter += 1
 
-            // Increment the httpPort counter
-            httpPortCounter += 1
+                //🖐 we need the IP address of the worker (for the registration with the reverse proxy)
+                //or domain name
+                //because the worker and the module are on the same machine
+                //but not necessarily the reverse proxy
+                //🤔 how to start a module with https??? (or only the reverse proxy???)
 
-            //🖐 we need the IP address of the worker (for the registration with the reverse proxy)
-            //or domain name
-            //because the worker and the module are on the same machine
-            //but not necessarily the reverse proxy
-            //🤔 how to start a module with https??? (or only the reverse proxy???)
+                moduleServerPort := "http" //TODO: handle the case of https
+                moduleServerUrl := helpers.GetModuleServerUrl(workerDomain, moduleServerPort, httpPortCounter)
+                moduleRemoteUrl := reverseProxy + "/functions/" + functionName + "/" + revisionName
 
-            moduleServerPort := "http" //TODO: handle the case of https
-            moduleServerUrl := helpers.GetModuleServerUrl(workerDomain, moduleServerPort, httpPortCounter)
-            moduleRemoteUrl := reverseProxy + "/functions/" + functionName + "/" + revisionName
+                fmt.Println("🌍 the 💊 Capsule module is running at:", moduleServerUrl)
+                fmt.Println("📝 registering to the reverse proxy:", reverseProxy)
+                fmt.Println("🎉 you can call the function at:", moduleRemoteUrl)
 
-            fmt.Println("🌍 the 💊 Capsule module is running at:", moduleServerUrl)
-            fmt.Println("📝 registering to the reverse proxy:", reverseProxy)
-            fmt.Println("🎉 you can call the function at:", moduleRemoteUrl)
+                fmt.Println("👨🏻‍💻 updating the list of the functions")
 
-            fmt.Println("👨🏻‍💻 updating the list of the functions")
+                // 🚀 Start a function
+                pid, processStatus, tmpFileName := StartFunction(capsulePath, wasmEnvVariables, wasmModuleUrl, httpPortCounter)
 
-            // 🚀 Start a function
-            pid, processStatus, tmpFileName := StartFunction(capsulePath, wasmEnvVariables, wasmModuleUrl, httpPortCounter)
+                if models.IsFunctionExist(functionName, functions) == true {
 
-            if models.IsFunctionExist(functionName, functions) == true {
+                    //TODO: prevent the creation of "default" revision
 
-                //TODO: prevent the creation of "default" revision
+                    // the function already exists
+                    if models.IsRevisionExist(functionName, revisionName, functions) == true {
+                        // 📦 Register a new **Wasm Module**
+                        processStatus = RegisterURL(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken)
 
-                // the function already exists
-                if models.IsRevisionExist(functionName, revisionName, functions) == true {
-                    // 📦 Register a new **Wasm Module**
-                    processStatus = RegisterURL(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
+                        // The revision already exists
+                        // Then we will add a new running wasm module (scale)
+                        wasmModule := models.RunningWasmModule{
+                            Pid:          pid,
+                            Status:       processStatus,
+                            LocalUrl:     moduleServerUrl,
+                            RemoteUrl:    moduleRemoteUrl,
+                            EnvVariables: wasmEnvVariables,
+                            TmpFileName:  tmpFileName,
+                        }
+                        AddRunningWasmModuleToRevision(functionName, revisionName, wasmModule, functions)
 
-                    // The revision already exists
-                    // Then we will add a new running wasm module (scale)
+                    } else {
+                        // 📝 Register a **Revision** to the reverse proxy
+                        processStatus = RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken)
+
+                        // The revision does not exist
+                        // Then Create a new revision for the function
+                        // With a running wasm module
+                        wasmModule := models.RunningWasmModule{
+                            Pid:          pid, // at the end pid counter will be the id of the process
+                            Status:       processStatus,
+                            LocalUrl:     moduleServerUrl,
+                            RemoteUrl:    moduleRemoteUrl,
+                            EnvVariables: wasmEnvVariables,
+                            TmpFileName:  tmpFileName,
+                        }
+                        AddRevisionWithWasmModuleToFunction(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
+
+                    }
+                } else {
+
+                    // 📝 Register a **Function** to the reverse proxy
+                    processStatus = RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus, reverseProxyAdminToken)
+
+                    // The function does not exist: this is the first deployment of the function
+                    // The revision does not exist
+                    // Then, create the function and the revision
                     wasmModule := models.RunningWasmModule{
                         Pid:          pid,
                         Status:       processStatus,
@@ -249,55 +293,26 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
                         EnvVariables: wasmEnvVariables,
                         TmpFileName:  tmpFileName,
                     }
-                    AddRunningWasmModuleToRevision(functionName, revisionName, wasmModule, functions)
-
-                } else {
-                    // 📝 Register a **Revision** to the reverse proxy
-                    processStatus = RegisterRevision(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
-
-                    // The revision does not exist
-                    // Then Create a new revision for the function
-                    // With a running wasm module
-                    wasmModule := models.RunningWasmModule{
-                        Pid:          pid, // at the end pid counter will be the id of the process
-                        Status:       processStatus,
-                        LocalUrl:     moduleServerUrl,
-                        RemoteUrl:    moduleRemoteUrl,
-                        EnvVariables: wasmEnvVariables,
-                        TmpFileName:  tmpFileName,
-                    }
-                    AddRevisionWithWasmModuleToFunction(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
-
+                    AddFunctionWithRevisionWithWasmModule(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
                 }
-            } else {
 
-                // 📝 Register a **Function** to the reverse proxy
-                processStatus = RegisterFunction(functionName, revisionName, moduleServerUrl, reverseProxy, backend, processStatus)
+                //delete(functions[functionName].Revisions, revisionName)
 
-                // The function does not exist: this is the first deployment of the function
-                // The revision does not exist
-                // Then, create the function and the revision
-                wasmModule := models.RunningWasmModule{
-                    Pid:          pid,
-                    Status:       processStatus,
-                    LocalUrl:     moduleServerUrl,
-                    RemoteUrl:    moduleRemoteUrl,
-                    EnvVariables: wasmEnvVariables,
-                    TmpFileName:  tmpFileName,
-                }
-                AddFunctionWithRevisionWithWasmModule(functionName, revisionName, wasmModuleUrl, wasmModule, functions)
+                c.JSON(http.StatusAccepted, gin.H{
+                    "code":      "FUNCTION_DEPLOYED",
+                    "message":   "Function deployed",
+                    "function":  functionName,
+                    "revision":  revisionName,
+                    "localUrl":  moduleServerUrl,
+                    "remoteUrl": moduleRemoteUrl})
+
             }
-
-            //delete(functions[functionName].Revisions, revisionName)
-
-            c.JSON(http.StatusAccepted, gin.H{
-                "code":      "FUNCTION_DEPLOYED",
-                "message":   "Function deployed",
-                "function":  functionName,
-                "revision":  revisionName,
-                "localUrl":  moduleServerUrl,
-                "remoteUrl": moduleRemoteUrl})
-
+        } else {
+            c.JSON(http.StatusForbidden, gin.H{
+                "code":    "KO",
+                "from":    "worker",
+                "message": "Forbidden"})
         }
+
     })
 }

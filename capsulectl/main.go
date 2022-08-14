@@ -110,6 +110,7 @@ func DeployFunctionRevision(functionName, revisionName, downloadUrl, envVariable
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringBody).
 		Post(workerUrl + "/functions/deploy")
 
@@ -187,6 +188,7 @@ func SetDefaultRevision(functionName, revisionName, workerUrl, workerToken strin
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringUnSetBody).
 		Delete(workerUrl + "/functions/remove_default_revision")
 
@@ -194,6 +196,7 @@ func SetDefaultRevision(functionName, revisionName, workerUrl, workerToken strin
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringSetBody).
 		Post(workerUrl + "/functions/set_default_revision")
 
@@ -252,6 +255,7 @@ func UnSetDefaultRevision(functionName, workerUrl, workerToken string) {
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringUnSetBody).
 		Delete(workerUrl + "/functions/remove_default_revision")
 
@@ -306,6 +310,7 @@ func UnDeployRevision(functionName, revisionName, workerUrl, workerToken string)
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringSetBody).
 		Delete(workerUrl + "/functions/revisions/deployments")
 
@@ -361,6 +366,7 @@ func DownscaleRevision(functionName, revisionName, workerUrl, workerToken string
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json; charset=utf-8").
+		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
 		SetBody(jsonStringSetBody).
 		Delete(workerUrl + "/functions/revisions/downscale")
 
@@ -430,9 +436,18 @@ func ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend string) {
 func main() {
 	args := os.Args[1:]
 
-	adminWorkerToken := GetEnv("CAPSULE_WORKER_TOKEN", "")
+	/*
+	   You need to use a header with this key: CAPSULE_WORKER_ADMIN_TOKEN
+	*/
+	adminWorkerToken := GetEnv("CAPSULE_WORKER_ADMIN_TOKEN", "")
+
 	workerUrl := GetEnv("CAPSULE_WORKER_URL", "")
-	adminReverseProxyToken := GetEnv("CAPSULE_REVERSE_PROXY_TOKEN", "")
+
+	/*
+	   You need to use a header with this key: CAPSULE_REVERSE_PROXY_ADMIN_TOKEN
+	*/
+	adminReverseProxyToken := GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "") // right now, not used
+
 	reverseProxyUrl := GetEnv("CAPSULE_REVERSE_PROXY_URL", "")
 	backend := GetEnv("CAPSULE_BACKEND", "")
 

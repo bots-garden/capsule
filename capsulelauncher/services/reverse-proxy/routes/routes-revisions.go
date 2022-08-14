@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[interface{}]interface{}) {
+func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[interface{}]interface{}, reverseProxyAdminToken string) {
 
 	/*
 	   ==========================================================
@@ -23,43 +23,52 @@ func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	       echo ""
 	*/
 	router.POST("memory/functions/:function_name/revision", func(c *gin.Context) {
-		functionName := c.Param("function_name")
+		//TODO: check if there is a better practice to handle authentication token
+		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
 
-		//TODO: add an authentication token
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_JSON_BINDING",
-				"message": err.Error()})
-		}
+			functionName := c.Param("function_name")
 
-		//TODO: check if the values are empty or not
-		revisionName := jsonMap["revision"].(string)
-		firstUrl := jsonMap["url"].(string)
-
-		// if the function does not exist, we cannot add a revision
-		if functions[functionName] == nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_FUNCTION_NOT_FOUND",
-				"message": functionName + " does not exist"})
-		} else {
-			// if the revision already exists we cannot add it
-			if functions[functionName][revisionName] != nil {
+			jsonMap := make(map[string]interface{})
+			if err := c.Bind(&jsonMap); err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
-					"code":    "ERROR_REVISION_ALREADY_EXISTS",
-					"message": revisionName + " already exists"})
-			} else {
-				// add the revision to the function
-				functions[functionName][revisionName] = []string{firstUrl}
-
-				c.JSON(http.StatusAccepted, gin.H{
-					"code":     "OK",
-					"message":  "Revision added to the function",
-					"function": functionName,
-					"revision": revisionName,
-					"url":      firstUrl})
+					"code":    "ERROR_JSON_BINDING",
+					"message": err.Error()})
 			}
+
+			//TODO: check if the values are empty or not
+			revisionName := jsonMap["revision"].(string)
+			firstUrl := jsonMap["url"].(string)
+
+			// if the function does not exist, we cannot add a revision
+			if functions[functionName] == nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR_FUNCTION_NOT_FOUND",
+					"message": functionName + " does not exist"})
+			} else {
+				// if the revision already exists we cannot add it
+				if functions[functionName][revisionName] != nil {
+					c.JSON(http.StatusInternalServerError, gin.H{
+						"code":    "ERROR_REVISION_ALREADY_EXISTS",
+						"message": revisionName + " already exists"})
+				} else {
+					// add the revision to the function
+					functions[functionName][revisionName] = []string{firstUrl}
+
+					c.JSON(http.StatusAccepted, gin.H{
+						"code":     "OK",
+						"message":  "Revision added to the function",
+						"function": functionName,
+						"revision": revisionName,
+						"url":      firstUrl})
+				}
+			}
+		} else {
+			c.JSON(http.StatusForbidden, gin.H{
+				"code":    "KO",
+				"from":    "reverse-proxy",
+				"message": "Forbidden"})
 		}
+
 	})
 
 	/*
@@ -78,43 +87,50 @@ func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	       echo ""
 	*/
 	router.DELETE("memory/functions/:function_name/revision", func(c *gin.Context) {
+		//TODO: check if there is a better practice to handle authentication token
+		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
 
-		functionName := c.Param("function_name")
+			functionName := c.Param("function_name")
 
-		//TODO: add an authentication token
-		jsonMap := make(map[string]interface{})
-		if err := c.Bind(&jsonMap); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_JSON_BINDING",
-				"message": err.Error()})
-		}
-
-		//TODO: check if the values are empty or not
-		revisionName := jsonMap["revision"].(string)
-		//firstUrl := jsonMap["url"].(string)
-
-		// if the function does not exist, we cannot add a revision
-		if functions[functionName] == nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    "ERROR_FUNCTION_NOT_FOUND",
-				"message": functionName + " does not exist"})
-		} else {
-			// if the revision does not exist we cannot remove it
-			if functions[functionName][revisionName] == nil {
+			jsonMap := make(map[string]interface{})
+			if err := c.Bind(&jsonMap); err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
-					"code":    "ERROR_REVISION_NOT_FOUND",
-					"message": revisionName + " does not exist"})
-			} else {
-				// add the revision to the function
-				//functions[functionName][revisionName] = []string{firstUrl}
-				delete(functions[functionName], revisionName)
-
-				c.JSON(http.StatusAccepted, gin.H{
-					"code":     "OK",
-					"message":  "Revision removed from the function",
-					"function": functionName,
-					"revision": revisionName})
+					"code":    "ERROR_JSON_BINDING",
+					"message": err.Error()})
 			}
+
+			//TODO: check if the values are empty or not
+			revisionName := jsonMap["revision"].(string)
+			//firstUrl := jsonMap["url"].(string)
+
+			// if the function does not exist, we cannot add a revision
+			if functions[functionName] == nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code":    "ERROR_FUNCTION_NOT_FOUND",
+					"message": functionName + " does not exist"})
+			} else {
+				// if the revision does not exist we cannot remove it
+				if functions[functionName][revisionName] == nil {
+					c.JSON(http.StatusInternalServerError, gin.H{
+						"code":    "ERROR_REVISION_NOT_FOUND",
+						"message": revisionName + " does not exist"})
+				} else {
+					// add the revision to the function
+					//functions[functionName][revisionName] = []string{firstUrl}
+					delete(functions[functionName], revisionName)
+
+					c.JSON(http.StatusAccepted, gin.H{
+						"code":     "OK",
+						"message":  "Revision removed from the function",
+						"function": functionName,
+						"revision": revisionName})
+				}
+			}
+		} else {
+			c.JSON(http.StatusForbidden, gin.H{
+				"code":    "KO",
+				"from":    "reverse-proxy",
+				"message": "Forbidden"})
 		}
 
 	})
