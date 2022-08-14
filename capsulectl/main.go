@@ -22,13 +22,13 @@ type CapsuleCtlFlag struct {
 	WasmModuleOrganization string // wasm modules registry related
 	WasmModuleName         string // wasm modules registry related
 	WasmModuleTag          string // wasm modules registry related
-	WasmRegistryToken      string // wasm modules registry related
-	WasmModuleFile         string // wasm modules registry related
-	WasmModuleInfo         string // wasm modules registry related
-	FunctionName           string
-	RevisionName           string
-	DownloadUrl            string
-	EnvVariables           string
+	//WasmRegistryToken      string // wasm modules registry related
+	WasmModuleFile string // wasm modules registry related
+	WasmModuleInfo string // wasm modules registry related
+	FunctionName   string
+	RevisionName   string
+	DownloadUrl    string
+	EnvVariables   string
 }
 
 /*
@@ -48,19 +48,35 @@ func PublishToTheRegistry(wasmModuleFile, wasmModuleInfo, wasmModuleOrg, wasmMod
 	fmt.Println("⏳", "[publishing to registry]", wasmModuleOrg, wasmModuleName, wasmModuleTag)
 
 	client := resty.New()
-	_, err := client.
+	resp, err := client.
 		R().
 		EnableTrace().
 		SetHeader("Content-Type", "multipart/form-data").
+		SetHeader("CAPSULE_REGISTRY_ADMIN_TOKEN", wasmRegistryToken).
 		SetFile("file", wasmModuleFile).
 		SetMultipartFormData(map[string]string{
 			"info": wasmModuleInfo,
 		}).
 		Post(wasmRegistryUrl + "/upload/" + wasmModuleOrg + "/" + wasmModuleName + "/" + wasmModuleTag)
+
 	if err != nil {
 		fmt.Println("😡", "[publishing to registry]", err)
 	} else {
-		fmt.Println("🙂", "[publishing to registry]", wasmModuleFile, "published")
+
+		jsonRespMap := make(map[string]interface{})
+		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
+		if jsonRespMapErr != nil {
+			fmt.Println("😡", "[publishing to registry]", jsonRespMapErr)
+		}
+		//fmt.Println("🌍", "[publishing to registry]", jsonRespMap)
+
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[publishing to registry]", jsonRespMap["message"])
+
+		} else {
+			fmt.Println("🙂", "[publishing to registry]", wasmModuleFile, "published")
+		}
+
 	}
 
 }
@@ -117,7 +133,6 @@ func DeployFunctionRevision(functionName, revisionName, downloadUrl, envVariable
 	if err != nil {
 		fmt.Println("😡", "[when deploying to worker]", err)
 	} else {
-		fmt.Println("🙂", "[deployed to worker]", functionName, "/", revisionName)
 		/*
 		   {"code":"FUNCTION_DEPLOYED","function":"hello","localUrl":"http://localhost:10001","message":"Function deployed","remoteUrl":"http://localhost:8888/functions/hello/blue","revision":"blue"}
 		*/
@@ -127,7 +142,15 @@ func DeployFunctionRevision(functionName, revisionName, downloadUrl, envVariable
 			fmt.Println("😡", "[(resp->map)deploying function revision]", jsonRespMapErr)
 		}
 
-		fmt.Println("🌍", "[serving]", jsonRespMap["remoteUrl"])
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[when deploying to worker]", jsonRespMap["message"])
+
+		} else {
+			fmt.Println("🙂", "[deployed to worker]", functionName, "/", revisionName)
+			fmt.Println("🌍", "[serving]", jsonRespMap["remoteUrl"])
+
+		}
+
 	}
 
 }
@@ -207,7 +230,6 @@ func SetDefaultRevision(functionName, revisionName, workerUrl, workerToken strin
 	if errSetDefault != nil {
 		fmt.Println("😡", "[when setting the default revision]", errSetDefault)
 	} else {
-		fmt.Println("🙂", "[the default revision is set]->", functionName, "/", revisionName)
 
 		jsonRespMap := make(map[string]interface{})
 		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
@@ -215,7 +237,16 @@ func SetDefaultRevision(functionName, revisionName, workerUrl, workerToken strin
 			fmt.Println("😡", "[(resp->map)setting the default revision]", jsonRespMapErr)
 		}
 
-		fmt.Println("🌍", "[serving]", jsonRespMap["url"])
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[when setting the default revision]", jsonRespMap["message"])
+
+		} else {
+			fmt.Println("🙂", "[the default revision is set]->", functionName, "/", revisionName)
+			fmt.Println("🌍", "[serving]", jsonRespMap["url"])
+
+		}
+
+		//fmt.Println("🌍", "[serving]", jsonRespMap["url"])
 		//fmt.Println("🌍", "[serving]", jsonRespMap)
 
 	}
@@ -262,12 +293,18 @@ func UnSetDefaultRevision(functionName, workerUrl, workerToken string) {
 	if errUnSetDefault != nil {
 		fmt.Println("😡", "[when unsetting the default revision]", errUnSetDefault)
 	} else {
-		fmt.Println("🙂", "[the default revision is unset]->", functionName)
 
 		jsonRespMap := make(map[string]interface{})
 		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
 		if jsonRespMapErr != nil {
 			fmt.Println("😡", "[(resp->map)unsetting the default revision]", jsonRespMapErr)
+		}
+
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[when unsetting the default revision]", jsonRespMap["message"])
+
+		} else {
+			fmt.Println("🙂", "[the default revision is unset]->", functionName)
 		}
 
 		//fmt.Println("🌍", "[serving]", jsonRespMap)
@@ -317,12 +354,18 @@ func UnDeployRevision(functionName, revisionName, workerUrl, workerToken string)
 	if errSetDefault != nil {
 		fmt.Println("😡", "[when un-deploying the revision]", errSetDefault)
 	} else {
-		fmt.Println("🙂", "[the revision is un-deployed (all processes killed)]->", functionName, "/", revisionName)
 
 		jsonRespMap := make(map[string]interface{})
 		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
 		if jsonRespMapErr != nil {
 			fmt.Println("😡", "[(resp->map)un-deploying the revision]", jsonRespMapErr)
+		}
+
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[when un-deploying the revision]", jsonRespMap["message"])
+
+		} else {
+			fmt.Println("🙂", "[the revision is un-deployed (all processes killed)]->", functionName, "/", revisionName)
 		}
 
 		//fmt.Println("🌍", "[serving]", jsonRespMap["url"])
@@ -448,6 +491,11 @@ func main() {
 	*/
 	adminReverseProxyToken := GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "") // right now, not used
 
+	/*
+	   You need to use a header with this key: CAPSULE_REGISTRY_ADMIN_TOKEN
+	*/
+	registryAdminToken := GetEnv("CAPSULE_REGISTRY_ADMIN_TOKEN", "")
+
 	reverseProxyUrl := GetEnv("CAPSULE_REVERSE_PROXY_URL", "")
 	backend := GetEnv("CAPSULE_BACKEND", "")
 
@@ -471,7 +519,7 @@ func main() {
 
 		// Where to download the wasm module
 		wasmRegistryUrlPtr := capsuleCtlFlagSet.String("registryUrl", "", "wasm module registry url")
-		wasmRegistryTokenPtr := capsuleCtlFlagSet.String("registryToken", "", "wasm registry token")
+		//wasmRegistryTokenPtr := capsuleCtlFlagSet.String("registryToken", "", "wasm registry token")
 		wasmModuleFilePtr := capsuleCtlFlagSet.String("wasmFile", "", "wasm module location")
 		wasmModuleInfoPtr := capsuleCtlFlagSet.String("wasmInfo", "", "wasm module information when publishing to the registry")
 		wasmModuleNamePtr := capsuleCtlFlagSet.String("wasmName", "", "wasm module name for publication")
@@ -490,11 +538,11 @@ func main() {
 		}
 
 		flags := CapsuleCtlFlag{
-			RevisionName:           *revisionNamePtr,
-			FunctionName:           *functionNamePtr,
-			DownloadUrl:            *downloadUrlPtr,
-			EnvVariables:           *envVariablesPtr,
-			WasmRegistryToken:      *wasmRegistryTokenPtr,
+			RevisionName: *revisionNamePtr,
+			FunctionName: *functionNamePtr,
+			DownloadUrl:  *downloadUrlPtr,
+			EnvVariables: *envVariablesPtr,
+			//WasmRegistryToken:      *wasmRegistryTokenPtr,
 			WasmRegistryUrl:        *wasmRegistryUrlPtr,
 			WasmModuleFile:         *wasmModuleFilePtr,
 			WasmModuleInfo:         *wasmModuleInfoPtr,
@@ -509,8 +557,7 @@ func main() {
 			   ./capsulectl publish \
 			   -wasmFile=./hello/hello.wasm -wasmInfo=wip \
 			   -wasmOrg=k33g -wasmName=hello -wasmTag=0.0.0 \
-			   -registryUrl=http://localhost:4999 \
-			   -registryToken=nothing
+			   -registryUrl=http://localhost:4999
 			*/
 			PublishToTheRegistry(
 				flags.WasmModuleFile,
@@ -519,7 +566,8 @@ func main() {
 				flags.WasmModuleName,
 				flags.WasmModuleTag,
 				flags.WasmRegistryUrl,
-				flags.WasmRegistryToken)
+				registryAdminToken)
+			//flags.WasmRegistryToken
 
 		case "deploy":
 			/*
