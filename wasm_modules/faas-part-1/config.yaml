@@ -1,5 +1,0 @@
-functions:
-    hello:
-        default:
-            - http://localhost:9091
-

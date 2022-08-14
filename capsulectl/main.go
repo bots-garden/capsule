@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/capsulectl/commons"
 	"github.com/go-resty/resty/v2"
 	"log"
 	"os"
@@ -376,12 +376,53 @@ func DownscaleRevision(functionName, revisionName, workerUrl, workerToken string
 		//fmt.Println("🌍", "[serving]", jsonRespMap)
 		if jsonRespMap["code"] == "WASM_MODULE_DEPLOYMENT_NOT_REMOVED" {
 			fmt.Println("😡", "[the revision is not downscaled]-> the revision needs at least one running wasm module")
-
 		} else {
 			fmt.Println("🙂", "[the revision is downscaled (one process killed)]->", functionName, "/", revisionName, "pid:", jsonRespMap["pid"])
 
 		}
 
+	}
+
+}
+
+func WorkerInfo(workerUrl, adminWorkerToken, backend string) {
+	//TODO: change the route of the worker to taking account of the backend
+	// curl http://localhost:9999/functions/list
+	// fmt.Println(workerUrl, adminWorkerToken, backend)
+
+	client := resty.New()
+
+	resp, err := client.
+		R().
+		EnableTrace().
+		SetHeader("Content-Type", "application/json; charset=utf-8").
+		Get(workerUrl + "/functions/list")
+
+	if err != nil {
+		fmt.Println("😡", err)
+
+	} else {
+		fmt.Println(resp)
+	}
+
+}
+
+func ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend string) {
+	//curl http://localhost:8888/memory/functions/list
+	//fmt.Println(reverseProxyUrl, adminReverseProxyToken, backend)
+
+	client := resty.New()
+
+	resp, err := client.
+		R().
+		EnableTrace().
+		SetHeader("Content-Type", "application/json; charset=utf-8").
+		Get(reverseProxyUrl + "/" + backend + "/functions/list")
+
+	if err != nil {
+		fmt.Println("😡", err)
+	} else {
+		fmt.Println(resp)
 	}
 
 }
@@ -393,6 +434,7 @@ func main() {
 	workerUrl := GetEnv("CAPSULE_WORKER_URL", "")
 	adminReverseProxyToken := GetEnv("CAPSULE_REVERSE_PROXY_TOKEN", "")
 	reverseProxyUrl := GetEnv("CAPSULE_REVERSE_PROXY_URL", "")
+	backend := GetEnv("CAPSULE_BACKEND", "")
 
 	commands := map[string]string{
 		"publish":       "publish a wasm module to the capsule registry",
@@ -401,8 +443,8 @@ func main() {
 		"un-deploy":     "undeploy a function's revision",
 		"set-default":   "set the default revision of a function (and remove the previous one if it exists)",
 		"unset-default": "remove the default revision of a function",
-		"worker":        "🚧wip",
-		"reverse-proxy": "🚧wip",
+		"worker":        "display information about the worker",
+		"reverse-proxy": "display information about the reverse-proxy",
 		"help":          "",
 		"version":       "get the capsulectl version"}
 
@@ -530,15 +572,13 @@ func main() {
 				adminWorkerToken)
 
 		case "worker":
-			// 🚧 wip
-			fmt.Println(workerUrl)
+			WorkerInfo(workerUrl, adminWorkerToken, backend)
 
 		case "reverse-proxy":
-			// 🚧 wip
-			fmt.Println(reverseProxyUrl, adminReverseProxyToken)
+			ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend)
 
 		case "version":
-			fmt.Println(commons.CapsuleVersion())
+			fmt.Println(commons.CapsuleCtlVersion())
 
 		case "help":
 			//TODO: add help for the flags

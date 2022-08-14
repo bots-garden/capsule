@@ -11,6 +11,8 @@ import (
 var functions = make(map[string]models.Function)
 var httpPortCounter int
 
+//TODO: implement reverse proxy authentication token
+
 func Serve(httpPort, capsulePath string, httpPortCounterStart int, reverseProxy, workerDomain, backend, crt, key string) {
 
 	httpPortCounter = httpPortCounterStart
@@ -31,7 +33,7 @@ func Serve(httpPort, capsulePath string, httpPortCounterStart int, reverseProxy,
 
 	routes.DefineSwitchRoutes(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
 
-	routes.DefineDeploymentsListRoute(router, functions)
+	routes.DefineDeploymentsListRoute(router, functions, reverseProxy, backend)
 
 	routes.DefineRemoveRevisionDeploymentRoute(router, functions, capsulePath, httpPortCounter, workerDomain, reverseProxy, backend)
 

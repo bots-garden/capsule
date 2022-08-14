@@ -1,1 +1,0 @@
-# capsule-faas-demo

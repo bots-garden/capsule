@@ -1,2 +1,3 @@
-# Capsule CLI: `capsulectl`
+# Capsule CLI: `capsulectl` aka `cc`
+
 

@@ -133,4 +133,16 @@ func DefineUrlsRoutes(router *gin.Engine, functions map[interface{}]map[interfac
 		}
 
 	})
+
+	router.GET("memory/functions/:function_name/:function_revision/urls", func(c *gin.Context) {
+
+		functionName := c.Param("function_name")
+		revisionName := c.Param("function_revision")
+
+		//currentUrlsList := functions[functionName][revisionName].([]string)
+		currentUrlsList := functions[functionName][revisionName]
+
+		c.IndentedJSON(http.StatusOK, currentUrlsList)
+		//c.JSON(http.StatusOK, registeredFunctions)
+	})
 }

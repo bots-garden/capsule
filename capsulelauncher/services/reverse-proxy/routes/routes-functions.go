@@ -21,7 +21,8 @@ func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 			}
 			registeredFunctions[functionName.(string)] = functionsRevisions
 		}
-		c.JSON(http.StatusOK, registeredFunctions)
+		c.IndentedJSON(http.StatusOK, registeredFunctions)
+		//c.JSON(http.StatusOK, registeredFunctions)
 	})
 
 	/*

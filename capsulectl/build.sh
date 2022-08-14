@@ -1,5 +1,5 @@
 #!/bin/bash
-go build -o capsulectl
+go build -o cc
 
-ls -lh capsulectl*
+ls -lh cc*
 
