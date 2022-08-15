@@ -2,9 +2,9 @@ package worker
 
 import (
 	"fmt"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulelauncher/services/worker/models"
 	"github.com/bots-garden/capsule/capsulelauncher/services/worker/routes"
+	"github.com/bots-garden/capsule/commons"
 	"github.com/gin-gonic/gin"
 )
 

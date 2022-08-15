@@ -1,5 +1,5 @@
 package commons
 
 func CapsuleVersion() string {
-	return "v0.1.4 🐡" // blowfish
+	return "v0.1.5 🦐" // shrimp
 }
