@@ -1,7 +1,7 @@
-github.com/bots-garden/capsule v0.0.0-20220815055714-7ff0750505e0 h1:cxmHLqYGpl2UEqDmh4VdD9t0FcEk1/6FSWsGCWogyR4=
-github.com/bots-garden/capsule v0.0.0-20220815055714-7ff0750505e0/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
-github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220815055714-7ff0750505e0 h1:KuAxtyHzkKWW7wLb58Zzl8szREv2KGTe+v2+zGZh7b8=
-github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220815055714-7ff0750505e0/go.mod h1:+MkRH9yoAGaeopd6q72PbjTwdS3MsMeascCcQKk+eeE=
+github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9 h1:Sa9tID8kNjiZrPtEliJz8twpFjYpiKsLh4RpcBQPCb8=
+github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220815061533-7c019d210585 h1:j8UJHLEjTN/52qjnMHX+sAEFDosi2UZHlEUjcBSeWxE=
+github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220815061533-7c019d210585/go.mod h1:+MkRH9yoAGaeopd6q72PbjTwdS3MsMeascCcQKk+eeE=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
