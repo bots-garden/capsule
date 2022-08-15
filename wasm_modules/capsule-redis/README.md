@@ -1,10 +1,9 @@
 # Capsule Redis
 
-This wasm module is used by the `cli` mode
+This wasm module is used by the `cli` mode. You need to start a Redis server (`redis-server`)
 
 ```bash
-#!/bin/bash
-REDIS_ADDR="localhost:6379" REDIS_PWD="" go run main.go \
-   -wasm=../wasm_modules/capsule-redis/hello.wasm \
+REDIS_ADDR="localhost:6379" REDIS_PWD="" ./capsule \
+   -wasm=./hello.wasm \
    -mode=cli
 ```

@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ../../capsulelauncher
+cd ../../capsule-launcher
 REDIS_ADDR="localhost:6379" \
 REDIS_PWD="" \
 go run main.go \
