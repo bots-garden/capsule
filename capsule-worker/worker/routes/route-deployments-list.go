@@ -2,8 +2,8 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/bots-garden/capsule/capsulelauncher/services/worker/helpers"
-	"github.com/bots-garden/capsule/capsulelauncher/services/worker/models"
+	"github.com/bots-garden/capsule/capsule-worker/worker/helpers"
+	"github.com/bots-garden/capsule/capsule-worker/worker/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

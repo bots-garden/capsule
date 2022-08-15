@@ -7,7 +7,7 @@ on:
 jobs:
 
   releases-matrix:
-    name: Release Capsule Binary
+    name: Release Capsule (Launcher) Binary
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,14 +21,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          project_path: "./capsulelauncher"
+          project_path: "./capsule-launcher"
           binary_name: "capsule"
           ldflags: "-s -w"
           #extra_files: ./capsulelauncher/README.md
           goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
 
   releases-matrix-registry:
-      name: Release Capsule CLI Binary
+      name: Release Capsule Registry Binary
       runs-on: ubuntu-latest
       strategy:
           matrix:
@@ -49,7 +49,7 @@ jobs:
                 goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
 
   releases-matrix-reverse-proxy:
-      name: Release Capsule CLI Binary
+      name: Release Capsule Reverse Proxy Binary
       runs-on: ubuntu-latest
       strategy:
           matrix:
@@ -69,6 +69,27 @@ jobs:
                 #extra_files: ./capsulectl/README.md
                 goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
 
+  releases-matrix-worker:
+      name: Release Capsule Worker Binary
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              # build and publish in parallel: linux/amd64
+              goos: [linux, darwin]
+              goarch: [amd64, arm64]
+      steps:
+          - uses: actions/checkout@v2
+          - uses: wangyoucao577/go-release-action@v1.16
+            with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                goos: ${{ matrix.goos }}
+                goarch: ${{ matrix.goarch }}
+                project_path: "./capsule-worker"
+                binary_name: "capsule-worker"
+                ldflags: "-s -w"
+                #extra_files: ./capsulectl/README.md
+                goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
+
   releases-matrix-cli:
       name: Release Capsule CLI Binary
       runs-on: ubuntu-latest
@@ -84,7 +105,7 @@ jobs:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 goos: ${{ matrix.goos }}
                 goarch: ${{ matrix.goarch }}
-                project_path: "./capsulectl"
+                project_path: "./capsule-ctl"
                 binary_name: "cc"
                 ldflags: "-s -w"
                 #extra_files: ./capsulectl/README.md
