@@ -75,9 +75,14 @@ func main() {
                     SetOutput(flags.wasm).
                     Get(flags.url)
 
+                fmt.Println("🎃", "url", flags.url)
+
                 if errLoadWasmFileFromUrl != nil {
                     log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+                } else {
+                    fmt.Println("🎃", "downloaded", flags.url)
                 }
+
                 wasmFile = loadWasmFile(flags.wasm)
             }
             return wasmFile
