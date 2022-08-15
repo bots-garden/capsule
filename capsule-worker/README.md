@@ -5,8 +5,7 @@
 ## Start a Worker
 
 ```bash
-capsule \
-   -mode=worker \
+capsule-worker \
    -reverseProxy=http://localhost:8888 \
    -backend=memory \
    -capsulePath=capsule \
@@ -18,16 +17,14 @@ capsule \
 
 > **Start the registry**:
 ```bash
-capsule run main.go \
-   -mode=registry \
+capsule-registry \
    -files="/functions" \
    -httpPort=4999
 ```
 
 > **Start the reverse-proxy**:
 ```bash
-capsule \
-   -mode=reverse-proxy \
+capsule-reverse-proxy \
    -backend="memory" \
    -httpPort=8888
 ```

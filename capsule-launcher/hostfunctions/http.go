@@ -2,7 +2,7 @@ package hostfunctions
 
 import (
 	"context"
-	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
+	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
 	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
 

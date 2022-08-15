@@ -1,6 +1,7 @@
 #!/bin/bash
 cd ../capsule-launcher
 # build the capsule executable
+rm capsule
 ./build.sh
 cp capsule ../capsule-worker/capsule
 

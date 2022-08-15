@@ -55,10 +55,12 @@ func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmM
 
 	tmpFileName = uuid.New().String() + ".wasm"
 
-	fmt.Println("🎃", "StartFunction")
-	fmt.Println("🎃", "capsulePath", capsulePath)
-	fmt.Println("🎃", "wasmModuleUrl", wasmModuleUrl)
-	fmt.Println("🎃", "tmpFileName", tmpFileName)
+	/*
+		fmt.Println("🎃", "StartFunction")
+		fmt.Println("🎃", "capsulePath", capsulePath)
+		fmt.Println("🎃", "wasmModuleUrl", wasmModuleUrl)
+		fmt.Println("🎃", "tmpFileName", tmpFileName)
+	*/
 
 	cmd := exec.Command(
 		capsulePath,
@@ -239,7 +241,7 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
 				fmt.Println("📝 registering to the reverse proxy:", reverseProxy)
 				fmt.Println("🎉 you can call the function at:", moduleRemoteUrl)
 
-				fmt.Println("👨🏻‍💻 🎃updating the list of the functions")
+				fmt.Println("🗄 updating the list of the functions")
 
 				// 🚀 Start a function
 				pid, processStatus, tmpFileName := StartFunction(capsulePath, wasmEnvVariables, wasmModuleUrl, httpPortCounter)

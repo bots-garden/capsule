@@ -3,8 +3,7 @@ module github.com/bots-garden/capsule/capsule-launcher
 go 1.18
 
 require (
-	github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9
-	github.com/bots-garden/capsule/capsulelauncher v0.0.0-20220815061533-7c019d210585
+	github.com/bots-garden/capsule v0.0.0-20220815080256-b30492298265
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2

@@ -11,11 +11,19 @@ What is **Capsule**?
 
 📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.1.5 (`v0.1.5 🦐`)
 
+There are 5 components in the **Capsule** project:
+- `capsule`: the wasm module launcher (executor)
+- `capsule-reverse-proxy`: a reverse-proxy to simplify the functions (wasm modules) access
+- `capsule-registry`: a wasm module registry (🚧 support of https://wapm.io/ in progress)
+- `capsule-worker`: a server to start the functions (wasm modules) remotely
+- `capsule-ctl` (short name: `cc`): a CLI to facilitate the interaction with the worker
+
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
 
-👋 You will find some **running examples** with this project: https://github.com/bots-garden/capsule-samples
-
+👋 You will find some **running examples** with these projects:
+- https://github.com/bots-garden/capsule-samples
+- https://github.com/bots-garden/capsule-faas-demo
 
 ## First CLI function
 
@@ -370,9 +378,9 @@ query := "SELECT * FROM `" + bucketName + "`.data.docs"
 jsonStringArray, err := hf.CouchBaseQuery(query)
 ```
 
-## Use Capsule as a reverse proxy
+## Use the Capsule Reverse Proxy
 
-You can use **Capsule** as a reverse proxy. Then, you can call a function by its name:
+You can use the **Capsule Reverse Proxy**. Then, you can call a function by its name:
 ```bash
 http://localhost:8888/functions/hola
 ```
@@ -385,10 +393,9 @@ http://localhost:8888/functions/hola/orange
 > - *The reverse proxy will serve the `orange` revision of the `hola` function*
 > - *The `default` revision is the `default` version of the function (http://localhost:8888/functions/hola)*
 
-To run **Capsule** as a reverse proxy, run it like this:
+To run the **Capsule Reverse Proxy**, run the below command:
 ```bash
-./capsule \
-   -mode=reverse-proxy \
+./capsule-reverse-proxy \
    -config=./config.yaml \
    -httpPort=8888
 ```
@@ -419,12 +426,11 @@ hola:
 
 ### Use the "in memory" dynamic mode of the reverse-proxy
 
-With the reverse proxy mode of Capsule, you gain an **API** that allows to define routes dynamically (in memory). You can keep the yaml config file (it is loaded in memory at startup).
+With the Capsule Reverse Proxy, you gain an **API** that allows to define routes dynamically (in memory). You can keep the yaml config file (it is loaded in memory at startup).
 
 To run **Capsule** as a reverse proxy, with the "in memory" dynamic mode, add this flag: `-backend="memory"`:
 ```bash
 ./capsule \
-   -mode=reverse-proxy \
    -config=./config.yaml \
    -backend="memory" \
    -httpPort=8888
@@ -554,7 +560,7 @@ curl -v -X DELETE \
   -d '{"url": "http://localhost:5053"}'
 ```
 
-## Use Capsule as a Wasm modules registry
+## Use the Capsule Wasm modules registry
 > 🚧 this is a work in progress
 
 It's possible to download the wasm module from a remote location before serving it:
@@ -567,13 +573,12 @@ It's possible to download the wasm module from a remote location before serving 
    -httpPort=8080
 ```
 
-**Capsule** provides a `registry` mode allowing to upload and serve the wasm modules
+The **Capsule Registry** allows to upload and serve the wasm modules
 
 ### Start the wasm registry
 
 ```bash
-./capsule \
-   -mode=registry \
+./capsule-registry \
    -files="./wasm_modules" \
    -httpPort=4999
 ```
@@ -615,6 +620,7 @@ curl http://localhost:4999/info/k33g/hola/0.0.0
 curl http://localhost:4999/modules
 ```
 
-## Use Capsule as Worker(s)
+## Use the Capsule Worker
+> 🚧 documentation in progress
 
-Then you will get an api to start functions remotely. For more details, see `/capsulelauncher/services/worker/README.md`
+You will get an api to start functions remotely. For more details, see `/capsule-worker/README.md`
