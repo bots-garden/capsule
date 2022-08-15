@@ -11,6 +11,9 @@
             <path value="file://$PROJECT_DIR$/wasm_modules/capsule-http-post" />
             <path value="file://$PROJECT_DIR$/wasm_modules/capsule-redis" />
             <path value="file://$PROJECT_DIR$/wasm_modules/capsules-couchbase" />
+            <path value="file://$PROJECT_DIR$/wasm_modules/registry-demo" />
+            <path value="file://$PROJECT_DIR$/wasm_modules/reverse-proxy-demo" />
+            <path value="file://$PROJECT_DIR$/wasm_modules/capsule-files" />
           </resourceRoots>
         </entryData>
       </entry>

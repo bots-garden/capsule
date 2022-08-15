@@ -1,16 +1,13 @@
 package reverse_proxy
 
 import (
-	"fmt"
-	"github.com/bots-garden/capsule/capsule-reverse-proxy/reverse-proxy/routes"
-	"github.com/bots-garden/capsule/commons"
-	"github.com/gin-gonic/gin"
-	"gopkg.in/yaml.v3"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
+    "fmt"
+    "github.com/bots-garden/capsule/capsule-reverse-proxy/reverse-proxy/routes"
+    "github.com/bots-garden/capsule/commons"
+    "github.com/gin-gonic/gin"
+    "net/http"
+    "net/http/httputil"
+    "net/url"
 )
 
 /*
@@ -25,165 +22,123 @@ func getEnv(key, fallback string) string {
 var lastUrlIndex = 0
 
 func redirect(functionUrls []string, c *gin.Context) {
-	//fmt.Println("🟢🖐", functionUrls)
-	var functionUrl = ""
+    var functionUrl = ""
 
-	if len(functionUrls) == 1 {
-		functionUrl = functionUrls[0]
-	} else {
-		//TODO better repartition (load balancing) handling
-		lastUrlIndex += 1
-		if lastUrlIndex == len(functionUrls) {
-			lastUrlIndex = 0
-		}
+    if len(functionUrls) == 1 {
+        functionUrl = functionUrls[0]
+    } else {
+        //TODO better repartition (load balancing) handling
+        lastUrlIndex += 1
+        if lastUrlIndex == len(functionUrls) {
+            lastUrlIndex = 0
+        }
 
-		functionUrl = functionUrls[lastUrlIndex]
+        functionUrl = functionUrls[lastUrlIndex]
 
-		//fmt.Println("🛑 kind of load balancing", lastUrlIndex)
-		//fmt.Println("🌍", functionUrl)
-	}
+    }
 
-	remote, err := url.Parse(functionUrl)
+    remote, err := url.Parse(functionUrl)
 
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+        panic(err)
+    }
 
-	proxy := httputil.NewSingleHostReverseProxy(remote)
+    proxy := httputil.NewSingleHostReverseProxy(remote)
 
-	proxy.Director = func(req *http.Request) {
-		req.Header = c.Request.Header
-		req.Host = remote.Host
-		req.URL.Scheme = remote.Scheme
-		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("proxyPath")
+    proxy.Director = func(req *http.Request) {
+        req.Header = c.Request.Header
+        req.Host = remote.Host
+        req.URL.Scheme = remote.Scheme
+        req.URL.Host = remote.Host
+        req.URL.Path = c.Param("proxyPath")
 
-		//fmt.Println("🔴", c.Request.Header)
-	}
+    }
 
-	proxy.ServeHTTP(c.Writer, c.Request)
+    proxy.ServeHTTP(c.Writer, c.Request)
 }
 
-// 👀 See https://github.com/bots-garden/procyon/blob/main/procyon-reverse-proxy/main.go
 func proxy(c *gin.Context) {
 
-	functionName := c.Param("function_name")
-	functionUrls := functions[functionName]["default"]
+    functionName := c.Param("function_name")
+    functionUrls := functions[functionName]["default"]
 
-	//fmt.Println("👋functionName", functionName)
-	//fmt.Println("👋functionUrls", functionUrls)
+    if functionUrls != nil {
+        //redirect(functionUrls.([]interface{}), c)
+        redirect(functionUrls.([]string), c)
 
-	if functionUrls != nil {
-		/*
-		   2022/08/09 14:11:44 http: panic serving 127.0.0.1:65399:
-		   interface conversion: interface {} is []string, not []interface {}
-
-		*/
-
-		//redirect(functionUrls.([]interface{}), c)
-		redirect(functionUrls.([]string), c)
-
-	} else {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
-	}
+    } else {
+        c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
+    }
 
 }
 
 func proxyRevision(c *gin.Context) {
 
-	functionName := c.Param("function_name")
-	functionRevision := c.Param("function_revision")
-	functionUrls := functions[functionName][functionRevision]
+    functionName := c.Param("function_name")
+    functionRevision := c.Param("function_revision")
+    functionUrls := functions[functionName][functionRevision]
 
-	if functionUrls != nil {
-		redirect(functionUrls.([]string), c)
-	} else {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
-	}
+    if functionUrls != nil {
+        redirect(functionUrls.([]string), c)
+    } else {
+        c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "😢 Houston? We have a problem 🥵"})
+    }
 }
 
-var yamlConfig = make(map[interface{}]map[interface{}]map[interface{}]interface{})
+//var yamlConfig = make(map[interface{}]map[interface{}]map[interface{}]interface{})
 var functions = make(map[interface{}]map[interface{}]interface{})
-var filters = make(map[interface{}]map[interface{}]interface{})
+
+//var filters = make(map[interface{}]map[interface{}]interface{})
 
 func Serve(httpPort, config, backend, crt, key string) {
 
-	if config != "" {
-		fmt.Println("📝 config file:", config)
-		yamlFile, errFile := ioutil.ReadFile(config)
-		if errFile != nil {
-			log.Fatal(errFile)
-		}
+    switch backend {
+    case "memory":
+        // it's possible to mix memory and yaml for the functions
+        fmt.Println("👋 routes are defined in memory")
+    case "redis":
+        fmt.Println("👋 Redis backend (🚧 not implemented)")
+        fmt.Println("👋 routes are defined in a Redis backend")
+        fmt.Println("👋 use environment variable for the Redis configuration ")
+    default:
+        fmt.Println("👋 routes are defined in a Redis backend")
+        fmt.Println("👋 use environment variable for the Redis configuration ")
+    }
 
-		errYaml := yaml.Unmarshal(yamlFile, &yamlConfig)
+    if commons.GetEnv("DEBUG", "false") == "false" {
+        gin.SetMode(gin.ReleaseMode)
+    } else {
+        gin.SetMode(gin.DebugMode)
+    }
+    //router := gin.Default()
+    router := gin.New()
 
-		if errYaml != nil {
-			log.Fatal(errYaml)
-		}
+    router.NoRoute(func(c *gin.Context) {
+        c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
+    })
 
-		functions = yamlConfig["functions"]
-		filters = yamlConfig["filters"]
+    /*
+       You need to use a header with this key: CAPSULE_REVERSE_PROXY_ADMIN_TOKEN
+    */
+    reverseProxyAdminToken := commons.GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "")
 
-		// The code below is for testing
-		/*
-		   functions["sandbox"] = map[interface{}]interface{}{"default": []string{"http://localhost:5050"}, "blue": []string{"http://localhost:5051"}}
+    reverse_proxy_memory_routes.DefineFunctionsRoutes(router, functions, reverseProxyAdminToken)
+    reverse_proxy_memory_routes.DefineRevisionsRoutes(router, functions, reverseProxyAdminToken)
+    reverse_proxy_memory_routes.DefineUrlsRoutes(router, functions, reverseProxyAdminToken)
 
-		   functions["sandbox"]["green"] = []string{"http://localhost:5052"}
+    // Call the functions
+    router.Any("/functions/:function_name", proxy)
+    router.Any("/functions/:function_name/:function_revision", proxyRevision)
 
-		   urlsList := functions["sandbox"]["green"].([]string)
-		   urlsList = append(urlsList, "http://localhost:5053")
+    if crt != "" {
+        // certs/procyon-registry.local.crt
+        // certs/procyon-registry.local.key
+        fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🔐🌍")
 
-		   functions["sandbox"]["green"] = urlsList
-		*/
-	}
-
-	switch backend {
-	case "yaml":
-		fmt.Println("👋 routes are defined in", config)
-	case "memory":
-		// it's possible to mix memory and yaml for the functions
-		fmt.Println("👋 routes are defined in memory")
-	case "redis":
-	default:
-		fmt.Println("👋 routes are defined in a Redis backend")
-		//TODO check the environment variables
-		fmt.Println("👋 use environment variable for the Redis configuration ")
-	}
-
-	if commons.GetEnv("DEBUG", "false") == "false" {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
-		gin.SetMode(gin.DebugMode)
-	}
-	//router := gin.Default()
-	router := gin.New()
-
-	router.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "😢 Page not found 🥵"})
-	})
-
-	/*
-	   You need to use a header with this key: CAPSULE_REVERSE_PROXY_ADMIN_TOKEN
-	*/
-	reverseProxyAdminToken := commons.GetEnv("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN", "")
-
-	reverse_proxy_memory_routes.DefineFunctionsRoutes(router, functions, reverseProxyAdminToken)
-	reverse_proxy_memory_routes.DefineRevisionsRoutes(router, functions, reverseProxyAdminToken)
-	reverse_proxy_memory_routes.DefineUrlsRoutes(router, functions, reverseProxyAdminToken)
-
-	// Call the functions
-	router.Any("/functions/:function_name", proxy)
-	router.Any("/functions/:function_name/:function_revision", proxyRevision)
-
-	if crt != "" {
-		// certs/procyon-registry.local.crt
-		// certs/procyon-registry.local.key
-		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🔐🌍")
-
-		router.RunTLS(":"+httpPort, crt, key)
-	} else {
-		fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🌍")
-		router.Run(":" + httpPort)
-	}
+        router.RunTLS(":"+httpPort, crt, key)
+    } else {
+        fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") Reverse-Proxy is listening on:", httpPort, "🌍")
+        router.Run(":" + httpPort)
+    }
 
 }

@@ -394,47 +394,15 @@ http://localhost:8888/functions/hola/orange
 > - *The `default` revision is the `default` version of the function (http://localhost:8888/functions/hola)*
 
 To run the **Capsule Reverse Proxy**, run the below command:
+
 ```bash
 ./capsule-reverse-proxy \
-   -config=./config.yaml \
-   -httpPort=8888
-```
-> *You have to define a configuration yaml file.*
-
-### Define the routes in a yaml file (static mode)
-
-*config.yaml*
-```yaml
-hello:
-    default:
-        - http://localhost:9091
-        - http://localhost:7071
-
-hey:
-    default:
-        - http://localhost:9092
-
-hola:
-    default:
-        - http://localhost:9093
-    orange:
-        - http://localhost:6061
-    yellow:
-        - http://localhost:6062
-```
-> *A revision can be a set of URLs. In this case, the Capsule reverse-proxy will use randomly one of the URLs.*
-
-### Use the "in memory" dynamic mode of the reverse-proxy
-
-With the Capsule Reverse Proxy, you gain an **API** that allows to define routes dynamically (in memory). You can keep the yaml config file (it is loaded in memory at startup).
-
-To run **Capsule** as a reverse proxy, with the "in memory" dynamic mode, add this flag: `-backend="memory"`:
-```bash
-./capsule \
    -config=./config.yaml \
    -backend="memory" \
    -httpPort=8888
 ```
+
+With the Capsule Reverse Proxy, you gain an **API** that allows to define routes dynamically (in memory).
 
 #### Registration API
 
@@ -550,6 +518,9 @@ The routes list will look like that:
 
 }
 ```
+
+> *A revision can be a set of URLs. In this case, the Capsule reverse-proxy will use randomly one of the URLs.*
+
 
 ##### Remove a URL from the function revision
 

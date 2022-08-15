@@ -27,7 +27,7 @@ func main() {
 		//flags
 		httpPortPtr := flag.String("httpPort", "8080", "http port")
 
-		configPtr := flag.String("config", "", "config file (reverse proxy)")
+		configPtr := flag.String("config", "", "config file (🚧 not implemented)")
 		backendPtr := flag.String("backend", "memory", "backend for reverse proxy, registration, discovery")
 
 		crtPtr := flag.String("crt", "", "certificate")

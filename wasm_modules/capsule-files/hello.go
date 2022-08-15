@@ -6,8 +6,7 @@ import hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
 func main() {
 
 	hf.Log("🚀 ignition...")
-	hostInformation := hf.GetHostInformation()
-	hf.Log("👋 message from the wasm module: " + hostInformation)
+
 	hf.Log(hf.Ping("✊ knock knock from the wasm module"))
 	hf.Log(hf.Ping("✊ knock knock from the wasm module"))
 

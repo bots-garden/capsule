@@ -1,6 +1,7 @@
 #!/bin/bash
-export MESSAGE="💊 Capsule Rocks 🚀"
-./capsule \
-   -wasm=./hello.wasm \
+cd ../../capsule-launcher
+
+MESSAGE="💊 Capsule Rocks 🚀" go run main.go \
+   -wasm=../wasm_modules/capsule-files/hello.wasm \
    -mode=cli \
    "👋 hello world 🌍🎃" 1234 "Bob Morane"

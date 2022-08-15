@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-files
+module github.com/bots-garden/capsule/wasm_modules/reverse-proxy-demo/capsule-hola-orange-bis
 
 go 1.18
 
