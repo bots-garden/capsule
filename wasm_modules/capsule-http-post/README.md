@@ -3,9 +3,8 @@
 This wasm module is used by the `cli` mode
 
 ```bash
-#!/bin/bash
-go run main.go \
-   -wasm=../wasm_modules/capsule-http-post/hello.wasm \
+./capsule \
+   -wasm=./hello.wasm \
    -mode=cli \
    "[POST]👋 hello world 🌍"
 ```

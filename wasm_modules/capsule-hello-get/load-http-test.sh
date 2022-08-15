@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # before serve the wasm file: python3 -m http.server 8080
-cd ../../capsulelauncher
+cd ../../capsule-launcher
 
-export MESSAGE="💊 Capsule Rocks 🚀"
 go run main.go \
    -wasm=./tmp/hello.wasm \
    -url="http://localhost:8080/hello.wasm" \

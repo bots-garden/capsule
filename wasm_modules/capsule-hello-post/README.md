@@ -2,14 +2,18 @@
 
 This wasm module is used by the `http` mode
 
+## Build the wasm module
+
+```bash
+tinygo build -o hello.wasm -scheduler=none -target wasi ./hello.go
+```
+
 ## Load (and run) the wasm file module from a local path
 
 ```bash
-cd ../../capsulelauncher
-
 export MESSAGE="💊 Capsule Rocks 🚀"
-go run main.go \
-   -wasm=../wasm_modules/capsule-hello/hello.wasm \
+./capsule \
+   -wasm=./hello.wasm \
    -mode=http \
    -httpPort=7070
 ```
@@ -31,10 +35,8 @@ python3 -m http.server 8080
 
 Then load and serve the module: *(the `wasm` file is the output of the download file)*
 ```bash
-cd ../../capsulelauncher
-
 export MESSAGE="💊 Capsule Rocks 🚀"
-go run main.go \
+./capsule \
    -wasm=./tmp/hello.wasm \
    -url="http://localhost:8080/hello.wasm" \
    -mode=http \
