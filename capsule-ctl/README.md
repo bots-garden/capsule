@@ -1,4 +1,4 @@
-# Capsule CLI: `capsulectl` aka `cc`
+# Capsule CLI, aka `cc`
 
 ## Publish a wasm file to the Capsule registry
 
