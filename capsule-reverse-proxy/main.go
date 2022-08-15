@@ -3,16 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/bots-garden/capsule/capsule-registry/registry"
+	"github.com/bots-garden/capsule/capsule-reverse-proxy/reverse-proxy"
 	"github.com/bots-garden/capsule/commons"
 	"os"
 )
 
 type CapsuleFlags struct {
 	httpPort string
+	config   string // config file for the reverse proxy
 	crt      string // https (certificate)
 	key      string // https (key)
-	files    string // root location of the wasm modules (for the registry)
+	backend  string // backend for reverse proxy (and/or service discovery)
+
 }
 
 func main() {
@@ -24,7 +26,9 @@ func main() {
 	} else {
 		//flags
 		httpPortPtr := flag.String("httpPort", "8080", "http port")
-		filesPtr := flag.String("files", "", "root location of the wasm modules (for the registry)")
+
+		configPtr := flag.String("config", "", "config file (reverse proxy)")
+		backendPtr := flag.String("backend", "memory", "backend for reverse proxy, registration, discovery")
 
 		crtPtr := flag.String("crt", "", "certificate")
 		keyPtr := flag.String("key", "", "key")
@@ -33,12 +37,13 @@ func main() {
 
 		flags := CapsuleFlags{
 			*httpPortPtr,
+			*configPtr,
 			*crtPtr,
 			*keyPtr,
-			*filesPtr,
+			*backendPtr,
 		}
 
-		registry.Serve(flags.httpPort, flags.files, flags.crt, flags.key)
+		reverse_proxy.Serve(flags.httpPort, flags.config, flags.backend, flags.crt, flags.key)
 
 	}
 

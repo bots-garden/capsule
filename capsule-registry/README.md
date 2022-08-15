@@ -1,4 +1,4 @@
-# Wasm modules registry
+# Capsule Registry: Wasm modules registry
 
 ```bash
 DOWNLOADED_FILES_PATH="${PWD}/tmp/functions"

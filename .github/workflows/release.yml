@@ -48,7 +48,26 @@ jobs:
                 #extra_files: ./capsulectl/README.md
                 goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
 
-
+  releases-matrix-reverse-proxy:
+      name: Release Capsule CLI Binary
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              # build and publish in parallel: linux/amd64
+              goos: [linux, darwin]
+              goarch: [amd64, arm64]
+      steps:
+          - uses: actions/checkout@v2
+          - uses: wangyoucao577/go-release-action@v1.16
+            with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                goos: ${{ matrix.goos }}
+                goarch: ${{ matrix.goarch }}
+                project_path: "./capsule-reverse-proxy"
+                binary_name: "capsule-reverse-proxy"
+                ldflags: "-s -w"
+                #extra_files: ./capsulectl/README.md
+                goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"
 
   releases-matrix-cli:
       name: Release Capsule CLI Binary

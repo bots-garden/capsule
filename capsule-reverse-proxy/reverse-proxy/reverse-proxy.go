@@ -2,7 +2,7 @@ package reverse_proxy
 
 import (
 	"fmt"
-	reverse_proxy_memory_routes "github.com/bots-garden/capsule/capsulelauncher/services/reverse-proxy/routes"
+	"github.com/bots-garden/capsule/capsule-reverse-proxy/reverse-proxy/routes"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v3"
