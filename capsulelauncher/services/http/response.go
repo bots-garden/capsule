@@ -2,7 +2,7 @@ package capsulehttp
 
 import (
 	"encoding/json"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/commons"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

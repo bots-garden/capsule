@@ -3,8 +3,8 @@ package hostfunctions
 
 import (
 	"errors"
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
 	"github.com/bots-garden/capsule/capsulemodule/memory"
+	"github.com/bots-garden/capsule/commons"
 	"strconv"
 	_ "unsafe"
 )

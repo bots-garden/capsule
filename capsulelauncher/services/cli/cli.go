@@ -2,8 +2,8 @@ package capsulecli
 
 import (
     "fmt"
-    "github.com/bots-garden/capsule/capsulelauncher/commons"
     capsule "github.com/bots-garden/capsule/capsulelauncher/services/wasmrt"
+    "github.com/bots-garden/capsule/commons"
     "log"
     "strconv"
 )

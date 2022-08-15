@@ -6,7 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/tetratelabs/wazero/api"
 
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/commons"
 )
 
 func Http(ctx context.Context, module api.Module,

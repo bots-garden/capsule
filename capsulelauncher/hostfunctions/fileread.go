@@ -5,7 +5,7 @@ import (
 	"github.com/bots-garden/capsule/capsulelauncher/hostfunctions/memory"
 	"os"
 
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/commons"
 
 	"github.com/tetratelabs/wazero/api"
 )

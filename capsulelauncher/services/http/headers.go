@@ -1,7 +1,7 @@
 package capsulehttp
 
 import (
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/commons"
 	"strings"
 )
 

@@ -6,7 +6,7 @@ import (
 	"github.com/tetratelabs/wazero/api"
 	"os"
 
-	"github.com/bots-garden/capsule/capsulelauncher/commons"
+	"github.com/bots-garden/capsule/commons"
 )
 
 // GetEnv :
