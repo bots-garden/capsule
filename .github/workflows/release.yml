@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  releases-matrix:
+  releases-matrix-launcher:
     name: Release Capsule (Launcher) Binary
     runs-on: ubuntu-latest
     strategy:
@@ -106,7 +106,7 @@ jobs:
                 goos: ${{ matrix.goos }}
                 goarch: ${{ matrix.goarch }}
                 project_path: "./capsule-ctl"
-                binary_name: "cc"
+                binary_name: "caps"
                 ldflags: "-s -w"
                 #extra_files: ./capsulectl/README.md
                 goversion: "https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz"

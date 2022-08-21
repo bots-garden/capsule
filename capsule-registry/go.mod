@@ -3,7 +3,7 @@ module github.com/bots-garden/capsule/capsule-registry
 go 1.18
 
 require (
-	github.com/bots-garden/capsule v0.0.0-20220815053639-8f472197bb5e
+	github.com/bots-garden/capsule v0.0.0-20220815132744-791526f0745d
 	github.com/gin-gonic/gin v1.8.1
 )
 

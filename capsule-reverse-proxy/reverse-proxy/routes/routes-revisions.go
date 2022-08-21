@@ -24,7 +24,7 @@ func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	*/
 	router.POST("memory/functions/:function_name/revision", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
+		if len(reverseProxyAdminToken) == 0 || CheckReverseProxyAdminToken(c, reverseProxyAdminToken) {
 
 			functionName := c.Param("function_name")
 
@@ -88,7 +88,7 @@ func DefineRevisionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	*/
 	router.DELETE("memory/functions/:function_name/revision", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
+		if len(reverseProxyAdminToken) == 0 || CheckReverseProxyAdminToken(c, reverseProxyAdminToken) {
 
 			functionName := c.Param("function_name")
 

@@ -44,7 +44,7 @@ func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 
 	router.POST("memory/functions/registration", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
+		if len(reverseProxyAdminToken) == 0 || CheckReverseProxyAdminToken(c, reverseProxyAdminToken) {
 
 			jsonMap := make(map[string]interface{})
 			if err := c.Bind(&jsonMap); err != nil {
@@ -102,7 +102,7 @@ func DefineFunctionsRoutes(router *gin.Engine, functions map[interface{}]map[int
 	*/
 	router.DELETE("memory/functions/registration", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(reverseProxyAdminToken) == 0 || c.GetHeader("CAPSULE_REVERSE_PROXY_ADMIN_TOKEN") == reverseProxyAdminToken {
+		if len(reverseProxyAdminToken) == 0 || CheckReverseProxyAdminToken(c, reverseProxyAdminToken) {
 
 			jsonMap := make(map[string]interface{})
 			if err := c.Bind(&jsonMap); err != nil {

@@ -190,7 +190,7 @@ func DefineDeployRoute(router *gin.Engine, functions map[string]models.Function,
 	*/
 	router.POST("functions/deploy", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(workerAdminToken) == 0 || c.GetHeader("CAPSULE_WORKER_ADMIN_TOKEN") == workerAdminToken {
+		if len(workerAdminToken) == 0 || CheckWorkerAdminToken(c, workerAdminToken) {
 
 			// check json payload parameters
 			jsonMap := make(map[string]interface{})

@@ -15,6 +15,18 @@ import (
 // TODO: add a route to delete a module
 // TODO: add a route to get the list of the module (and information)
 
+func CheckRegistryAdminToken(c *gin.Context, registryAdminToken string) bool {
+	if c.GetHeader("CAPSULE_REGISTRY_ADMIN_TOKEN") == registryAdminToken ||
+		c.GetHeader("Capsule_Registry_Admin_Token") == registryAdminToken ||
+		c.GetHeader("capsule_registry_admin_token") == registryAdminToken {
+		return true
+	} else {
+		return false
+	}
+}
+
+// See: https://github.com/gin-gonic/gin/issues/1079
+
 func Serve(httpPort, filesPath, crt, key string) {
 	/*
 	   You need to use a header with this key: CAPSULE_REGISTRY_ADMIN_TOKEN
@@ -138,7 +150,7 @@ func Serve(httpPort, filesPath, crt, key string) {
 	*/
 	router.POST("/upload/:user_org/:wasm_module/:tag", func(c *gin.Context) {
 		//TODO: check if there is a better practice to handle authentication token
-		if len(registryAdminToken) == 0 || c.GetHeader("CAPSULE_REGISTRY_ADMIN_TOKEN") == registryAdminToken {
+		if len(registryAdminToken) == 0 || CheckRegistryAdminToken(c, registryAdminToken) {
 			userOrg := c.Param("user_org")
 			wasmModule := c.Param("wasm_module") // without extension
 			tag := c.Param("tag")
