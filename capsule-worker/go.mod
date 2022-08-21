@@ -3,7 +3,7 @@ module github.com/bots-garden/capsule/capsule-worker
 go 1.18
 
 require (
-	github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9
+	github.com/bots-garden/capsule/commons v0.0.0-20220821060842-d1dc9f030021
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0

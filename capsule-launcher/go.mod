@@ -3,13 +3,13 @@ module github.com/bots-garden/capsule/capsule-launcher
 go 1.18
 
 require (
-	github.com/bots-garden/capsule v0.0.0-20220815080256-b30492298265
+	github.com/bots-garden/capsule v0.0.0-20220821054212-49646e0c5db4
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/shirou/gopsutil/v3 v3.22.7
-	github.com/tetratelabs/wazero v0.0.0-20220812081006-d7d18a5519e6
+	github.com/tetratelabs/wazero v0.0.0-20220819101114-6c2712fd00fc
 )
 
 require (

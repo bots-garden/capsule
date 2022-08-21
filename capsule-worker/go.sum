@@ -1,5 +1,5 @@
-github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9 h1:Sa9tID8kNjiZrPtEliJz8twpFjYpiKsLh4RpcBQPCb8=
-github.com/bots-garden/capsule v0.0.0-20220815072918-10ffdc8288d9/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
+github.com/bots-garden/capsule/commons v0.0.0-20220821060842-d1dc9f030021 h1:cBeILASaSUdrsImLP6wR6a747SHYBJqIwuADm2BMDO4=
+github.com/bots-garden/capsule/commons v0.0.0-20220821060842-d1dc9f030021/go.mod h1:5ctHSZAwy3GEi4tR9YKFTfWtBUXDcOMFHNiJYXbV61c=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
