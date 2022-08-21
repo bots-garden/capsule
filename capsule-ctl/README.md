@@ -4,7 +4,7 @@
 
 ```bash
 CAPSULE_REGISTRY_ADMIN_TOKEN="AZERTYUIOP" \
-./cc publish \
+./caps publish \
 -wasmFile=./hey/hey.wasm -wasmInfo=wip \
 -wasmOrg=k33g -wasmName=hey -wasmTag=0.0.0 \
 -registryUrl=http://localhost:4999
@@ -16,7 +16,7 @@ CAPSULE_REGISTRY_ADMIN_TOKEN="AZERTYUIOP" \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_BACKEND="memory" \
 CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
-./cc deploy \
+./caps deploy \
 -function=hey \
 -revision=demo \
 -downloadUrl=http://localhost:4999/k33g/hey/0.0.0/hey.wasm
@@ -29,7 +29,7 @@ CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_BACKEND="memory" \
 CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
-./cc set-default \
+./caps set-default \
 -function=hello \
 -revision=orange
 ```
@@ -40,7 +40,7 @@ CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_BACKEND="memory" \
 CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
-./cc unset-default \
+./caps unset-default \
 -function=hello
 ```
 
@@ -50,7 +50,7 @@ CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
 CAPSULE_WORKER_URL="http://localhost:9999" \
 CAPSULE_BACKEND="memory" \
 CAPSULE_WORKER_ADMIN_TOKEN="0987654321" \
-./cc un-deploy \
+./caps un-deploy \
 -function=hello \
 -revision=green
 ```

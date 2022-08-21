@@ -1,5 +1,5 @@
-github.com/bots-garden/capsule v0.0.0-20220815061533-7c019d210585 h1:TlOK/uhYqVqKWv5P5r/uFQP92dpvOLhrZ/9cyy8pNX8=
-github.com/bots-garden/capsule v0.0.0-20220815061533-7c019d210585/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
+github.com/bots-garden/capsule v0.0.0-20220815132744-791526f0745d h1:xf+TLqAUfN+kQPK2CJ2XUUyfpZ/J7i1zOegNFlnsKjo=
+github.com/bots-garden/capsule v0.0.0-20220815132744-791526f0745d/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
 github.com/go-resty/resty/v2 v2.7.0 h1:me+K9p3uhSmXtrBZ4k9jcEAfJmuC8IivWHwaLZwPrFY=
 github.com/go-resty/resty/v2 v2.7.0/go.mod h1:9PWDzw47qPphMRFfhsyk0NnSgvluHcljSMVIq3w7q0I=
 golang.org/x/net v0.0.0-20211029224645-99673261e6eb h1:pirldcYWx7rx7kE5r+9WsOXPXK0+WH5+uZ7uPmJ44uM=

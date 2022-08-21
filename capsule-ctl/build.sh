@@ -1,5 +1,5 @@
 #!/bin/bash
-go build -o cc
+go build -o caps
 
-ls -lh cc*
+ls -lh caps*
 
