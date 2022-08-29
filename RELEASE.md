@@ -1,9 +1,18 @@
 # Manual release process
 
 - Change the version number (`N.N.N`) in:
-  -  `./capsulelauncher/commons/version.go`
-  -  `./capsulectl/commons/version.go`
-  -  `/README.md`
+  - `./commons/version.go`
+  - `/README.md`
+  - `install-capsule-ctl.sh`
+  - `install-capsule-launcher.sh`
+  - `install-capsule-registry.sh`
+  - `install-capsule-reverse-proxy.sh`
+  - `install-capsule-worker.sh`
+
 - Commit & Push
 - On GitHub: create a release + a tag (`N.N.N`)
-- Update the samples repository https://github.com/bots-garden/capsule-samples
+- Update the samples repositories:
+  - https://github.com/bots-garden/capsule-samples
+  - https://github.com/bots-garden/capsule-faas-demo
+  - https://github.com/bots-garden/capsule-on-fly-dot-io
+  - https://github.com/bots-garden/capsule-launcher-demo
