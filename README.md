@@ -6,26 +6,20 @@ What is **Capsule**?
 
 **Capsule** is a WebAssembly function launcher. It means that, with **Capsule** you can:
 
-- From your terminal, execute a function of a wasm module
-- Serving a function of a wasm module through http
+- From your terminal, execute a function of a wasm module (the **"CLI mode"**)
+- Serving a function of a wasm module through http (the **"HTTP mode"**)
 
-🖐 The functions are developed with GoLang and compiled to wasm with TinyGo
+> 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
 📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.1.6 (`v0.1.6 🦐`)
-
-There are 5 components in the **Capsule** project:
-- `capsule`: the wasm module launcher (executor)
-- `capsule-reverse-proxy`: a reverse-proxy to simplify the functions (wasm modules) access
-- `capsule-registry`: a wasm module registry (🚧 support of https://wapm.io/ in progress)
-- `capsule-worker`: a server to start the functions (wasm modules) remotely
-- `capsule-ctl` (short name: `cc`): a CLI to facilitate the interaction with the worker
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
 
 👋 You will find some **running examples** with these projects:
 - https://github.com/bots-garden/capsule-samples
-- https://github.com/bots-garden/capsule-faas-demo
+- https://github.com/bots-garden/capsule-on-fly-dot-io
+- https://github.com/bots-garden/capsule-launcher-demo
 
 ## First CLI function
 
@@ -379,3 +373,20 @@ query := "SELECT * FROM `" + bucketName + "`.data.docs"
 
 jsonStringArray, err := hf.CouchBaseQuery(query)
 ```
+
+## Capsule FaaS (experimental)
+
+There are four additional components to use **capsule** (the wasm module launcher/executor) in **FaaS** mode:
+
+- `capsule-reverse-proxy`: a reverse-proxy to simplify the functions (wasm modules) access
+- `capsule-registry`: a wasm module registry (🚧 support of https://wapm.io/ in progress)
+- `capsule-worker`: a server to start the functions (wasm modules) remotely
+- `capsule-ctl` (short name: `caps`): a CLI to facilitate the interaction with the worker
+
+See documents files in `./docs` (🚧 this is a work in progress)
+
+👋 You will find some **running examples** with this project:
+- https://github.com/bots-garden/capsule-faas-demo
+
+> - You can use the capsule registry independently of FaaS mode, only to provide wasm modules to the capsule launcher
+> - You can use the capsule reverse-proxy independently of FaaS mode, only to get only one access URL
