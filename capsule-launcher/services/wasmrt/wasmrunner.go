@@ -9,6 +9,7 @@ import (
 )
 
 func GetNewWasmRuntimeForHttp(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
+	//fmt.Println("🖐[checking] create new wasm runtime")
 	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callHandleHttp")
 	return runtime, module, function, context

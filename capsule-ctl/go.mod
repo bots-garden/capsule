@@ -2,8 +2,10 @@ module github.com/bots-garden/capsule/capsule-ctl
 
 go 1.18
 
+replace github.com/bots-garden/capsule/commons => ../commons
+
 require (
-	github.com/bots-garden/capsule v0.0.0-20220821054212-49646e0c5db4
+	github.com/bots-garden/capsule/commons v0.0.0-00010101000000-000000000000
 	github.com/go-resty/resty/v2 v2.7.0
 )
 

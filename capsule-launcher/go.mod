@@ -2,8 +2,9 @@ module github.com/bots-garden/capsule/capsule-launcher
 
 go 1.18
 
+replace github.com/bots-garden/capsule/commons => ../commons
+
 require (
-	github.com/bots-garden/capsule v0.0.0-20220821054212-49646e0c5db4
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
@@ -13,6 +14,7 @@ require (
 )
 
 require (
+	github.com/bots-garden/capsule/commons v0.0.0-20220821063800-09667c0e1624 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/couchbase/gocbcore/v10 v10.1.4 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

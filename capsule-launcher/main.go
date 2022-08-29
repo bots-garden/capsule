@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	capsule_cli "github.com/bots-garden/capsule/capsule-launcher/services/cli"
-	capsule_http "github.com/bots-garden/capsule/capsule-launcher/services/http"
+	"github.com/bots-garden/capsule/capsule-launcher/services/cli"
+	"github.com/bots-garden/capsule/capsule-launcher/services/http"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/go-resty/resty/v2"
 	"log"
@@ -90,9 +90,9 @@ func main() {
 
 		switch what := flags.mode; what {
 		case "http":
-			capsule_http.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
+			capsulehttp.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 		case "cli":
-			capsule_cli.Execute(flag.Args(), getWasmFile())
+			capsulecli.Execute(flag.Args(), getWasmFile())
 		default:
 			log.Panicln("🔴 bad mode", *capsuleModePtr)
 		}
