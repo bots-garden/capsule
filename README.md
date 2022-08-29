@@ -1,5 +1,6 @@
 # 💊 Capsule
-> 🖐 I'm learning Go
+> - 🖐 I'm learning Go
+> - Issues: https://github.com/bots-garden/capsule/issues
 
 What is **Capsule**?
 
