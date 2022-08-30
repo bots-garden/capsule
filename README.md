@@ -1,30 +1,25 @@
 # 💊 Capsule
-> 🖐 I'm learning Go
+> - 🖐 I'm learning Go
+> - Issues: https://github.com/bots-garden/capsule/issues
 
 What is **Capsule**?
 
 **Capsule** is a WebAssembly function launcher. It means that, with **Capsule** you can:
 
-- From your terminal, execute a function of a wasm module
-- Serving a function of a wasm module through http
+- From your terminal, execute a function of a wasm module (the **"CLI mode"**)
+- Serving a function of a wasm module through http (the **"HTTP mode"**)
 
-🖐 The functions are developed with GoLang and compiled to wasm with TinyGo
+> 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
 📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.1.6 (`v0.1.6 🦐`)
-
-There are 5 components in the **Capsule** project:
-- `capsule`: the wasm module launcher (executor)
-- `capsule-reverse-proxy`: a reverse-proxy to simplify the functions (wasm modules) access
-- `capsule-registry`: a wasm module registry (🚧 support of https://wapm.io/ in progress)
-- `capsule-worker`: a server to start the functions (wasm modules) remotely
-- `capsule-ctl` (short name: `cc`): a CLI to facilitate the interaction with the worker
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
 
 👋 You will find some **running examples** with these projects:
 - https://github.com/bots-garden/capsule-samples
-- https://github.com/bots-garden/capsule-faas-demo
+- https://github.com/bots-garden/capsule-on-fly-dot-io
+- https://github.com/bots-garden/capsule-launcher-demo
 
 ## First CLI function
 
@@ -379,220 +374,19 @@ query := "SELECT * FROM `" + bucketName + "`.data.docs"
 jsonStringArray, err := hf.CouchBaseQuery(query)
 ```
 
-## Use the Capsule Reverse Proxy
+## Capsule FaaS (experimental)
 
-You can use the **Capsule Reverse Proxy**. Then, you can call a function by its name:
-```bash
-http://localhost:8888/functions/hola
-```
-> *The reverse proxy will serve the **default** version of the `hola` function*
+There are four additional components to use **capsule** (the wasm module launcher/executor) in **FaaS** mode:
 
-Or, you can use a revision of the function (for example, if you use several version of the function):
-```bash
-http://localhost:8888/functions/hola/orange
-```
-> - *The reverse proxy will serve the `orange` revision of the `hola` function*
-> - *The `default` revision is the `default` version of the function (http://localhost:8888/functions/hola)*
+- `capsule-reverse-proxy`: a reverse-proxy to simplify the functions (wasm modules) access
+- `capsule-registry`: a wasm module registry (🚧 support of https://wapm.io/ in progress)
+- `capsule-worker`: a server to start the functions (wasm modules) remotely
+- `capsule-ctl` (short name: `caps`): a CLI to facilitate the interaction with the worker
 
-To run the **Capsule Reverse Proxy**, run the below command:
+See documents files in `./docs` (🚧 this is a work in progress)
 
-```bash
-./capsule-reverse-proxy \
-   -config=./config.yaml \
-   -backend="memory" \
-   -httpPort=8888
-```
+👋 You will find some **running examples** with this project:
+- https://github.com/bots-garden/capsule-faas-demo
 
-With the Capsule Reverse Proxy, you gain an **API** that allows to define routes dynamically (in memory).
-
-#### Registration API
-
-##### Register a function (add a new route to a function)
-
-```bash
-curl -v -X POST \
-  http://localhost:8888/memory/functions/registration \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"function": "morgen", "revision": "default", "url": "http://localhost:5050"}'
-```
-> - This will add a new entry to the routes list with a `default` revision, with one url `http://localhost:5050`
-> - You can call the function with this url: http://localhost:8888/function/morgen
-
-The routes list (it's a map) will look like that:
-
-```json
-{
-    "morgen": {
-        "default": [
-            "http://localhost:5050"
-        ]
-    }
-}
-```
-
-You can create a new function registration with a named revision:
-
-```bash
-curl -v -X POST \
-  http://localhost:8888/memory/functions/registration \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"function": "morgen", "revision": "magenta", "url": "http://localhost:5051"}'
-```
-> - This will add a new entry to the routes list with a `magenta` revision, with one url `http://localhost:5051`
-> - You can call the function with this url: http://localhost:8888/function/morgen/magenta
-
-
-##### Remove the registration
-
-```bash
-curl -v -X DELETE \
-  http://localhost:8888/memory/functions/registration \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"function": "morgen"}'
-```
-
-
-#### Revision API
-
-##### Add a revision to the function registration
-
-```bash
-curl -v -X POST \
-  http://localhost:8888/memory/functions/morgen/revision \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"revision": "blue", "url": "http://localhost:5051"}'
-```
-> - The function already exists
-> - The name of the function is set in the url `http://localhost:8888/memory/functions/:function_name/revision`
-
-The routes list will look like that:
-
-```json
-{
-    "morgen": {
-        "blue": [
-            "http://localhost:5051"
-        ],
-        "default": [
-            "http://localhost:5050"
-        ]
-    }
-
-}
-```
-
-##### Remove a revision from the function registration
-
-```bash
-curl -v -X DELETE \
-  http://localhost:8888/memory/functions/morgen/revision \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"revision": "blue"}'
-```
-
-#### URL API
-
-##### Add a URL to the revision of a function
-
-```bash
-curl -v -X POST \
-  http://localhost:8888/memory/functions/morgen/blue/url \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"url": "http://localhost:5053"}'
-```
-> - The revision already exists
-> - The name of the function and of the revision are set in the url `http://localhost:8888/memory/functions/:function_name/:function_revision/url`
-
-The routes list will look like that:
-
-```json
-{
-    "morgen": {
-        "blue": [
-            "http://localhost:5051",
-            "http://localhost:5053"
-        ],
-        "default": [
-            "http://localhost:5050"
-        ]
-    }
-
-}
-```
-
-> *A revision can be a set of URLs. In this case, the Capsule reverse-proxy will use randomly one of the URLs.*
-
-
-##### Remove a URL from the function revision
-
-```bash
-curl -v -X DELETE \
-  http://localhost:8888/memory/functions/morgen/blue/url \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"url": "http://localhost:5053"}'
-```
-
-## Use the Capsule Wasm modules registry
-> 🚧 this is a work in progress
-
-It's possible to download the wasm module from a remote location before serving it:
-
-```bash
-./capsule \
-   -url=http://localhost:9090/hello.wasm \
-   -wasm=./tmp/hello.wasm \
-   -mode=http \
-   -httpPort=8080
-```
-
-The **Capsule Registry** allows to upload and serve the wasm modules
-
-### Start the wasm registry
-
-```bash
-./capsule-registry \
-   -files="./wasm_modules" \
-   -httpPort=4999
-```
-> The `-files` tag defines where the modules are uploaded
-
-### Upload a wasm module
-
-```bash
-curl -X POST http://localhost:4999/upload/k33g/hola/0.0.0 \
-  -F "file=@../with-proxy/capsule-hola/hola.wasm" \
-  -F "info=hola function from @k33g" \
-  -H "Content-Type: multipart/form-data"
-```
-> - The upload url is defined like this: `/upload/user_name_or_organization/module_name/tag`
-> - The wasm module will be saved to `./wasm_modules/user_name_or_organization/module_name/tag/module_name.wasm`
-> - This data `"info=hola function from @k33g"` will create a file `./wasm_modules/user_name_or_organization/module_name/tag/module_name.info`
-
-Then you can download the module at http://localhost:4999/upload/k33g/hola/0.0.0/hello.wasm
-
-### Download and start a wasm module
-
-```bash
-./capsule \
-   -wasm=./tmp/hola.wasm \
-   -url="http://localhost:4999/k33g/hola/0.0.0/hola.wasm" \
-   -mode=http \
-   -httpPort=7072
-```
-
-### Get information about a wasm module
-
-```bash
-curl http://localhost:4999/info/k33g/hola/0.0.0
-```
-
-### Get the list of all the wasm modules
-
-```bash
-curl http://localhost:4999/modules
-```
-
-## Use the Capsule Worker
-> 🚧 documentation in progress
-
-You will get an api to start functions remotely. For more details, see `/capsule-worker/README.md`
+> - You can use the capsule registry independently of FaaS mode, only to provide wasm modules to the capsule launcher
+> - You can use the capsule reverse-proxy independently of FaaS mode, only to get only one access URL

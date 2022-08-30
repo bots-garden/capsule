@@ -19,6 +19,11 @@ func main() {
 	//argsWithProg := os.Args
 	args := os.Args[1:]
 
+	if len(args) == 0 {
+		fmt.Println("😮 no args. Type capsule-registry --help")
+		os.Exit(0)
+	}
+
 	if args[0] == "version" {
 		fmt.Println(commons.CapsuleVersion())
 	} else {

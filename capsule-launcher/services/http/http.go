@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
-	capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
+	"github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/gin-gonic/gin"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -12,6 +12,7 @@ import (
 )
 
 func Serve(httpPort string, wasmFile []byte, crt, key string) {
+	//fmt.Println("👋[checking]capsulehttp.Serve")
 
 	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `}`
 

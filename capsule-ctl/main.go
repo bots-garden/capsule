@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	//"github.com/bots-garden/capsule/capsule-ctl/registry"
+	"github.com/bots-garden/capsule/capsule-ctl/reverseproxy"
+	"github.com/bots-garden/capsule/capsule-ctl/revisions"
+	"github.com/bots-garden/capsule/capsule-ctl/worker"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/go-resty/resty/v2"
-	"log"
 	"os"
 )
 
@@ -38,7 +41,6 @@ curl -X POST http://localhost:4999/upload/k33g/hello/0.0.0 \
   -F "file=@./hello/hello.wasm" \
   -F "info=hello function v0.0.0 from @k33g [GET]" \
   -H "Content-Type: multipart/form-data"
-
 */
 
 func PublishToTheRegistry(wasmModuleFile, wasmModuleInfo, wasmModuleOrg, wasmModuleName, wasmModuleTag, wasmRegistryUrl, wasmRegistryToken string) {
@@ -61,423 +63,37 @@ func PublishToTheRegistry(wasmModuleFile, wasmModuleInfo, wasmModuleOrg, wasmMod
 
 	if err != nil {
 		fmt.Println("😡", "[publishing to registry]", err)
+		os.Exit(1)
 	} else {
 
 		jsonRespMap := make(map[string]interface{})
 		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
 		if jsonRespMapErr != nil {
 			fmt.Println("😡", "[publishing to registry]", jsonRespMapErr)
+			os.Exit(1)
 		}
 		//fmt.Println("🌍", "[publishing to registry]", jsonRespMap)
 
 		if jsonRespMap["code"] == "KO" {
 			fmt.Println("😡", "[publishing to registry]", jsonRespMap["message"])
+			os.Exit(1)
 
 		} else {
 			fmt.Println("🙂", "[publishing to registry]", wasmModuleFile, "published")
+			os.Exit(0)
 		}
 
-	}
-
-}
-
-/*
-curl -v -X POST \
-http://localhost:9999/functions/deploy \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello",
-    "revision": "blue",
-    "downloadUrl": "http://localhost:4999/k33g/hello/0.0.0/hello.wasm",
-    "envVariables": {
-        "MESSAGE": "Revision 🔵",
-        "TOKEN": "👩‍🔧🧑‍🔧👨‍🔧"
-    }
-}
-*/
-
-func DeployFunctionRevision(functionName, revisionName, downloadUrl, envVariables, workerUrl, workerToken string) {
-	fmt.Println("⏳", "[deploying to worker]", functionName, "/", revisionName)
-
-	jsonEnvMapMap := make(map[string]interface{})
-	jsonMapErr := json.Unmarshal([]byte(envVariables), &jsonEnvMapMap)
-	if jsonMapErr != nil {
-		fmt.Println("😡", "[(envVariables->map)deploying function revision]", jsonMapErr)
-	}
-
-	body := map[string]interface{}{
-		"function":     functionName,
-		"revision":     revisionName,
-		"downloadUrl":  downloadUrl,
-		"envVariables": jsonEnvMapMap,
-	}
-
-	bytesBody, jsonErr := json.Marshal(body)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)deploying function revision]", jsonErr)
-	}
-
-	jsonStringBody := string(bytesBody)
-
-	client := resty.New()
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringBody).
-		Post(workerUrl + "/functions/deploy")
-
-	if err != nil {
-		fmt.Println("😡", "[when deploying to worker]", err)
-	} else {
-		/*
-		   {"code":"FUNCTION_DEPLOYED","function":"hello","localUrl":"http://localhost:10001","message":"Function deployed","remoteUrl":"http://localhost:8888/functions/hello/blue","revision":"blue"}
-		*/
-		jsonRespMap := make(map[string]interface{})
-		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
-		if jsonRespMapErr != nil {
-			fmt.Println("😡", "[(resp->map)deploying function revision]", jsonRespMapErr)
-		}
-
-		if jsonRespMap["code"] == "KO" {
-			fmt.Println("😡", "[when deploying to worker]", jsonRespMap["message"])
-
-		} else {
-			fmt.Println("🙂", "[deployed to worker]", functionName, "/", revisionName)
-			fmt.Println("🌍", "[serving]", jsonRespMap["remoteUrl"])
-
-		}
-
-	}
-
-}
-
-/*
-# Remove default revision if it exists
-curl -v -X DELETE \
-http://localhost:9999/functions/remove_default_revision \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello"
-}
-EOF
-
-# Now the green revision is the default revision
-curl -v -X POST \
-http://localhost:9999/functions/set_default_revision \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello",
-    "revision": "green"
-}
-EOF
-*/
-
-func SetDefaultRevision(functionName, revisionName, workerUrl, workerToken string) {
-	fmt.Println("⏳", "[setting default revision]", functionName, "/", revisionName)
-
-	unSetBody := map[string]interface{}{
-		"function": functionName,
-	}
-
-	setBody := map[string]interface{}{
-		"function": functionName,
-		"revision": revisionName,
-	}
-
-	bytesUnSetBody, jsonErr := json.Marshal(unSetBody)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)unsetting default revision]", jsonErr)
-	}
-
-	bytesSetBody, jsonErr := json.Marshal(setBody)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)setting default revision]", jsonErr)
-	}
-
-	jsonStringUnSetBody := string(bytesUnSetBody)
-	jsonStringSetBody := string(bytesSetBody)
-
-	client := resty.New()
-
-	resp, errUnSetDefault := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringUnSetBody).
-		Delete(workerUrl + "/functions/remove_default_revision")
-
-	resp, errSetDefault := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringSetBody).
-		Post(workerUrl + "/functions/set_default_revision")
-
-	if errUnSetDefault != nil {
-		fmt.Println("😡", "[when unsetting the default revision]", errUnSetDefault)
-	}
-
-	if errSetDefault != nil {
-		fmt.Println("😡", "[when setting the default revision]", errSetDefault)
-	} else {
-
-		jsonRespMap := make(map[string]interface{})
-		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
-		if jsonRespMapErr != nil {
-			fmt.Println("😡", "[(resp->map)setting the default revision]", jsonRespMapErr)
-		}
-
-		if jsonRespMap["code"] == "KO" {
-			fmt.Println("😡", "[when setting the default revision]", jsonRespMap["message"])
-
-		} else {
-			fmt.Println("🙂", "[the default revision is set]->", functionName, "/", revisionName)
-			fmt.Println("🌍", "[serving]", jsonRespMap["url"])
-
-		}
-
-		//fmt.Println("🌍", "[serving]", jsonRespMap["url"])
-		//fmt.Println("🌍", "[serving]", jsonRespMap)
-
-	}
-
-}
-
-/*
-# Remove default revision if it exists
-curl -v -X DELETE \
-http://localhost:9999/functions/remove_default_revision \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello"
-}
-EOF
-*/
-
-func UnSetDefaultRevision(functionName, workerUrl, workerToken string) {
-	fmt.Println("⏳", "[unsetting default revision]", functionName)
-
-	unSetBody := map[string]interface{}{
-		"function": functionName,
-	}
-
-	bytesUnSetBody, jsonErr := json.Marshal(unSetBody)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)unsetting default revision]", jsonErr)
-	}
-
-	jsonStringUnSetBody := string(bytesUnSetBody)
-
-	client := resty.New()
-
-	resp, errUnSetDefault := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringUnSetBody).
-		Delete(workerUrl + "/functions/remove_default_revision")
-
-	if errUnSetDefault != nil {
-		fmt.Println("😡", "[when unsetting the default revision]", errUnSetDefault)
-	} else {
-
-		jsonRespMap := make(map[string]interface{})
-		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
-		if jsonRespMapErr != nil {
-			fmt.Println("😡", "[(resp->map)unsetting the default revision]", jsonRespMapErr)
-		}
-
-		if jsonRespMap["code"] == "KO" {
-			fmt.Println("😡", "[when unsetting the default revision]", jsonRespMap["message"])
-
-		} else {
-			fmt.Println("🙂", "[the default revision is unset]->", functionName)
-		}
-
-		//fmt.Println("🌍", "[serving]", jsonRespMap)
-
-	}
-
-}
-
-/*
-curl -v -X DELETE \
-http://localhost:9999/functions/revisions/deployments \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello",
-    "revision": "blue"
-}
-EOF
-*/
-
-func UnDeployRevision(functionName, revisionName, workerUrl, workerToken string) {
-	fmt.Println("⏳", "[un-deploying revision]", functionName, "/", revisionName)
-
-	setBody := map[string]interface{}{
-		"function": functionName,
-		"revision": revisionName,
-	}
-
-	bytesSetBody, jsonErr := json.Marshal(setBody)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)un-deploying revision]", jsonErr)
-	}
-
-	jsonStringSetBody := string(bytesSetBody)
-
-	client := resty.New()
-
-	resp, errSetDefault := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringSetBody).
-		Delete(workerUrl + "/functions/revisions/deployments")
-
-	if errSetDefault != nil {
-		fmt.Println("😡", "[when un-deploying the revision]", errSetDefault)
-	} else {
-
-		jsonRespMap := make(map[string]interface{})
-		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
-		if jsonRespMapErr != nil {
-			fmt.Println("😡", "[(resp->map)un-deploying the revision]", jsonRespMapErr)
-		}
-
-		if jsonRespMap["code"] == "KO" {
-			fmt.Println("😡", "[when un-deploying the revision]", jsonRespMap["message"])
-
-		} else {
-			fmt.Println("🙂", "[the revision is un-deployed (all processes killed)]->", functionName, "/", revisionName)
-		}
-
-		//fmt.Println("🌍", "[serving]", jsonRespMap["url"])
-		//fmt.Println("🌍", "[serving]", jsonRespMap)
-
-	}
-
-}
-
-/*
-curl -v -X DELETE \
-http://localhost:9999/functions/revisions/downscale \
--H "Expect:" \
--H 'content-type: application/json; charset=utf-8' \
---data-binary @- << EOF
-{
-    "function": "hello",
-    "revision": "orange"
-}
-EOF
-*/
-
-func DownscaleRevision(functionName, revisionName, workerUrl, workerToken string) {
-	fmt.Println("⏳", "[downscaling revision]", functionName, "/", revisionName)
-
-	setBody := map[string]interface{}{
-		"function": functionName,
-		"revision": revisionName,
-	}
-
-	bytesSetBody, jsonErr := json.Marshal(setBody)
-	if jsonErr != nil {
-		fmt.Println("😡", "[(body -> json)downscaling revision]", jsonErr)
-	}
-
-	jsonStringSetBody := string(bytesSetBody)
-
-	client := resty.New()
-
-	resp, errSetDefault := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		SetHeader("CAPSULE_WORKER_ADMIN_TOKEN", workerToken).
-		SetBody(jsonStringSetBody).
-		Delete(workerUrl + "/functions/revisions/downscale")
-
-	if errSetDefault != nil {
-		fmt.Println("😡", "[when downscaling the revision]", errSetDefault)
-	} else {
-
-		jsonRespMap := make(map[string]interface{})
-		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
-		if jsonRespMapErr != nil {
-			fmt.Println("😡", "[(resp->map)downscaling the revision]", jsonRespMapErr)
-		}
-		//fmt.Println("🌍", "[serving]", jsonRespMap)
-		if jsonRespMap["code"] == "WASM_MODULE_DEPLOYMENT_NOT_REMOVED" {
-			fmt.Println("😡", "[the revision is not downscaled]-> the revision needs at least one running wasm module")
-		} else {
-			fmt.Println("🙂", "[the revision is downscaled (one process killed)]->", functionName, "/", revisionName, "pid:", jsonRespMap["pid"])
-
-		}
-
-	}
-
-}
-
-func WorkerInfo(workerUrl, adminWorkerToken, backend string) {
-	//TODO: change the route of the worker to taking account of the backend
-	// curl http://localhost:9999/functions/list
-	// fmt.Println(workerUrl, adminWorkerToken, backend)
-
-	client := resty.New()
-
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		Get(workerUrl + "/functions/list")
-
-	if err != nil {
-		fmt.Println("😡", err)
-
-	} else {
-		fmt.Println(resp)
-	}
-
-}
-
-func ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend string) {
-	//curl http://localhost:8888/memory/functions/list
-	//fmt.Println(reverseProxyUrl, adminReverseProxyToken, backend)
-
-	client := resty.New()
-
-	resp, err := client.
-		R().
-		EnableTrace().
-		SetHeader("Content-Type", "application/json; charset=utf-8").
-		Get(reverseProxyUrl + "/" + backend + "/functions/list")
-
-	if err != nil {
-		fmt.Println("😡", err)
-	} else {
-		fmt.Println(resp)
 	}
 
 }
 
 func main() {
 	args := os.Args[1:]
+
+	if len(args) == 0 {
+		fmt.Println("😮 no args. Type caps help or caps --help")
+		os.Exit(0)
+	}
 
 	/*
 	   You need to use a header with this key: CAPSULE_WORKER_ADMIN_TOKEN
@@ -535,6 +151,7 @@ func main() {
 		err := capsuleCtlFlagSet.Parse(os.Args[2:])
 		if err != nil {
 			fmt.Println("😡", err)
+			os.Exit(1)
 		}
 
 		flags := CapsuleCtlFlag{
@@ -577,7 +194,7 @@ func main() {
 			   -downloadUrl=http://localhost:4999/k33g/hello/0.0.0/hello.wasm \
 			   -envVariables={"MESSAGE": "Revision 🔵","TOKEN": "👩‍🔧🧑‍🔧👨‍🔧"}
 			*/
-			DeployFunctionRevision(
+			revisions.DeployFunctionRevision(
 				flags.FunctionName,
 				flags.RevisionName,
 				flags.DownloadUrl,
@@ -591,7 +208,7 @@ func main() {
 			   -function=hello \
 			   -revision=blue
 			*/
-			UnDeployRevision(
+			revisions.UnDeployRevision(
 				flags.FunctionName,
 				flags.RevisionName,
 				workerUrl,
@@ -603,7 +220,7 @@ func main() {
 			   -function=hello \
 			   -revision=blue
 			*/
-			SetDefaultRevision(
+			revisions.SetDefaultRevision(
 				flags.FunctionName,
 				flags.RevisionName,
 				workerUrl,
@@ -614,7 +231,7 @@ func main() {
 			   CAPSULE_WORKER_URL="http://localhost:9999" ./capsulectl unset-default \
 			   -function=hello
 			*/
-			UnSetDefaultRevision(
+			revisions.UnSetDefaultRevision(
 				flags.FunctionName,
 				workerUrl,
 				adminWorkerToken)
@@ -628,20 +245,21 @@ func main() {
 			   -revision=orange
 			*/
 
-			DownscaleRevision(
+			revisions.DownscaleRevision(
 				flags.FunctionName,
 				flags.RevisionName,
 				workerUrl,
 				adminWorkerToken)
 
 		case "worker":
-			WorkerInfo(workerUrl, adminWorkerToken, backend)
+			worker.WorkerInfo(workerUrl, adminWorkerToken, backend)
 
 		case "reverse-proxy":
-			ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend)
+			reverseproxy.ReverseProxyInfo(reverseProxyUrl, adminReverseProxyToken, backend)
 
 		case "version":
 			fmt.Println(commons.CapsuleVersion())
+			os.Exit(0)
 
 		case "help":
 			//TODO: add help for the flags
@@ -652,11 +270,14 @@ func main() {
 			}
 
 		default:
-			log.Panicln("😡", "Houston, we have a problem")
+			//log.Panicln("😡", "Houston, we have a problem")
+			fmt.Println("😡", "Houston, we have a problem")
+			os.Exit(1)
 		}
 
 	} else {
 		fmt.Println("😡", args[0], "is not a recognized command")
+		os.Exit(1)
 	}
 
 }
