@@ -7,7 +7,6 @@ import (
 	"github.com/bots-garden/capsule/capsule-launcher/services/http"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/go-resty/resty/v2"
-	"log"
 	"os"
 )
 
@@ -25,6 +24,11 @@ type CapsuleFlags struct {
 func main() {
 	//argsWithProg := os.Args
 	args := os.Args[1:]
+
+	if len(args) == 0 {
+		fmt.Println("😮 no args. Type capsule --help")
+		os.Exit(0)
+	}
 
 	if args[0] == "version" {
 		fmt.Println(commons.CapsuleVersion())
@@ -62,7 +66,9 @@ func main() {
 				wasmFileToLoad, errLoadWasmFile := os.ReadFile(path)
 
 				if errLoadWasmFile != nil {
-					log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+					//log.Panicln("🔴 Error while loading the wasm file:", errLoadWasmFile)
+					fmt.Println("🔴 Error while loading the wasm file:", errLoadWasmFile)
+					os.Exit(1)
 				}
 				return wasmFileToLoad
 			}
@@ -78,7 +84,9 @@ func main() {
 				fmt.Println("📥", "file to download", flags.url)
 
 				if errLoadWasmFileFromUrl != nil {
-					log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+					//log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+					fmt.Println("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
+					os.Exit(1)
 				} else {
 					fmt.Println("🙂", "file downloaded", flags.wasm)
 				}
@@ -94,7 +102,8 @@ func main() {
 		case "cli":
 			capsulecli.Execute(flag.Args(), getWasmFile())
 		default:
-			log.Panicln("🔴 bad mode", *capsuleModePtr)
+			fmt.Println("🔴 bad mode", *capsuleModePtr)
+			os.Exit(1)
 		}
 	}
 

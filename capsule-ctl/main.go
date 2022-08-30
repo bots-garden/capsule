@@ -35,6 +35,11 @@ type CapsuleCtlFlag struct {
 func main() {
 	args := os.Args[1:]
 
+	if len(args) == 0 {
+		fmt.Println("😮 no args. Type caps help or caps --help")
+		os.Exit(0)
+	}
+
 	/*
 	   You need to use a header with this key: CAPSULE_WORKER_ADMIN_TOKEN
 	*/
