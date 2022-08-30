@@ -1,5 +1,5 @@
 #!/bin/bash
-CAPSULE_VERSION="0.1.6"
+CAPSULE_VERSION="0.1.7"
 CAPSULE_MODULE="capsule"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
