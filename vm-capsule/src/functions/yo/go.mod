@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule-faas-demo/yo
+module github.com/bots-garden/capsule-faas-vm/yo
 
 go 1.18
 
