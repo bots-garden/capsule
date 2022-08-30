@@ -1,13 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/bots-garden/capsule/capsule-ctl/registry"
+	//"github.com/bots-garden/capsule/capsule-ctl/registry"
 	"github.com/bots-garden/capsule/capsule-ctl/reverseproxy"
 	"github.com/bots-garden/capsule/capsule-ctl/revisions"
 	"github.com/bots-garden/capsule/capsule-ctl/worker"
 	"github.com/bots-garden/capsule/commons"
+	"github.com/go-resty/resty/v2"
 	"os"
 )
 
@@ -30,6 +32,59 @@ type CapsuleCtlFlag struct {
 	RevisionName   string
 	DownloadUrl    string
 	EnvVariables   string
+}
+
+/*
+# Publish the wasm module to the registry
+# 🖐 change the tag if you publish a new version
+curl -X POST http://localhost:4999/upload/k33g/hello/0.0.0 \
+  -F "file=@./hello/hello.wasm" \
+  -F "info=hello function v0.0.0 from @k33g [GET]" \
+  -H "Content-Type: multipart/form-data"
+*/
+
+func PublishToTheRegistry(wasmModuleFile, wasmModuleInfo, wasmModuleOrg, wasmModuleName, wasmModuleTag, wasmRegistryUrl, wasmRegistryToken string) {
+	//TODO: make it wasmer.io compliant
+	//fmt.Println(wasmModuleFile, wasmModuleInfo, wasmModuleOrg, wasmModuleName, wasmModuleTag, wasmRegistryUrl, wasmRegistryToken)
+
+	fmt.Println("⏳", "[publishing to registry]", wasmModuleOrg, wasmModuleName, wasmModuleTag)
+
+	client := resty.New()
+	resp, err := client.
+		R().
+		EnableTrace().
+		SetHeader("Content-Type", "multipart/form-data").
+		SetHeader("CAPSULE_REGISTRY_ADMIN_TOKEN", wasmRegistryToken).
+		SetFile("file", wasmModuleFile).
+		SetMultipartFormData(map[string]string{
+			"info": wasmModuleInfo,
+		}).
+		Post(wasmRegistryUrl + "/upload/" + wasmModuleOrg + "/" + wasmModuleName + "/" + wasmModuleTag)
+
+	if err != nil {
+		fmt.Println("😡", "[publishing to registry]", err)
+		os.Exit(1)
+	} else {
+
+		jsonRespMap := make(map[string]interface{})
+		jsonRespMapErr := json.Unmarshal([]byte(resp.String()), &jsonRespMap)
+		if jsonRespMapErr != nil {
+			fmt.Println("😡", "[publishing to registry]", jsonRespMapErr)
+			os.Exit(1)
+		}
+		//fmt.Println("🌍", "[publishing to registry]", jsonRespMap)
+
+		if jsonRespMap["code"] == "KO" {
+			fmt.Println("😡", "[publishing to registry]", jsonRespMap["message"])
+			os.Exit(1)
+
+		} else {
+			fmt.Println("🙂", "[publishing to registry]", wasmModuleFile, "published")
+			os.Exit(0)
+		}
+
+	}
+
 }
 
 func main() {
@@ -121,7 +176,7 @@ func main() {
 			   -wasmOrg=k33g -wasmName=hello -wasmTag=0.0.0 \
 			   -registryUrl=http://localhost:4999
 			*/
-			registry.PublishToTheRegistry(
+			PublishToTheRegistry(
 				flags.WasmModuleFile,
 				flags.WasmModuleInfo,
 				flags.WasmModuleOrganization,

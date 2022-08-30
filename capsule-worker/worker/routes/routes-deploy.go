@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -50,17 +51,38 @@ func AddFunctionWithRevisionWithWasmModule(functionName, revisionName, wasmModul
 	}
 }
 
+func copyAndCapture(w io.Writer, r io.Reader) ([]byte, error) {
+	var out []byte
+	buf := make([]byte, 1024, 1024)
+	for {
+		n, err := r.Read(buf[:])
+		if n > 0 {
+			d := buf[:n]
+			out = append(out, d...)
+			_, err := w.Write(d)
+			if err != nil {
+				return out, err
+			}
+		}
+		if err != nil {
+			// Read returns io.EOF at the end of file, which is not an error for us
+			if err == io.EOF {
+				err = nil
+			}
+			return out, err
+		}
+	}
+}
+
 // StartFunction : Start a function
 func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmModuleUrl string, httpPortCounter int) (pid int, processStatus, tmpFileName string) {
 
 	tmpFileName = uuid.New().String() + ".wasm"
 
-	/*
-		fmt.Println("🎃", "StartFunction")
-		fmt.Println("🎃", "capsulePath", capsulePath)
-		fmt.Println("🎃", "wasmModuleUrl", wasmModuleUrl)
-		fmt.Println("🎃", "tmpFileName", tmpFileName)
-	*/
+	fmt.Println("🎃", "StartFunction")
+	fmt.Println("🎃", "capsulePath", capsulePath)
+	fmt.Println("🎃", "wasmModuleUrl", wasmModuleUrl)
+	fmt.Println("🎃", "tmpFileName", tmpFileName)
 
 	cmd := exec.Command(
 		capsulePath,
@@ -88,7 +110,18 @@ func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmM
 
 	*/
 
+	/*
+	   var stdout, stderr []byte
+	   var errStdout, errStderr error
+	   stdoutIn, _ := cmd.StdoutPipe()
+	   stderrIn, _ := cmd.StderrPipe()
+	*/
+
 	err := cmd.Start()
+
+	//output, err := cmd.Output()
+
+	//fmt.Println(string(output))
 
 	//var processStatus string
 	if err != nil {
@@ -99,6 +132,31 @@ func StartFunction(capsulePath string, wasmEnvVariables map[string]string, wasmM
 	}
 
 	fmt.Println("🚀 service started, process Id:", cmd.Process.Pid)
+
+	/*
+	   var wg sync.WaitGroup
+	   wg.Add(1)
+	   go func() {
+	       stdout, errStdout = copyAndCapture(os.Stdout, stdoutIn)
+	       wg.Done()
+	   }()
+
+	   stderr, errStderr = copyAndCapture(os.Stderr, stderrIn)
+
+	   wg.Wait()
+
+	   err = cmd.Wait()
+	   if err != nil {
+	       //log.Fatalf("cmd.Run() failed with %s\n", err)
+	       fmt.Println("cmd.Run() failed with:", err)
+
+	   }
+	   if errStdout != nil || errStderr != nil {
+	       log.Fatal("failed to capture stdout or stderr\n")
+	   }
+	   outStr, errStr := string(stdout), string(stderr)
+	   fmt.Printf("\nout:\n%s\nerr:\n%s\n", outStr, errStr)
+	*/
 
 	return cmd.Process.Pid, processStatus, tmpFileName
 }

@@ -77,11 +77,17 @@ func main() {
 				wasmFile = loadWasmFile(flags.wasm)
 			} else {
 				client := resty.New()
-				_, errLoadWasmFileFromUrl := client.R().
+				resp, errLoadWasmFileFromUrl := client.R().
 					SetOutput(flags.wasm).
 					Get(flags.url)
 
 				fmt.Println("📥", "file to download", flags.url)
+				fmt.Println("📦", "file saved as", flags.wasm)
+
+				if resp.IsError() {
+					fmt.Println("🔴 Error while downloading the wasm file:", "empty response")
+					os.Exit(1)
+				}
 
 				if errLoadWasmFileFromUrl != nil {
 					//log.Panicln("🔴 Error while downloading the wasm file:", errLoadWasmFileFromUrl)
@@ -103,7 +109,7 @@ func main() {
 			capsulecli.Execute(flag.Args(), getWasmFile())
 		default:
 			fmt.Println("🔴 bad mode", *capsuleModePtr)
-			os.Exit(1)
+			//os.Exit(1)
 		}
 	}
 
