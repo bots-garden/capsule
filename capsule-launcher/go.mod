@@ -9,7 +9,7 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/shirou/gopsutil/v3 v3.22.7
-	github.com/tetratelabs/wazero v0.0.0-20220819101114-6c2712fd00fc
+	github.com/tetratelabs/wazero v1.0.0-beta.1
 )
 
 require (
