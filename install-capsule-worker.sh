@@ -19,7 +19,7 @@ else
 fi
 
 CAPSULE_ARCH=$(uname -m)
-x86_64
+
 echo "💊 Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
 sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin

@@ -1,10 +1,6 @@
 #!/bin/bash
 
 # -----------------------------------------------
-#  GitLab setup
-# -----------------------------------------------
-
-# -----------------------------------------------
 #  Tools
 # -----------------------------------------------
 function check_file() {
@@ -30,14 +26,16 @@ eval $(cat vm.capsule.config)
 echo "🖥️ creating ${vm_name}"
 
 multipass launch --name ${vm_name} \
-  --cpus ${vm_cpus} \
-	--mem ${vm_mem} \
-	--disk ${vm_disk} \
-	--cloud-init ./capsule.cloud-init.yaml
+--cpus ${vm_cpus} \
+--mem ${vm_mem} \
+--disk ${vm_disk} \
+--cloud-init ./capsule.cloud-init.yaml
 
 multipass mount certs ${vm_name}:certs
 multipass mount src ${vm_name}:src
 multipass mount apps ${vm_name}:apps
+multipass mount faas ${vm_name}:faas
+
 
 ip=$(multipass info ${vm_name} | grep IPv4 | awk '{print $2}')
 
@@ -45,11 +43,6 @@ multipass info ${vm_name}
 
 multipass exec ${vm_name} -- sudo -- sh -c "echo \"${ip} ${vm_domain}\" >> /etc/hosts"
 
-multipass --verbose exec ${vm_name} -- sudo -- bash <<EOF
-apt-get update
-# /usr/local/bin
-
-EOF
 
 # 🖐 add this to `hosts` file(s)
 echo "${ip} ${vm_domain}" > config/caps.hosts.config
