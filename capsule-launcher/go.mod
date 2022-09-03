@@ -5,12 +5,12 @@ go 1.18
 replace github.com/bots-garden/capsule/commons => ../commons
 
 require (
-	github.com/bots-garden/capsule/commons v0.0.0-20220830110544-64220191babb
+	github.com/bots-garden/capsule/commons v0.0.0-20220903062354-1c48dd250b77
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-resty/resty/v2 v2.7.0
-	github.com/shirou/gopsutil/v3 v3.22.7
+	github.com/shirou/gopsutil/v3 v3.22.8
 	github.com/tetratelabs/wazero v1.0.0-pre.1
 )
 
