@@ -11,33 +11,37 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
     bodyResp string, headersResp map[string]string, errResp error)
 */
 
-var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
+var handleHttpFunction func(req Request) (
 	resp Response, errResp error)
 
 /* previous version
 func SetHandleHttp(function func(string, map[string]string) (string, map[string]string, error)) {
 */
 
-func SetHandleHttp(function func(string, map[string]string) (Response, error)) {
+func SetHandleHttp(function func(request Request) (Response, error)) {
 	handleHttpFunction = function
 }
 
-// TODO add detailed comments
+// The name "callHandleHttp" of the exported function is defined/declared
+// in `wasmrunner.go`, function: GetNewWasmRuntimeForHttp
+
 //export callHandleHttp
 //go:linkname callHandleHttp
-func callHandleHttp(strPtrPos, size uint32, headersPtrPos, headersSize uint32) (strPtrPosSize uint64) {
+func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, headersSize, methodPtrPos, methodSize uint32) (strPtrPosSize uint64) {
 	//posted JSON data
-	stringParameter := memory.GetStringParam(strPtrPos, size)
+	bodyParameter := memory.GetStringParam(bodyPtrPos, bodySize)
 	headersParameter := memory.GetStringParam(headersPtrPos, headersSize)
+	uriParameter := memory.GetStringParam(uriPtrPos, uriSize)
+	methodParameter := memory.GetStringParam(methodPtrPos, methodSize)
 
 	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrSeparator)
-	headers := commons.CreateMapFromSlice(headersSlice, ":")
+	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
 
 	var result string
-	//stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
-	responseReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(stringParameter, headers)
+	//stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(bodyParameter, headers)
+	responseReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(Request{bodyParameter, headers, uriParameter, methodParameter})
 
-	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(responseReturnByHandleFunction.Headers), "|")
+	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(responseReturnByHandleFunction.Headers), commons.StrSeparator)
 
 	if errorReturnByHandleFunction != nil {
 		result = commons.CreateStringError(errorReturnByHandleFunction.Error(), 0)

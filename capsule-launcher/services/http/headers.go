@@ -6,7 +6,7 @@ import (
 )
 
 func GetHeadersMapFromString(headersStr string) map[string]string {
-	return commons.CreateMapFromSlice(commons.CreateSliceFromString(headersStr, "|"), ":")
+	return commons.CreateMapFromSlice(commons.CreateSliceFromString(headersStr, commons.StrSeparator), commons.FieldSeparator)
 }
 
 //TODO: add other content types

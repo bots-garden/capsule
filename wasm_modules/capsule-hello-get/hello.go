@@ -10,7 +10,12 @@ func main() {
 	hf.Log("🖖" + hf.GetHostInformation())
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (response hf.Response, errResp error) {
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+
+	hf.Log("Body: " + request.Body)
+	hf.Log("URI: " + request.Uri)
+	hf.Log("Method: " + request.Method)
+
 	html := `
     <html>
         <head>
