@@ -16,6 +16,13 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
 	hf.Log("URI: " + request.Uri)
 	hf.Log("Method: " + request.Method)
 
+	params := request.ParseQueryString()
+
+	//curl http://localhost:7070/?a=1&b=2
+	for key, value := range params {
+		hf.Log(key + " : " + value)
+	}
+
 	html := `
     <html>
         <head>

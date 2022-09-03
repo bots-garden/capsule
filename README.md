@@ -105,13 +105,13 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
-	hf.Log("📝 body: " + bodyReq)
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+    hf.Log("📝 Body: " + request.Body)
 
 	// Read the request headers
-	hf.Log("Content-Type: " + headersReq["Content-Type"])
-	hf.Log("Content-Length: " + headersReq["Content-Length"])
-	hf.Log("User-Agent: " + headersReq["User-Agent"])
+    hf.Log("Content-Type: " + request.Headers["Content-Type"])
+    hf.Log("Content-Length: " + request.Headers["Content-Length"])
+    hf.Log("User-Agent: " + request.Headers["User-Agent"])
 
 	// Read the MESSAGE environment variable
 	envMessage, err := hf.GetEnv("MESSAGE")
@@ -122,14 +122,14 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 	}
 
 	// Set the response content type and add a message header
-	headersResp = map[string]string{
+	headersResp := map[string]string{
 		"Content-Type": "application/json; charset=utf-8",
 		"Message":      "👋 hello world 🌍",
 	}
 
 	jsonResponse := `{"message": "hey people!"}`
 
-	return jsonResponse, headersResp, err
+	return hf.Response{Body: jsonResponse, Headers: headersResp}, err
 }
 ```
 > - `hf.SetHandleHttp(Handle)` defines the called wasm function
@@ -224,7 +224,7 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+func Handle(request hf.Request) (response hf.Response, errResp error) {
 	html := `
     <html>
         <head>
@@ -239,11 +239,11 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
     </html>
     `
 
-	headersResp = map[string]string{
+	headersResp := map[string]string{
 		"Content-Type": "text/html; charset=utf-8",
 	}
 
-	return html, headersResp, nil
+	return hf.Response{Body: html, Headers: headersResp}, nil
 }
 ```
 

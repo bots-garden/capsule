@@ -9,7 +9,7 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (resp hf.Response, errResp error) {
+func Handle(req hf.Request) (resp hf.Response, errResp error) {
 	html := `
     <html>
         <head>

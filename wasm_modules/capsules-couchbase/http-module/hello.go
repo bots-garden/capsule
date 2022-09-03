@@ -10,7 +10,7 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (response hf.Response, errResp error) {
+func Handle(request hf.Request) (response hf.Response, errResp error) {
 	bucketName, err := hf.GetEnv("COUCHBASE_BUCKET")
 	query := "SELECT * FROM `" + bucketName + "`.data.docs"
 
