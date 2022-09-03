@@ -11,7 +11,7 @@ What is **Capsule**?
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.1.8 (`v0.1.8 🐙[octopus]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.1.9 (`v0.1.9 🐞[ladybug]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
