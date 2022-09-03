@@ -357,6 +357,18 @@ if err != nil {
 }
 ```
 
+*``KEYS`*
+```golang
+legion, err := hf.RedisKeys("bob*")
+if err != nil {
+    hf.Log(err.Error())
+}
+
+for _, bob := range legion {
+    hf.Log(bob)
+}
+```
+
 ### Make CouchBase N1QL Query
 
 You need to run **Capsule** with these four environment variables:
