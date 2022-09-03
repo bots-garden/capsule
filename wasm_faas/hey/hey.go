@@ -14,7 +14,7 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+func Handle(bodyReq string, headersReq map[string]string) (resp hf.Response, errResp error) {
 
 	hf.Log("📝 body: " + bodyReq)
 
@@ -28,7 +28,7 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 	hf.Log("🟠 User-Agent: " + headersReq["User-Agent"])
 	hf.Log("🔴 My-Token: " + headersReq["My-Token"])
 
-	headersResp = map[string]string{
+	headers := map[string]string{
 		"Content-Type": "application/json; charset=utf-8",
 		"Message":      "👋 hello world 🌍",
 		"MyToken":      headersReq["My-Token"],
@@ -38,5 +38,5 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 	jsondoc, _ = sjson.Set(jsondoc, "message", "👋 hey! What's up?")
 	jsondoc, _ = sjson.Set(jsondoc, "author", "Bob")
 
-	return jsondoc, headersResp, nil
+	return hf.Response{Body: jsondoc, Headers: headers}, nil
 }

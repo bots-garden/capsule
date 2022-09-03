@@ -1,9 +1,9 @@
-github.com/bots-garden/capsule v0.0.0-20220815052111-84fb610d29f3 h1:jd6GhVtU6hJh2YhTOal46CxbSfGALQOw+QdwC4N/7eg=
-github.com/bots-garden/capsule v0.0.0-20220815052111-84fb610d29f3/go.mod h1:PBhXY24j6vjuYghjEt+9mXzDb2ZwD9m9PAh9e6FTXck=
-github.com/bots-garden/capsule/capsulemodule v0.0.0-20220815084835-9a0b98b22e4a h1:eGcBQabgdwqG7oVjGJyqYYzJ7yf3eyRHniJROsBplQ0=
-github.com/bots-garden/capsule/capsulemodule v0.0.0-20220815084835-9a0b98b22e4a/go.mod h1:tu9DYBPXGSfiDaCN1opAFZZ3FFt3TVFH5jkYnPypY64=
+github.com/bots-garden/capsule/commons v0.0.0-20220903105536-e833f3d14593 h1:ZyijXSlp/DUFiw/rmyntfqjU1UqWgR5wof93wiEZgu8=
+github.com/bots-garden/capsule/commons v0.0.0-20220903105536-e833f3d14593/go.mod h1:5ctHSZAwy3GEi4tR9YKFTfWtBUXDcOMFHNiJYXbV61c=
 github.com/tidwall/gjson v1.14.2 h1:6BBkirS0rAHjumnjHF6qgy5d2YAJ1TLIaFE2lzfOLqo=
 github.com/tidwall/gjson v1.14.2/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
+github.com/tidwall/gjson v1.14.3 h1:9jvXn7olKEHU1S9vwoMGliaT8jq1vJ7IH/n9zD9Dnlw=
+github.com/tidwall/gjson v1.14.3/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/match v1.1.1 h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=
 github.com/tidwall/match v1.1.1/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
 github.com/tidwall/pretty v1.2.0 h1:RWIZEg2iJ8/g6fDDYzMpobmaoGh5OLl4AXtGUGPcqCs=

@@ -14,6 +14,7 @@
             <path value="file://$PROJECT_DIR$/wasm_modules/registry-demo" />
             <path value="file://$PROJECT_DIR$/wasm_modules/reverse-proxy-demo" />
             <path value="file://$PROJECT_DIR$/wasm_modules/capsule-files" />
+            <path value="file://$PROJECT_DIR$/wasm_modules/capsule-redis-keys" />
           </resourceRoots>
         </entryData>
       </entry>

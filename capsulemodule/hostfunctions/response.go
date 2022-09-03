@@ -1,6 +1,12 @@
 package hostfunctions
 
 type Response struct {
-	body    string
-	headers map[string]string
+	Body    string
+	Headers map[string]string
 }
+
+/* TODO:
+- add status code
+- SetHeader method
+- ...
+*/

@@ -15,7 +15,7 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+func Handle(bodyReq string, headersReq map[string]string) (resp hf.Response, errResp error) {
 	/*
 	   bodyReq = {"author":"Philippe","message":"Golang 💚 wasm"}
 	*/
@@ -36,7 +36,7 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 		hf.Log("Environment variable: " + envMessage)
 	}
 
-	headersResp = map[string]string{
+	headers := map[string]string{
 		"Content-Type": "application/json; charset=utf-8",
 		"Message":      "👋 hey people 🌍",
 	}
@@ -45,12 +45,8 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 	jsondoc, _ = sjson.Set(jsondoc, "message", "👋 Hey! What's up?")
 	jsondoc, _ = sjson.Set(jsondoc, "author", "Bob")
 
-	return jsondoc, headersResp, nil
-	//return jsondoc, headersResp , errors.New("😡 oups I did it again")
+	return hf.Response{Body: jsondoc, Headers: headers}, nil
 }
-
-// TODO: helpers: SetHeader() ...
-// TODO: be able to return a status code
 
 /*
 curl -v -X POST \

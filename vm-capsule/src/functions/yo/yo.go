@@ -2,16 +2,16 @@ package main
 
 // TinyGo wasm module
 import (
-    hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
 )
 
 func main() {
-    hf.SetHandleHttp(Handle)
+	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
-    message, _ := hf.GetEnv("MESSAGE")
-    html := `
+func Handle(bodyReq string, headersReq map[string]string) (resp hf.Response, errResp error) {
+	message, _ := hf.GetEnv("MESSAGE")
+	html := `
     <html>
         <head>
             <meta charset="utf-8">
@@ -41,9 +41,9 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
     </html>
     `
 
-    headersResp = map[string]string{
-        "Content-Type": "text/html; charset=utf-8",
-    }
+	headers := map[string]string{
+		"Content-Type": "text/html; charset=utf-8",
+	}
 
-    return html, headersResp, nil
+	return hf.Response{Body: html, Headers: headers}, nil
 }
