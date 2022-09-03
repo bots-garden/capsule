@@ -10,7 +10,19 @@ func main() {
 	hf.Log("🖖" + hf.GetHostInformation())
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+
+	hf.Log("Body: " + request.Body)
+	hf.Log("URI: " + request.Uri)
+	hf.Log("Method: " + request.Method)
+
+	params := request.ParseQueryString()
+
+	//curl http://localhost:7070/?a=1&b=2
+	for key, value := range params {
+		hf.Log(key + " : " + value)
+	}
+
 	html := `
     <html>
         <head>
@@ -25,9 +37,9 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
     </html>
     `
 
-	headersResp = map[string]string{
+	headersResp := map[string]string{
 		"Content-Type": "text/html; charset=utf-8",
 	}
 
-	return html, headersResp, nil
+	return hf.Response{Body: html, Headers: headersResp}, nil
 }

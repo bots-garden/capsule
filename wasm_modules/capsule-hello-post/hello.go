@@ -15,19 +15,21 @@ func main() {
 	hf.SetHandleHttp(Handle)
 }
 
-func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, headersResp map[string]string, errResp error) {
+func Handle(request hf.Request) (response hf.Response, errResp error) {
 	/*
 	   bodyReq = {"author":"Philippe","message":"Golang 💚 wasm"}
 	*/
-	hf.Log("📝 body: " + bodyReq)
+	hf.Log("📝 Body: " + request.Body)
+	hf.Log("📝 URI: " + request.Uri)
+	hf.Log("📝 Method: " + request.Method)
 
-	author := gjson.Get(bodyReq, "author")
-	message := gjson.Get(bodyReq, "message")
+	author := gjson.Get(request.Body, "author")
+	message := gjson.Get(request.Body, "message")
 	hf.Log("👋 " + message.String() + " by " + author.String() + " 😄")
 
-	hf.Log("Content-Type: " + headersReq["Content-Type"])
-	hf.Log("Content-Length: " + headersReq["Content-Length"])
-	hf.Log("User-Agent: " + headersReq["User-Agent"])
+	hf.Log("Content-Type: " + request.Headers["Content-Type"])
+	hf.Log("Content-Length: " + request.Headers["Content-Length"])
+	hf.Log("User-Agent: " + request.Headers["User-Agent"])
 
 	envMessage, err := hf.GetEnv("MESSAGE")
 	if err != nil {
@@ -36,7 +38,7 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 		hf.Log("Environment variable: " + envMessage)
 	}
 
-	headersResp = map[string]string{
+	headersResp := map[string]string{
 		"Content-Type": "application/json; charset=utf-8",
 		"Message":      "👋 hello world 🌍",
 	}
@@ -45,12 +47,8 @@ func Handle(bodyReq string, headersReq map[string]string) (bodyResp string, head
 	jsondoc, _ = sjson.Set(jsondoc, "message", "👋 hey! What's up?")
 	jsondoc, _ = sjson.Set(jsondoc, "author", "Bob")
 
-	return jsondoc, headersResp, err
-	//return jsondoc, headersResp, errors.New("😡 oups I did it again")
+	return hf.Response{Body: jsondoc, Headers: headersResp}, err
 }
-
-// TODO: helpers: SetHeader() ...
-// TODO: be able to return a status code
 
 /*
 curl -v -X POST \

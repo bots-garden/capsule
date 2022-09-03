@@ -27,7 +27,7 @@ func GetHeadersStringFromHeadersRequest(c *gin.Context) string {
 		headersMap[key] = values[0]
 	}
 	headersSlice := commons.CreateSliceFromMap(headersMap)
-	headersParameter := commons.CreateStringFromSlice(headersSlice, "|")
+	headersParameter := commons.CreateStringFromSlice(headersSlice, commons.StrSeparator)
 
 	return headersParameter
 }

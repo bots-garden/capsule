@@ -28,11 +28,11 @@ func Http(ctx context.Context, module api.Module,
 	headersStr := memory.ReadStringFromMemory(ctx, module, headersOffSet, headersByteCount)
 
 	//TODO: choose another separator: °
-	headersSlice := commons.CreateSliceFromString(headersStr, "|")
+	headersSlice := commons.CreateSliceFromString(headersStr, commons.StrSeparator)
 
 	//fmt.Println(headersSlice)
 
-	headersMap := commons.CreateMapFromSlice(headersSlice, ":")
+	headersMap := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
 
 	//fmt.Println(headersMap)
 	//fmt.Println(headersMap["Accept"])
