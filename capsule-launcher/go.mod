@@ -5,7 +5,7 @@ go 1.18
 replace github.com/bots-garden/capsule/commons => ../commons
 
 require (
-	github.com/bots-garden/capsule/commons v0.0.0-20220903062354-1c48dd250b77
+	github.com/bots-garden/capsule/commons v0.0.0-20220905091452-b91984559445
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2

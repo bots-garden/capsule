@@ -32,6 +32,23 @@ func CallExportedOnLoad(wasmFile []byte) {
 	// QUESTION: should I return something ?
 }
 
+func CallExportedOnExit(wasmFile []byte) {
+	runtime, module, context := CreateWasmRuntimeAndModuleInstances(wasmFile)
+	function := module.ExportedFunction("OnExit")
+
+	if function != nil {
+		//fmt.Println("🟢 Function founded")
+		defer runtime.Close(context)
+
+		err := ExecVoidFunction(function, module, context)
+		if err != nil {
+			fmt.Println("🔴 Error", err.Error())
+		}
+	}
+
+	// QUESTION: should I return something ?
+}
+
 func GetNewWasmRuntime(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
 	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callHandle")
