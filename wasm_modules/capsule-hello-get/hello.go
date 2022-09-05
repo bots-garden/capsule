@@ -10,6 +10,11 @@ func main() {
 	hf.Log("🖖" + hf.GetHostInformation())
 }
 
+//export OnLoad
+func OnLoad() {
+	hf.Log("👋 from the OnLoad method")
+}
+
 func Handle(request hf.Request) (response hf.Response, errResp error) {
 
 	hf.Log("Body: " + request.Body)

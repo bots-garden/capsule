@@ -30,6 +30,11 @@ if [[ "$1" == "feature" ]]; then
   message="✨ feature $2"
 fi
 
+if [[ "$1" == "start" ]]; then
+  message="🚀 start $2"
+fi
+
+
 if [[ "$1" == "doc" ]]; then
   message="📝 update doc $2"
 fi

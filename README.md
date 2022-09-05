@@ -187,6 +187,18 @@ User-Agent: curl/7.79.1
 Environment variable: 🖐 good morning 😄
 ```
 
+### OnLoad function
+
+If you add an `OnLoad` exported function to the module, it will be executed at the start of the HTTP launcher (capsule).
+>  *the `main` function will be executed too*
+
+```golang
+//export OnLoad
+func OnLoad() {
+	hf.Log("👋 from the OnLoad method")
+}
+```
+
 ## Remote loading of the wasm module
 
 You can download the wasm module from a remote location before executing it:

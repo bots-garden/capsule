@@ -6,6 +6,6 @@ replace github.com/bots-garden/capsule/capsulemodule => ../../capsulemodule
 
 replace github.com/bots-garden/capsule/commons => ../../commons
 
-require github.com/bots-garden/capsule/capsulemodule v0.0.0-20220903105536-e833f3d14593
+require github.com/bots-garden/capsule/capsulemodule v0.0.0-20220903173120-dd90b15300ea
 
-require github.com/bots-garden/capsule/commons v0.0.0-20220903105536-e833f3d14593 // indirect
+require github.com/bots-garden/capsule/commons v0.0.0-20220903173120-dd90b15300ea // indirect
