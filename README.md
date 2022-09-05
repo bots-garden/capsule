@@ -19,9 +19,12 @@ What is **Capsule**?
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
 
 👋 You will find some **running examples** with these projects:
-- https://github.com/bots-garden/capsule-samples
-- https://github.com/bots-garden/capsule-on-fly-dot-io
 - https://github.com/bots-garden/capsule-launcher-demo
+- https://github.com/bots-garden/capsule-hello-universe
+
+> Old samples to be updated:
+> - https://github.com/bots-garden/capsule-samples
+> - https://github.com/bots-garden/capsule-on-fly-dot-io
 
 ## First CLI function
 
