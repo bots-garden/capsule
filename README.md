@@ -1,6 +1,8 @@
 # 💊 Capsule
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
+> - Last release: `v0.1.9 🐞[ladybug]`
+> - Dev release (next release): `v0.2.0 🪲 [beetle][dev]`
 
 What is **Capsule**?
 
@@ -195,9 +197,24 @@ If you add an `OnLoad` exported function to the module, it will be executed at t
 ```golang
 //export OnLoad
 func OnLoad() {
-	hf.Log("👋 from the OnLoad method")
+	hf.Log("👋 from the OnLoad function")
 }
 ```
+> It can be useful to register your wasm service to a backend (Redis, CouchBase, ...)
+
+### OnExit function
+
+If you add an `OnExit` exported function to the module, it will be executed when you stop the HTTP launcher (capsule).
+>  *the `main` function will be executed too*
+
+```golang
+//export OnExit
+func OnExit() {
+	hf.Log("👋 from the OnExit function")
+}
+```
+> It can be useful to unregister your wasm service from a backend (Redis, CouchBase, ...)
+
 
 ## Remote loading of the wasm module
 
@@ -338,6 +355,31 @@ if err != nil {
 }
 ```
 
+### Use memory cache
+
+*`MemorySet`*
+```golang
+_, err := hf.MemorySet("message", "🚀 hello is started")
+```
+
+*`MemorySet`*
+```golang
+value, err := hf.MemoryGet("message")
+```
+
+*`MemoryKeys`*
+```golang
+keys, err := hf.MemoryKeys()
+// it will return an array of strings
+if err != nil {
+  hf.Log(err.Error())
+}
+
+for key, value := range keys {
+  hf.Log(key+":"+value)
+}
+```
+
 ### Make Redis queries
 > 🚧 this is a work in progress
 
@@ -369,7 +411,7 @@ if err != nil {
 }
 ```
 
-*``KEYS`*
+*`KEYS`*
 ```golang
 legion, err := hf.RedisKeys("bob*")
 if err != nil {

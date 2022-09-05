@@ -19,12 +19,17 @@ func main() {
 
 //export OnLoad
 func OnLoad() {
-	hf.Log("👋 from the OnLoad method")
+	hf.Log("👋 from the OnLoad function")
 
 	_, err := hf.MemorySet("message", "🚀 hello is started")
 	if err != nil {
 		hf.Log(err.Error())
 	}
+}
+
+//export OnExit
+func OnExit() {
+	hf.Log("👋 from the OnExit function")
 }
 
 func Handle(request hf.Request) (response hf.Response, errResp error) {
