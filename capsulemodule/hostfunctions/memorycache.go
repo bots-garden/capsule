@@ -10,22 +10,22 @@ import (
 	"github.com/bots-garden/capsule/commons"
 )
 
-//export hostRedisSet
-//go:linkname hostRedisSet
-func hostRedisSet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+//export hostMemorySet
+//go:linkname hostMemorySet
+func hostMemorySet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-//export hostRedisGet
-//go:linkname hostRedisGet
-func hostRedisGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int)
+//export hostMemoryGet
+//go:linkname hostMemoryGet
+func hostMemoryGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int)
 
-//export hostRedisKeys
-//go:linkname hostRedisKeys
-func hostRedisKeys(patternPtrPos, patternSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+//export hostMemoryKeys
+//go:linkname hostMemoryKeys
+func hostMemoryKeys(retBuffPtrPos **byte, retBuffSize *int)
 
-// RedisSet :
-// Call host function: hostRedisSet
+// MemorySet :
+// Call host function: hostMemorySet
 // This function is called by the wasm module
-func RedisSet(key string, value string) (string, error) {
+func MemorySet(key string, value string) (string, error) {
 
 	// transform the parameters for the host function
 	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
@@ -36,7 +36,7 @@ func RedisSet(key string, value string) (string, error) {
 
 	// call the host function
 	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
-	hostRedisSet(keyPtrPos, keySize, valuePtrPos, valueSize, &buffPtr, &buffSize)
+	hostMemorySet(keyPtrPos, keySize, valuePtrPos, valueSize, &buffPtr, &buffSize)
 
 	// transform the result to a string
 	var resultStr = ""
@@ -59,9 +59,9 @@ func RedisSet(key string, value string) (string, error) {
 
 }
 
-// RedisGet :
+// MemoryGet :
 // This function is called by the wasm module
-func RedisGet(key string) (string, error) {
+func MemoryGet(key string) (string, error) {
 
 	// transform the parameter for the host function
 	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
@@ -71,7 +71,7 @@ func RedisGet(key string) (string, error) {
 
 	// call the host function
 	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
-	hostRedisGet(keyPtrPos, keySize, &buffPtr, &buffSize)
+	hostMemoryGet(keyPtrPos, keySize, &buffPtr, &buffSize)
 
 	// transform the result to a string
 	var resultStr = ""
@@ -94,18 +94,16 @@ func RedisGet(key string) (string, error) {
 
 }
 
-// RedisKeys :
+// MemoryKeys :
 // This function is called by the wasm module
-func RedisKeys(pattern string) ([]string, error) {
+func MemoryKeys() ([]string, error) {
 	// transform the parameter for the host function
-	patternPtrPos, patternSize := memory.GetStringPtrPositionAndSize(pattern)
-
 	var buffPtr *byte
 	var buffSize int
 
 	// call the host function
 	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
-	hostRedisKeys(patternPtrPos, patternSize, &buffPtr, &buffSize)
+	hostMemoryKeys(&buffPtr, &buffSize)
 
 	// transform the result to a string
 	var results []string

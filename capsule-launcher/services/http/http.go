@@ -14,7 +14,7 @@ import (
 func Serve(httpPort string, wasmFile []byte, crt, key string) {
 	//fmt.Println("👋[checking]capsulehttp.Serve")
 
-	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `}`
+	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `,"capsuleVersion":"` + commons.CapsuleVersion() + `"}`
 
 	v, _ := mem.VirtualMemory()
 

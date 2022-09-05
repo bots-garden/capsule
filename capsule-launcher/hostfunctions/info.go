@@ -7,6 +7,7 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
+// HostInformation updated in `services/http/http.go`
 var HostInformation = ""
 
 // GetHostInformation returns information about the host

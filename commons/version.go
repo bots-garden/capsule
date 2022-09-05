@@ -1,5 +1,5 @@
 package commons
 
 func CapsuleVersion() string {
-	return "v0.1.9 🐞[ladybug]"
+	return "0.2.0 🪲 [beetle][dev]"
 }

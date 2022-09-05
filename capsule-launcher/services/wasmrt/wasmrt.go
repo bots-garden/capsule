@@ -36,6 +36,9 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostRedisSet", hostfunctions.RedisSet).
 		ExportFunction("hostRedisGet", hostfunctions.RedisGet).
 		ExportFunction("hostRedisKeys", hostfunctions.RedisKeys).
+		ExportFunction("hostMemorySet", hostfunctions.MemorySet).
+		ExportFunction("hostMemoryGet", hostfunctions.MemoryGet).
+		ExportFunction("hostMemoryKeys", hostfunctions.MemoryKeys).
 		ExportFunction("hostCouchBaseQuery", hostfunctions.CouchBaseQuery).
 		Instantiate(ctx, wasmRuntime)
 
@@ -59,7 +62,9 @@ func CreateWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
+	// 🖐 The main method is called at this moment
 	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+
 	if errInstanceWasmModule != nil {
 		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
 	}
