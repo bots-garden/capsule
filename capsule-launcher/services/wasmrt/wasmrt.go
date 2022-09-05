@@ -59,7 +59,9 @@ func CreateWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
+	// 🖐 The main method is called at this moment
 	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+
 	if errInstanceWasmModule != nil {
 		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
 	}

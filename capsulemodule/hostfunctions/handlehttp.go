@@ -11,12 +11,7 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
     bodyResp string, headersResp map[string]string, errResp error)
 */
 
-var handleHttpFunction func(req Request) (
-	resp Response, errResp error)
-
-/* previous version
-func SetHandleHttp(function func(string, map[string]string) (string, map[string]string, error)) {
-*/
+var handleHttpFunction func(req Request) (resp Response, errResp error)
 
 func SetHandleHttp(function func(request Request) (Response, error)) {
 	handleHttpFunction = function
