@@ -24,7 +24,15 @@ func Serve(httpPort string, wasmFile []byte, crt, key string) {
 		gin.SetMode(gin.DebugMode)
 	}
 
-	// === call the onLpad Method of the wasm module ===
+	// === Call the OnLoad function of the wasm module ===
+	/*
+	   It happens only if you add this code to the wasm module
+	   //export OnLoad
+	   func OnLoad() {
+	       hf.Log("👋 from the OnLoad method")
+	   }
+	*/
+	capsule.CallExportedOnLoad(wasmFile)
 
 	router := gin.New()
 

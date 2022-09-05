@@ -15,6 +15,23 @@ func GetNewWasmRuntimeForHttp(wasmFile []byte) (runtime wazero.Runtime, module a
 	return runtime, module, function, context
 }
 
+func CallExportedOnLoad(wasmFile []byte) {
+	runtime, module, context := CreateWasmRuntimeAndModuleInstances(wasmFile)
+	function := module.ExportedFunction("OnLoad")
+
+	if function != nil {
+		//fmt.Println("🟢 Function founded")
+		defer runtime.Close(context)
+
+		err := ExecVoidFunction(function, module, context)
+		if err != nil {
+			fmt.Println("🔴 Error", err.Error())
+		}
+	}
+
+	// QUESTION: should I return something ?
+}
+
 func GetNewWasmRuntime(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
 	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callHandle")
@@ -69,4 +86,13 @@ func ExecHandleFunction(function api.Function, module api.Module, ctx context.Co
 		return nil, errors.New("😡[execHandleFunction] Memory.Read out of range of memory size")
 	}
 	return bytes, nil
+}
+
+// ExecVoidFunction :
+func ExecVoidFunction(function api.Function, module api.Module, ctx context.Context) (err error) {
+	_, err = function.Call(ctx)
+	if err != nil {
+		fmt.Println("😡[execVoidFunction]", err)
+	}
+	return err
 }
