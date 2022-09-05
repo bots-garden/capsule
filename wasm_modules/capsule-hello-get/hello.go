@@ -8,11 +8,23 @@ import (
 func main() {
 	hf.SetHandleHttp(Handle)
 	hf.Log("🖖" + hf.GetHostInformation())
+
+	value, err := hf.MemoryGet("message")
+	if err != nil {
+		hf.Log("😡 Error: " + err.Error())
+	} else {
+		hf.Log("📝 message: " + value)
+	}
 }
 
 //export OnLoad
 func OnLoad() {
 	hf.Log("👋 from the OnLoad method")
+
+	_, err := hf.MemorySet("message", "🚀 hello is started")
+	if err != nil {
+		hf.Log(err.Error())
+	}
 }
 
 func Handle(request hf.Request) (response hf.Response, errResp error) {

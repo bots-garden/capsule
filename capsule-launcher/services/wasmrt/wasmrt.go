@@ -36,6 +36,9 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostRedisSet", hostfunctions.RedisSet).
 		ExportFunction("hostRedisGet", hostfunctions.RedisGet).
 		ExportFunction("hostRedisKeys", hostfunctions.RedisKeys).
+		ExportFunction("hostMemorySet", hostfunctions.MemorySet).
+		ExportFunction("hostMemoryGet", hostfunctions.MemoryGet).
+		ExportFunction("hostMemoryKeys", hostfunctions.MemoryKeys).
 		ExportFunction("hostCouchBaseQuery", hostfunctions.CouchBaseQuery).
 		Instantiate(ctx, wasmRuntime)
 
