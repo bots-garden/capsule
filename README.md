@@ -10,7 +10,7 @@
 - 0.1.9: Add `Request` and `Response` types (for the Handle function)
 - 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string))
 
-What is **Capsule**?
+## What is **Capsule**?
 
 **Capsule** is a WebAssembly function launcher. It means that, with **Capsule** you can:
 
