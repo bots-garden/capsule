@@ -1,8 +1,14 @@
 # 💊 Capsule
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.1.9 🐞[ladybug]`
-> - Dev release (next release): `v0.2.0 🪲 [beetle][dev]`
+> - Last release: `v0.2.0 🪲 [beetle]`
+> - Dev release (next release): `v0.2.1 TBD`
+
+## What's new
+
+- 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
+- 0.1.9: Add `Request` and `Response` types (for the Handle function)
+- 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string))
 
 What is **Capsule**?
 
