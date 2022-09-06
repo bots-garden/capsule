@@ -8,7 +8,7 @@
 
 - 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
 - 0.1.9: Add `Request` and `Response` types (for the Handle function)
-- 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string))
+- 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
 
 ## What is **Capsule**?
 
