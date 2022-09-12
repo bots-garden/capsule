@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-nats
+module github.com/bots-garden/capsule/wasm_modules/capsule-nats-publisher
 
 go 1.18
 

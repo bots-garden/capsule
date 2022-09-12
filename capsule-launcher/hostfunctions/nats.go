@@ -8,50 +8,49 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
-var natsconn *nats.Conn
+// NatsConnectPublish :
+// only if context is cli or http
+func NatsConnectPublish(ctx context.Context, module api.Module, natsSrvOffset, natsSrvByteCount, subjectOffset, subjectByteCount, dataOffset, dataByteCount, retBuffPtrPos, retBuffSize uint32) {
 
-func InitNatsConn() (*nats.Conn, error) {
+	var stringResultFromHost = ""
 
-	if natsconn == nil {
-		//fmt.Println("🙂 NATS_SRV:", commons.GetEnv("NATS_SRV", "nats.devsecops.fun:4222"))
+	natsSrv := memory.ReadStringFromMemory(ctx, module, natsSrvOffset, natsSrvByteCount)
 
-		natsconn, err := nats.Connect(commons.GetEnv("NATS_SRV", "nats.devsecops.fun:4222"))
-		// nats.DefaultURL
+	natsconn, errConn := nats.Connect(natsSrv)
+	defer natsconn.Close()
 
-		/*
-			if err != nil {
-				fmt.Println("😡", err.Error())
-			} else {
-				fmt.Println("🙂", "connection ok")
-				fmt.Println("ConnectedServerId", nc.ConnectedServerId())
-			}
-		*/
+	if errConn != nil {
+		//fmt.Println("1️⃣😡", errConn.Error())
+		stringResultFromHost = commons.CreateStringError(errConn.Error(), 0)
 
-		return natsconn, err
 	} else {
-		return natsconn, nil
+		subject := memory.ReadStringFromMemory(ctx, module, subjectOffset, subjectByteCount)
+		data := memory.ReadStringFromMemory(ctx, module, dataOffset, dataByteCount)
+
+		errPub := natsconn.Publish(subject, []byte(data))
+
+		if errPub != nil {
+			//fmt.Println("2️⃣😡", errPub.Error())
+			stringResultFromHost = commons.CreateStringError(errPub.Error(), 0)
+			// if code 0 don't display code in the error message
+		} else {
+			stringResultFromHost = "[OK](" + subject + ":" + data + ")"
+		}
 	}
+	// Write the new string stringResultFromHost to the "shared memory"
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 
-}
-
-func GetNewNatsConn() (*nats.Conn, error) {
-	natsconn, err := nats.Connect(commons.GetEnv("NATS_SRV", "nats.devsecops.fun:4222"))
-	return natsconn, err
-}
-
-func getNatsConn() *nats.Conn {
-	return natsconn
 }
 
 //TODO: allow to create the connection inside the module
 
 // NatsPublish :
-// only if context is cli or http
-// if context is nats, use capsuleNatsConn
+// only if context is nats
 func NatsPublish(ctx context.Context, module api.Module, subjectOffset, subjectByteCount, dataOffset, dataByteCount, retBuffPtrPos, retBuffSize uint32) {
-	nc, errConn := GetNewNatsConn()
-	//TODO: not sure that's that work
-	defer nc.Close()
+
+	nc, errConn := commons.GetCapsuleNatsConn()
+	// the connection already exists (we re-used it)
+	// it's closed in capsule-launcher/services/nats/listen
 
 	var stringResultFromHost = ""
 
@@ -62,12 +61,6 @@ func NatsPublish(ctx context.Context, module api.Module, subjectOffset, subjectB
 	} else {
 		subject := memory.ReadStringFromMemory(ctx, module, subjectOffset, subjectByteCount)
 		data := memory.ReadStringFromMemory(ctx, module, dataOffset, dataByteCount)
-
-		/*
-		   fmt.Println("subject:", subject)
-		   fmt.Println("data", data)
-		   fmt.Println(natsconn.ConnectedServerId())
-		*/
 
 		errPub := nc.Publish(subject, []byte(data))
 
@@ -81,9 +74,5 @@ func NatsPublish(ctx context.Context, module api.Module, subjectOffset, subjectB
 	}
 	// Write the new string stringResultFromHost to the "shared memory"
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
-
-	/*
-	   Question: do I really need: retBuffPtrPos, retBuffSize
-	*/
 
 }

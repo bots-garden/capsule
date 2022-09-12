@@ -8,6 +8,44 @@ import (
 	_ "unsafe"
 )
 
+//export hostNatsConnectPublish
+//go:linkname hostNatsConnectPublish
+func hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+func NatsConnectPublish(natsSrv string, subject string, data string) (string, error) {
+
+	natsSrvPtrPos, natsSrvSize := memory.GetStringPtrPositionAndSize(natsSrv)
+	subjectPtrPos, subjectSize := memory.GetStringPtrPositionAndSize(subject)
+	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+
+	var buffPtr *byte
+	var buffSize int
+
+	// call the host function
+	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
+	hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize, &buffPtr, &buffSize)
+
+	// transform the result to a string
+	var resultStr = ""
+	var err error
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
+
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
+
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
+
+}
+
 //export hostNatsPublish
 //go:linkname hostNatsPublish
 func hostNatsPublish(subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)

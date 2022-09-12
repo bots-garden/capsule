@@ -1,17 +1,17 @@
 package capsulenats
 
 import (
-    "context"
-    "fmt"
-    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
-    capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
-    "github.com/bots-garden/capsule/commons"
-    "github.com/nats-io/nats.go"
-    "log"
-    "os"
-    "os/signal"
-    "syscall"
-    "time"
+	"context"
+	"fmt"
+	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
+	capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
+	"github.com/bots-garden/capsule/commons"
+	"github.com/nats-io/nats.go"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 /*
@@ -25,61 +25,61 @@ about hf.NatsPublish => create a hf.Connect(string) too
 
 func Listen(natssrv string, subject string, wasmFile []byte) {
 
-    // Create context that listens for the interrupt signal from the OS.
-    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-    defer stop()
+	// Create context that listens for the interrupt signal from the OS.
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
-    hostfunctions.HostInformation = `{"natsServer":"` + natssrv + `","capsuleVersion":"` + commons.CapsuleVersion() + `"}`
+	hostfunctions.HostInformation = `{"natsServer":"` + natssrv + `","capsuleVersion":"` + commons.CapsuleVersion() + `"}`
 
-    capsule.CallExportedOnLoad(wasmFile)
+	capsule.CallExportedOnLoad(wasmFile)
 
-    nc, err := InitNatsConn(natssrv)
-    defer nc.Close()
+	nc, err := commons.InitNatsConn(natssrv)
+	defer nc.Close()
 
-    if err != nil {
-        fmt.Println(err.Error())
-        os.Exit(1)
-    } else {
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	} else {
 
-        go func() {
-            // Simple Async Subscriber
-            _, err := nc.Subscribe(subject, func(m *nats.Msg) {
-                fmt.Printf("👋 Received a message: %s\n", string(m.Data))
+		go func() {
+			// Simple Async Subscriber
+			_, err := nc.Subscribe(subject, func(m *nats.Msg) {
+				//fmt.Printf("👋 Received a message: %s\n", string(m.Data))
 
-                wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForNats(wasmFile)
-                defer wasmRuntime.Close(ctx)
+				wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForNats(wasmFile)
+				defer wasmRuntime.Close(ctx)
 
-                params := string(m.Data)
+				params := string(m.Data)
 
-                paramsPos, paramsLen, free, err := capsule.ReserveMemorySpaceFor(params, wasmModule, ctx)
-                defer free.Call(ctx, paramsPos)
+				paramsPos, paramsLen, free, err := capsule.ReserveMemorySpaceFor(params, wasmModule, ctx)
+				defer free.Call(ctx, paramsPos)
 
-                err = capsule.ExecHandleVoidFunction(wasmFunction, wasmModule, ctx, paramsPos, paramsLen)
+				err = capsule.ExecHandleVoidFunction(wasmFunction, wasmModule, ctx, paramsPos, paramsLen)
 
-                //TODO: change the error handling
-                if err != nil {
-                    log.Panicf("out of range of memory size")
-                }
-            })
-            if err != nil {
-                fmt.Println(err.Error())
-                os.Exit(1)
-            }
-        }()
+				//TODO: change the error handling
+				if err != nil {
+					log.Panicf("out of range of memory size")
+				}
+			})
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
+		}()
 
-        // Listen for the interrupt signal.
-        <-ctx.Done()
+		// Listen for the interrupt signal.
+		<-ctx.Done()
 
-        // Restore default behavior on the interrupt signal and notify user of shutdown.
-        stop()
-        fmt.Println("💊 Capsule shutting down gracefully ...")
+		// Restore default behavior on the interrupt signal and notify user of shutdown.
+		stop()
+		fmt.Println("💊 Capsule shutting down gracefully ...")
 
-        capsule.CallExportedOnExit(wasmFile)
+		capsule.CallExportedOnExit(wasmFile)
 
-        _, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-        defer cancel()
+		_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
 
-        fmt.Println("💊 Capsule exiting")
-    }
+		fmt.Println("💊 Capsule exiting")
+	}
 
 }
