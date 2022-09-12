@@ -40,6 +40,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostMemoryGet", hostfunctions.MemoryGet).
 		ExportFunction("hostMemoryKeys", hostfunctions.MemoryKeys).
 		ExportFunction("hostCouchBaseQuery", hostfunctions.CouchBaseQuery).
+		ExportFunction("hostNatsPublish", hostfunctions.NatsPublish).
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {

@@ -1,0 +1,15 @@
+{
+    "name": "js-node",
+    "version": "1.0.0",
+    "description": "https://github.com/nats-io/nats.js",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "nats": "^2.8.0"
+    },
+    "type": "module"
+}

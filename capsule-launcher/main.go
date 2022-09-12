@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/bots-garden/capsule/capsule-launcher/services/cli"
 	"github.com/bots-garden/capsule/capsule-launcher/services/http"
+	capsulenats "github.com/bots-garden/capsule/capsule-launcher/services/nats"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/go-resty/resty/v2"
 	"os"
@@ -19,6 +20,8 @@ type CapsuleFlags struct {
 	crt      string // https (certificate)
 	key      string // https (key)
 	registry string // url to the registry
+	natssrv  string // nats server
+	subject  string // nats topic
 }
 
 func main() {
@@ -45,7 +48,8 @@ func main() {
 
 		crtPtr := flag.String("crt", "", "certificate")
 		keyPtr := flag.String("key", "", "key")
-
+		natssrvPtr := flag.String("natssrv", "", "nats server url")
+		subjectPtr := flag.String("subject", "", "nats subject(topic)")
 		flag.Parse()
 
 		flags := CapsuleFlags{
@@ -57,6 +61,8 @@ func main() {
 			*crtPtr,
 			*keyPtr,
 			*registryPtr,
+			*natssrvPtr,
+			*subjectPtr,
 		}
 
 		getWasmFile := func() []byte {
@@ -107,6 +113,8 @@ func main() {
 			capsulehttp.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 		case "cli":
 			capsulecli.Execute(flag.Args(), getWasmFile())
+		case "nats":
+			capsulenats.Listen(flags.natssrv, flags.subject, getWasmFile())
 		default:
 			fmt.Println("🔴 bad mode", *capsuleModePtr)
 			//os.Exit(1)
