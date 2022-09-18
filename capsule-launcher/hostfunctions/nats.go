@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
 	"github.com/bots-garden/capsule/commons"
+	"github.com/bots-garden/capsule/natsconn"
 	"github.com/nats-io/nats.go"
 	"github.com/tetratelabs/wazero/api"
 )
@@ -12,12 +13,12 @@ import (
 
 // NatsGetSubject return the NATS subject of the capsule launcher
 func NatsGetSubject(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
-	subject := commons.GetCapsuleNatsSubject()
+	subject := natsconn.GetCapsuleNatsSubject()
 	memory.WriteStringToMemory(subject, ctx, module, retBuffPtrPos, retBuffSize)
 }
 
 func NatsGetServer(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
-	server := commons.GetCapsuleNatsServer()
+	server := natsconn.GetCapsuleNatsServer()
 	memory.WriteStringToMemory(server, ctx, module, retBuffPtrPos, retBuffSize)
 
 }
@@ -30,8 +31,8 @@ func NatsConnectPublish(ctx context.Context, module api.Module, natsSrvOffset, n
 
 	natsSrv := memory.ReadStringFromMemory(ctx, module, natsSrvOffset, natsSrvByteCount)
 
-	natsconn, errConn := nats.Connect(natsSrv)
-	defer natsconn.Close()
+	natscn, errConn := nats.Connect(natsSrv)
+	defer natscn.Close()
 
 	if errConn != nil {
 		//fmt.Println("1️⃣😡", errConn.Error())
@@ -41,7 +42,7 @@ func NatsConnectPublish(ctx context.Context, module api.Module, natsSrvOffset, n
 		subject := memory.ReadStringFromMemory(ctx, module, subjectOffset, subjectByteCount)
 		data := memory.ReadStringFromMemory(ctx, module, dataOffset, dataByteCount)
 
-		errPub := natsconn.Publish(subject, []byte(data))
+		errPub := natscn.Publish(subject, []byte(data))
 
 		if errPub != nil {
 			//fmt.Println("2️⃣😡", errPub.Error())
@@ -62,7 +63,7 @@ func NatsConnectPublish(ctx context.Context, module api.Module, natsSrvOffset, n
 // only if context is nats
 func NatsPublish(ctx context.Context, module api.Module, subjectOffset, subjectByteCount, dataOffset, dataByteCount, retBuffPtrPos, retBuffSize uint32) {
 
-	nc, errConn := commons.GetCapsuleNatsConn()
+	nc, errConn := natsconn.GetCapsuleNatsConn()
 	// the connection already exists (we re-used it)
 	// it's closed in capsule-launcher/services/nats/listen
 
