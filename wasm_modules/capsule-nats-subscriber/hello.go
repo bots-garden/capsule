@@ -42,7 +42,8 @@ func OnLoad() {
 //export OnExit
 func OnExit() {
 	hf.Log("👋🤗 have a nice day")
-	hf.Log("Exit Error: " + hf.GetExitError())
-	hf.Log("Exit Code: " + hf.GetExitCode())
+
+	//hf.Log("Exit Error: " + hf.GetExitError())
+	//hf.Log("Exit Code: " + hf.GetExitCode())
 
 }

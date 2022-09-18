@@ -6,6 +6,7 @@ import (
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
 	capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
 	"github.com/bots-garden/capsule/commons"
+	"github.com/bots-garden/capsule/natsconn"
 	"github.com/nats-io/nats.go"
 	"os"
 	"os/signal"
@@ -24,8 +25,8 @@ func StoreExitError(from string, err error, exitCode int, wasmFile []byte) {
 
 func Listen(natssrv string, subject string, wasmFile []byte) {
 	// Store the Nats subject and server
-	commons.SetCapsuleNatsSubject(subject)
-	commons.SetCapsuleNatsServer(natssrv)
+	natsconn.SetCapsuleNatsSubject(subject)
+	natsconn.SetCapsuleNatsServer(natssrv)
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -35,7 +36,7 @@ func Listen(natssrv string, subject string, wasmFile []byte) {
 
 	capsule.CallExportedOnLoad(wasmFile)
 
-	nc, err := commons.InitNatsConn(natssrv)
+	nc, err := natsconn.InitNatsConn(natssrv)
 	defer nc.Close()
 
 	if err != nil {
