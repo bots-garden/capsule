@@ -16,7 +16,7 @@ Pass a string as parameter
 Get a string from the host
 */
 func Ping(message string) string {
-
+	//Log("AZERTYUIOP🤗")
 	strPtrPos, size := memory.GetStringPtrPositionAndSize(message)
 
 	var buffPtr *byte
