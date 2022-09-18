@@ -13,6 +13,8 @@ import (
 
 var redisDb *redis.Client
 
+// TODO: handle errors
+
 func InitRedisCli() {
 	if redisDb == nil {
 		defaultDb, _ := strconv.Atoi(commons.GetEnv("REDIS_DEFAULTDB", "0"))

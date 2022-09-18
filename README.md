@@ -2,7 +2,7 @@
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
 > - Last release: `v0.2.0 🪲 [beetle]`
-> - Dev release (next release): `v0.2.1 TBD`
+> - Dev release (next release): `v0.2.1 🐌 [snail][dev]`
 
 ## What's new
 
@@ -12,14 +12,15 @@
 
 ## What is **Capsule**?
 
-**Capsule** is a WebAssembly function launcher. It means that, with **Capsule** you can:
+**Capsule** is a WebAssembly function launcher(runner). It means that, with **Capsule** you can:
 
 - From your terminal, execute a function of a wasm module (the **"CLI mode"**)
 - Serving a function of a wasm module through http (the **"HTTP mode"**)
+- Serving a function of a wasm module through NATS (the **"NATS mode"**), in this case **Capsule** is used as a NATS subscriber and can reply on a subject(topic)
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.2.0 (`v0.2.0 🪲 [beetle]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.2.1 (`v0.2.1 🐌 [snail][dev]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
@@ -225,6 +226,17 @@ func OnExit() {
 > It can be useful to unregister your wasm service from a backend (Redis, CouchBase, ...)
 
 
+### GetExitError and GetExitCode function
+> 🖐🚧 it's a work in progress (it's not implemented entirely)
+```golang
+//export OnExit
+func OnExit() {
+	hf.Log("👋🤗 have a nice day")
+	hf.Log("Exit Error: " + hf.GetExitError())
+	hf.Log("Exit Code: " + hf.GetExitCode())
+}
+```
+
 ## Remote loading of the wasm module
 
 You can download the wasm module from a remote location before executing it:
@@ -303,6 +315,112 @@ Now, you can open http://localhost:8080 with your browser or run a curl request:
 curl http://localhost:8080
 ```
 
+## First Nats function
+> 🖐🚧 The NAT integration with **Capsule** is a work in progress
+
+NATS is an open-source messaging system.
+
+> - About NATS: https://nats.io/ and https://docs.nats.io/
+> - Nats Overview: https://docs.nats.io/nats-concepts/overview
+
+### Requirements
+
+#### NATS Server
+
+You need to install and run a NATS server: https://docs.nats.io/running-a-nats-service/introduction/installation.
+Otherwise, I created a Virtual Machine for this; If you have installed [Multipass](https://multipass.run/), go to the `./nats/vm-nats` directory of this project. I created some scripts for my experiments:
+
+- `create-vm.sh` *create the multipass VM, the settings of the VM are stored in the `vm.nats.config`*
+- `01-install-nats-server.sh` *install the NATS server inside the VM*
+- `02-start-nats-server.sh` *start the NATS server*
+- `03-stop-nats-server.sh` *stop the NATS server*
+- `stop-vm.sh` *stop the VM*
+- `start-vm.sh` *start the VM*
+- `destroy-vm.sh` *delete the VM*
+- `shell-vm.sh` *SSH connect to the VM*
+
+#### NATS Client
+
+You need a NATS client to publish messages. You can find sample of Go and Node.js NATS clients in the `./nats/clients`.
+
+### Run **Capsule** as a NATS subscriber:
+
+```bash
+capsule \
+   -wasm=../wasm_modules/capsule-nats-subscriber/hello.wasm \
+   -mode=nats \
+   -natssrv=nats.devsecops.fun:4222 \
+   -subject=ping
+```
+> - use the "NATS mode": `-mode=nats`
+> - define the NATS subject: `-subject=<subject_name>`
+> - define the address of the NATS server: `-natssrv=<nats_server:port>`
+
+### NATS function
+
+A **Capsule** NATS function is a subscription to a subject. **Capsule** is listening on a subject(like a MQTT topic) and execute a function every time a message is posted on the subject:
+
+```golang
+package main
+
+import (
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+)
+
+func main() {
+	hf.OnNatsMessage(Handle) // define the triggered function when a message "arrives" on the subject/topic
+}
+
+// at every message on the subject channel, the `Handle` function is executed
+func Handle(params []string) {
+	// send a message to another subject
+	_, err := hf.NatsPublish("notify", "it's a wasm module here")
+
+	if err != nil {
+		hf.Log("😡 ouch something bad is happening")
+		hf.Log(err.Error())
+	}
+}
+```
+
+
+### Capsule NATS publisher
+> Publish NATS messages from capsule
+
+You can use a **WASM Capsule module** to publish NATS messages, even if **Capsule** is not started in "nats" mode, for example from a **WASM CLI Capsule module**:
+
+```golang
+package main
+
+import (
+    "errors"
+    hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+    "strings"
+)
+
+func main() {
+    hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+    var errs []string
+
+    // a new connection is created at every call/publish
+    _, err1stMsg := hf.NatsConnectPublish("nats.devsecops.fun:4222", "ping", "🖐 Hello from WASM with Nats 💜")
+    _, err2ndMsg := hf.NatsConnectPublish("nats.devsecops.fun:4222", "notify", "👋 Hello World 🌍")
+
+    if err1stMsg != nil {
+        errs = append(errs, err1stMsg.Error())
+    }
+    if err2ndMsg != nil {
+        errs = append(errs, err2ndMsg.Error())
+    }
+
+    return "NATS Rocks!", errors.New(strings.Join(errs, "|"))
+}
+```
+> In this use case, you need to define the NATS server and create a connection
+
 ## Host functions
 
 **Capsule** offers some capabilities to the wasm modules by providing some "host functions":
@@ -371,7 +489,7 @@ if err != nil {
 _, err := hf.MemorySet("message", "🚀 hello is started")
 ```
 
-*`MemorySet`*
+*`MemoryGet`*
 ```golang
 value, err := hf.MemoryGet("message")
 ```
@@ -447,6 +565,51 @@ bucketName, _ := hf.GetEnv("COUCHBASE_BUCKET")
 query := "SELECT * FROM `" + bucketName + "`.data.docs"
 
 jsonStringArray, err := hf.CouchBaseQuery(query)
+```
+
+### Nats
+
+*`NatsPublish(subject string, message string)`*: publish a message on a subject
+```golang
+_, err := hf.NatsPublish("notify", "it's a wasm module here")
+```
+> You must use the `"nats"` mode of **Capsule** as the NATS connection is defined at the start of **Capsule** and shared with the WASM module:
+> ```bash
+> capsule \
+> -wasm=../wasm_modules/capsule-nats-subscriber/hello.wasm \
+> -mode=nats \
+> -natssrv=nats.devsecops.fun:4222 \
+> -subject=ping
+> ```
+
+*`NatsGetSubject()`*: get the subject listened by the **Capsule** launcher
+```golang
+hf.Log("👂Listening on: " + hf.NatsGetSubject())
+```
+
+
+*`NatsGetServer()`*: get the connected NATS server
+```golang
+hf.Log("👋 NATS server: " + hf.NatsGetServer())
+```
+
+*`NatsConnectPublish(server string, subject string, message string)`*: connect to a NATS server and send a message on a subject
+```golang
+_, err := hf.NatsConnectPublish("nats.devsecops.fun:4222", "ping", "🖐 Hello from WASM with Nats 💜")
+```
+> You can use this function with all the running modes of **Capsule**
+
+### Error Management
+> 🖐🚧 it's a work in progress (it's not implemented entirely)
+
+*`GetExitError()` & `GetExitCode`*:
+```golang
+//export OnExit
+func OnExit() {
+	hf.Log("👋🤗 have a nice day")
+	hf.Log("Exit Error: " + hf.GetExitError())
+	hf.Log("Exit Code: " + hf.GetExitCode())
+}
 ```
 
 ## Capsule FaaS (experimental)

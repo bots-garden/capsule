@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/commons
+module nats-demo
 
 go 1.18
 

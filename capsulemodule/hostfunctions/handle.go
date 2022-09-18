@@ -2,35 +2,34 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-    "github.com/bots-garden/capsule/capsulemodule/memory"
-    "github.com/bots-garden/capsule/commons"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
+	"github.com/bots-garden/capsule/commons"
 )
 
 var handleFunction func([]string) (string, error)
 
 func SetHandle(function func([]string) (string, error)) {
-    handleFunction = function
+	handleFunction = function
 }
 
 // TODO add detailed comments
 //export callHandle
 //go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
-    stringParameter := memory.GetStringParam(strPtrPos, size)
-    //TODO change the separator
-    stringParameters := commons.CreateSliceFromString(stringParameter, "°")
-    var result string
-    stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameters)
+	stringParameter := memory.GetStringParam(strPtrPos, size)
+	stringParameters := commons.CreateSliceFromString(stringParameter, commons.StrSeparator)
+	var result string
+	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameters)
 
-    if errorReturnByHandleFunction != nil {
-        result = commons.CreateStringError(errorReturnByHandleFunction.Error(), 0)
-    } else {
-        result = stringReturnByHandleFunction
-    }
+	if errorReturnByHandleFunction != nil {
+		result = commons.CreateStringError(errorReturnByHandleFunction.Error(), 0)
+	} else {
+		result = stringReturnByHandleFunction
+	}
 
-    pos, length := memory.GetStringPtrPositionAndSize(result)
+	pos, length := memory.GetStringPtrPositionAndSize(result)
 
-    return memory.PackPtrPositionAndSize(pos, length)
+	return memory.PackPtrPositionAndSize(pos, length)
 }
 
 /* Function Samples
