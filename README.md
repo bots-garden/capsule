@@ -1,11 +1,11 @@
 # 💊 Capsule
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.0 🪲 [beetle]`
-> - Dev release (next release): `v0.2.1 🐌 [snail][dev]`
+> - Last release: `v0.2.2 🦋 [butterfly]`
 
 ## What's new
 
+- v0.2.2: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
 - 0.2.1: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
 - 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
 - 0.1.9: Add `Request` and `Response` types (for the Handle function)
@@ -21,7 +21,7 @@
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.2.1 (`v0.2.1 🐌 [snail]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.2 (`v0.2.2 🦋 [butterfly]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
