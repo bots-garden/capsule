@@ -8,6 +8,34 @@ import (
 	_ "unsafe"
 )
 
+//export hostNatsGetSubject
+//go:linkname hostNatsGetSubject
+func hostNatsGetSubject(retBuffPtrPos **byte, retBuffSize *int)
+
+func NatsGetSubject() string {
+	var buffPtr *byte
+	var buffSize int
+
+	hostNatsGetSubject(&buffPtr, &buffSize)
+
+	// return the string result of the host function calling
+	return memory.GetStringResult(buffPtr, buffSize)
+}
+
+//export hostNatsGetServer
+//go:linkname hostNatsGetServer
+func hostNatsGetServer(retBuffPtrPos **byte, retBuffSize *int)
+
+func NatsGetServer() string {
+	var buffPtr *byte
+	var buffSize int
+
+	hostNatsGetServer(&buffPtr, &buffSize)
+
+	// return the string result of the host function calling
+	return memory.GetStringResult(buffPtr, buffSize)
+}
+
 //export hostNatsConnectPublish
 //go:linkname hostNatsConnectPublish
 func hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)

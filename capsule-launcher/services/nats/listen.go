@@ -7,23 +7,25 @@ import (
 	capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/nats-io/nats.go"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 )
 
-/*
-callHandleOnMessage
-callHandlePublish => host function
-
-
-about hf.NatsPublish => create a hf.Connect(string) too
-+ onLoad?
-*/
+func StoreExitError(from string, err error, exitCode int, wasmFile []byte) {
+	fmt.Println("🔴 [store exit error for wasm module] from:", from)
+	fmt.Println("🔴 Error:", err.Error())
+	// store error information for the wasm module
+	commons.SetExitError(err.Error())
+	commons.SetExitCode(1)
+	capsule.CallExportedOnExit(wasmFile)
+}
 
 func Listen(natssrv string, subject string, wasmFile []byte) {
+	// Store the Nats subject and server
+	commons.SetCapsuleNatsSubject(subject)
+	commons.SetCapsuleNatsServer(natssrv)
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -37,15 +39,18 @@ func Listen(natssrv string, subject string, wasmFile []byte) {
 	defer nc.Close()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		StoreExitError("initialize NATS conn", err, 1, wasmFile)
 		os.Exit(1)
 	} else {
 
 		go func() {
+
 			// Simple Async Subscriber
 			_, err := nc.Subscribe(subject, func(m *nats.Msg) {
-				//fmt.Printf("👋 Received a message: %s\n", string(m.Data))
+				// this part is triggered when we have a message
 
+				//fmt.Printf("👋 Received a message: %s\n", string(m.Data))
+				// call `callNatsMessageHandle`
 				wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForNats(wasmFile)
 				defer wasmRuntime.Close(ctx)
 
@@ -56,13 +61,15 @@ func Listen(natssrv string, subject string, wasmFile []byte) {
 
 				err = capsule.ExecHandleVoidFunction(wasmFunction, wasmModule, ctx, paramsPos, paramsLen)
 
-				//TODO: change the error handling
 				if err != nil {
-					log.Panicf("out of range of memory size")
+					StoreExitError("call NATS ExecHandleVoidFunction (callNatsMessageHandle)", err, 1, wasmFile)
+					os.Exit(1)
+					//log.Panicf("out of range of memory size")
 				}
 			})
+
 			if err != nil {
-				fmt.Println(err.Error())
+				StoreExitError("subscribe NATS subject", err, 1, wasmFile)
 				os.Exit(1)
 			}
 		}()

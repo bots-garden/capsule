@@ -8,6 +8,20 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
+//TODO: NatsGetServer
+
+// NatsGetSubject return the NATS subject of the capsule launcher
+func NatsGetSubject(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
+	subject := commons.GetCapsuleNatsSubject()
+	memory.WriteStringToMemory(subject, ctx, module, retBuffPtrPos, retBuffSize)
+}
+
+func NatsGetServer(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
+	server := commons.GetCapsuleNatsServer()
+	memory.WriteStringToMemory(server, ctx, module, retBuffPtrPos, retBuffSize)
+
+}
+
 // NatsConnectPublish :
 // only if context is cli or http
 func NatsConnectPublish(ctx context.Context, module api.Module, natsSrvOffset, natsSrvByteCount, subjectOffset, subjectByteCount, dataOffset, dataByteCount, retBuffPtrPos, retBuffSize uint32) {

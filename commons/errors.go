@@ -5,6 +5,25 @@ import (
 	"strings"
 )
 
+var errExit string
+var errExitCode int
+
+func GetExitError() string {
+	return errExit
+}
+func SetExitError(errMsg string) {
+	errExit = errMsg
+}
+
+func GetExitCode() int {
+	return errExitCode
+}
+
+func SetExitCode(code int) {
+	//fmt.Println("📝", code)
+	errExitCode = code
+}
+
 // CreateStringError :
 // to not display an error code at the end of the error message, code == 0
 func CreateStringError(message string, code int) string {
