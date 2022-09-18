@@ -2,7 +2,7 @@ module github.com/bots-garden/capsule/commons
 
 go 1.18
 
-require github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
+require github.com/nats-io/nats.go v1.17.0
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
