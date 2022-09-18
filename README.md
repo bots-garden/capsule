@@ -6,6 +6,7 @@
 
 ## What's new
 
+- 0.2.1: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
 - 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
 - 0.1.9: Add `Request` and `Response` types (for the Handle function)
 - 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
@@ -20,7 +21,7 @@
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.2.1 (`v0.2.1 🐌 [snail][dev]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/0.2.1 (`v0.2.1 🐌 [snail]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
