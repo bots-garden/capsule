@@ -8,7 +8,7 @@
   - `install-capsule-registry.sh`
   - `install-capsule-reverse-proxy.sh`
   - `install-capsule-worker.sh`
-
+- Check **every dependency** for every module
 - Commit & Push
 - On GitHub: create a release + a tag (`N.N.N`)
 - Update the samples repositories:
