@@ -2,14 +2,16 @@
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
 > - Last release: `v0.2.2 🦋 [butterfly]`
+> - Dev release: `v0.2.3 🐢 [turtle][dev]`
 
 ## What's new
 
-- v0.2.2: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
-- 0.2.1: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
-- 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
-- 0.1.9: Add `Request` and `Response` types (for the Handle function)
-- 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
+- `v0.2.3`: 🚧 in progress
+- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
+- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
+- `0.2.0`: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
+- `0.1.9`: Add `Request` and `Response` types (for the Handle function)
+- `0.1.8`: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
 
 ## What is **Capsule**?
 
