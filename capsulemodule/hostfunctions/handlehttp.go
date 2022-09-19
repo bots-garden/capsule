@@ -2,7 +2,6 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -24,10 +23,10 @@ func SetHandleHttp(function func(request Request) (Response, error)) {
 //go:linkname callHandleHttp
 func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, headersSize, methodPtrPos, methodSize uint32) (strPtrPosSize uint64) {
 	//posted JSON data
-	bodyParameter := memory.GetStringParam(bodyPtrPos, bodySize)
-	headersParameter := memory.GetStringParam(headersPtrPos, headersSize)
-	uriParameter := memory.GetStringParam(uriPtrPos, uriSize)
-	methodParameter := memory.GetStringParam(methodPtrPos, methodSize)
+	bodyParameter := getStringParam(bodyPtrPos, bodySize)
+	headersParameter := getStringParam(headersPtrPos, headersSize)
+	uriParameter := getStringParam(uriPtrPos, uriSize)
+	methodParameter := getStringParam(methodPtrPos, methodSize)
 
 	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrSeparator)
 	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
@@ -45,9 +44,9 @@ func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, hea
 	}
 
 	// merge body and headers response
-	pos, length := memory.GetStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
+	pos, length := getStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
 
-	return memory.PackPtrPositionAndSize(pos, length)
+	return packPtrPositionAndSize(pos, length)
 }
 
 func CreateBodyString(message string) string {

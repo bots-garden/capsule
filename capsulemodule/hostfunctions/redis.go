@@ -6,7 +6,6 @@ import (
 	"strconv"
 	_ "unsafe"
 
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -28,8 +27,8 @@ func hostRedisKeys(patternPtrPos, patternSize uint32, retBuffPtrPos **byte, retB
 func RedisSet(key string, value string) (string, error) {
 
 	// transform the parameters for the host function
-	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
-	valuePtrPos, valueSize := memory.GetStringPtrPositionAndSize(value)
+	keyPtrPos, keySize := getStringPtrPositionAndSize(key)
+	valuePtrPos, valueSize := getStringPtrPositionAndSize(value)
 
 	var buffPtr *byte
 	var buffSize int
@@ -41,7 +40,7 @@ func RedisSet(key string, value string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -64,7 +63,7 @@ func RedisSet(key string, value string) (string, error) {
 func RedisGet(key string) (string, error) {
 
 	// transform the parameter for the host function
-	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
+	keyPtrPos, keySize := getStringPtrPositionAndSize(key)
 
 	var buffPtr *byte
 	var buffSize int
@@ -76,7 +75,7 @@ func RedisGet(key string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -98,7 +97,7 @@ func RedisGet(key string) (string, error) {
 // This function is called by the wasm module
 func RedisKeys(pattern string) ([]string, error) {
 	// transform the parameter for the host function
-	patternPtrPos, patternSize := memory.GetStringPtrPositionAndSize(pattern)
+	patternPtrPos, patternSize := getStringPtrPositionAndSize(pattern)
 
 	var buffPtr *byte
 	var buffSize int
@@ -110,7 +109,7 @@ func RedisKeys(pattern string) ([]string, error) {
 	// transform the result to a string
 	var results []string
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {

@@ -1,11 +1,10 @@
 package hostfunctions
 
 import (
-    "errors"
-    "github.com/bots-garden/capsule/capsulemodule/memory"
-    "github.com/bots-garden/capsule/commons"
-    "strconv"
-    _ "unsafe"
+	"errors"
+	"github.com/bots-garden/capsule/commons"
+	"strconv"
+	_ "unsafe"
 )
 
 //export hostReadFile
@@ -19,29 +18,29 @@ func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retB
 
 func ReadFile(filePath string) (string, error) {
 
-    filePathPtrPos, size := memory.GetStringPtrPositionAndSize(filePath)
+	filePathPtrPos, size := getStringPtrPositionAndSize(filePath)
 
-    var buffPtr *byte
-    var buffSize int
+	var buffPtr *byte
+	var buffSize int
 
-    hostReadFile(filePathPtrPos, size, &buffPtr, &buffSize)
+	hostReadFile(filePathPtrPos, size, &buffPtr, &buffSize)
 
-    var resultStr = ""
-    var err error
-    valueStr := memory.GetStringResult(buffPtr, buffSize)
+	var resultStr = ""
+	var err error
+	valueStr := getStringResult(buffPtr, buffSize)
 
-    // check the return value
-    if commons.IsErrorString(valueStr) {
-        errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
-        if errorCode == 0 {
-            err = errors.New(errorMessage)
-        } else {
-            err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
-        }
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
 
-    } else {
-        resultStr = valueStr
-    }
-    return resultStr, err
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
 
 }

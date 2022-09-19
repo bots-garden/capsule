@@ -6,7 +6,6 @@ import (
 	"strconv"
 	_ "unsafe"
 
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -28,8 +27,8 @@ func hostMemoryKeys(retBuffPtrPos **byte, retBuffSize *int)
 func MemorySet(key string, value string) (string, error) {
 
 	// transform the parameters for the host function
-	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
-	valuePtrPos, valueSize := memory.GetStringPtrPositionAndSize(value)
+	keyPtrPos, keySize := getStringPtrPositionAndSize(key)
+	valuePtrPos, valueSize := getStringPtrPositionAndSize(value)
 
 	var buffPtr *byte
 	var buffSize int
@@ -41,7 +40,7 @@ func MemorySet(key string, value string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -64,7 +63,7 @@ func MemorySet(key string, value string) (string, error) {
 func MemoryGet(key string) (string, error) {
 
 	// transform the parameter for the host function
-	keyPtrPos, keySize := memory.GetStringPtrPositionAndSize(key)
+	keyPtrPos, keySize := getStringPtrPositionAndSize(key)
 
 	var buffPtr *byte
 	var buffSize int
@@ -76,7 +75,7 @@ func MemoryGet(key string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -108,7 +107,7 @@ func MemoryKeys() ([]string, error) {
 	// transform the result to a string
 	var results []string
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {

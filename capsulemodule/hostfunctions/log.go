@@ -1,7 +1,6 @@
 package hostfunctions
 
 import (
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	_ "unsafe"
 )
 
@@ -12,6 +11,6 @@ func hostLogString(ptrPos, size uint32)
 // Log : call host function: hostLogString
 // Print a string
 func Log(message string) {
-	ptr, size := memory.GetStringPtrPositionAndSize(message)
+	ptr, size := getStringPtrPositionAndSize(message)
 	hostLogString(ptr, size)
 }
