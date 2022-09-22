@@ -11,7 +11,7 @@
 - Check **every dependency** for every module
 
 ```bash
-TAG="v0.2.2"
+TAG="v0.2.3"
 cd commons
 go mod edit -replace github.com/bots-garden/capsule@${TAG}=../
 

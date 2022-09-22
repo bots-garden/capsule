@@ -10,7 +10,7 @@ capsule \
    -wasm=../wasm_modules/capsule-nats-subscriber/hello.wasm \
    -mode=nats \
    -natssrv=nats.devsecops.fun:4222 \
-   -subject=ping
+   -subject=notify
 */
 func main() {
 	hf.OnNatsMessage(Handle)
@@ -18,15 +18,12 @@ func main() {
 
 func Handle(params []string) {
 
-	hf.Log("👋 on subject: " + hf.NatsGetSubject() + ", 🎉 message" + params[0])
+	hf.Log("🟣👋 on subject: " + hf.NatsGetSubject() + ", 🎉 message " + params[0])
 
-	// we use the connection of the launcher (capsule)
-	_, err := hf.NatsPublish("notify", "it's a wasm module here")
+	// see: https://docs.nats.io/using-nats/developer/receiving/reply
+	_, _ = hf.NatsReply("Hey I'm the other subscriber", 10)
+	//_, _ = hf.NatsReply("Hola It's me again")
 
-	if err != nil {
-		hf.Log("😡 ouch something bad is happening")
-		hf.Log(err.Error())
-	}
 }
 
 //export OnLoad
