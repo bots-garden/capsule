@@ -17,7 +17,7 @@ func GetCapsuleMqttConn() (mqtt.Client, error) {
 	return mqttClient, mqttErr
 }
 
-func InitMqttConn(mqttSrv, mqttClientId, mqttTopic string, messageHandler mqtt.MessageHandler) (mqtt.Client, error) {
+func InitMqttConn(mqttSrv, mqttClientId string, messageHandler mqtt.MessageHandler) (mqtt.Client, error) {
 	if mqttClient == nil {
 		opts := mqtt.NewClientOptions()
 		opts.AddBroker(fmt.Sprintf("tcp://%s", mqttSrv))
@@ -29,7 +29,7 @@ func InitMqttConn(mqttSrv, mqttClientId, mqttTopic string, messageHandler mqtt.M
 		// TODO: add connect and connectLost handlers management
 		// opts.OnConnect = connectHandler
 		// opts.OnConnectionLost = connectLostHandler
-		mqttClient := mqtt.NewClient(opts)
+		mqttClient = mqtt.NewClient(opts)
 		token := mqttClient.Connect()
 		token.Wait()
 		mqttErr = token.Error()
@@ -38,8 +38,8 @@ func InitMqttConn(mqttSrv, mqttClientId, mqttTopic string, messageHandler mqtt.M
 	return mqttClient, mqttErr
 }
 
-func SetCapsuleMqttTopic(mqttTopic string) {
-	mqttTopic = mqttTopic
+func SetCapsuleMqttTopic(topic string) {
+	mqttTopic = topic
 }
 func GetCapsuleMqttTopic() string {
 	return mqttTopic
@@ -52,8 +52,8 @@ func GetCapsuleMqttServer() string {
 	return mqttServer
 }
 
-func SetCapsuleMqttClientId(mqttClientId string) {
-	mqttClientId = mqttClientId
+func SetCapsuleMqttClientId(clientId string) {
+	mqttClientId = clientId
 }
 func GetCapsuleMqttClientId() string {
 	return mqttClientId

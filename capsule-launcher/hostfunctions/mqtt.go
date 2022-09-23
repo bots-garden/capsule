@@ -75,12 +75,12 @@ func MqttConnectPublish(ctx context.Context, module api.Module, mqttSrvOffset, m
 //TODO: allow to create the connection inside the module
 
 // MqttPublish :
-// only if context is nats
+// only if context is mqtt
 func MqttPublish(ctx context.Context, module api.Module, topicOffset, topicByteCount, dataOffset, dataByteCount, retBuffPtrPos, retBuffSize uint32) {
 
 	mqttClient, errConn := mqttconn.GetCapsuleMqttConn()
 	// the connection already exists (we re-used it)
-	// it's closed in capsule-launcher/services/nats/listen
+	// it's closed in capsule-launcher/services/mqtt/listen
 
 	var stringResultFromHost = ""
 

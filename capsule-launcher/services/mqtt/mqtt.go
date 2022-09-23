@@ -37,11 +37,20 @@ func Listen(mqttSrv, mqttClientId, mqttTopic string, wasmFile []byte) {
 
 	capsule.CallExportedOnLoad(wasmFile)
 
-	client, err := mqttconn.InitMqttConn(mqttSrv, mqttClientId, mqttTopic, setHandler(wasmFile))
+	client, err := mqttconn.InitMqttConn(mqttSrv, mqttClientId, setHandler(wasmFile))
 	defer client.Disconnect(250)
 
 	if err != nil {
-		StoreExitError("initialize NATS conn", err, 1, wasmFile)
+		StoreExitError("initialize MQTT conn", err, 1, wasmFile)
+		os.Exit(1)
+	}
+
+	// Subscribe
+	token := client.Subscribe(mqttTopic, 1, nil)
+	token.Wait()
+	err = token.Error()
+	if err != nil {
+		StoreExitError("initialize MQTT subscribe", err, 1, wasmFile)
 		os.Exit(1)
 	}
 
@@ -62,7 +71,7 @@ func Listen(mqttSrv, mqttClientId, mqttTopic string, wasmFile []byte) {
 
 func setHandler(wasmFile []byte) mqtt.MessageHandler {
 	return func(client mqtt.Client, msg mqtt.Message) {
-		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForNats(wasmFile)
+		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForMqtt(wasmFile)
 		defer wasmRuntime.Close(ctx)
 
 		params := string(msg.Payload())

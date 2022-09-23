@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"errors"
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 	"strconv"
 	_ "unsafe"
@@ -12,14 +11,14 @@ import (
 //go:linkname hostMqttGetTopic
 func hostMqttGetTopic(retBuffPtrPos **byte, retBuffSize *int)
 
-func MqttGetSubject() string {
+func MqttGetTopic() string {
 	var buffPtr *byte
 	var buffSize int
 
 	hostMqttGetTopic(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }
 
 //export hostMqttGetServer
@@ -33,7 +32,7 @@ func MqttGetServer() string {
 	hostMqttGetServer(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }
 
 //export hostMqttGetClientId
@@ -47,7 +46,7 @@ func MqttGetClientId() string {
 	hostMqttGetClientId(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }
 
 //export hostMqttConnectPublish
@@ -56,10 +55,10 @@ func hostMqttConnectPublish(mqttSrvPtrPos, mqttSrvSize, clientIdPtrPos, clientId
 
 func MqttConnectPublish(mqttSrv, clientId, topic, data string) (string, error) {
 
-	mqttSrvPtrPos, mqttSrvSize := memory.GetStringPtrPositionAndSize(mqttSrv)
-	clientIdPtrPos, clientIdSize := memory.GetStringPtrPositionAndSize(clientId)
-	topicPtrPos, topicSize := memory.GetStringPtrPositionAndSize(topic)
-	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+	mqttSrvPtrPos, mqttSrvSize := getStringPtrPositionAndSize(mqttSrv)
+	clientIdPtrPos, clientIdSize := getStringPtrPositionAndSize(clientId)
+	topicPtrPos, topicSize := getStringPtrPositionAndSize(topic)
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
 
 	var buffPtr *byte
 	var buffSize int
@@ -71,7 +70,7 @@ func MqttConnectPublish(mqttSrv, clientId, topic, data string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -98,8 +97,8 @@ func hostMqttPublish(topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuf
 
 func MqttPublish(topic string, data string) (string, error) {
 	// transform the parameters for the host function
-	topicPtrPos, topicSize := memory.GetStringPtrPositionAndSize(topic)
-	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+	topicPtrPos, topicSize := getStringPtrPositionAndSize(topic)
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
 
 	var buffPtr *byte
 	var buffSize int
@@ -111,7 +110,7 @@ func MqttPublish(topic string, data string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
