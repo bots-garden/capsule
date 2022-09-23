@@ -2,7 +2,7 @@
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
 > - Last release: `v0.2.3 🐢 [turtle]`
-> - Dev release: `TBD`
+> - Dev release: `v0.2.4 🦎 [lizard][dev]` *🚧 in progress*
 
 ## What's new
 
