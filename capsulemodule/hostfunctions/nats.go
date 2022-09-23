@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"errors"
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 	"strconv"
 	_ "unsafe"
@@ -19,7 +18,7 @@ func NatsGetSubject() string {
 	hostNatsGetSubject(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }
 
 //export hostNatsGetServer
@@ -33,7 +32,7 @@ func NatsGetServer() string {
 	hostNatsGetServer(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }
 
 //export hostNatsConnectPublish
@@ -42,9 +41,9 @@ func hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSi
 
 func NatsConnectPublish(natsSrv string, subject string, data string) (string, error) {
 
-	natsSrvPtrPos, natsSrvSize := memory.GetStringPtrPositionAndSize(natsSrv)
-	subjectPtrPos, subjectSize := memory.GetStringPtrPositionAndSize(subject)
-	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+	natsSrvPtrPos, natsSrvSize := getStringPtrPositionAndSize(natsSrv)
+	subjectPtrPos, subjectSize := getStringPtrPositionAndSize(subject)
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
 
 	var buffPtr *byte
 	var buffSize int
@@ -56,7 +55,45 @@ func NatsConnectPublish(natsSrv string, subject string, data string) (string, er
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
+
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
+
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
+
+}
+
+//export hostNatsConnectRequest
+//go:linkname hostNatsConnectRequest
+func hostNatsConnectRequest(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+func NatsConnectRequest(natsSrv string, subject string, data string, timeoutSecondDuration uint32) (string, error) {
+
+	natsSrvPtrPos, natsSrvSize := getStringPtrPositionAndSize(natsSrv)
+	subjectPtrPos, subjectSize := getStringPtrPositionAndSize(subject)
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
+
+	var buffPtr *byte
+	var buffSize int
+
+	// call the host function
+	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
+	hostNatsConnectRequest(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize, timeoutSecondDuration, &buffPtr, &buffSize)
+
+	// transform the result to a string
+	var resultStr = ""
+	var err error
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {
@@ -83,8 +120,8 @@ func hostNatsPublish(subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, re
 
 func NatsPublish(subject string, data string) (string, error) {
 	// transform the parameters for the host function
-	subjectPtrPos, subjectSize := memory.GetStringPtrPositionAndSize(subject)
-	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+	subjectPtrPos, subjectSize := getStringPtrPositionAndSize(subject)
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
 
 	var buffPtr *byte
 	var buffSize int
@@ -96,7 +133,46 @@ func NatsPublish(subject string, data string) (string, error) {
 	// transform the result to a string
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
+
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
+
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
+
+}
+
+//export hostNatsReply
+//go:linkname hostNatsReply
+func hostNatsReply(dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+// NatsPublish :
+// Publish data on nats topic
+
+func NatsReply(data string, timeoutSecondDuration uint32) (string, error) {
+	// transform the parameters for the host function
+	dataPtrPos, dataSize := getStringPtrPositionAndSize(data)
+
+	var buffPtr *byte
+	var buffSize int
+
+	// call the host function
+	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
+	hostNatsReply(dataPtrPos, dataSize, timeoutSecondDuration, &buffPtr, &buffSize)
+
+	// transform the result to a string
+	var resultStr = ""
+	var err error
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {

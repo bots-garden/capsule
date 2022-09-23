@@ -2,7 +2,6 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -15,13 +14,13 @@ func OnNatsMessage(function func([]string)) {
 //export callNatsMessageHandle
 //go:linkname callNatsMessageHandle
 func callNatsMessageHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
-	stringParameter := memory.GetStringParam(strPtrPos, size)
+	stringParameter := getStringParam(strPtrPos, size)
 	//fmt.Println("🤗 stringParameter", stringParameter)
 	stringParameters := commons.CreateSliceFromString(stringParameter, commons.StrSeparator)
 	var result string
 	natsHandleFunction(stringParameters)
 
-	pos, length := memory.GetStringPtrPositionAndSize(result)
+	pos, length := getStringPtrPositionAndSize(result)
 
-	return memory.PackPtrPositionAndSize(pos, length)
+	return packPtrPositionAndSize(pos, length)
 }

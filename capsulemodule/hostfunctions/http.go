@@ -3,7 +3,6 @@ package hostfunctions
 
 import (
 	"errors"
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 	"strconv"
 	_ "unsafe"
@@ -16,8 +15,8 @@ func hostHttp(urlOffset uint32, urlByteCount uint32, methodOffSet uint32, method
 func Http(url, method string, headers map[string]string, body string) (string, error) {
 	// Get parameters from the wasm module
 	// Prepare parameters for the host function call
-	urlStrPos, urlStrSize := memory.GetStringPtrPositionAndSize(url)
-	methodStrPos, methodStrSize := memory.GetStringPtrPositionAndSize(method)
+	urlStrPos, urlStrSize := getStringPtrPositionAndSize(url)
+	methodStrPos, methodStrSize := getStringPtrPositionAndSize(method)
 
 	/*
 	   headers := map[string]string{"Accept": "application/json", "Content-Type": " text/html; charset=UTF-8"}
@@ -30,9 +29,9 @@ func Http(url, method string, headers map[string]string, body string) (string, e
 	headersStringSlice := commons.CreateSliceFromMap(headers)
 	headerString := commons.CreateStringFromSlice(headersStringSlice, commons.StrSeparator)
 
-	headersStrPos, headersStrSize := memory.GetStringPtrPositionAndSize(headerString)
+	headersStrPos, headersStrSize := getStringPtrPositionAndSize(headerString)
 
-	bodyStrPos, bodyStrSize := memory.GetStringPtrPositionAndSize(body)
+	bodyStrPos, bodyStrSize := getStringPtrPositionAndSize(body)
 
 	// This will be used to retrieve the return value (result)
 	var buffPtr *byte
@@ -44,7 +43,7 @@ func Http(url, method string, headers map[string]string, body string) (string, e
 
 	var resultStr = ""
 	var err error
-	valueStr := memory.GetStringResult(buffPtr, buffSize)
+	valueStr := getStringResult(buffPtr, buffSize)
 
 	// check the return value
 	if commons.IsErrorString(valueStr) {

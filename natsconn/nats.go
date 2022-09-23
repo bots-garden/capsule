@@ -6,6 +6,7 @@ var natsconn *nats.Conn
 var natsErr error
 var natsSubject string
 var nastServer string
+var natsSubscription *nats.Subscription
 
 func GetCapsuleNatsConn() (*nats.Conn, error) {
 	return natsconn, natsErr
@@ -14,8 +15,15 @@ func GetCapsuleNatsConn() (*nats.Conn, error) {
 func InitNatsConn(natssrv string) (*nats.Conn, error) {
 	if natsconn == nil {
 		natsconn, natsErr = nats.Connect(natssrv)
+		if natsErr == nil {
+			natsSubscription, natsErr = natsconn.SubscribeSync(GetCapsuleNatsSubject())
+		}
 	}
 	return natsconn, natsErr
+}
+
+func GetCapsuleNatsSubscription() (*nats.Subscription, error) {
+	return natsSubscription, natsErr
 }
 
 func SetCapsuleNatsSubject(natssub string) {
