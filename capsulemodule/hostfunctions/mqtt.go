@@ -1,0 +1,130 @@
+package hostfunctions
+
+import (
+	"errors"
+	"github.com/bots-garden/capsule/capsulemodule/memory"
+	"github.com/bots-garden/capsule/commons"
+	"strconv"
+	_ "unsafe"
+)
+
+//export hostMqttGetTopic
+//go:linkname hostMqttGetTopic
+func hostMqttGetTopic(retBuffPtrPos **byte, retBuffSize *int)
+
+func MqttGetSubject() string {
+	var buffPtr *byte
+	var buffSize int
+
+	hostMqttGetTopic(&buffPtr, &buffSize)
+
+	// return the string result of the host function calling
+	return memory.GetStringResult(buffPtr, buffSize)
+}
+
+//export hostMqttGetServer
+//go:linkname hostMqttGetServer
+func hostMqttGetServer(retBuffPtrPos **byte, retBuffSize *int)
+
+func MqttGetServer() string {
+	var buffPtr *byte
+	var buffSize int
+
+	hostMqttGetServer(&buffPtr, &buffSize)
+
+	// return the string result of the host function calling
+	return memory.GetStringResult(buffPtr, buffSize)
+}
+
+//export hostMqttGetClientId
+//go:linkname hostMqttGetClientId
+func hostMqttGetClientId(retBuffPtrPos **byte, retBuffSize *int)
+
+func MqttGetClientId() string {
+	var buffPtr *byte
+	var buffSize int
+
+	hostMqttGetClientId(&buffPtr, &buffSize)
+
+	// return the string result of the host function calling
+	return memory.GetStringResult(buffPtr, buffSize)
+}
+
+//export hostMqttConnectPublish
+//go:linkname hostMqttConnectPublish
+func hostMqttConnectPublish(mqttSrvPtrPos, mqttSrvSize, clientIdPtrPos, clientIdSize, topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+func MqttConnectPublish(mqttSrv, clientId, topic, data string) (string, error) {
+
+	mqttSrvPtrPos, mqttSrvSize := memory.GetStringPtrPositionAndSize(mqttSrv)
+	clientIdPtrPos, clientIdSize := memory.GetStringPtrPositionAndSize(clientId)
+	topicPtrPos, topicSize := memory.GetStringPtrPositionAndSize(topic)
+	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+
+	var buffPtr *byte
+	var buffSize int
+
+	// call the host function
+	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
+	hostMqttConnectPublish(mqttSrvPtrPos, mqttSrvSize, clientIdPtrPos, clientIdSize, topicPtrPos, topicSize, dataPtrPos, dataSize, &buffPtr, &buffSize)
+
+	// transform the result to a string
+	var resultStr = ""
+	var err error
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
+
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
+
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
+
+}
+
+//export hostMqttPublish
+//go:linkname hostMqttPublish
+func hostMqttPublish(topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+
+// MqttPublish :
+// Publish data on mqtt topic
+
+func MqttPublish(topic string, data string) (string, error) {
+	// transform the parameters for the host function
+	topicPtrPos, topicSize := memory.GetStringPtrPositionAndSize(topic)
+	dataPtrPos, dataSize := memory.GetStringPtrPositionAndSize(data)
+
+	var buffPtr *byte
+	var buffSize int
+
+	// call the host function
+	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
+	hostMqttPublish(topicPtrPos, topicSize, dataPtrPos, dataSize, &buffPtr, &buffSize)
+
+	// transform the result to a string
+	var resultStr = ""
+	var err error
+	valueStr := memory.GetStringResult(buffPtr, buffSize)
+
+	// check the return value
+	if commons.IsErrorString(valueStr) {
+		errorMessage, errorCode := commons.GetErrorStringInfo(valueStr)
+		if errorCode == 0 {
+			err = errors.New(errorMessage)
+		} else {
+			err = errors.New(errorMessage + " (" + strconv.Itoa(errorCode) + ")")
+		}
+
+	} else {
+		resultStr = valueStr
+	}
+	return resultStr, err
+
+}
