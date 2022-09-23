@@ -2,7 +2,6 @@
 package hostfunctions
 
 import (
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	_ "unsafe"
 )
 
@@ -21,5 +20,5 @@ func GetHostInformation() string {
 	hostGetHostInformation(&buffPtr, &buffSize)
 
 	// return the string result of the host function calling
-	return memory.GetStringResult(buffPtr, buffSize)
+	return getStringResult(buffPtr, buffSize)
 }

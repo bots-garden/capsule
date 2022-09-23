@@ -1,15 +1,17 @@
 # 💊 Capsule
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.2 🦋 [butterfly]`
+> - Last release: `v0.2.3 🐢 [turtle]`
+> - Dev release: `v0.2.4 🦎 [lizard][dev]` *🚧 in progress*
 
 ## What's new
 
-- v0.2.2: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
-- 0.2.1: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
-- 0.2.0: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
-- 0.1.9: Add `Request` and `Response` types (for the Handle function)
-- 0.1.8: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
+- `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
+- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
+- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
+- `0.2.0`: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
+- `0.1.9`: Add `Request` and `Response` types (for the Handle function)
+- `0.1.8`: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
 
 ## What is **Capsule**?
 
@@ -21,7 +23,7 @@
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.2 (`v0.2.2 🦋 [butterfly]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.3 (`v0.2.3 🐢 [turtle]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
@@ -317,7 +319,7 @@ curl http://localhost:8080
 ```
 
 ## First Nats function
-> 🖐🚧 The NAT integration with **Capsule** is a work in progress
+> 🖐🚧 The NAT integration with **Capsule** is a work in progress and the functions are subject to change
 
 NATS is an open-source messaging system.
 
@@ -421,6 +423,62 @@ func Handle(params []string) (string, error) {
 }
 ```
 > In this use case, you need to define the NATS server and create a connection
+
+### Request and Reply
+
+A NATS "publisher" can make a request to a NATS "subscriber" and wait for an answer
+
+```golang
+package main
+
+import (
+	"errors"
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+	"strings"
+)
+
+func main() {
+	hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+
+	// Publish and wait for an answer; 1 is the timeout in seconds
+	res, err := hf.NatsConnectRequest("nats.devsecops.fun:4222", "notify", "👋 Hello World 🌍", 1)
+
+	if err != nil {
+		hf.Log("🔴" + err.Error())
+	} else {
+        // Display the answer
+		hf.Log("🔵" + res)
+	}
+
+	return "NATS Rocks!", err
+}
+```
+
+A NATS "subscriber" can reply to a request received on its subject
+
+```golang
+package main
+
+import (
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+)
+
+func main() {
+	hf.OnNatsMessage(Handle)
+}
+
+func Handle(params []string) {
+
+	hf.Log("Message on subject: " + hf.NatsGetSubject() + ", 🎉 message: " + params[0])
+
+	// reply to the message on the current subject; 10 is the timeout in seconds
+	_, _ = hf.NatsReply("Hey! What's up", 10)
+
+}
+```
 
 ## Host functions
 
@@ -583,6 +641,14 @@ _, err := hf.NatsPublish("notify", "it's a wasm module here")
 > -subject=ping
 > ```
 
+*`NatsReply(message string, timeout uint32)`*: publish a message on the current subject and wait for an answer
+```golang
+_, err := hf.NatsReply("it's a wasm module here", 10)
+```
+> You must use the `"nats"` mode of **Capsule** as the NATS connection and the subscription are defined at the start of **Capsule** and shared with the WASM module.
+
+
+
 *`NatsGetSubject()`*: get the subject listened by the **Capsule** launcher
 ```golang
 hf.Log("👂Listening on: " + hf.NatsGetSubject())
@@ -600,8 +666,15 @@ _, err := hf.NatsConnectPublish("nats.devsecops.fun:4222", "ping", "🖐 Hello f
 ```
 > You can use this function with all the running modes of **Capsule**
 
+*`NatsConnectPublish(server string, subject string, message string, timeout uint32)`*: connect to a NATS server and send a message on a subject
+```golang
+answer, err := hf.NatsConnectRequest("nats.devsecops.fun:4222", "notify", "👋 Hello World 🌍", 1)
+```
+> You can use this function with all the running modes of **Capsule**
+
+
 ### Error Management
-> 🖐🚧 it's a work in progress (it's not implemented entirely)
+> 🖐🖐🖐 🚧 it's a work in progress (it's not implemented entirely)
 
 *`GetExitError()` & `GetExitCode`*:
 ```golang

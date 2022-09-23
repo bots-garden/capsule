@@ -2,7 +2,6 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"github.com/bots-garden/capsule/capsulemodule/memory"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -16,7 +15,7 @@ func SetHandle(function func([]string) (string, error)) {
 //export callHandle
 //go:linkname callHandle
 func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
-	stringParameter := memory.GetStringParam(strPtrPos, size)
+	stringParameter := getStringParam(strPtrPos, size)
 	stringParameters := commons.CreateSliceFromString(stringParameter, commons.StrSeparator)
 	var result string
 	stringReturnByHandleFunction, errorReturnByHandleFunction := handleFunction(stringParameters)
@@ -27,23 +26,23 @@ func callHandle(strPtrPos, size uint32) (strPtrPosSize uint64) {
 		result = stringReturnByHandleFunction
 	}
 
-	pos, length := memory.GetStringPtrPositionAndSize(result)
+	pos, length := getStringPtrPositionAndSize(result)
 
-	return memory.PackPtrPositionAndSize(pos, length)
+	return packPtrPositionAndSize(pos, length)
 }
 
 /* Function Samples
 //export helloWorld
 func helloWorld() (strPtrPosSize uint64) {
-	strPtrPos, size := helpers.GetStringPtrPositionAndSize("👋 hello world, I'm very happy to meet you, I love what you are doing my friend")
-	return helpers.PackPtrPositionAndSize(strPtrPos, size)
+	strPtrPos, size := helpers.getStringPtrPositionAndSize("👋 hello world, I'm very happy to meet you, I love what you are doing my friend")
+	return helpers.packPtrPositionAndSize(strPtrPos, size)
 }
 
 //export sayHello
 func sayHello(strPtrPos, size uint32) (strPtrPosSize uint64) {
-	name := helpers.GetStringParam(strPtrPos, size)
-	pos, length := helpers.GetStringPtrPositionAndSize("👋 hello " + name)
+	name := helpers.getStringParam(strPtrPos, size)
+	pos, length := helpers.getStringPtrPositionAndSize("👋 hello " + name)
 
-	return helpers.PackPtrPositionAndSize(pos, length)
+	return helpers.packPtrPositionAndSize(pos, length)
 }
 */
