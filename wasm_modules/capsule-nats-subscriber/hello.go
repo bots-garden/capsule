@@ -44,5 +44,4 @@ func OnExit() {
 
 	//hf.Log("Exit Error: " + hf.GetExitError())
 	//hf.Log("Exit Code: " + hf.GetExitCode())
-
 }

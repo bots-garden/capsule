@@ -11,7 +11,7 @@
 - Check **every dependency** for every module
 
 ```bash
-TAG="v0.2.3"
+TAG="vN.N.N"
 cd commons
 go mod edit -replace github.com/bots-garden/capsule@${TAG}=../
 
@@ -22,7 +22,7 @@ go mod edit -replace github.com/bots-garden/capsule/commons@${TAG}=../commons
 
 cd ..
 git add .
-git commit -m "gardening modules for ${TAG}"
+git commit -m "updates modules for ${TAG}"
 
 git tag ${TAG}
 git tag commons/${TAG}

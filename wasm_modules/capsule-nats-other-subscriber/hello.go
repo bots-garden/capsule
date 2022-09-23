@@ -21,8 +21,8 @@ func Handle(params []string) {
 	hf.Log("🟣👋 on subject: " + hf.NatsGetSubject() + ", 🎉 message " + params[0])
 
 	// see: https://docs.nats.io/using-nats/developer/receiving/reply
+	// reply to a message on the current subject
 	_, _ = hf.NatsReply("Hey I'm the other subscriber", 10)
-	//_, _ = hf.NatsReply("Hola It's me again")
 
 }
 
