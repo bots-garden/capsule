@@ -40,3 +40,7 @@ git push origin main ${TAG} commons/${TAG} capsulemodule/${TAG}
   - https://github.com/bots-garden/capsule-faas-demo
   - https://github.com/bots-garden/capsule-on-fly-dot-io
   - https://github.com/bots-garden/capsule-launcher-demo
+
+### Tips
+
+- Remove a tag: git tag -d vN.N.N
