@@ -1,11 +1,12 @@
 # 💊 Capsule
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.3 🐢 [turtle]`
-> - Dev release: `v0.2.4 🦎 [lizard][dev]` *🚧 in progress*
+> - Last release: `v0.2.4 🦎 [lizard]`
+> - Dev release: `v0.2.5 🦖 [T-Rex][dev]` *🚧 in progress*
 
 ## What's new
 
+- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr`
 - `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
 - `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
 - `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
@@ -23,7 +24,7 @@
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.3 (`v0.2.3 🐢 [turtle]`)
+📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.4 (`v0.2.4 🦎 [lizard]`)
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)

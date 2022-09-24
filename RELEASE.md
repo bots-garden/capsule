@@ -10,6 +10,8 @@
   - `install-capsule-worker.sh`
 - Check **every dependency** for every module
 
+
+> update and run `update-modules-for-release.sh`
 ```bash
 TAG="vN.N.N"
 cd commons
