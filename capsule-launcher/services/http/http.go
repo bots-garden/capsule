@@ -1,178 +1,187 @@
 package capsulehttp
 
 import (
-    "context"
-    "encoding/json"
-    "fmt"
-    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
-    "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
-    "github.com/bots-garden/capsule/commons"
-    "github.com/gin-gonic/gin"
-    "github.com/shirou/gopsutil/v3/mem"
-    "net/http"
-    "os/signal"
-    "syscall"
-    "time"
+	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
+	"github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
+	"github.com/bots-garden/capsule/commons"
+	"github.com/gin-gonic/gin"
+	"github.com/shirou/gopsutil/v3/mem"
+	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func Serve(httpPort string, wasmFile []byte, crt, key string) {
-    //fmt.Println("👋[checking]capsulehttp.Serve")
+	//fmt.Println("👋[checking]capsulehttp.Serve")
 
-    // Create context that listens for the interrupt signal from the OS.
-    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-    defer stop()
+	// Create context that listens for the interrupt signal from the OS.
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
-    hostfunctions.HostInformation = `{"httpPort":` + httpPort + `,"capsuleVersion":"` + commons.CapsuleVersion() + `"}`
+	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `,"capsuleVersion":"` + commons.CapsuleVersion() + `"}`
 
-    v, _ := mem.VirtualMemory()
+	v, _ := mem.VirtualMemory()
 
-    if commons.GetEnv("DEBUG", "false") == "false" {
-        gin.SetMode(gin.ReleaseMode)
-    } else {
-        gin.SetMode(gin.DebugMode)
-    }
+	if commons.GetEnv("DEBUG", "false") == "false" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 
-    // === Call the OnLoad function of the wasm module ===
-    /*
-       It happens only if you add this code to the wasm module
-       //export OnLoad
-       func OnLoad() {
-           hf.Log("👋 from the OnLoad function")
-       }
-    */
-    capsule.CallExportedOnLoad(wasmFile)
+	// === Call the OnLoad function of the wasm module ===
+	/*
+	   It happens only if you add this code to the wasm module
+	   //export OnLoad
+	   func OnLoad() {
+	       hf.Log("👋 from the OnLoad function")
+	   }
+	*/
+	capsule.CallExportedOnLoad(wasmFile)
 
-    router := gin.New()
+	router := gin.New()
 
-    router.GET("/host-metrics", func(c *gin.Context) {
-        jsonMap := make(map[string]interface{})
-        json.Unmarshal([]byte(v.String()), &jsonMap)
-        c.JSON(http.StatusOK, jsonMap)
-    })
+	router.GET("/host-metrics", func(c *gin.Context) {
+		jsonMap := make(map[string]interface{})
+		json.Unmarshal([]byte(v.String()), &jsonMap)
+		c.JSON(http.StatusOK, jsonMap)
+	})
 
-    router.GET("/health", func(c *gin.Context) {
-        c.String(http.StatusOK, "OK")
-    })
+	router.GET("/health", func(c *gin.Context) {
+		c.String(http.StatusOK, "OK")
+	})
 
-    router.GET("/", func(c *gin.Context) {
+	router.GET("/", func(c *gin.Context) {
 
-        jsonStr, _ := GetJsonStringFromPayloadRequest(c)
-        headersStr := GetHeadersStringFromHeadersRequest(c)
-        uri := c.Request.RequestURI
-        method := c.Request.Method
+		jsonStr, _ := GetJsonStringFromPayloadRequest(c)
 
-        wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-        defer wasmRuntime.Close(ctx)
+		headersStr := GetHeadersStringFromHeadersRequest(c)
+		uri := c.Request.RequestURI
+		method := c.Request.Method
 
-        uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
-        defer free.Call(ctx, uriPos)
+		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
+		defer wasmRuntime.Close(ctx)
 
-        jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
-        defer free.Call(ctx, jsonStrPos)
+		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
+		defer free.Call(ctx, uriPos)
 
-        headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
-        defer free.Call(ctx, headersStrPos)
+		jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
+		defer free.Call(ctx, jsonStrPos)
 
-        methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
-        defer free.Call(ctx, methodPos)
+		headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
+		defer free.Call(ctx, headersStrPos)
 
-        bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
-        if err != nil {
-            c.String(500, "out of range of memory size")
-        }
-        bodyStr, headers := GetBodyAndHeaders(bytes, c)
+		methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
+		defer free.Call(ctx, methodPos)
 
-        // check the return value
-        if commons.IsErrorString(bodyStr) {
-            SendErrorMessage(bodyStr, headers, c)
-        } else if IsBodyString(bodyStr) {
-            SendBodyMessage(bodyStr, headers, c)
-        } else {
-            c.String(http.StatusOK, bodyStr)
-        }
+		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
+		if err != nil {
+			c.String(500, "out of range of memory size")
+		}
+		bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
-    })
+		// check the return value
+		if commons.IsErrorString(bodyStr) {
+			SendErrorMessage(bodyStr, headers, c)
+		} else if IsBodyString(bodyStr) {
+			SendBodyMessage(bodyStr, headers, c)
+		} else {
+			c.String(http.StatusOK, bodyStr)
+		}
 
-    router.POST("/", func(c *gin.Context) {
+	})
 
-        // Parameters "setup"
-        jsonStr, _ := GetJsonStringFromPayloadRequest(c)
-        headersStr := GetHeadersStringFromHeadersRequest(c)
-        uri := c.Request.RequestURI
-        method := c.Request.Method
+	router.POST("/", func(c *gin.Context) {
 
-        wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-        defer wasmRuntime.Close(ctx)
+		// Parameters "setup"
+		// we need to know if it's an array or not
+		jsonStr, errJson := GetJsonStringFromPayloadRequest(c)
 
-        uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
-        defer free.Call(ctx, uriPos)
+		if errJson != nil {
+			fmt.Println("🔴 Error:", errJson.Error())
+		} else {
+			//fmt.Println("🟢-> ", jsonStr)
+		}
 
-        jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
-        defer free.Call(ctx, jsonStrPos)
+		headersStr := GetHeadersStringFromHeadersRequest(c)
+		uri := c.Request.RequestURI
+		method := c.Request.Method
 
-        headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
-        defer free.Call(ctx, headersStrPos)
+		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
+		defer wasmRuntime.Close(ctx)
 
-        methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
-        defer free.Call(ctx, methodPos)
+		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
+		defer free.Call(ctx, uriPos)
 
-        bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
+		jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
+		defer free.Call(ctx, jsonStrPos)
 
-        if err != nil {
-            c.String(500, "out of range of memory size")
-        }
+		headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
+		defer free.Call(ctx, headersStrPos)
 
-        bodyStr, headers := GetBodyAndHeaders(bytes, c)
+		methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
+		defer free.Call(ctx, methodPos)
 
-        // check the return value
-        if commons.IsErrorString(bodyStr) {
-            SendErrorMessage(bodyStr, headers, c)
-        } else if IsBodyString(bodyStr) {
-            SendJsonMessage(bodyStr, headers, c)
-        } else {
-            c.String(http.StatusOK, bodyStr)
-        }
+		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
 
-        //c.String(http.StatusOK, bodyStr)
+		if err != nil {
+			c.String(500, "out of range of memory size")
+		}
 
-    })
+		bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
-    go func() {
-        if crt != "" {
-            // certs/procyon-registry.local.crt
-            // certs/procyon-registry.local.key
-            fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🔐🌍")
+		// check the return value
+		if commons.IsErrorString(bodyStr) {
+			SendErrorMessage(bodyStr, headers, c)
+		} else if IsBodyString(bodyStr) {
+			SendJsonMessage(bodyStr, headers, c)
+		} else {
+			c.String(http.StatusOK, bodyStr)
+		}
 
-            router.RunTLS(":"+httpPort, crt, key)
+		//c.String(http.StatusOK, bodyStr)
 
-        } else {
-            fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🌍")
-            router.Run(":" + httpPort)
-        }
-    }()
+	})
 
-    // Listen for the interrupt signal.
-    <-ctx.Done()
+	go func() {
+		if crt != "" {
+			// certs/procyon-registry.local.crt
+			// certs/procyon-registry.local.key
+			fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🔐🌍")
 
-    // Restore default behavior on the interrupt signal and notify user of shutdown.
-    stop()
-    fmt.Println("💊 Capsule shutting down gracefully ...")
+			router.RunTLS(":"+httpPort, crt, key)
 
-    // === Call the OnExit function of the wasm module ===
-    /*
-       It happens only if you add this code to the wasm module
-       //export OnExit
-       func OnExit() {
-           hf.Log("👋 from the OnExit function")
-       }
-    */
-    capsule.CallExportedOnExit(wasmFile)
+		} else {
+			fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🌍")
+			router.Run(":" + httpPort)
+		}
+	}()
 
-    // The context is used to inform the server it has 5 seconds to finish
-    // the request it is currently handling
-    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-    defer cancel()
+	// Listen for the interrupt signal.
+	<-ctx.Done()
 
-    fmt.Println("💊 Capsule exiting")
+	// Restore default behavior on the interrupt signal and notify user of shutdown.
+	stop()
+	fmt.Println("💊 Capsule shutting down gracefully ...")
+
+	// === Call the OnExit function of the wasm module ===
+	/*
+	   It happens only if you add this code to the wasm module
+	   //export OnExit
+	   func OnExit() {
+	       hf.Log("👋 from the OnExit function")
+	   }
+	*/
+	capsule.CallExportedOnExit(wasmFile)
+
+	// The context is used to inform the server it has 5 seconds to finish
+	// the request it is currently handling
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	fmt.Println("💊 Capsule exiting")
 
 }

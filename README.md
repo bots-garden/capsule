@@ -686,6 +686,67 @@ func OnExit() {
 }
 ```
 
+## Helpers (for the wasm modules)
+
+Handling Json with TinyGo is not straight forward (but not impossible).
+If your use case is very simple (a Json string without nested object or array) you can use:
+
+- `flatjson.StrToMap(flatJsonStr string) map[string]interface{}`: get a flat json string (no nested obj) and return a map
+- `flatjson.MapToStr(jsonMap map[string]interface{}) string`: get a flat json map and return a json string
+
+*Example:*
+```golang
+package main
+
+import (
+    "github.com/bots-garden/capsule/capsulemodule/flatjson"
+    hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+    "strconv"
+)
+
+func main() {
+    hf.SetHandleHttp(Handle)
+}
+
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+
+    jsonMap := flatjson.StrToMap(request.Body)
+
+    author := jsonMap["author"].(string)
+    age := jsonMap["age"].(int)
+    weight := jsonMap["weight"].(float64)
+    isHuman := jsonMap["human"].(bool)
+    message := jsonMap["message"].(string)
+
+    hf.Log("👋 " + message + " by " + author + " 😄")
+    hf.Log("👋 age: " + strconv.Itoa(age))
+    hf.Log("👋 weight: " + strconv.FormatFloat(weight, 'f', 6, 64))
+
+    if isHuman {
+        hf.Log("I'm not a 🤖")
+    }
+
+    headersResp := map[string]string{
+        "Content-Type": "application/json; charset=utf-8",
+    }
+
+    responseMap := map[string]interface{}{
+        "message": "👋 hey! What's up?",
+        "author":  "Bob",
+    }
+
+    return hf.Response{Body: flatjson.MapToStr(responseMap), Headers: headersResp}, nil
+}
+```
+
+*Call the function:*
+```bash
+curl -v -X POST \
+  http://localhost:7070 \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{"message": "TinyGo 💚💜 wasm", "author": "@k33g", "text":"this is a text", "age":42, "human": true, "weight": 100.5}'
+```
+
 ## Capsule FaaS (experimental)
 
 There are four additional components to use **capsule** (the wasm module launcher/executor) in **FaaS** mode:

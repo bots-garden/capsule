@@ -8,6 +8,7 @@ import (
 
 // GetJsonStringFromPayloadRequest :
 func GetJsonStringFromPayloadRequest(c *gin.Context) (string, error) {
+
 	jsonMap := make(map[string]interface{})
 	if err := c.Bind(&jsonMap); err != nil {
 		return "", err
