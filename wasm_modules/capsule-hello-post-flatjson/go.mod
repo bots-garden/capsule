@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-hello-get
+module github.com/bots-garden/capsule/wasm_modules/capsule-hello-post-flatjson
 
 go 1.18
 
