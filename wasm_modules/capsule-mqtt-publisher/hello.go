@@ -14,8 +14,8 @@ func Handle(params []string) (string, error) {
 	var errs []string
 
 	// a new connection is created at every call/publish
-	_, err1stMsg := hf.MqttConnectPublish("127.0.0.1:1883", "sensor", "topic/sensor1", "🖐 Hello from WASM with MQTT 💜")
-	_, err2ndMsg := hf.MqttConnectPublish("127.0.0.1:1883", "sensor", "topic/sensor2", "👋 Hello World 🌍")
+	_, err1stMsg := hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic/sensor0", "🖐 Hello from WASM with MQTT 💜")
+	_, err2ndMsg := hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic/sensor1", "👋 Hello World 🌍")
 
 	if err1stMsg != nil {
 		errs = append(errs, err1stMsg.Error())

@@ -6,5 +6,5 @@ go run main.go \
    -mode=mqtt \
    -mqttsrv=127.0.0.1:1883 \
    -topic=topic/sensor0 \
-   -clientId=sensor
+   -clientId=sensor_id1
 
