@@ -46,6 +46,11 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		ExportFunction("hostNatsGetServer", hostfunctions.NatsGetServer).
 		ExportFunction("hostNatsConnectRequest", hostfunctions.NatsConnectRequest).
 		ExportFunction("hostNatsReply", hostfunctions.NatsReply).
+		ExportFunction("hostMqttGetTopic", hostfunctions.MqttGetTopic).
+		ExportFunction("hostMqttGetServer", hostfunctions.MqttGetServer).
+		ExportFunction("hostMqttGetClientId", hostfunctions.MqttGetClientId).
+		ExportFunction("hostMqttPublish", hostfunctions.MqttPublish).
+		ExportFunction("hostMqttConnectPublish", hostfunctions.MqttConnectPublish).
 		ExportFunction("hostGetExitError", hostfunctions.GetExitError).
 		ExportFunction("hostGetExitCode", hostfunctions.GetExitCode).
 		Instantiate(ctx, wasmRuntime)

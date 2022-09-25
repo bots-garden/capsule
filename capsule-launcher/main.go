@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/bots-garden/capsule/capsule-launcher/services/cli"
 	"github.com/bots-garden/capsule/capsule-launcher/services/http"
+	capsulemqtt "github.com/bots-garden/capsule/capsule-launcher/services/mqtt"
 	capsulenats "github.com/bots-garden/capsule/capsule-launcher/services/nats"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/go-resty/resty/v2"
@@ -22,6 +23,9 @@ type CapsuleFlags struct {
 	registry string // url to the registry
 	natssrv  string // nats server
 	subject  string // nats topic
+	mqttsrv  string // mqtt server
+	topic    string // mqtt topic
+	clientId string // mqtt clientId
 }
 
 func main() {
@@ -50,6 +54,11 @@ func main() {
 		keyPtr := flag.String("key", "", "key")
 		natssrvPtr := flag.String("natssrv", "", "nats server url")
 		subjectPtr := flag.String("subject", "", "nats subject(topic)")
+
+		mqttsrvPtr := flag.String("mqttsrv", "", "mqtt server url")
+		topicPtr := flag.String("topic", "", "mqtt topic")
+		clientIdPtr := flag.String("clientId", "", "mqtt client id")
+
 		flag.Parse()
 
 		flags := CapsuleFlags{
@@ -63,6 +72,9 @@ func main() {
 			*registryPtr,
 			*natssrvPtr,
 			*subjectPtr,
+			*mqttsrvPtr,
+			*topicPtr,
+			*clientIdPtr,
 		}
 
 		getWasmFile := func() []byte {
@@ -115,6 +127,8 @@ func main() {
 			capsulecli.Execute(flag.Args(), getWasmFile())
 		case "nats":
 			capsulenats.Listen(flags.natssrv, flags.subject, getWasmFile())
+		case "mqtt":
+			capsulemqtt.Listen(flags.mqttsrv, flags.clientId, flags.topic, getWasmFile())
 		default:
 			fmt.Println("🔴 bad mode", *capsuleModePtr)
 			//os.Exit(1)
