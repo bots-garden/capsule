@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule/wasm_modules/capsule-nats-subscriber
+module github.com/bots-garden/capsule/wasm_modules/capsule-mqtt-subscriber
 
 go 1.18
 
