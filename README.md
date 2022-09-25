@@ -22,6 +22,7 @@
 - From your terminal, execute a function of a wasm module (the **"CLI mode"**)
 - Serving a function of a wasm module through http (the **"HTTP mode"**)
 - Serving a function of a wasm module through NATS (the **"NATS mode"**), in this case **Capsule** is used as a NATS subscriber and can reply on a subject(topic)
+- Serving a function of a wasm module through MQTT (the **"MQTT mode"**), in this case **Capsule** is used as a MQTT subscriber and can reply on a subject(topic)
 
 > 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
 
