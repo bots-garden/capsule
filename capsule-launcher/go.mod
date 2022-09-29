@@ -19,7 +19,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/nats-io/nats.go v1.17.0
 	github.com/shirou/gopsutil/v3 v3.22.8
-	github.com/tetratelabs/wazero v1.0.0-pre.1
+	github.com/tetratelabs/wazero v1.0.0-pre.1.0.20220929053752-9a623c4f88f3
 )
 
 require (
