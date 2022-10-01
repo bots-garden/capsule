@@ -2,7 +2,7 @@
 <img src="./logos/capsule-wasm-logo.png" alt="capsule-wasm-logo.png" width="40%" height="40%"/>
 <img src="./logos/capsule-logo.png" alt="capsule-logo.png" width="30%" height="30%"/>
 -->
-<img src="./logos/capsule-logo-readme.png" alt="capsule-logo.png" width="30%" height="30%"/>
+<img src="./logos/capsule-logo-readme.png" alt="capsule-logo.png"  width="15%" height="15%"/>
 
 # Capsule: the nano functions runner
 > - 🖐 I'm learning Go
