@@ -4,7 +4,7 @@
 -->
 <img src="./logos/capsule-logo-readme.png" alt="capsule-logo.png"  width="10%" height="10%"/>
 
-# Capsule: the nano functions runner
+# Capsule: the nano (wasm) functions runner
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
 > - Last release: `v0.2.6 🐝 [Bee]`
