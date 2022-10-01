@@ -20,12 +20,12 @@ func GetPackedPtrPositionAndSize(result []uint64) (ptrPos uint32, size uint32) {
 
 func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
-	wasmRuntime := wazero.NewRuntimeWithConfig(ctx, wazero.NewRuntimeConfig().WithWasmCore2())
+	wasmRuntime := wazero.NewRuntime(ctx)
 	//https://github.com/tetratelabs/wazero/blob/main/examples/allocation/tinygo/greet.go#L29
 
 	// 🏠 Add host functions to the wasmModule (to be availale from the module)
 	// These functions allows the module to call functions of the host
-	_, errEnv := wasmRuntime.NewModuleBuilder("env").
+	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
 		ExportFunction("hostLogString", hostfunctions.LogString).
 		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
 		ExportFunction("hostPing", hostfunctions.Ping).
