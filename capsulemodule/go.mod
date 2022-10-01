@@ -20,4 +20,4 @@ replace (
 	github.com/bots-garden/capsule/commons v0.2.5 => ../commons
 )
 
-require github.com/bots-garden/capsule/commons v0.2.2
+require github.com/bots-garden/capsule/commons v0.2.5

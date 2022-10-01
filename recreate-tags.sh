@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TAG="v0.2.5"
+TAG="v0.2.6"
 
 git add .
 git commit -m "📦 updates modules for ${TAG}"

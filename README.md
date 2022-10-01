@@ -1,11 +1,17 @@
-# 💊 Capsule
+<!--
+<img src="./logos/capsule-wasm-logo.png" alt="capsule-wasm-logo.png" width="40%" height="40%"/>
+-->
+<img src="./logos/capsule-logo.png" alt="capsule-logo.png" width="40%" height="40%"/>
+
+# Capsule: the nano functions runner
 > - 🖐 I'm learning Go
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.5 🦖 [T-Rex]`
-> - Dev release: `v0.2.6 🐝 [Bee][dev]` *🚧 in progress*
+> - Last release: `v0.2.6 🐝 [Bee]`
+> - Dev release: `v0.2.7 🦚 [peacock][dev]` *🚧 in progress*
 
 ## What's new
 
+- `v0.2.6`: Wazero: updates to `1.0.0-pre.2` by [@codefromthecrypt](https://github.com/codefromthecrypt) + a logo
 - `v0.2.5`: Add MQTT support by [@py4mac](https://github.com/py4mac) with `MqttPublish` & `MqttPublish`
 - `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr`
 - `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
