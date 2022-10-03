@@ -46,6 +46,14 @@
 > - https://github.com/bots-garden/capsule-samples
 > - https://github.com/bots-garden/capsule-on-fly-dot-io
 
+## Blog posts
+
+
+- [Capsule, my personal wasm multi-tools knife (part 1)](https://www.wasm.builders/k33g_org/capsule-my-personal-wasm-multi-tools-knife-part-1-3eoa)
+- [Capsule, my personal wasm FaaS (part 2)](https://www.wasm.builders/k33g_org/capsule-my-personal-wasm-faas-part-2-140k)
+- [A simple calc serverless function with Capsule, NATS and Node.js](https://www.wasm.builders/k33g_org/a-simple-calc-serverless-function-with-capsule-nats-and-nodejs-2mnk)
+- [Host and Serve a Lit SPA with WebAssembly (and Capsule)](https://www.wasm.builders/k33g_org/host-and-serve-a-lit-spa-with-webassembly-and-capsule-52ak)
+
 ## First CLI function
 
 Create a `go.mod` file: (`go mod init cli-say-hello`)
