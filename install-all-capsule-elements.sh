@@ -3,6 +3,11 @@
 LAST_CAPSULE_VERSION="v0.2.6"
 echo "System: ${OSTYPE} $(uname -m)"
 
+if [ -z "$CAPSULE_PATH" ]
+then
+    CAPSULE_PATH="$HOME/.local/bin"
+fi
+
 if [[ $1 = "help" ]]
 then
     echo "usage: $0"
@@ -10,7 +15,8 @@ then
     echo "You can force the values by setting these environment variables:"
     echo "- CAPSULE_OS (linux, darwin)"
     echo "- CAPSULE_ARCH (amd64, arm64)"
-    echo "- CAPSULE_VERSION"
+    echo "- CAPSULE_VERSION (default: ${LAST_CAPSULE_VERSION})"
+    echo "- CAPSULE_PATH (default: ${CAPSULE_PATH})"
     exit 0
 fi
 
@@ -49,29 +55,31 @@ echo "Installing capsule elements [${CAPSULE_VERSION}] ${CAPSULE_OS} ${CAPSULE_A
 CAPSULE_MODULE="caps"
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
+tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
 
 CAPSULE_MODULE="capsule"
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
+tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
 
 CAPSULE_MODULE="capsule-registry"
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
+tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
 
 CAPSULE_MODULE="capsule-reverse-proxy"
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
+tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
 
 CAPSULE_MODULE="capsule-worker"
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
+tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
+
+echo "Capsule $(capsule version) and all FaaS components are installed 🎉"
