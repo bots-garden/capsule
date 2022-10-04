@@ -2,11 +2,6 @@
 LAST_CAPSULE_VERSION="v0.2.6"
 echo "System: ${OSTYPE} $(uname -m)"
 
-if [ -z "$CAPSULE_PATH" ]
-then
-    CAPSULE_PATH="$HOME/.local/bin"
-fi
-
 if [[ $1 = "help" ]]
 then
     echo "usage: $0"
@@ -14,8 +9,7 @@ then
     echo "You can force the values by setting these environment variables:"
     echo "- CAPSULE_OS (linux, darwin)"
     echo "- CAPSULE_ARCH (amd64, arm64)"
-    echo "- CAPSULE_VERSION (default: ${LAST_CAPSULE_VERSION})"
-    echo "- CAPSULE_PATH (default: ${CAPSULE_PATH})"
+    echo "- CAPSULE_VERSION"
     exit 0
 fi
 
@@ -70,7 +64,5 @@ CAPSULE_MODULE="capsule"
 
 echo "Installing ${CAPSULE_MODULE}..."
 wget https://github.com/bots-garden/capsule/releases/download/${CAPSULE_VERSION}/${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory ${CAPSULE_PATH}
+sudo tar -zxf ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz --directory /usr/local/bin
 rm ${CAPSULE_MODULE}-${CAPSULE_VERSION}-${CAPSULE_OS}-${CAPSULE_ARCH}.tar.gz
-
-echo "Capsule $(capsule version) is installed 🎉"
