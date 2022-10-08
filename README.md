@@ -63,7 +63,7 @@ This image will be used to deploy Capsule to CaaS or Kubernetes. You can use it 
 docker run \
   -p 8080:8080 \
   -e MESSAGE="👋 Hello World 🌍" \
-  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.6 \
+  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.7 \
   /capsule \
   -wasm=./app/index.wasm \
   -mode=http \
