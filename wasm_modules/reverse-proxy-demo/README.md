@@ -1,1 +1,0 @@
-# Capsule Reverse Proxy demo

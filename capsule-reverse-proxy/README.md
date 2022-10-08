@@ -1,3 +1,0 @@
-# Capsule Reverse-Proxy
-
-> 🚧 wip
