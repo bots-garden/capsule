@@ -33,6 +33,15 @@ wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSIO
 ```
 > The script will install capsule in `$HOME/.local/bin`
 
+🖐 **On macOS**:
+- create the `$HOME/.local/bin` directory
+- add it to your path:
+  ```bash
+  export CAPSULE_PATH="$HOME/.local"
+  export PATH="$CAPSULE_PATH/bin:$PATH"
+  ```
+> if you want to install Capsule somewhere else, override the `CAPSULE_PATH` variable (default value: `CAPSULE_PATH="$HOME/.local/bin"`)
+
 Then you can serve a wasm function like this:
 
 ```bash
