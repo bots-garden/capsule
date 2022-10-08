@@ -9,13 +9,13 @@ replace (
 )
 
 require (
-	github.com/bots-garden/capsule/commons v0.2.5
-	github.com/bots-garden/capsule/mqttconn v0.0.0-20220925075755-ccaa11dca703
-	github.com/bots-garden/capsule/natsconn v0.0.0-20220925075755-ccaa11dca703
+	github.com/bots-garden/capsule/commons v0.2.6
+	github.com/bots-garden/capsule/mqttconn v0.0.0-20221008083118-2753339a260f
+	github.com/bots-garden/capsule/natsconn v0.0.0-20221008083118-2753339a260f
 	github.com/couchbase/gocb/v2 v2.5.3
 	github.com/eclipse/paho.mqtt.golang v1.4.1
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-redis/redis/v9 v9.0.0-beta.2
+	github.com/go-redis/redis/v9 v9.0.0-beta.3
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/nats-io/nats.go v1.17.0
 	github.com/shirou/gopsutil/v3 v3.22.9
@@ -50,10 +50,10 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20220216144756-c35f1ee13d7c // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be // indirect
-	golang.org/x/net v0.0.0-20220930213112-107f3e3c3b0b // indirect
+	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b // indirect
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
-	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
+	golang.org/x/sys v0.0.0-20221006211917-84dc82d7e875 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

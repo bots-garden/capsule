@@ -1,5 +1,5 @@
 #!/bin/bash
-LAST_CAPSULE_VERSION="v0.2.6"
+LAST_CAPSULE_VERSION="v0.2.7"
 echo "System: ${OSTYPE} $(uname -m)"
 
 if [[ $1 = "help" ]]

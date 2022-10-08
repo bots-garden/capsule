@@ -5,22 +5,10 @@
 <img src="./logos/capsule-logo-readme.png" alt="capsule-logo.png"  width="10%" height="10%"/>
 
 # Capsule: the nano (wasm) functions runner
-> - 🖐 I'm learning Go
+
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.6 🐝 [Bee]`
-> - Dev release: `v0.2.7 🦚 [peacock][dev]` *🚧 in progress*
-
-## What's new
-
-- `v0.2.6`: Wazero: updates to `1.0.0-pre.2` by [@codefromthecrypt](https://github.com/codefromthecrypt) + a logo
-- `v0.2.5`: Add MQTT support by [@py4mac](https://github.com/py4mac) with `MqttPublish` & `MqttPublish`
-- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr`
-- `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
-- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
-- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
-- `0.2.0`: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
-- `0.1.9`: Add `Request` and `Response` types (for the Handle function)
-- `0.1.8`: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
+> - Last release: `v0.2.7 🦚 [peacock]`
+> - Dev release: `v0.2.8 TBD` *🚧 in progress*
 
 ## What is **Capsule**?
 
@@ -31,12 +19,48 @@
 - Serving a function of a wasm module through NATS (the **"NATS mode"**), in this case **Capsule** is used as a NATS subscriber and can reply on a subject(topic)
 - Serving a function of a wasm module through MQTT (the **"MQTT mode"**), in this case **Capsule** is used as a MQTT subscriber and can reply on a subject(topic)
 
-> 🖐 **The functions are developed with GoLang and compiled to wasm with TinyGo**
-
-📦 Before executing or running a function, you need to download the last release of **Capsule**: https://github.com/bots-garden/capsule/releases/tag/v0.2.6 (`v0.2.6 🐝 [Bee]`)
-
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
+
+## Installing Capsule
+
+Before executing or running a function, you need to install the last release of **Capsule**:
+
+```bash
+CAPSULE_VERSION="v0.2.7"
+wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
+# To get the developement version you can use CAPSULE_VERSION="main"
+```
+> The script will install capsule in `$HOME/.local/bin`
+
+Then you can serve a wasm function like this:
+
+```bash
+MESSAGE="👋 Hello World 🌍" capsule \
+  -wasm=./app/index.wasm \
+  -mode=http \
+  -httpPort=8080
+```
+
+> You can download the appropriate release of **Capsule** here: https://github.com/bots-garden/capsule/releases/tag/v0.2.7 (`v0.2.7 🦚 [peacock]`)
+
+### Using the Capsule Docker image
+> The documentation is a wip 🚧
+
+A "scratch" Docker image of Capsule exists on https://hub.docker.com/r/k33g/capsule-launcher/tags. You can find more details on the [capsule-docker-image](https://github.com/bots-garden/capsule-docker-image) project.
+This image will be used to deploy Capsule to CaaS or Kubernetes. You can use it directly to run a wasm function without installing Capsule:
+
+```bash
+docker run \
+  -p 8080:8080 \
+  -e MESSAGE="👋 Hello World 🌍" \
+  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.6 \
+  /capsule \
+  -wasm=./app/index.wasm \
+  -mode=http \
+  -httpPort=8080
+```
+
 
 👋 You will find some **running examples** with these projects:
 - https://github.com/bots-garden/capsule-launcher-demo
@@ -46,8 +70,62 @@
 > - https://github.com/bots-garden/capsule-samples
 > - https://github.com/bots-garden/capsule-on-fly-dot-io
 
-## Blog posts
+## Tooling
+> The documentation is a wip 🚧
 
+To write and build wasm function for Capsule, you need to install GoLang and TinyGo. Otherwise, you can use the [capsule-function-builder](https://github.com/bots-garden/capsule-function-builder) project. It provides a very simple CLI, named **capsule-builder** or **cabu** that uses a Docker image with all the necessary resources (Golang and TinyGo compilers).
+
+### Install Capsule Builder
+
+```bash
+CAPSULE_BUILDER_VERSION="v0.0.0"
+wget -O - https://raw.githubusercontent.com/bots-garden/capsule-function-builder/${CAPSULE_BUILDER_VERSION}/install-capsule-builder.sh | bash
+```
+
+Then you can generate a new project from a template:
+
+```bash
+# template name: `service-get`
+# function project name `hello-world`
+cabu generate service-get hello-world
+```
+
+
+Then, build it easily:
+
+```bash
+cd hello-world
+cabu build . hello-world.go hello-world.wasm
+```
+
+And, finally, serve it:
+
+```bash
+capsule \
+  -wasm=./hello-world.wasm \
+  -mode=http \
+  -httpPort=8080
+```
+
+## What's new
+
+- `v0.2.7`:
+    - The FaaS components are externalized, now, this project is **only** for the **Capsule Runner**
+    - "Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)
+    - **cabu** (or **capsule-builder**) (https://github.com/bots-garden/capsule-function-builder): a CLI using a specific Docker image allowing:
+        - the creation of a wasm function project (from templates)
+        - the build of the wasm function, without installing anything (TinyGo is embedded in the image) (https://github.com/bots-garden/capsule-function-builder)
+>- `v0.2.6`: Wazero: updates to `1.0.0-pre.2` by [@codefromthecrypt](https://github.com/codefromthecrypt) + a logo
+>- `v0.2.5`: Add MQTT support by [@py4mac](https://github.com/py4mac) with `MqttPublish` & `MqttPublish`
+>- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr`
+>- `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
+>- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
+>- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
+>- `0.2.0`: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
+>- `0.1.9`: Add `Request` and `Response` types (for the Handle function)
+>- `0.1.8`: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
+
+## Blog posts
 
 - [Capsule, my personal wasm multi-tools knife (part 1)](https://www.wasm.builders/k33g_org/capsule-my-personal-wasm-multi-tools-knife-part-1-3eoa)
 - [Capsule, my personal wasm FaaS (part 2)](https://www.wasm.builders/k33g_org/capsule-my-personal-wasm-faas-part-2-140k)

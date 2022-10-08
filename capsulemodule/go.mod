@@ -12,6 +12,7 @@ replace (
 	github.com/bots-garden/capsule v0.2.4 => ../
 	github.com/bots-garden/capsule v0.2.5 => ../
 	github.com/bots-garden/capsule v0.2.6 => ../
+	github.com/bots-garden/capsule v0.2.7 => ../
 )
 
 replace (
@@ -20,6 +21,7 @@ replace (
 	github.com/bots-garden/capsule/commons v0.2.4 => ../commons
 	github.com/bots-garden/capsule/commons v0.2.5 => ../commons
 	github.com/bots-garden/capsule/commons v0.2.6 => ../commons
+	github.com/bots-garden/capsule/commons v0.2.7 => ../commons
 )
 
-require github.com/bots-garden/capsule/commons v0.2.5
+require github.com/bots-garden/capsule/commons v0.2.6

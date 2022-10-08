@@ -4,6 +4,7 @@
   - `./commons/version.go`
   - `/README.md`
   - `install-capsule-launcher.sh`
+  - `sudo.install-capsule-launcher.sh`
 - 🖐 Check **every dependency** for every module
 - Update and run `update-modules-for-release.sh`
 - On GitHub: create a release + a tag (`vN.N.N`)
