@@ -122,7 +122,8 @@ func main() {
 
 		switch what := flags.mode; what {
 		case "http":
-			capsulehttp.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
+			capsulehttp.FiberServe(flags.httpPort, getWasmFile(), flags.crt, flags.key)
+			//capsulehttp.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 		case "cli":
 			capsulecli.Execute(flag.Args(), getWasmFile())
 		case "nats":

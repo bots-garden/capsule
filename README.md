@@ -126,7 +126,7 @@ capsule \
         - the build of the wasm function, without installing anything (TinyGo is embedded in the image) (https://github.com/bots-garden/capsule-function-builder)
 >- `v0.2.6`: Wazero: updates to `1.0.0-pre.2` by [@codefromthecrypt](https://github.com/codefromthecrypt) + a logo
 >- `v0.2.5`: Add MQTT support by [@py4mac](https://github.com/py4mac) with `MqttPublish` & `MqttPublish`
->- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr`
+>- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr` (update 2022/10/10: these two helpers has been removed)
 >- `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
 >- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
 >- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
@@ -883,67 +883,6 @@ func OnExit() {
 	hf.Log("Exit Error: " + hf.GetExitError())
 	hf.Log("Exit Code: " + hf.GetExitCode())
 }
-```
-
-## Helpers (for the wasm modules)
-
-Handling Json with TinyGo is not straight forward (but not impossible).
-If your use case is very simple (a Json string without nested object or array) you can use:
-
-- `flatjson.StrToMap(flatJsonStr string) map[string]interface{}`: get a flat json string (no nested obj) and return a map
-- `flatjson.MapToStr(jsonMap map[string]interface{}) string`: get a flat json map and return a json string
-
-*Example:*
-```golang
-package main
-
-import (
-    "github.com/bots-garden/capsule/capsulemodule/flatjson"
-    hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
-    "strconv"
-)
-
-func main() {
-    hf.SetHandleHttp(Handle)
-}
-
-func Handle(request hf.Request) (response hf.Response, errResp error) {
-
-    jsonMap := flatjson.StrToMap(request.Body)
-
-    author := jsonMap["author"].(string)
-    age := jsonMap["age"].(int)
-    weight := jsonMap["weight"].(float64)
-    isHuman := jsonMap["human"].(bool)
-    message := jsonMap["message"].(string)
-
-    hf.Log("👋 " + message + " by " + author + " 😄")
-    hf.Log("👋 age: " + strconv.Itoa(age))
-    hf.Log("👋 weight: " + strconv.FormatFloat(weight, 'f', 6, 64))
-
-    if isHuman {
-        hf.Log("I'm not a 🤖")
-    }
-
-    headersResp := map[string]string{
-        "Content-Type": "application/json; charset=utf-8",
-    }
-
-    responseMap := map[string]interface{}{
-        "message": "👋 hey! What's up?",
-        "author":  "Bob",
-    }
-
-    return hf.Response{Body: flatjson.MapToStr(responseMap), Headers: headersResp}, nil
-}
-```
-
-*Call the function:*
-```bash
-curl -v -X POST \
-  http://localhost:7070 \
-  -H 'content-type: application/json; charset=utf-8' \
-  -d '{"message": "TinyGo 💚💜 wasm", "author": "@k33g", "text":"this is a text", "age":42, "human": true, "weight": 100.5}'
 ```
 
 ## Capsule FaaS (experimental)
