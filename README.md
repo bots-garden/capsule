@@ -7,8 +7,8 @@
 # Capsule: the nano (wasm) functions runner
 
 > - Issues: https://github.com/bots-garden/capsule/issues
-> - Last release: `v0.2.7 🦚 [peacock]`
-> - Dev release: `v0.2.8 TBD` *🚧 in progress*
+> - Last release: `v0.2.8 🦤 [dodo]`
+> - Dev release: `v0.2.9 TBD` *🚧 in progress*
 
 ## What is **Capsule**?
 
@@ -27,7 +27,7 @@
 Before executing or running a function, you need to install the last release of **Capsule**:
 
 ```bash
-CAPSULE_VERSION="v0.2.7"
+CAPSULE_VERSION="v0.2.8"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 # To get the developement version you can use CAPSULE_VERSION="main"
 ```
@@ -51,7 +51,7 @@ MESSAGE="👋 Hello World 🌍" capsule \
   -httpPort=8080
 ```
 
-> You can download the appropriate release of **Capsule** here: https://github.com/bots-garden/capsule/releases/tag/v0.2.7 (`v0.2.7 🦚 [peacock]`)
+> You can download the appropriate release of **Capsule** here: https://github.com/bots-garden/capsule/releases/tag/v0.2.8 (`v0.2.8 🦤 [dodo]`)
 
 ### Using the Capsule Docker image
 > The documentation is a wip 🚧
@@ -63,7 +63,7 @@ This image will be used to deploy Capsule to CaaS or Kubernetes. You can use it 
 docker run \
   -p 8080:8080 \
   -e MESSAGE="👋 Hello World 🌍" \
-  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.7 \
+  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.8 \
   /capsule \
   -wasm=./app/index.wasm \
   -mode=http \
@@ -87,7 +87,7 @@ To write and build wasm function for Capsule, you need to install GoLang and Tin
 ### Install Capsule Builder
 
 ```bash
-CAPSULE_BUILDER_VERSION="v0.0.0"
+CAPSULE_BUILDER_VERSION="v0.0.2"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule-function-builder/${CAPSULE_BUILDER_VERSION}/install-capsule-builder.sh | bash
 ```
 
@@ -118,6 +118,7 @@ capsule \
 
 ## What's new
 
+- `v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin).
 - `v0.2.7`:
     - The FaaS components are externalized, now, this project is **only** for the **Capsule Runner**
     - "Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)

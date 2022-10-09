@@ -9,9 +9,9 @@ replace (
 )
 
 require (
-	github.com/bots-garden/capsule/commons v0.2.6
-	github.com/bots-garden/capsule/mqttconn v0.0.0-20221008083118-2753339a260f
-	github.com/bots-garden/capsule/natsconn v0.0.0-20221008083118-2753339a260f
+	github.com/bots-garden/capsule/commons v0.2.7
+	github.com/bots-garden/capsule/mqttconn v0.0.0-20221008165930-a5225539ff83
+	github.com/bots-garden/capsule/natsconn v0.0.0-20221008165930-a5225539ff83
 	github.com/couchbase/gocb/v2 v2.5.3
 	github.com/eclipse/paho.mqtt.golang v1.4.1
 	github.com/gin-gonic/gin v1.8.1
@@ -38,7 +38,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.15.9 // indirect
+	github.com/klauspost/compress v1.15.11 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20220913051719-115f729f3c8c // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
