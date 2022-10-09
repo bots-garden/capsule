@@ -79,10 +79,8 @@ func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
         if commons.IsErrorString(bodyStr) {
             return SendErrorMessage(bodyStr, headers, c)
         } else if IsBodyString(bodyStr) {
-            fmt.Println("🖐 SendBodyMessage")
             return SendBodyMessage(bodyStr, headers, c)
         } else {
-            fmt.Println("🖐 c.String")
             c.Status(http.StatusOK)
             return c.SendString(bodyStr)
         }
