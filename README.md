@@ -29,7 +29,6 @@ Before executing or running a function, you need to install the last release of 
 ```bash
 CAPSULE_VERSION="v0.2.8"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
-# To get the developement version you can use CAPSULE_VERSION="main"
 ```
 > The script will install capsule in `$HOME/.local/bin`
 
