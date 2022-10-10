@@ -117,7 +117,7 @@ capsule \
 
 ## What's new
 
-- `v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin).
+- `v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
 - `v0.2.7`:
     - The FaaS components are externalized, now, this project is **only** for the **Capsule Runner**
     - "Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)
