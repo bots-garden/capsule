@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Developer guide - Capsule</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Developer guide";
+        var mkdocs_page_input_path = "dev-guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/rust.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/golang.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/bash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/javascript.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Capsule
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Developer guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#first-cli-function">First CLI function</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#first-http-function">First HTTP function</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#onload-function">OnLoad function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#onexit-function">OnExit function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#getexiterror-and-getexitcode-function">GetExitError and GetExitCode function</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#remote-loading-of-the-wasm-module">Remote loading of the wasm module</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-request">GET Request</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#first-nats-function">First Nats function</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#nats-server">NATS Server</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#nats-client">NATS Client</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#run-capsule-as-a-nats-subscriber">Run Capsule as a NATS subscriber:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nats-function">NATS function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#capsule-nats-publisher">Capsule NATS publisher</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#request-and-reply">Request and Reply</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#first-mqtt-function">First MQTT function</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#requirements_1">Requirements</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#mqtt-server">MQTT Server</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#run-capsule-as-a-mqtt-subscriber">Run Capsule as a MQTT subscriber:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mqtt-function">MQTT function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#capsule-mqtt-publisher">Capsule MQTT publisher</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../host-functions/">Host functions</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tooling/">Tooling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">Refs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../capsule-faas/">Capsule FaaS</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Capsule</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Developer guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="developer-guide">Developer Guide</h1>
+<h2 id="first-cli-function">First CLI function</h2>
+<p>Create a <code>go.mod</code> file: (<code>go mod init cli-say-hello</code>)</p>
+<pre><code>module cli-say-hello
+
+go 1.18
+</code></pre>
+<p>Install the Capsule dependencies:</p>
+<pre><code class="language-bash">go get github.com/bots-garden/capsule/capsulemodule/hostfunctions
+</code></pre>
+<p>Create a <code>hello.go</code> file:</p>
+<pre><code class="language-go">package main
+
+import hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+
+// main is required.
+func main() {
+    hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+    var err error
+    for _, param := range params {
+        hf.Log(&quot;- parameter is: &quot; + param)
+    }
+
+    ret := &quot;The first parameter is: &quot; + params[0]
+
+    return ret, err // err = nil
+}
+</code></pre>
+<blockquote>
+<ul>
+<li><code>hf.SetHandle(Handle)</code> defines the called wasm function</li>
+<li><code>hf.Log(string)</code> prints a value</li>
+</ul>
+</blockquote>
+<p>Build the wasm module:</p>
+<pre><code class="language-bash">tinygo build -o hello.wasm -scheduler=none --no-debug -target wasi ./hello.go
+</code></pre>
+<p>Execute the <code>Handle</code> function:</p>
+<pre><code class="language-bash">./capsule \
+   -wasm=./hello.wasm \
+   -mode=cli \
+   &quot;👋 hello world 🌍🎃&quot; 1234 &quot;Bob Morane&quot;
+</code></pre>
+<blockquote>
+<ul>
+<li><code>-wasm</code> flag: the path to the wasm file</li>
+<li><code>-mode</code> execution mode</li>
+</ul>
+</blockquote>
+<p><em>output:</em></p>
+<pre><code class="language-bash">- parameter is: 👋 hello world 🌍🎃
+- parameter is: 1234
+- parameter is: Bob Morane
+The first parameter is: 👋 hello world 🌍🎃
+</code></pre>
+<h2 id="first-http-function">First HTTP function</h2>
+<p>Create a <code>go.mod</code> file: (<code>go mod init http-say-hello</code>)</p>
+<pre><code>module http-say-hello
+
+go 1.18
+</code></pre>
+<p>To serve the function through http, you need to change the signature of the <code>Handle</code> function:</p>
+<pre><code class="language-golang">package main
+
+import hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+
+// main is required.
+func main() {
+    hf.SetHandleHttp(Handle)
+}
+
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+    hf.Log(&quot;📝 Body: &quot; + request.Body)
+
+    // Read the request headers
+    hf.Log(&quot;Content-Type: &quot; + request.Headers[&quot;Content-Type&quot;])
+    hf.Log(&quot;Content-Length: &quot; + request.Headers[&quot;Content-Length&quot;])
+    hf.Log(&quot;User-Agent: &quot; + request.Headers[&quot;User-Agent&quot;])
+
+    // Read the MESSAGE environment variable
+    envMessage, err := hf.GetEnv(&quot;MESSAGE&quot;)
+    if err != nil {
+        hf.Log(&quot;😡 &quot; + err.Error())
+    } else {
+        hf.Log(&quot;Environment variable: &quot; + envMessage)
+    }
+
+    // Set the response content type and add a message header
+    headersResp := map[string]string{
+        &quot;Content-Type&quot;: &quot;application/json; charset=utf-8&quot;,
+        &quot;Message&quot;:      &quot;👋 hello world 🌍&quot;,
+    }
+
+    jsonResponse := `{&quot;message&quot;: &quot;hey people!&quot;}`
+
+    return hf.Response{Body: jsonResponse, Headers: headersResp}, err
+}
+</code></pre>
+<blockquote>
+<ul>
+<li><code>hf.SetHandleHttp(Handle)</code> defines the called wasm function</li>
+<li><code>hf.Log(string)</code> prints a value</li>
+<li><code>hf.GetEnv("MESSAGE")</code> get the value of the <code>MESSAGE</code> environment variable</li>
+</ul>
+</blockquote>
+<p>Build the wasm module:</p>
+<pre><code class="language-bash">tinygo build -o hello.wasm -scheduler=none --no-debug -target wasi ./hello.go
+</code></pre>
+<p>Serve the <code>Handle</code> function:</p>
+<pre><code class="language-bash">export MESSAGE=&quot;🖐 good morning 😄&quot;
+./capsule \
+   -wasm=./hello.wasm \
+   -mode=http \
+   -httpPort=8080
+</code></pre>
+<p>Call the <code>Handle</code> function:</p>
+<pre><code class="language-bash">curl -v -X POST \
+  http://localhost:8080 \
+  -H 'content-type: application/json; charset=utf-8' \
+  -d '{&quot;message&quot;: &quot;TinyGo 💚 wasm&quot;}'
+</code></pre>
+<p><em>request output:</em></p>
+<pre><code class="language-bash">&gt; POST / HTTP/1.1
+&gt; Host: localhost:8080
+&gt; User-Agent: curl/7.79.1
+&gt; Accept: */*
+&gt; content-type: application/json; charset=utf-8
+&gt; Content-Length: 31
+&gt;
+* Mark bundle as not supporting multiuse
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: application/json; charset=utf-8
+&lt; Message: 👋 hello world 🌍
+&lt; Date: Sat, 30 Jul 2022 19:17:28 GMT
+&lt; Content-Length: 26
+&lt;
+{&quot;message&quot;:&quot;hey people!&quot;}
+</code></pre>
+<p><em>log server output:</em></p>
+<pre><code class="language-bash">📝 body: {&quot;message&quot;:&quot;TinyGo 💚 wasm&quot;}
+Content-Type: application/json; charset=utf-8
+Content-Length: 31
+User-Agent: curl/7.79.1
+Environment variable: 🖐 good morning 😄
+</code></pre>
+<h3 id="onload-function">OnLoad function</h3>
+<p>If you add an <code>OnLoad</code> exported function to the module, it will be executed at the start of the HTTP launcher (capsule).</p>
+<blockquote>
+<p><em>the <code>main</code> function will be executed too</em></p>
+</blockquote>
+<pre><code class="language-golang">//export OnLoad
+func OnLoad() {
+    hf.Log(&quot;👋 from the OnLoad function&quot;)
+}
+</code></pre>
+<blockquote>
+<p>It can be useful to register your wasm service to a backend (Redis, CouchBase, ...)</p>
+</blockquote>
+<h3 id="onexit-function">OnExit function</h3>
+<p>If you add an <code>OnExit</code> exported function to the module, it will be executed when you stop the HTTP launcher (capsule).</p>
+<blockquote>
+<p><em>the <code>main</code> function will be executed too</em></p>
+</blockquote>
+<pre><code class="language-golang">//export OnExit
+func OnExit() {
+    hf.Log(&quot;👋 from the OnExit function&quot;)
+}
+</code></pre>
+<blockquote>
+<p>It can be useful to unregister your wasm service from a backend (Redis, CouchBase, ...)</p>
+</blockquote>
+<h3 id="getexiterror-and-getexitcode-function">GetExitError and GetExitCode function</h3>
+<blockquote>
+<p>🖐🚧 it's a work in progress (it's not implemented entirely)</p>
+</blockquote>
+<pre><code class="language-golang">//export OnExit
+func OnExit() {
+    hf.Log(&quot;👋🤗 have a nice day&quot;)
+    hf.Log(&quot;Exit Error: &quot; + hf.GetExitError())
+    hf.Log(&quot;Exit Code: &quot; + hf.GetExitCode())
+}
+</code></pre>
+<h2 id="remote-loading-of-the-wasm-module">Remote loading of the wasm module</h2>
+<p>You can download the wasm module from a remote location before executing it:</p>
+<p>For example, provide the wasm file with an HTTP server, run this command at the root of your project:</p>
+<pre><code class="language-bash">python3 -m http.server 9090
+</code></pre>
+<blockquote>
+<p>Now you can download the wasm file with this url: http://localhost:9090/hello.wasm</p>
+</blockquote>
+<p>Serve the <code>Handle</code> function:</p>
+<pre><code class="language-bash">export MESSAGE=&quot;🖐 good morning 😄&quot;
+./capsule \
+   -url=http://localhost:9090/hello.wasm \
+   -wasm=./tmp/hello.wasm \
+   -mode=http \
+   -httpPort=8080
+</code></pre>
+<blockquote>
+<ul>
+<li><code>-url</code> flag: the download url</li>
+<li><code>-wasm</code> flag: the path where to save the wasm file</li>
+</ul>
+</blockquote>
+<h2 id="get-request">GET Request</h2>
+<p><strong>Capsule</strong> accept the <code>GET</code> requests, so you can serve, for example, HTML:</p>
+<pre><code class="language-golang">package main
+
+import hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+
+// main is required.
+func main() {
+    hf.SetHandleHttp(Handle)
+}
+
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+    html := `
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Wasm is fantastic 😍&lt;/title&gt;
+        &lt;/head&gt;
+
+        &lt;body&gt;
+            &lt;h1&gt;👋 Hello World 🌍&lt;/h1&gt;
+            &lt;h2&gt;Served with 💜 with Capsule 💊&lt;/h2&gt;
+        &lt;/body&gt;
+
+    &lt;/html&gt;
+    `
+
+    headersResp := map[string]string{
+        &quot;Content-Type&quot;: &quot;text/html; charset=utf-8&quot;,
+    }
+
+    return hf.Response{Body: html, Headers: headersResp}, nil
+}
+</code></pre>
+<p>Build the wasm module:</p>
+<pre><code class="language-bash">tinygo build -o hello.wasm -scheduler=none --no-debug -target wasi ./hello.go
+</code></pre>
+<p>Serve the <code>Handle</code> "function page":</p>
+<pre><code class="language-bash">./capsule \
+   -wasm=./hello.wasm \
+   -mode=http \
+   -httpPort=8080
+</code></pre>
+<p>Now, you can open http://localhost:8080 with your browser or run a curl request:</p>
+<pre><code class="language-bash">curl http://localhost:8080
+</code></pre>
+<h2 id="first-nats-function">First Nats function</h2>
+<blockquote>
+<p>🖐🚧 The NAT integration with <strong>Capsule</strong> is a work in progress and the functions are subject to change</p>
+</blockquote>
+<p>NATS is an open-source messaging system.</p>
+<blockquote>
+<ul>
+<li>About NATS: https://nats.io/ and https://docs.nats.io/</li>
+<li>Nats Overview: https://docs.nats.io/nats-concepts/overview</li>
+</ul>
+</blockquote>
+<h3 id="requirements">Requirements</h3>
+<h4 id="nats-server">NATS Server</h4>
+<p>You need to install and run a NATS server: https://docs.nats.io/running-a-nats-service/introduction/installation.
+Otherwise, I created a Virtual Machine for this; If you have installed <a href="https://multipass.run/">Multipass</a>, go to the <code>./nats/vm-nats</code> directory of this project. I created some scripts for my experiments:</p>
+<ul>
+<li><code>create-vm.sh</code> <em>create the multipass VM, the settings of the VM are stored in the <code>vm.nats.config</code></em></li>
+<li><code>01-install-nats-server.sh</code> <em>install the NATS server inside the VM</em></li>
+<li><code>02-start-nats-server.sh</code> <em>start the NATS server</em></li>
+<li><code>03-stop-nats-server.sh</code> <em>stop the NATS server</em></li>
+<li><code>stop-vm.sh</code> <em>stop the VM</em></li>
+<li><code>start-vm.sh</code> <em>start the VM</em></li>
+<li><code>destroy-vm.sh</code> <em>delete the VM</em></li>
+<li><code>shell-vm.sh</code> <em>SSH connect to the VM</em></li>
+</ul>
+<h4 id="nats-client">NATS Client</h4>
+<p>You need a NATS client to publish messages. You can find sample of Go and Node.js NATS clients in the <code>./nats/clients</code>.</p>
+<h3 id="run-capsule-as-a-nats-subscriber">Run <strong>Capsule</strong> as a NATS subscriber:</h3>
+<pre><code class="language-bash">capsule \
+   -wasm=../wasm_modules/capsule-nats-subscriber/hello.wasm \
+   -mode=nats \
+   -natssrv=nats.devsecops.fun:4222 \
+   -subject=ping
+</code></pre>
+<blockquote>
+<ul>
+<li>use the "NATS mode": <code>-mode=nats</code></li>
+<li>define the NATS subject: <code>-subject=&lt;subject_name&gt;</code></li>
+<li>define the address of the NATS server: <code>-natssrv=&lt;nats_server:port&gt;</code></li>
+</ul>
+</blockquote>
+<h3 id="nats-function">NATS function</h3>
+<p>A <strong>Capsule</strong> NATS function is a subscription to a subject. <strong>Capsule</strong> is listening on a subject(like a MQTT topic) and execute a function every time a message is posted on the subject:</p>
+<pre><code class="language-golang">package main
+
+import (
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+)
+
+func main() {
+    hf.OnNatsMessage(Handle) // define the triggered function when a message &quot;arrives&quot; on the subject/topic
+}
+
+// at every message on the subject channel, the `Handle` function is executed
+func Handle(params []string) {
+    // send a message to another subject
+    _, err := hf.NatsPublish(&quot;notify&quot;, &quot;it's a wasm module here&quot;)
+
+    if err != nil {
+        hf.Log(&quot;😡 ouch something bad is happening&quot;)
+        hf.Log(err.Error())
+    }
+}
+</code></pre>
+<h3 id="capsule-nats-publisher">Capsule NATS publisher</h3>
+<blockquote>
+<p>Publish NATS messages from capsule</p>
+</blockquote>
+<p>You can use a <strong>WASM Capsule module</strong> to publish NATS messages, even if <strong>Capsule</strong> is not started in "nats" mode, for example from a <strong>WASM CLI Capsule module</strong>:</p>
+<pre><code class="language-golang">package main
+
+import (
+    &quot;errors&quot;
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+    &quot;strings&quot;
+)
+
+func main() {
+    hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+    var errs []string
+
+    // a new connection is created at every call/publish
+    _, err1stMsg := hf.NatsConnectPublish(&quot;nats.devsecops.fun:4222&quot;, &quot;ping&quot;, &quot;🖐 Hello from WASM with Nats 💜&quot;)
+    _, err2ndMsg := hf.NatsConnectPublish(&quot;nats.devsecops.fun:4222&quot;, &quot;notify&quot;, &quot;👋 Hello World 🌍&quot;)
+
+    if err1stMsg != nil {
+        errs = append(errs, err1stMsg.Error())
+    }
+    if err2ndMsg != nil {
+        errs = append(errs, err2ndMsg.Error())
+    }
+
+    return &quot;NATS Rocks!&quot;, errors.New(strings.Join(errs, &quot;|&quot;))
+}
+</code></pre>
+<blockquote>
+<p>In this use case, you need to define the NATS server and create a connection</p>
+</blockquote>
+<h3 id="request-and-reply">Request and Reply</h3>
+<p>A NATS "publisher" can make a request to a NATS "subscriber" and wait for an answer</p>
+<pre><code class="language-golang">package main
+
+import (
+    &quot;errors&quot;
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+    &quot;strings&quot;
+)
+
+func main() {
+    hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+
+    // Publish and wait for an answer; 1 is the timeout in seconds
+    res, err := hf.NatsConnectRequest(&quot;nats.devsecops.fun:4222&quot;, &quot;notify&quot;, &quot;👋 Hello World 🌍&quot;, 1)
+
+    if err != nil {
+        hf.Log(&quot;🔴&quot; + err.Error())
+    } else {
+        // Display the answer
+        hf.Log(&quot;🔵&quot; + res)
+    }
+
+    return &quot;NATS Rocks!&quot;, err
+}
+</code></pre>
+<p>A NATS "subscriber" can reply to a request received on its subject</p>
+<pre><code class="language-golang">package main
+
+import (
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+)
+
+func main() {
+    hf.OnNatsMessage(Handle)
+}
+
+func Handle(params []string) {
+
+    hf.Log(&quot;Message on subject: &quot; + hf.NatsGetSubject() + &quot;, 🎉 message: &quot; + params[0])
+
+    // reply to the message on the current subject; 10 is the timeout in seconds
+    _, _ = hf.NatsReply(&quot;Hey! What's up&quot;, 10)
+
+}
+</code></pre>
+<h2 id="first-mqtt-function">First MQTT function</h2>
+<blockquote>
+<p>🖐🚧 The MQTT integration with <strong>Capsule</strong> is a work in progress and the functions are subject to change</p>
+</blockquote>
+<p>MQTT is a standard for IOT message.</p>
+<blockquote>
+<ul>
+<li>About MQTT: https://mqtt.org/</li>
+</ul>
+</blockquote>
+<h3 id="requirements_1">Requirements</h3>
+<h4 id="mqtt-server">MQTT Server</h4>
+<p>You need to install and run a MQTT server. To do so, go to the <code>./mqtt</code> directory of this project and run the docker-compose file</p>
+<h3 id="run-capsule-as-a-mqtt-subscriber">Run <strong>Capsule</strong> as a MQTT subscriber:</h3>
+<pre><code class="language-bash">capsule \
+   -wasm=../wasm_modules/capsule-mqtt-subscriber/hello.wasm \
+   -mode=mqtt \
+   -mqttsrv=127.0.0.1:1883 \
+   -topic=topic/sensor0 \
+   -clientId=sensor
+</code></pre>
+<blockquote>
+<ul>
+<li>use the "MQTT mode": <code>-mode=mqtt</code></li>
+<li>define the MQTT topic: <code>-topic=&lt;topic_name&gt;</code></li>
+<li>define the MQTT clientId: <code>-clientId=&lt;clientId&gt;</code></li>
+<li>define the address of the MQTT server: <code>-mqttsrv=&lt;mqtt_server:port&gt;</code></li>
+</ul>
+</blockquote>
+<h3 id="mqtt-function">MQTT function</h3>
+<p>A <strong>Capsule</strong> MQTT function is a subscription to a subject. <strong>Capsule</strong> is listening on a topic and execute a function every time a message is posted on the subject:</p>
+<pre><code class="language-golang">package main
+
+import (
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+)
+
+func main() {
+    hf.OnMqttMessage(Handle) // define the triggered function when a message &quot;arrives&quot; on the topic
+}
+
+// at every message on the subject channel, the `Handle` function is executed
+func Handle(params []string) {
+    // send a message to another subject
+    _, err := hf.MqttPublish(&quot;topic/reply&quot;, &quot;it's a wasm module here&quot;)
+
+    if err != nil {
+        hf.Log(&quot;😡 ouch something bad is happening&quot;)
+        hf.Log(err.Error())
+    }
+}
+</code></pre>
+<h3 id="capsule-mqtt-publisher">Capsule MQTT publisher</h3>
+<blockquote>
+<p>Publish MQTT messages from capsule</p>
+</blockquote>
+<p>You can use a <strong>WASM Capsule module</strong> to MQTT messages, even if <strong>Capsule</strong> is not started in "mqtt" mode, for example from a <strong>WASM CLI Capsule module</strong>:</p>
+<pre><code class="language-golang">package main
+
+import (
+    &quot;errors&quot;
+    hf &quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;
+    &quot;strings&quot;
+)
+
+func main() {
+    hf.SetHandle(Handle)
+}
+
+func Handle(params []string) (string, error) {
+    var errs []string
+
+    // a new connection is created at every call/publish
+    _, err1stMsg := hf.MqttConnectPublish(&quot;127.0.0.1:1883&quot;, &quot;sensor&quot;, &quot;topic/sensor1&quot;, &quot;🖐 Hello from WASM with MQTT 💜&quot;)
+    _, err2ndMsg := hf.MqttConnectPublish(&quot;127.0.0.1:1883&quot;, &quot;sensor&quot;, &quot;topic/sensor2&quot;, &quot;👋 Hello World 🌍&quot;)
+
+    if err1stMsg != nil {
+        errs = append(errs, err1stMsg.Error())
+    }
+    if err2ndMsg != nil {
+        errs = append(errs, err2ndMsg.Error())
+    }
+
+    return &quot;MQTT Rocks!&quot;, errors.New(strings.Join(errs, &quot;|&quot;))
+}
+</code></pre>
+<blockquote>
+<p>In this use case, you need to define the MQTT server and create a connection</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../install/" class="btn btn-neutral float-left" title="Install"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../host-functions/" class="btn btn-neutral float-right" title="Host functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../install/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../host-functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

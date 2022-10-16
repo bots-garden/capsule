@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Capsule</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/rust.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/golang.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/bash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/javascript.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Capsule
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-capsule">What is Capsule?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#whats-new">What's new</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="install/">Install</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="dev-guide/">Developer guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="host-functions/">Host functions</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="tooling/">Tooling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="references/">Refs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="capsule-faas/">Capsule FaaS</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Capsule</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="capsule-the-nano-wasm-functions-runner">Capsule: the nano (wasm) functions runner</h1>
+<blockquote>
+<p>🚧 This is a wip</p>
+</blockquote>
+<ul>
+<li>Issues: <a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></li>
+<li>Last release: <code>v0.2.8 🦤 [dodo]</code></li>
+<li>Dev release: <code>v0.2.9 🦜 [parrot]</code> <em>🚧 in progress</em></li>
+</ul>
+<h2 id="what-is-capsule">What is <strong>Capsule</strong>?</h2>
+<p><strong>Capsule</strong> is a WebAssembly function launcher(runner). It means that, with <strong>Capsule</strong> you can:</p>
+<ul>
+<li>From your terminal, execute a function of a wasm module (the <strong>"CLI mode"</strong>)</li>
+<li>Serving a function of a wasm module through http (the <strong>"HTTP mode"</strong>)</li>
+<li>Serving a function of a wasm module through NATS (the <strong>"NATS mode"</strong>), in this case <strong>Capsule</strong> is used as a NATS subscriber and can reply on a subject(topic)</li>
+<li>Serving a function of a wasm module through MQTT (the <strong>"MQTT mode"</strong>), in this case <strong>Capsule</strong> is used as a MQTT subscriber and can reply on a subject(topic)</li>
+</ul>
+<blockquote>
+<ul>
+<li><strong>Capsule</strong> is developed with GoLang and thanks to the 💜 <strong><a href="https://github.com/tetratelabs/wazero">Wazero</a></strong> project</li>
+<li>The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)</li>
+</ul>
+</blockquote>
+<h2 id="whats-new">What's new</h2>
+<ul>
+<li><code>v0.2.8</code>: Capsule uses now <a href="https://github.com/gofiber/fiber">Fiber</a> instead <a href="https://github.com/gin-gonic/gin">Gin</a>. The size of the Capsule Runner Docker image is now 16.8M!</li>
+<li><code>v0.2.7</code>:<ul>
+<li>The FaaS components are externalized, now, this project is <strong>only</strong> for the <strong>Capsule Runner</strong></li>
+<li>"Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)</li>
+<li><strong>cabu</strong> (or <strong>capsule-builder</strong>) (https://github.com/bots-garden/capsule-function-builder): a CLI using a specific Docker image allowing:<ul>
+<li>the creation of a wasm function project (from templates)</li>
+<li>the build of the wasm function, without installing anything (TinyGo is embedded in the image) (https://github.com/bots-garden/capsule-function-builder)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>v0.2.6</code>: Wazero: updates to <code>1.0.0-pre.2</code> by <a href="https://github.com/codefromthecrypt">@codefromthecrypt</a> + a logo</li>
+<li><code>v0.2.5</code>: Add MQTT support by <a href="https://github.com/py4mac">@py4mac</a> with <code>MqttPublish</code> &amp; <code>MqttPublish</code></li>
+<li><code>v0.2.4</code>: Add 2 wasm helper functions <code>flatjson.StrToMap</code> and <code>flatjson.MapToStr</code> (update 2022/10/10: these two helpers has been removed)</li>
+<li><code>v0.2.3</code>: NATS support, 2 new functions: <code>NatsReply</code> and <code>NatsConnectRequest</code></li>
+<li><code>v0.2.2</code>: like <code>0.2.1</code> with fixed modules dependencies, and tag name start with a <code>v</code></li>
+<li><code>0.2.1</code>: NATS support (1st stage) <code>OnNatsMessage</code>, <code>NatsPublish</code>, <code>NatsConnectPublish</code>, <code>NatsConnectPublish</code>, <code>NatsGetSubject</code>, <code>NatsGetServer</code></li>
+<li><code>0.2.0</code>: <code>OnLoad</code> &amp; <code>OnExit</code> functions + Memory cache host functions (<code>MemorySet</code>, <code>MemoryGet</code>, <code>MemoryKeys</code>)</li>
+<li><code>0.1.9</code>: Add <code>Request</code> and <code>Response</code> types (for the Handle function)</li>
+<li><code>0.1.8</code>: Redis host functions: add the KEYS command (<code>RedisKeys(pattern string)</code>)</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="install/" class="btn btn-neutral float-right" title="Install">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="install/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.4.1
+Build Date UTC : 2022-10-16 12:35:26.797011+00:00
+-->

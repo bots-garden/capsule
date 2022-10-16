@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Host functions - Capsule</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Host functions";
+        var mkdocs_page_input_path = "host-functions.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/rust.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/golang.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/bash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/javascript.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Capsule
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer guide</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Host functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#print-a-message">Print a message</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#read-and-write-files">Read and Write files</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#read-value-of-the-environment-variables">Read value of the environment variables</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#make-http-requests">Make HTTP requests</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#use-memory-cache">Use memory cache</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#make-redis-queries">Make Redis queries</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#make-couchbase-n1ql-query">Make CouchBase N1QL Query</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#nats">Nats</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#error-management">Error Management</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tooling/">Tooling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">Refs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../capsule-faas/">Capsule FaaS</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Capsule</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Host functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="host-functions">Host functions</h1>
+<p><strong>Capsule</strong> offers some capabilities to the wasm modules by providing some "host functions":</p>
+<h2 id="print-a-message">Print a message</h2>
+<pre><code class="language-golang">hf.Log(&quot;👋 Hello World 🌍&quot;)
+</code></pre>
+<h2 id="read-and-write-files">Read and Write files</h2>
+<pre><code class="language-golang">txt, err := hf.ReadFile(&quot;about.txt&quot;)
+if err != nil {
+    hf.Log(err.Error())
+}
+hf.Log(txt)
+
+newFile, err := hf.WriteFile(&quot;hello.txt&quot;, &quot;👋 HELLO WORLD 🌍&quot;)
+if err != nil {
+    hf.Log(err.Error())
+}
+hf.Log(newFile)
+</code></pre>
+<h2 id="read-value-of-the-environment-variables">Read value of the environment variables</h2>
+<pre><code class="language-golang">message, err := hf.GetEnv(&quot;MESSAGE&quot;)
+if err != nil {
+    hf.Log(err.Error())
+} else {
+    hf.Log(&quot;MESSAGE=&quot; + message)
+}
+</code></pre>
+<h2 id="make-http-requests">Make HTTP requests</h2>
+<p><em><code>GET</code></em></p>
+<pre><code class="language-golang">ret, err := hf.Http(&quot;https://httpbin.org/get&quot;, &quot;GET&quot;, headers, &quot;&quot;)
+if err != nil {
+    hf.Log(&quot;😡 error:&quot; + err.Error())
+} else {
+    hf.Log(&quot;📝result: &quot; + ret)
+}
+</code></pre>
+<p><em><code>POST</code></em></p>
+<pre><code class="language-golang">headers := map[string]string{&quot;Accept&quot;: &quot;application/json&quot;, &quot;Content-Type&quot;: &quot;text/html; charset=UTF-8&quot;}
+
+ret, err := hf.Http(&quot;https://httpbin.org/post&quot;, &quot;POST&quot;, headers, &quot;👋 hello world 🌍&quot;)
+if err != nil {
+    hf.Log(&quot;😡 error:&quot; + err.Error())
+} else {
+    hf.Log(&quot;📝result: &quot; + ret)
+}
+</code></pre>
+<h2 id="use-memory-cache">Use memory cache</h2>
+<p><em><code>MemorySet</code></em></p>
+<pre><code class="language-golang">_, err := hf.MemorySet(&quot;message&quot;, &quot;🚀 hello is started&quot;)
+</code></pre>
+<p><em><code>MemoryGet</code></em></p>
+<pre><code class="language-golang">value, err := hf.MemoryGet(&quot;message&quot;)
+</code></pre>
+<p><em><code>MemoryKeys</code></em></p>
+<pre><code class="language-golang">keys, err := hf.MemoryKeys()
+// it will return an array of strings
+if err != nil {
+  hf.Log(err.Error())
+}
+
+for key, value := range keys {
+  hf.Log(key+&quot;:&quot;+value)
+}
+</code></pre>
+<h2 id="make-redis-queries">Make Redis queries</h2>
+<blockquote>
+<p>🚧 this is a work in progress</p>
+</blockquote>
+<p>You need to run <strong>Capsule</strong> with these two environment variables:</p>
+<pre><code class="language-bash">REDIS_ADDR=&quot;localhost:6379&quot;
+REDIS_PWD=&quot;&quot;
+</code></pre>
+<p><em><code>SET</code></em></p>
+<pre><code class="language-golang">// add a key, value
+res, err := hf.RedisSet(&quot;greetings&quot;, &quot;Hello World&quot;)
+if err != nil {
+    hf.Log(err.Error())
+} else {
+    hf.Log(&quot;Value: &quot; + res)
+}
+</code></pre>
+<p><em><code>GET</code></em></p>
+<pre><code class="language-golang">// read the value
+res, err := hf.RedisGet(&quot;greetings&quot;)
+if err != nil {
+    hf.Log(err.Error())
+} else {
+    hf.Log(&quot;Value: &quot; + res)
+}
+</code></pre>
+<p><em><code>KEYS</code></em></p>
+<pre><code class="language-golang">legion, err := hf.RedisKeys(&quot;bob*&quot;)
+if err != nil {
+    hf.Log(err.Error())
+}
+
+for _, bob := range legion {
+    hf.Log(bob)
+}
+</code></pre>
+<h2 id="make-couchbase-n1ql-query">Make CouchBase N1QL Query</h2>
+<p>You need to run <strong>Capsule</strong> with these four environment variables:</p>
+<pre><code class="language-bash">COUCHBASE_CLUSTER=&quot;couchbase://localhost&quot;
+COUCHBASE_USER=&quot;admin&quot;
+COUCHBASE_PWD=&quot;ilovepandas&quot;
+COUCHBASE_BUCKET=&quot;wasm-data&quot;
+</code></pre>
+<pre><code class="language-golang">bucketName, _ := hf.GetEnv(&quot;COUCHBASE_BUCKET&quot;)
+query := &quot;SELECT * FROM `&quot; + bucketName + &quot;`.data.docs&quot;
+
+jsonStringArray, err := hf.CouchBaseQuery(query)
+</code></pre>
+<h2 id="nats">Nats</h2>
+<p><em><code>NatsPublish(subject string, message string)</code></em>: publish a message on a subject</p>
+<pre><code class="language-golang">_, err := hf.NatsPublish(&quot;notify&quot;, &quot;it's a wasm module here&quot;)
+</code></pre>
+<blockquote>
+<p>You must use the <code>"nats"</code> mode of <strong>Capsule</strong> as the NATS connection is defined at the start of <strong>Capsule</strong> and shared with the WASM module:</p>
+</blockquote>
+<pre><code class="language-bash">capsule \
+ -wasm=../wasm_modules/capsule-nats-subscriber/hello.wasm \
+ -mode=nats \
+ -natssrv=nats.devsecops.fun:4222 \
+ -subject=ping
+</code></pre>
+<p><em><code>NatsReply(message string, timeout uint32)</code></em>: publish a message on the current subject and wait for an answer</p>
+<pre><code class="language-golang">_, err := hf.NatsReply(&quot;it's a wasm module here&quot;, 10)
+</code></pre>
+<blockquote>
+<p>You must use the <code>"nats"</code> mode of <strong>Capsule</strong> as the NATS connection and the subscription are defined at the start of <strong>Capsule</strong> and shared with the WASM module.</p>
+</blockquote>
+<p><em><code>NatsGetSubject()</code></em>: get the subject listened by the <strong>Capsule</strong> launcher</p>
+<pre><code class="language-golang">hf.Log(&quot;👂Listening on: &quot; + hf.NatsGetSubject())
+</code></pre>
+<p><em><code>NatsGetServer()</code></em>: get the connected NATS server</p>
+<pre><code class="language-golang">hf.Log(&quot;👋 NATS server: &quot; + hf.NatsGetServer())
+</code></pre>
+<p><em><code>NatsConnectPublish(server string, subject string, message string)</code></em>: connect to a NATS server and send a message on a subject</p>
+<pre><code class="language-golang">_, err := hf.NatsConnectPublish(&quot;nats.devsecops.fun:4222&quot;, &quot;ping&quot;, &quot;🖐 Hello from WASM with Nats 💜&quot;)
+</code></pre>
+<blockquote>
+<p>You can use this function with all the running modes of <strong>Capsule</strong></p>
+</blockquote>
+<p><em><code>NatsConnectPublish(server string, subject string, message string, timeout uint32)</code></em>: connect to a NATS server and send a message on a subject</p>
+<pre><code class="language-golang">answer, err := hf.NatsConnectRequest(&quot;nats.devsecops.fun:4222&quot;, &quot;notify&quot;, &quot;👋 Hello World 🌍&quot;, 1)
+</code></pre>
+<blockquote>
+<p>You can use this function with all the running modes of <strong>Capsule</strong></p>
+</blockquote>
+<h2 id="error-management">Error Management</h2>
+<blockquote>
+<p>🖐🖐🖐 🚧 it's a work in progress (it's not implemented entirely)</p>
+</blockquote>
+<p><em><code>GetExitError()</code> &amp; <code>GetExitCode</code></em>:</p>
+<pre><code class="language-golang">//export OnExit
+func OnExit() {
+    hf.Log(&quot;👋🤗 have a nice day&quot;)
+    hf.Log(&quot;Exit Error: &quot; + hf.GetExitError())
+    hf.Log(&quot;Exit Code: &quot; + hf.GetExitCode())
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../dev-guide/" class="btn btn-neutral float-left" title="Developer guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tooling/" class="btn btn-neutral float-right" title="Tooling">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../dev-guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../tooling/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
