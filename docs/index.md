@@ -2,6 +2,10 @@
 
 > 🚧 This is a wip
 
+- Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
+- Last release: `v0.2.8 🦤 [dodo]`
+- Dev release: `v0.2.9 🦜 [parrot]` *🚧 in progress*
+
 ## What is **Capsule**?
 
 **Capsule** is a WebAssembly function launcher(runner). It means that, with **Capsule** you can:
@@ -13,8 +17,6 @@
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
 > - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
-
-
 
 ## What's new
 
