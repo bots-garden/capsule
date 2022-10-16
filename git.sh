@@ -9,7 +9,6 @@ if [[ "$1" == "sample" ]]; then
   message="🏓 sample $2"
 fi
 
-
 if [[ "$1" == "init" ]]; then
   message="🎉 first commit $2"
 fi
@@ -33,7 +32,6 @@ fi
 if [[ "$1" == "start" ]]; then
   message="🚀 start $2"
 fi
-
 
 if [[ "$1" == "doc" ]]; then
   message="📝 update doc $2"
