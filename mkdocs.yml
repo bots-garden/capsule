@@ -1,0 +1,9 @@
+site_name: Capsule
+nav:
+    - Home: index.md
+    - Install: install.md
+    - Developer guide: dev-guide.md
+    - Host functions: host-functions.md
+    - Tooling: tooling.md
+    - Refs: references.md
+    - Capsule FaaS: capsule-faas.md
