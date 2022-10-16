@@ -7,3 +7,12 @@ nav:
     - Tooling: tooling.md
     - Refs: references.md
     - Capsule FaaS: capsule-faas.md
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - rust
+        - golang
+        - bash
+        - javascript
