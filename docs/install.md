@@ -3,7 +3,7 @@
 Before executing or running a function, you need to install the last release of **Capsule**:
 
 ```bash
-CAPSULE_VERSION="v0.2.8"
+export CAPSULE_VERSION="v0.2.8"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 ```
 > The script will install **Capsule** in `$HOME/.local/bin`
@@ -13,8 +13,8 @@ wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSIO
 - create the `$HOME/.local/bin` directory
 - add it to your path:
 ```bash
-export CAPSULE_PATH="$HOME/.local"
-export PATH="$CAPSULE_PATH/bin:$PATH"
+export CAPSULE_PATH="$HOME/.local/bin"
+export PATH="$CAPSULE_PATH:$PATH"
 ```
 
 > if you want to install Capsule somewhere else, override the `CAPSULE_PATH` variable (default value: `CAPSULE_PATH="$HOME/.local/bin"`)
