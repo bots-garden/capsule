@@ -6,7 +6,7 @@ Before executing or running a function, you need to install the last release of 
 CAPSULE_VERSION="v0.2.8"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 ```
-> The script will install capsule in `$HOME/.local/bin`
+> The script will install **Capsule** in `$HOME/.local/bin`
 
 🖐 **On macOS**:
 

@@ -1,38 +1,84 @@
 # Capsule: the nano (wasm) functions runner
 
-> 🚧 This is a wip
-
-- Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
-- Last release: `v0.2.8 🦤 [dodo]`
-- Dev release: `v0.2.9 🦜 [parrot]` *🚧 in progress*
-
 ## What is **Capsule**?
 
-**Capsule** is a WebAssembly function launcher(runner). It means that, with **Capsule** you can:
+**Capsule** is a **WebAssembly Function Runner**. It means that **Capsule** is both:
 
-- From your terminal, execute a function of a wasm module (the **"CLI mode"**)
-- Serving a function of a wasm module through http (the **"HTTP mode"**)
-- Serving a function of a wasm module through NATS (the **"NATS mode"**), in this case **Capsule** is used as a NATS subscriber and can reply on a subject(topic)
-- Serving a function of a wasm module through MQTT (the **"MQTT mode"**), in this case **Capsule** is used as a MQTT subscriber and can reply on a subject(topic)
+- An **HTTP server** that serves **WebAssembly functions**
+- A **NATS** subscriber and publisher (written with WebAssembly)
+- A **MQTT** subscriber and publisher (written with WebAssembly)
+- A **CLI**, you can simply execute a WASM function in a terminal
 
 > - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
-> - The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)
+> - The wasm modules are developed in GoLang and compiled with **[TinyGo](https://tinygo.org/)** 💜 (with the WASI specification)
+
+## What does a **WASM function** look like with Capsule?
+
+```golang
+package main
+
+import (
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+)
+
+func main() {
+
+	hf.SetHandleHttp(Handle)
+}
+
+func Handle(request hf.Request) (response hf.Response, errResp error) {
+
+	headersResp := map[string]string{
+		"Content-Type": "application/json; charset=utf-8",
+	}
+
+	jsondoc := `{"message": "👋 Hello World 🌍"}`
+
+	return hf.Response{Body: jsondoc, Headers: headersResp}, err
+}
+```
+
+## What are the **added values** of Capsule?
+
+### Capsule brings superpowers to the WASM functions
+
+Thanks to **host functions** provided by **Capsule**, the **WASM functions** can:
+
+| **Description**  | **Host function**  |
+|---|---|
+| Print a message to the console | `hf.Log(string)` |
+| Read files | `hf.ReadFile("about.txt")` |
+| Write files | `hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")`|
+| **Read value of the environment variables** | `hf.GetEnv("MESSAGE")` |
+| Make HTTP requests | `hf.Http("https://httpbin.org/post", "POST", headers, "👋 hello world 🌍")` |
+| Use memory cache (set) | `hf.MemorySet("message", "🚀 hello is started")` |
+|  | `hf.MemoryGet("message")` |
+| Make Redis queries | `hf.RedisSet("greetings", "Hello World")` |
+|  | `hf.RedisGet("greetings")` |
+|  | `hf.RedisKeys("bob*")` |
+| **Make CouchBase N1QL Query** | `jsonStringArray, err := hf.CouchBaseQuery(query)` |
+| **Use Nats** | `hf.NatsPublish("subject", "hello")` |
+| | `hf.NatsReply("it's a wasm module here", 10)` |
+| | `hf.NatsGetSubject()` |
+| | `hf.NatsGetServer()` |
+| | `hf.NatsConnectPublish("nats.devsecops.fun:4222", "subject", "🖐 Hello from WASM with Nats 💜")` |
+| | `hf.NatsConnectRequest("nats.devsecops.fun:4222", "subject", "👋 Hello World 🌍", 1)` |
+| **Use MQTT** | `hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic", "👋 Hello World 🌍")` |
+| | `hf.MqttGetTopic()` |
+| | `hf.MqttPublish("topic", "it's a wasm module here")` |
+| Manage Errors | *🖐 🚧 it's a work in progress* |
+| | `hf.GetExitError()` |
+| | `hf.GetExitCode()` |
+
+## Information
+
+| **Label**  | **Description**  |
+|---|---|
+| Issues        | [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)  |
+| Last release  | `v0.2.8 🦤 [dodo]`  |
+| Dev release   | `v0.2.9 🦜 [parrot]` *🚧 in progress*  |
+| Releases      | [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases) |
 
 ## What's new
 
-- `v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
-- `v0.2.7`:
-    - The FaaS components are externalized, now, this project is **only** for the **Capsule Runner**
-    - "Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)
-    - **cabu** (or **capsule-builder**) (https://github.com/bots-garden/capsule-function-builder): a CLI using a specific Docker image allowing:
-        - the creation of a wasm function project (from templates)
-        - the build of the wasm function, without installing anything (TinyGo is embedded in the image) (https://github.com/bots-garden/capsule-function-builder)
-- `v0.2.6`: Wazero: updates to `1.0.0-pre.2` by [@codefromthecrypt](https://github.com/codefromthecrypt) + a logo
-- `v0.2.5`: Add MQTT support by [@py4mac](https://github.com/py4mac) with `MqttPublish` & `MqttPublish`
-- `v0.2.4`: Add 2 wasm helper functions `flatjson.StrToMap` and `flatjson.MapToStr` (update 2022/10/10: these two helpers has been removed)
-- `v0.2.3`: NATS support, 2 new functions: `NatsReply` and `NatsConnectRequest`
-- `v0.2.2`: like `0.2.1` with fixed modules dependencies, and tag name start with a `v`
-- `0.2.1`: NATS support (1st stage) `OnNatsMessage`, `NatsPublish`, `NatsConnectPublish`, `NatsConnectPublish`, `NatsGetSubject`, `NatsGetServer`
-- `0.2.0`: `OnLoad` & `OnExit` functions + Memory cache host functions (`MemorySet`, `MemoryGet`, `MemoryKeys`)
-- `0.1.9`: Add `Request` and `Response` types (for the Handle function)
-- `0.1.8`: Redis host functions: add the KEYS command (`RedisKeys(pattern string)`)
+`v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
