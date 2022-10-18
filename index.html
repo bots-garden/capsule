@@ -1,199 +1,739 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
-      <link rel="shortcut icon" href="img/favicon.ico" />
-    <title>Capsule</title>
-    <link rel="stylesheet" href="css/theme.css" />
-    <link rel="stylesheet" href="css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
     
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Home";
-        var mkdocs_page_input_path = "index.md";
-        var mkdocs_page_url = null;
-      </script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.6">
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
-    <!--[if lt IE 9]>
-      <script src="js/html5shiv.min.js"></script>
-    <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/rust.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/golang.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/bash.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/javascript.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
-</head>
+    
+      
+        <title>Capsule</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
 
-<body class="wy-body-for-nav" role="document">
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="." class="icon icon-home"> Capsule
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#capsule-the-nano-wasm-functions-runner" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#what-is-capsule">What is Capsule?</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#whats-new">What's new</a>
-    </li>
-    </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="install/">Install</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="dev-guide/">Developer guide</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="host-functions/">Host functions</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="tooling/">Tooling</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="references/">Refs</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="capsule-faas/">Capsule FaaS</a>
-                </li>
-              </ul>
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Capsule" class="md-header__button md-logo" aria-label="Capsule" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Capsule
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
       </div>
     </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href=".">Capsule</a>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
         
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
       </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Home</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
               
-                <h1 id="capsule-the-nano-wasm-functions-runner">Capsule: the nano (wasm) functions runner</h1>
-<blockquote>
-<p>🚧 This is a wip</p>
-</blockquote>
-<ul>
-<li>Issues: <a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></li>
-<li>Last release: <code>v0.2.8 🦤 [dodo]</code></li>
-<li>Dev release: <code>v0.2.9 🦜 [parrot]</code> <em>🚧 in progress</em></li>
-</ul>
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Capsule" class="md-nav__button md-logo" aria-label="Capsule" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Capsule
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        Home
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-capsule" class="md-nav__link">
+    What is Capsule?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-a-wasm-function-look-like-with-capsule" class="md-nav__link">
+    What does a WASM function look like with Capsule?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-the-added-values-of-capsule" class="md-nav__link">
+    What are the added values of Capsule?
+  </a>
+  
+    <nav class="md-nav" aria-label="What are the added values of Capsule?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capsule-brings-superpowers-to-the-wasm-functions" class="md-nav__link">
+    Capsule brings superpowers to the WASM functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information" class="md-nav__link">
+    Information
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new" class="md-nav__link">
+    What's new
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dev-guide/" class="md-nav__link">
+        Developer guide
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions/" class="md-nav__link">
+        Host functions
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tooling/" class="md-nav__link">
+        Tooling
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cookbook/" class="md-nav__link">
+        CookBook
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="references/" class="md-nav__link">
+        Refs
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="capsule-faas/" class="md-nav__link">
+        Capsule FaaS
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-capsule" class="md-nav__link">
+    What is Capsule?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-a-wasm-function-look-like-with-capsule" class="md-nav__link">
+    What does a WASM function look like with Capsule?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-the-added-values-of-capsule" class="md-nav__link">
+    What are the added values of Capsule?
+  </a>
+  
+    <nav class="md-nav" aria-label="What are the added values of Capsule?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capsule-brings-superpowers-to-the-wasm-functions" class="md-nav__link">
+    Capsule brings superpowers to the WASM functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information" class="md-nav__link">
+    Information
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new" class="md-nav__link">
+    What's new
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="capsule-the-nano-wasm-functions-runner">Capsule: the nano (wasm) functions runner</h1>
 <h2 id="what-is-capsule">What is <strong>Capsule</strong>?</h2>
-<p><strong>Capsule</strong> is a WebAssembly function launcher(runner). It means that, with <strong>Capsule</strong> you can:</p>
+<p><strong>Capsule</strong> is a <strong>WebAssembly Function Runner</strong>. It means that <strong>Capsule</strong> is both:</p>
 <ul>
-<li>From your terminal, execute a function of a wasm module (the <strong>"CLI mode"</strong>)</li>
-<li>Serving a function of a wasm module through http (the <strong>"HTTP mode"</strong>)</li>
-<li>Serving a function of a wasm module through NATS (the <strong>"NATS mode"</strong>), in this case <strong>Capsule</strong> is used as a NATS subscriber and can reply on a subject(topic)</li>
-<li>Serving a function of a wasm module through MQTT (the <strong>"MQTT mode"</strong>), in this case <strong>Capsule</strong> is used as a MQTT subscriber and can reply on a subject(topic)</li>
+<li>An <strong>HTTP server</strong> that serves <strong>WebAssembly functions</strong></li>
+<li>A <strong>NATS</strong> subscriber and publisher (written with WebAssembly)</li>
+<li>A <strong>MQTT</strong> subscriber and publisher (written with WebAssembly)</li>
+<li>A <strong>CLI</strong>, you can simply execute a WASM function in a terminal</li>
 </ul>
 <blockquote>
 <ul>
 <li><strong>Capsule</strong> is developed with GoLang and thanks to the 💜 <strong><a href="https://github.com/tetratelabs/wazero">Wazero</a></strong> project</li>
-<li>The wasm modules are developed in GoLang and compiled with TinyGo (with the WASI specification)</li>
+<li>The wasm modules are developed in GoLang and compiled with <strong><a href="https://tinygo.org/">TinyGo</a></strong> 💜 (with the WASI specification)</li>
 </ul>
 </blockquote>
+<h2 id="what-does-a-wasm-function-look-like-with-capsule">What does a <strong>WASM function</strong> look like with Capsule?</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="nx">hf</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;</span><span class="w"></span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="nx">hf</span><span class="p">.</span><span class="nx">SetHandleHttp</span><span class="p">(</span><span class="nx">Handle</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Handle</span><span class="p">(</span><span class="nx">request</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">errResp</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">    </span><span class="nx">headersResp</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">        </span><span class="s">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;application/json; charset=utf-8&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">    </span><span class="nx">jsondoc</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">`{&quot;message&quot;: &quot;👋 Hello World 🌍&quot;}`</span><span class="w"></span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">{</span><span class="nx">Body</span><span class="p">:</span><span class="w"> </span><span class="nx">jsondoc</span><span class="p">,</span><span class="w"> </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="nx">headersResp</span><span class="p">},</span><span class="w"> </span><span class="nx">err</span><span class="w"></span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<h2 id="what-are-the-added-values-of-capsule">What are the <strong>added values</strong> of Capsule?</h2>
+<h3 id="capsule-brings-superpowers-to-the-wasm-functions">Capsule brings superpowers to the WASM functions</h3>
+<p>Thanks to <strong>host functions</strong> provided by <strong>Capsule</strong>, the <strong>WASM functions</strong> can:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Description</strong></th>
+<th><strong>Host function</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Print a message to the console</td>
+<td><code>hf.Log(string)</code></td>
+</tr>
+<tr>
+<td>Read files</td>
+<td><code>hf.ReadFile("about.txt")</code></td>
+</tr>
+<tr>
+<td>Write files</td>
+<td><code>hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")</code></td>
+</tr>
+<tr>
+<td><strong>Read value of the environment variables</strong></td>
+<td><code>hf.GetEnv("MESSAGE")</code></td>
+</tr>
+<tr>
+<td>Make HTTP requests</td>
+<td><code>hf.Http("https://httpbin.org/post", "POST", headers, "👋 hello world 🌍")</code></td>
+</tr>
+<tr>
+<td>Use memory cache (set)</td>
+<td><code>hf.MemorySet("message", "🚀 hello is started")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.MemoryGet("message")</code></td>
+</tr>
+<tr>
+<td>Make Redis queries</td>
+<td><code>hf.RedisSet("greetings", "Hello World")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.RedisGet("greetings")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.RedisKeys("bob*")</code></td>
+</tr>
+<tr>
+<td><strong>Make CouchBase N1QL Query</strong></td>
+<td><code>jsonStringArray, err := hf.CouchBaseQuery(query)</code></td>
+</tr>
+<tr>
+<td><strong>Use Nats</strong></td>
+<td><code>hf.NatsPublish("subject", "hello")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.NatsReply("it's a wasm module here", 10)</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.NatsGetSubject()</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.NatsGetServer()</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.NatsConnectPublish("nats.devsecops.fun:4222", "subject", "🖐 Hello from WASM with Nats 💜")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.NatsConnectRequest("nats.devsecops.fun:4222", "subject", "👋 Hello World 🌍", 1)</code></td>
+</tr>
+<tr>
+<td><strong>Use MQTT</strong></td>
+<td><code>hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic", "👋 Hello World 🌍")</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.MqttGetTopic()</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.MqttPublish("topic", "it's a wasm module here")</code></td>
+</tr>
+<tr>
+<td>Manage Errors</td>
+<td><em>🖐 🚧 it's a work in progress</em></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.GetExitError()</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>hf.GetExitCode()</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="information">Information</h2>
+<table>
+<thead>
+<tr>
+<th><strong>Label</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues</td>
+<td><a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></td>
+</tr>
+<tr>
+<td>Last release</td>
+<td><code>v0.2.8 🦤 [dodo]</code></td>
+</tr>
+<tr>
+<td>Dev release</td>
+<td><code>v0.2.9 🦜 [parrot]</code> <em>🚧 in progress</em></td>
+</tr>
+<tr>
+<td>Releases</td>
+<td><a href="https://github.com/bots-garden/capsule/releases">https://github.com/bots-garden/capsule/releases</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="whats-new">What's new</h2>
-<ul>
-<li><code>v0.2.8</code>: Capsule uses now <a href="https://github.com/gofiber/fiber">Fiber</a> instead <a href="https://github.com/gin-gonic/gin">Gin</a>. The size of the Capsule Runner Docker image is now 16.8M!</li>
-<li><code>v0.2.7</code>:<ul>
-<li>The FaaS components are externalized, now, this project is <strong>only</strong> for the <strong>Capsule Runner</strong></li>
-<li>"Scratch" Docker image (18.5M) to easily use and deploy the Capsule Runner (https://github.com/bots-garden/capsule-docker-image)</li>
-<li><strong>cabu</strong> (or <strong>capsule-builder</strong>) (https://github.com/bots-garden/capsule-function-builder): a CLI using a specific Docker image allowing:<ul>
-<li>the creation of a wasm function project (from templates)</li>
-<li>the build of the wasm function, without installing anything (TinyGo is embedded in the image) (https://github.com/bots-garden/capsule-function-builder)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>v0.2.6</code>: Wazero: updates to <code>1.0.0-pre.2</code> by <a href="https://github.com/codefromthecrypt">@codefromthecrypt</a> + a logo</li>
-<li><code>v0.2.5</code>: Add MQTT support by <a href="https://github.com/py4mac">@py4mac</a> with <code>MqttPublish</code> &amp; <code>MqttPublish</code></li>
-<li><code>v0.2.4</code>: Add 2 wasm helper functions <code>flatjson.StrToMap</code> and <code>flatjson.MapToStr</code> (update 2022/10/10: these two helpers has been removed)</li>
-<li><code>v0.2.3</code>: NATS support, 2 new functions: <code>NatsReply</code> and <code>NatsConnectRequest</code></li>
-<li><code>v0.2.2</code>: like <code>0.2.1</code> with fixed modules dependencies, and tag name start with a <code>v</code></li>
-<li><code>0.2.1</code>: NATS support (1st stage) <code>OnNatsMessage</code>, <code>NatsPublish</code>, <code>NatsConnectPublish</code>, <code>NatsConnectPublish</code>, <code>NatsGetSubject</code>, <code>NatsGetServer</code></li>
-<li><code>0.2.0</code>: <code>OnLoad</code> &amp; <code>OnExit</code> functions + Memory cache host functions (<code>MemorySet</code>, <code>MemoryGet</code>, <code>MemoryKeys</code>)</li>
-<li><code>0.1.9</code>: Add <code>Request</code> and <code>Response</code> types (for the Handle function)</li>
-<li><code>0.1.8</code>: Redis host functions: add the KEYS command (<code>RedisKeys(pattern string)</code>)</li>
-</ul>
-              
+<p><code>v0.2.8</code>: Capsule uses now <a href="https://github.com/gofiber/fiber">Fiber</a> instead <a href="https://github.com/gin-gonic/gin">Gin</a>. The size of the Capsule Runner Docker image is now 16.8M!</p>
+
+
+
+
+
+                
+              </article>
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="install/" class="btn btn-neutral float-right" title="Install">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
+          
           
         </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
+        
+      </main>
+      
+        <footer class="md-footer">
+  
     
-    
-    
-      <span><a href="install/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+      
+        
+        <a href="install/" class="md-footer__link md-footer__link--next" aria-label="Next: Install" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Install
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
-
-</body>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.078830c0.min.js"></script>
+      
+    
+  </body>
 </html>
-
-<!--
-MkDocs version : 1.4.1
-Build Date UTC : 2022-10-16 12:35:26.797011+00:00
--->
