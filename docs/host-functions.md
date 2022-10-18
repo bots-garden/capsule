@@ -1,4 +1,6 @@
-#Host functions
+# Host functions
+
+> 🚧 this is a work in progress, each host function will be detailed with samples in the coming weeks.
 
 **Capsule** offers some capabilities to the wasm modules by providing some "host functions":
 
@@ -190,6 +192,48 @@ _, err := hf.NatsConnectPublish("nats.devsecops.fun:4222", "ping", "🖐 Hello f
 answer, err := hf.NatsConnectRequest("nats.devsecops.fun:4222", "notify", "👋 Hello World 🌍", 1)
 ```
 > You can use this function with all the running modes of **Capsule**
+
+## MQTT
+
+> You must use the `"mqtt"` mode of **Capsule** as the MQTT connection is defined at the start of **Capsule** and shared with the WASM module:
+
+```bash
+capsule \
+   -wasm=../wasm_modules/capsule-mqtt-subscriber/hello.wasm \
+   -mode=mqtt \
+   -mqttsrv=127.0.0.1:1883 \
+   -topic=topic/sensor0 \
+   -clientId=sensor_id1
+```
+
+### MQTT Handler as a Subscriber
+> 🖐 you have to call `hf.OnMqttMessage(Handle)` from the `main` function.
+
+```golang
+package main
+
+import (
+	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+)
+
+// the topic is defined when launching the capsule launcher
+func main() {
+	hf.OnMqttMessage(Handle)
+}
+
+func Handle(params []string) {
+    message := params[0]
+	hf.Log("👋 you get a message on topic " + hf.MqttGetTopic() + ": " + message)
+
+	// we use the connection of the launcher (capsule)
+	_, err := hf.MqttPublish("topic/reply", "it's a wasm module here")
+
+	if err != nil {
+		hf.Log("😡 ouch something bad is happening")
+		hf.Log(err.Error())
+	}
+}
+```
 
 
 ## Error Management

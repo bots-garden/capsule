@@ -6,6 +6,8 @@ We use [mkdocs](https://www.mkdocs.org/)
 
 ```bash
 pip install mkdocs
+pip install mkdocs-material
+
 ```
 
 ## Serve

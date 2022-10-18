@@ -2,17 +2,33 @@ site_name: Capsule
 nav:
     - Home: index.md
     - Install: install.md
+    - Getting Started: getting-started.md
     - Developer guide: dev-guide.md
     - Host functions: host-functions.md
     - Tooling: tooling.md
+    - CookBook: cookbook.md
     - Refs: references.md
     - Capsule FaaS: capsule-faas.md
+
 theme:
-    name: readthedocs
-    highlightjs: true
-    hljs_languages:
-        - yaml
-        - rust
-        - golang
-        - bash
-        - javascript
+  name: material
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      auto_title: false
+      linenums: true
+      anchor_linenums: true
+  - pymdownx.superfences
+
+
+
+
+#theme:
+#    name: readthedocs
+#    highlightjs: true
+#    hljs_languages:
+#        - yaml
+#        - rust
+#        - golang
+#        - bash
+#        - javascript
