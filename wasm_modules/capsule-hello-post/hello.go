@@ -19,6 +19,18 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
 	/*
 	   bodyReq = {"author":"Philippe","message":"Golang 💚 wasm"}
 	*/
+
+	jsonStr, _ := hf.MemoryGet("jsonStr")
+	headersStr, _ := hf.MemoryGet("headersStr")
+	uri, _ := hf.MemoryGet("uri")
+	method, _ := hf.MemoryGet("method")
+	hf.Log("=======================================")
+	hf.Log("jsonStr: " + jsonStr)
+	hf.Log("headersStr: " + headersStr)
+	hf.Log("uri: " + uri)
+	hf.Log("method: " + method)
+	hf.Log("=======================================")
+
 	hf.Log("📝 Body: " + request.Body)
 	hf.Log("📝 URI: " + request.Uri)
 	hf.Log("📝 Method: " + request.Method)
