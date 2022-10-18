@@ -53,6 +53,11 @@ func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
 		uri := c.Request().URI().String()
 		method := c.Method()
 
+        hostfunctions.SetValueToMemoryMap("jsonStr", jsonStr)
+        hostfunctions.SetValueToMemoryMap("headersStr", headersStr)
+        hostfunctions.SetValueToMemoryMap("uri", uri)
+        hostfunctions.SetValueToMemoryMap("method", method)
+
 		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
 		defer wasmRuntime.Close(ctx)
 

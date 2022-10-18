@@ -9,6 +9,10 @@ import (
 
 var memoryMap = map[string]string{"capsule_version": commons.CapsuleVersion()} // my little easter 🥚
 
+func SetValueToMemoryMap(keyStr, valueStr) {
+    memoryMap[keyStr] = valueStr
+}
+
 func MemorySet(ctx context.Context, module api.Module, keyOffset, keyByteCount, valueOffSet, valueByteCount, retBuffPtrPos, retBuffSize uint32) {
 	keyStr := memory.ReadStringFromMemory(ctx, module, keyOffset, keyByteCount)
 	valueStr := memory.ReadStringFromMemory(ctx, module, valueOffSet, valueByteCount)
