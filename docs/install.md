@@ -1,23 +1,24 @@
 # Installing Capsule
 
 Before executing or running a function, you need to install the last release of **Capsule**:
+> The script will install **Capsule** in `$HOME/.local/bin`
+> if you want to install Capsule somewhere else, override the `CAPSULE_PATH` variable (default value: `CAPSULE_PATH="$HOME/.local/bin"`)
+
+🖐 **On Linux**:
 
 ```bash
-CAPSULE_VERSION="v0.2.8"
+export CAPSULE_VERSION="v0.2.8"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 ```
-> The script will install **Capsule** in `$HOME/.local/bin`
 
 🖐 **On macOS**:
 
 - create the `$HOME/.local/bin` directory
 - add it to your path:
 ```bash
-export CAPSULE_PATH="$HOME/.local"
-export PATH="$CAPSULE_PATH/bin:$PATH"
+export CAPSULE_RUNNER_PATH="$HOME/.local"
+export PATH="$CAPSULE_RUNNER_PATH/bin:$PATH"
 ```
-
-> if you want to install Capsule somewhere else, override the `CAPSULE_PATH` variable (default value: `CAPSULE_PATH="$HOME/.local/bin"`)
 
 Then you can serve a wasm function like this:
 
