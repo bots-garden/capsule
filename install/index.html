@@ -399,25 +399,24 @@
 
 <h1 id="installing-capsule">Installing Capsule</h1>
 <p>Before executing or running a function, you need to install the last release of <strong>Capsule</strong>:</p>
+<blockquote>
+<p>The script will install <strong>Capsule</strong> in <code>$HOME/.local/bin</code>
+if you want to install Capsule somewhere else, override the <code>CAPSULE_PATH</code> variable (default value: <code>CAPSULE_PATH="$HOME/.local/bin"</code>)</p>
+</blockquote>
+<p>🖐 <strong>On Linux</strong>:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
-<span class="normal"><a href="#__codelineno-0-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">CAPSULE_VERSION</span><span class="o">=</span><span class="s2">&quot;v0.2.8&quot;</span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nb">export</span> <span class="nv">CAPSULE_VERSION</span><span class="o">=</span><span class="s2">&quot;v0.2.8&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>wget -O - https://raw.githubusercontent.com/bots-garden/capsule/<span class="si">${</span><span class="nv">CAPSULE_VERSION</span><span class="si">}</span>/install-capsule-launcher.sh<span class="p">|</span> bash
 </code></pre></div></td></tr></table></div>
-<blockquote>
-<p>The script will install <strong>Capsule</strong> in <code>$HOME/.local/bin</code></p>
-</blockquote>
 <p>🖐 <strong>On macOS</strong>:</p>
 <ul>
 <li>create the <code>$HOME/.local/bin</code> directory</li>
 <li>add it to your path:
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
-<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nb">export</span> <span class="nv">CAPSULE_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.local&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CAPSULE_PATH</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nb">export</span> <span class="nv">CAPSULE_RUNNER_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.local&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CAPSULE_RUNNER_PATH</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 </code></pre></div></td></tr></table></div></li>
 </ul>
-<blockquote>
-<p>if you want to install Capsule somewhere else, override the <code>CAPSULE_PATH</code> variable (default value: <code>CAPSULE_PATH="$HOME/.local/bin"</code>)</p>
-</blockquote>
 <p>Then you can serve a wasm function like this:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
 <span class="normal"><a href="#__codelineno-2-2">2</a></span>
