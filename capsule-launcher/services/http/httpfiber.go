@@ -15,7 +15,17 @@ import (
 	"time"
 )
 
-func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
+//import json "github.com/goccy/go-json"
+
+type RemoteWasmModule struct {
+	Url  string `json:"url"`
+	Path string `json:"path"`
+}
+
+func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
+
+	// to help to hot reload a wasm module
+	wasmFile := wasmFileModule
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -30,7 +40,11 @@ func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		//DisableKeepalive:      true,
+		//Concurrency:           100000,
 	})
+
+	//app.Use(requestid.New())
 
 	// host-metrics
 	app.Get("/host-metrics", func(c *fiber.Ctx) error {
@@ -89,6 +103,8 @@ func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
 	app.Post("/", func(c *fiber.Ctx) error {
 		jsonStr := string(c.Body())
 
+		//fmt.Println("🎃", c.GetReqHeaders())
+
 		headersStr := GetHeadersStringFromHeadersRequest(c)
 		uri := c.Request().URI().String()
 		method := c.Method()
@@ -123,6 +139,64 @@ func FiberServe(httpPort string, wasmFile []byte, crt, key string) {
 		} else {
 			c.Status(http.StatusOK)
 			return c.SendString(bodyStr)
+		}
+
+	})
+
+	// https://docs.gofiber.io/api/ctx#bodyparser
+	//TODO: protect with token
+
+	// 🖐 use this at your own risk
+	// 🖐 this feature is subject to change
+
+	/*
+	       CAPSULE_RELOAD_TOKEN
+
+	   	   curl -v -X POST \
+	   	     http://localhost:7070/load-wasm-module \
+	   	     -H 'content-type: application/json; charset=utf-8' \
+	   	     -d '{"url": "http://localhost:9090/hello.wasm", "path": "./tmp/hello.wasm"}'
+	   	     echo ""
+	*/
+
+	app.Post("/load-wasm-module", func(c *fiber.Ctx) error {
+
+		reloadWasmFile := func() error {
+
+			wm := new(RemoteWasmModule)
+
+			if err := c.BodyParser(wm); err != nil {
+				c.Status(500)
+				return c.SendString("😡[/load-wasm-module] " + err.Error())
+			}
+
+			var errWasmFile error
+			wasmFile, errWasmFile = capsule.GetWasmFileFromUrl(wm.Url, wm.Path)
+
+			if errWasmFile != nil {
+				c.Status(500)
+				return c.SendString("😡[/load-wasm-module] " + errWasmFile.Error())
+			}
+
+			c.Status(http.StatusOK)
+			return c.SendString("🙂 " + wm.Url + " loaded")
+		}
+
+		headerTokenReload := GetReloadTokenFromHeadersRequest(c)
+		envVarTokenReload := commons.GetEnv("CAPSULE_RELOAD_TOKEN", "")
+
+		//fmt.Println("🔑", "header:", headerTokenReload, "env:", envVarTokenReload)
+
+		if envVarTokenReload != "" { // you need to add a token to the header request
+			if headerTokenReload == envVarTokenReload {
+				return reloadWasmFile()
+			} else {
+				// not authorized: 401 Unauthorized
+				c.Status(401)
+				return c.SendString("😡[/load-wasm-module] Unauthorized")
+			}
+		} else { // you don't need a token
+			return reloadWasmFile()
 		}
 
 	})
