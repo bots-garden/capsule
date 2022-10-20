@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+//import json "github.com/goccy/go-json"
+
 type RemoteWasmModule struct {
 	Url  string `json:"url"`
 	Path string `json:"path"`
@@ -38,7 +40,11 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		//DisableKeepalive:      true,
+		//Concurrency:           100000,
 	})
+
+	//app.Use(requestid.New())
 
 	// host-metrics
 	app.Get("/host-metrics", func(c *fiber.Ctx) error {
@@ -96,6 +102,8 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
 
 	app.Post("/", func(c *fiber.Ctx) error {
 		jsonStr := string(c.Body())
+
+		//fmt.Println("🎃", c.GetReqHeaders())
 
 		headersStr := GetHeadersStringFromHeadersRequest(c)
 		uri := c.Request().URI().String()
