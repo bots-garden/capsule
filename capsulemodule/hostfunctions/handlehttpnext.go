@@ -2,8 +2,8 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"fmt"
 	"github.com/bots-garden/capsule/commons"
+	"strconv"
 )
 
 /* previous version
@@ -14,6 +14,8 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
 var handleHttpNextFunction func(req Request) (resp Response, errResp error)
 
 func SetHandleHttpNext(function func(request Request) (Response, error)) {
+	Log("🤖🖐🎃[SetHandleHttpNext]")
+
 	handleHttpNextFunction = function
 }
 
@@ -27,7 +29,7 @@ func callHandleHttpNext(reqId uint32) (strPtrPosSize uint64) {
 
 	reqParams, errReqParams := RequestParamsGet(reqId)
 
-	fmt.Println("🤖🖐[reqParams]", reqParams, reqId)
+	Log("🤖🖐[reqParams]:" + strconv.FormatUint(uint64(reqId), 10))
 
 	if errReqParams != nil {
 		// TODO
@@ -38,7 +40,12 @@ func callHandleHttpNext(reqId uint32) (strPtrPosSize uint64) {
 	uriParameter := reqParams[2]
 	methodParameter := reqParams[3]
 
-	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrSeparator)
+	Log("🤖🖐[bodyParameter]:" + bodyParameter)
+	Log("🤖🖐[headersParameter]:" + headersParameter)
+	Log("🤖🖐[uriParameter]:" + uriParameter)
+	Log("🤖🖐[methodParameter]:" + methodParameter)
+
+	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrHeadersSeparator) //👋
 	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
 
 	var result string

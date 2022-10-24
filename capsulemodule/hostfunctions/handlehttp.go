@@ -14,8 +14,6 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
 var handleHttpFunction func(req Request) (resp Response, errResp error)
 
 func SetHandleHttp(function func(request Request) (Response, error)) {
-	fmt.Println("🤖🖐🎃[SetHandleHttp]")
-
 	handleHttpFunction = function
 }
 

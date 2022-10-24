@@ -16,6 +16,10 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
 	hf.Log("📝 URI: " + request.Uri)
 	hf.Log("📝 Method: " + request.Method)
 
+	hf.Log("🟢 Content-Type: " + request.Headers["Content-Type"])
+	hf.Log("🟢 Content-Length: " + request.Headers["Content-Length"])
+	hf.Log("🟢 User-Agent: " + request.Headers["User-Agent"])
+
 	headersResp := map[string]string{
 		"Content-Type": "application/json; charset=utf-8",
 	}

@@ -32,14 +32,13 @@ var requestParamsMap = sync.Map{}
 func GetHeadersStringFromHeadersRequest(c *fiber.Ctx) string {
 
 	headersSlice := commons.CreateSliceFromMap(c.GetReqHeaders())
-	headersParameter := commons.CreateStringFromSlice(headersSlice, commons.StrSeparator)
+	headersParameter := commons.CreateStringFromSlice(headersSlice, commons.StrHeadersSeparator)
 
 	return headersParameter
 }
 
-// StoreRequestParam stores json data + headers + uri + method
+// StoreRequestParams stores json data + headers + uri + method
 // and returns the requestId
-// func StoreRequestParams(c *fiber.Ctx) string {
 func StoreRequestParams(c *fiber.Ctx) uint32 {
 
 	//reqId := uuid.New().String()

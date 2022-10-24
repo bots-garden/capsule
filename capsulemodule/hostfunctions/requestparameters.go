@@ -3,7 +3,6 @@ package hostfunctions
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	_ "unsafe"
 
@@ -27,7 +26,7 @@ func RequestParamsGet(reqId uint32) ([]string, error) {
 	// call the host function
 	// the result will be available in memory thanks to ` &buffPtr, &buffSize`
 
-	fmt.Println("🤖🐻[hostRequestParamsGet]", reqId)
+	Log("🤖🐻[hostRequestParamsGet]:" + strconv.FormatUint(uint64(reqId), 10))
 
 	hostRequestParamsGet(reqId, &buffPtr, &buffSize)
 
@@ -35,7 +34,7 @@ func RequestParamsGet(reqId uint32) ([]string, error) {
 	var err error
 	valueStr := getStringResult(buffPtr, buffSize)
 
-	fmt.Println("🤖🐻[valueStr]", valueStr)
+	Log("🤖🐻[valueStr]" + valueStr)
 
 	// 🖐 this string contains (in this order):
 	// reqParams.JsonData,
@@ -55,6 +54,10 @@ func RequestParamsGet(reqId uint32) ([]string, error) {
 
 	} else {
 		result := commons.CreateSliceFromString(valueStr, commons.StrSeparator)
+		Log("🤖🐻[result 0]" + result[0])
+		Log("🤖🐻[result 1]" + result[1]) // it's because of the headers and separators
+		Log("🤖🐻[result 2]" + result[2])
+		Log("🤖🐻[result 3]" + result[3])
 		return result, nil
 	}
 
