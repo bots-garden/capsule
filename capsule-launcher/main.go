@@ -124,6 +124,8 @@ func main() {
 		case "http":
 			capsulehttp.FiberServe(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 			//capsulehttp.Serve(flags.httpPort, getWasmFile(), flags.crt, flags.key)
+		case "http-next":
+			capsulehttp.FiberNexteServe(flags.httpPort, getWasmFile(), flags.crt, flags.key)
 		case "cli":
 			capsulecli.Execute(flag.Args(), getWasmFile())
 		case "nats":

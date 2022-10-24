@@ -7,7 +7,7 @@ import (
 func CreateSliceFromMap(strMap map[string]string) []string {
 	var strSlice []string
 	for field, value := range strMap {
-		strSlice = append(strSlice, field+":"+value)
+		strSlice = append(strSlice, field+FieldSeparator+value)
 	}
 	return strSlice
 }
