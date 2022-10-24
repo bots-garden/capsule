@@ -10,7 +10,7 @@ import (
 func GetHeadersStringFromHeadersRequest(c *fiber.Ctx) string {
 
 	headersSlice := commons.CreateSliceFromMap(c.GetReqHeaders())
-	headersParameter := commons.CreateStringFromSlice(headersSlice, commons.StrSeparator)
+	headersParameter := commons.CreateStringFromSlice(headersSlice, commons.StrHeadersSeparator)
 
 	return headersParameter
 }

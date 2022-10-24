@@ -3,7 +3,6 @@ package hostfunctions
 // TODO: move this to another package: exposedFunctions
 import (
 	"github.com/bots-garden/capsule/commons"
-	"strconv"
 )
 
 /* previous version
@@ -14,7 +13,7 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
 var handleHttpNextFunction func(req Request) (resp Response, errResp error)
 
 func SetHandleHttpNext(function func(request Request) (Response, error)) {
-	Log("🤖🖐🎃[SetHandleHttpNext]")
+	//Log("🤖🖐🎃[SetHandleHttpNext]")
 
 	handleHttpNextFunction = function
 }
@@ -25,11 +24,10 @@ func SetHandleHttpNext(function func(request Request) (Response, error)) {
 //export callHandleHttpNext
 //go:linkname callHandleHttpNext
 func callHandleHttpNext(reqId uint32) (strPtrPosSize uint64) {
-	//stringParameter := getStringParam(strPtrPos, size)
 
 	reqParams, errReqParams := RequestParamsGet(reqId)
 
-	Log("🤖🖐[reqParams]:" + strconv.FormatUint(uint64(reqId), 10))
+	//Log("🤖🖐[reqParams]:" + strconv.FormatUint(uint64(reqId), 10))
 
 	if errReqParams != nil {
 		// TODO
@@ -40,16 +38,17 @@ func callHandleHttpNext(reqId uint32) (strPtrPosSize uint64) {
 	uriParameter := reqParams[2]
 	methodParameter := reqParams[3]
 
-	Log("🤖🖐[bodyParameter]:" + bodyParameter)
-	Log("🤖🖐[headersParameter]:" + headersParameter)
-	Log("🤖🖐[uriParameter]:" + uriParameter)
-	Log("🤖🖐[methodParameter]:" + methodParameter)
+	/*
+		Log("🤖🖐[bodyParameter]:" + bodyParameter)
+		Log("🤖🖐[headersParameter]:" + headersParameter)
+		Log("🤖🖐[uriParameter]:" + uriParameter)
+		Log("🤖🖐[methodParameter]:" + methodParameter)
+	*/
 
 	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrHeadersSeparator) //👋
 	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
 
 	var result string
-	//stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(bodyParameter, headers)
 	responseReturnByHandleFunction, errorReturnByHandleFunction := handleHttpNextFunction(Request{bodyParameter, headers, uriParameter, methodParameter})
 
 	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(responseReturnByHandleFunction.Headers), commons.StrSeparator)

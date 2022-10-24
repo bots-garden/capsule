@@ -60,57 +60,14 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
 		return c.SendString("OK")
 	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.All("/", func(c *fiber.Ctx) error {
 		jsonStr := string(c.Body())
-
 		headersStr := GetHeadersStringFromHeadersRequest(c)
 		uri := c.Request().URI().String()
 		method := c.Method()
 
-		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-		defer wasmRuntime.Close(ctx)
-
-		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
-		defer free.Call(ctx, uriPos)
-
-		jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
-		defer free.Call(ctx, jsonStrPos)
-
-		headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
-		defer free.Call(ctx, headersStrPos)
-
-		methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
-		defer free.Call(ctx, methodPos)
-
-		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
-		if err != nil {
-			c.Status(500)
-			return c.SendString("out of range of memory size")
-		}
-		bodyStr, headers := GetBodyAndHeaders(bytes, c)
-
-		// check the return value
-		if commons.IsErrorString(bodyStr) {
-			return SendErrorMessage(bodyStr, headers, c)
-		} else if IsBodyString(bodyStr) {
-			return SendBodyMessage(bodyStr, headers, c)
-		} else {
-			c.Status(http.StatusOK)
-			return c.SendString(bodyStr)
-		}
-	})
-
-	app.Post("/", func(c *fiber.Ctx) error {
-		jsonStr := string(c.Body())
-
-		//fmt.Println("🎃", c.GetReqHeaders())
-
-		headersStr := GetHeadersStringFromHeadersRequest(c)
-		uri := c.Request().URI().String()
-		method := c.Method()
-
-		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-		defer wasmRuntime.Close(ctx)
+		wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
+		//defer wasmRuntime.Close(ctx)
 
 		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
 		defer free.Call(ctx, uriPos)

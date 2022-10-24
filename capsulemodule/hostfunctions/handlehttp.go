@@ -2,7 +2,6 @@ package hostfunctions
 
 // TODO: move this to another package: exposedFunctions
 import (
-	"fmt"
 	"github.com/bots-garden/capsule/commons"
 )
 
@@ -29,10 +28,8 @@ func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, hea
 	uriParameter := getStringParam(uriPtrPos, uriSize)
 	methodParameter := getStringParam(methodPtrPos, methodSize)
 
-	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrSeparator)
+	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrHeadersSeparator)
 	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
-
-	fmt.Println("🤖🖐🎃[reqParams]", bodyParameter)
 
 	var result string
 	//stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(bodyParameter, headers)

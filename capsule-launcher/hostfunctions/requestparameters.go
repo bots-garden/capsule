@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"context"
-	"fmt"
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/tetratelabs/wazero/api"
@@ -19,7 +18,7 @@ func RequestParamsGet(ctx context.Context, module api.Module, reqId, retBuffPtrP
 
 	reqParams, err := GetRequestParams(reqId)
 
-	fmt.Println("🤖🔵[READ reqParams]", reqParams, reqId)
+	//fmt.Println("🤖🔵[READ reqParams]", reqParams, reqId)
 
 	// This variable will store the concatenation of reqParams.JsonData, reqParams.Headers, reqParams.Uri, reqParams.Method
 	var stringResultFromHost = ""
@@ -31,7 +30,7 @@ func RequestParamsGet(ctx context.Context, module api.Module, reqId, retBuffPtrP
 		stringResultFromHost = commons.CreateStringFromSlice([]string{reqParams.JsonData, reqParams.Headers, reqParams.Uri, reqParams.Method}, commons.StrSeparator)
 	}
 
-	fmt.Println("🤖🔵[Memory stringResultFromHost]", stringResultFromHost)
+	//fmt.Println("🤖🔵[Memory stringResultFromHost]", stringResultFromHost)
 
 	// Write the new string stringResultFromHost to the "shared memory"
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)

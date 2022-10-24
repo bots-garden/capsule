@@ -8,4 +8,6 @@ hey -n 100 -c 100 -m POST \
 
 # Requests/sec: 30.5280
 # Requests/sec: 32.1274
-# Requests/sec: 31.5995
+# Requests/sec: 31.1002
+#  Requests/sec: 31.7709
+

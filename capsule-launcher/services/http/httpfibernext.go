@@ -56,18 +56,8 @@ func FiberNexteServe(httpPort string, wasmFileModule []byte, crt, key string) {
 	app.All("/", func(c *fiber.Ctx) error {
 
 		reqId := hostfunctions.StoreRequestParams(c)
-
-		//fmt.Println("🥘", reqId)
-		//fmt.Println(c.GetReqHeaders())
-
-		//TODO: next step: avoid the reloading (almost done)
 		wasmModule, wasmFunction, wasmCtx := capsule.GetModuleFunctionForHttpNext(wasmFile)
-		//defer wasmRuntime.Close(ctx)
 
-		//reqIdPos, reqIdLen, free, err := capsule.ReserveMemorySpaceFor(reqId, wasmModule, wasmCtx)
-		//defer free.Call(wasmCtx, reqIdPos)
-
-		// bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, wasmCtx, reqIdPos, reqIdLen)
 		bytes, err := capsule.ExecHandleFunctionNext(wasmFunction, wasmModule, wasmCtx, uint64(reqId))
 		if err != nil {
 			c.Status(500)
@@ -76,9 +66,6 @@ func FiberNexteServe(httpPort string, wasmFileModule []byte, crt, key string) {
 
 		bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
-		fmt.Println("🤖🟢[httpfibernext.go bytes]", bodyStr, headers)
-
-		//errRemoveReqId := hostfunctions.DeleteRequestParams(reqId)
 		hostfunctions.DeleteRequestParams(reqId)
 
 		// check the return value
