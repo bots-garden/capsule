@@ -8,27 +8,9 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
-/*
-func GetNewWasmRuntimeForHttp(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
-	//fmt.Println("🖐[checking] create new wasm runtime")
-	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
+func GetModuleFunctionForHttp(wasmFile []byte) (module api.Module, function api.Function, context context.Context) {
+	module, context = GetModuleInstance(wasmFile)
 	function = module.ExportedFunction("callHandleHttp")
-	return runtime, module, function, context
-}
-*/
-
-func GetNewWasmRuntimeForHttp(wasmFile []byte) (module api.Module, function api.Function, context context.Context) {
-	//fmt.Println("🤖[wasmrunner.go GetModuleFunctionForHttpNext]")
-	module, context = CreateWasmRuntimeAndModuleInstancesNext(wasmFile)
-	function = module.ExportedFunction("callHandleHttp")
-	return module, function, context
-}
-
-//<NEXT>
-func GetModuleFunctionForHttpNext(wasmFile []byte) (module api.Module, function api.Function, context context.Context) {
-	//fmt.Println("🤖[wasmrunner.go GetModuleFunctionForHttpNext]")
-	module, context = CreateWasmRuntimeAndModuleInstancesNext(wasmFile)
-	function = module.ExportedFunction("callHandleHttpNext")
 	return module, function, context
 }
 
@@ -136,7 +118,7 @@ func ExecHandleFunction(function api.Function, module api.Module, ctx context.Co
 
 // ExecHandleFunction :
 // params: pos1, length1, pos2, length2, ...
-func ExecHandleFunctionNext(function api.Function, module api.Module, ctx context.Context, reqId uint64) (bytes []byte, err error) {
+func ExecHandleFunctionForHttp(function api.Function, module api.Module, ctx context.Context, reqId uint64) (bytes []byte, err error) {
 	//fmt.Println("🤖[wasmrunner.go ExecHandleFunctionNext]", reqId)
 
 	// This shows how to

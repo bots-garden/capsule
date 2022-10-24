@@ -85,10 +85,8 @@ func CreateWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 	return wasmRuntime, wasmModule, ctx
 }
 
-//<NEXT>
 var persistentWasmRuntime wazero.Runtime
 
-//<NEXT>
 func CreatePersistentWasmRuntime(ctx context.Context) wazero.Runtime {
 	if persistentWasmRuntime == nil {
 		return CreateWasmRuntime(ctx)
@@ -97,8 +95,7 @@ func CreatePersistentWasmRuntime(ctx context.Context) wazero.Runtime {
 	}
 }
 
-//<NEXT>
-func CreateWasmRuntimeAndModuleInstancesNext(wasmFile []byte) (api.Module, context.Context) {
+func GetModuleInstance(wasmFile []byte) (api.Module, context.Context) {
 	// Choose the context to use for function calls.
 	ctx := context.Background()
 
