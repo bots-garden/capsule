@@ -11,34 +11,39 @@ var handleHttpFunction func(bodyReq string, headersReq map[string]string) (
     bodyResp string, headersResp map[string]string, errResp error)
 */
 
-var handleHttpFunction func(req Request) (resp Response, errResp error)
+var handleHttpNextFunction func(req Request) (resp Response, errResp error)
 
-func SetHandleHttp(function func(request Request) (Response, error)) {
-	fmt.Println("🤖🖐🎃[SetHandleHttp]")
-
-	handleHttpFunction = function
+func SetHandleHttpNext(function func(request Request) (Response, error)) {
+	handleHttpNextFunction = function
 }
 
 // The name "callHandleHttp" of the exported function is defined/declared
 // in `wasmrunner.go`, function: GetNewWasmRuntimeForHttp
 
-//export callHandleHttp
-//go:linkname callHandleHttp
-func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, headersSize, methodPtrPos, methodSize uint32) (strPtrPosSize uint64) {
-	//posted JSON data
-	bodyParameter := getStringParam(bodyPtrPos, bodySize)
-	headersParameter := getStringParam(headersPtrPos, headersSize)
-	uriParameter := getStringParam(uriPtrPos, uriSize)
-	methodParameter := getStringParam(methodPtrPos, methodSize)
+//export callHandleHttpNext
+//go:linkname callHandleHttpNext
+func callHandleHttpNext(reqId uint32) (strPtrPosSize uint64) {
+	//stringParameter := getStringParam(strPtrPos, size)
+
+	reqParams, errReqParams := RequestParamsGet(reqId)
+
+	fmt.Println("🤖🖐[reqParams]", reqParams, reqId)
+
+	if errReqParams != nil {
+		// TODO
+	}
+
+	bodyParameter := reqParams[0]
+	headersParameter := reqParams[1]
+	uriParameter := reqParams[2]
+	methodParameter := reqParams[3]
 
 	headersSlice := commons.CreateSliceFromString(headersParameter, commons.StrSeparator)
 	headers := commons.CreateMapFromSlice(headersSlice, commons.FieldSeparator)
 
-	fmt.Println("🤖🖐🎃[reqParams]", bodyParameter)
-
 	var result string
 	//stringReturnByHandleFunction, headersReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(bodyParameter, headers)
-	responseReturnByHandleFunction, errorReturnByHandleFunction := handleHttpFunction(Request{bodyParameter, headers, uriParameter, methodParameter})
+	responseReturnByHandleFunction, errorReturnByHandleFunction := handleHttpNextFunction(Request{bodyParameter, headers, uriParameter, methodParameter})
 
 	returnHeaderString := commons.CreateStringFromSlice(commons.CreateSliceFromMap(responseReturnByHandleFunction.Headers), commons.StrSeparator)
 
@@ -52,12 +57,4 @@ func callHandleHttp(bodyPtrPos, bodySize, uriPtrPos, uriSize, headersPtrPos, hea
 	pos, length := getStringPtrPositionAndSize(CreateResponseString(result, returnHeaderString))
 
 	return packPtrPositionAndSize(pos, length)
-}
-
-func CreateBodyString(message string) string {
-	return "[BODY]" + message
-}
-
-func CreateResponseString(result, headers string) string {
-	return result + "[HEADERS]" + headers
 }

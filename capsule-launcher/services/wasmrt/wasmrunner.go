@@ -15,6 +15,14 @@ func GetNewWasmRuntimeForHttp(wasmFile []byte) (runtime wazero.Runtime, module a
     return runtime, module, function, context
 }
 
+//<NEXT>
+func GetModuleFunctionForHttpNext(wasmFile []byte) (module api.Module, function api.Function, context context.Context) {
+    fmt.Println("🤖[wasmrunner.go GetModuleFunctionForHttpNext]")
+    module, context = CreateWasmRuntimeAndModuleInstancesNext(wasmFile)
+    function = module.ExportedFunction("callHandleHttpNext")
+    return module, function, context
+}
+
 func CallExportedOnLoad(wasmFile []byte) {
     runtime, module, context := CreateWasmRuntimeAndModuleInstances(wasmFile)
     function := module.ExportedFunction("OnLoad")
@@ -114,6 +122,37 @@ func ExecHandleFunction(function api.Function, module api.Module, ctx context.Co
     if !ok {
         return nil, errors.New("😡[execHandleFunction] Memory.Read out of range of memory size")
     }
+    return bytes, nil
+}
+
+// ExecHandleFunction :
+// params: pos1, length1, pos2, length2, ...
+func ExecHandleFunctionNext(function api.Function, module api.Module, ctx context.Context, reqId uint64) (bytes []byte, err error) {
+    fmt.Println("🤖[wasmrunner.go ExecHandleFunctionNext]", reqId)
+
+    // This shows how to
+    // read-back something allocated by TinyGo.
+    handleResultArray, err := function.Call(ctx, reqId)
+
+    if err != nil {
+        //log.Panicln(err)
+        fmt.Println("😡[execHandleFunction]", err)
+        return nil, err
+    }
+    fmt.Println("🤖🟠[wasmrunner.go handleResultArray]", handleResultArray)
+
+    // Note: This pointer is still owned by TinyGo,
+    // so don't try to free it!
+    handleReturnPtrPos, handleReturnSize := GetPackedPtrPositionAndSize(handleResultArray)
+
+    // The pointer is a linear memory offset,
+    // which is where we write the name.
+    bytes, ok := module.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize)
+    if !ok {
+        return nil, errors.New("😡[execHandleFunction] Memory.Read out of range of memory size")
+    }
+    fmt.Println("🤖🟠[wasmrunner.go bytes]", bytes)
+
     return bytes, nil
 }
 
