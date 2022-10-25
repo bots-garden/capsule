@@ -37,6 +37,7 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
            hf.Log("👋 from the OnLoad function")
        }
     */
+
     capsule.CallExportedOnLoad(wasmFile)
 
     app := fiber.New(fiber.Config{
@@ -121,6 +122,9 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
             }
 
             c.Status(http.StatusOK)
+
+            capsule.CallExportedOnLoad(wasmFile)
+
             return c.SendString("🙂 " + wm.Url + " loaded")
         }
 
@@ -170,6 +174,7 @@ func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
            hf.Log("👋 from the OnExit function")
        }
     */
+
     capsule.CallExportedOnExit(wasmFile)
 
     // The context is used to inform the server it has 5 seconds to finish
