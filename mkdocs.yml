@@ -1,10 +1,37 @@
 site_name: Capsule
+site_url: https://bots-garden.github.io/capsule/
+site_author: Philippe Charrière (@k33g)
+site_description: >-
+  **Capsule** is a **WebAssembly Function Runner**.
+# Repository
+repo_name: bots-garden/capsule
+repo_url: https://github.com/bots-garden/capsule
+
+# Copyright
+copyright: Copyright &copy; 2022 - 2023 Philippe Charrière
+
+
 nav:
     - Home: index.md
     - Install: install.md
     - Getting Started: getting-started.md
-    - Developer guide: dev-guide.md
-    - Host functions: host-functions.md
+    - Developer guide:
+      - First CLI function: first-cli-function.md
+      - First HTTP function: first-http-function.md
+      - First Nats function: first-nats-function.md
+      - First MQTT function: first-mqtt-function.md
+    - Host functions:
+      - Introduction: host-functions-intro.md
+      - Log: host-functions-log.md
+      - Files: host-functions-files.md
+      - Environment: host-functions-env.md
+      - HTTP Requests: host-functions-http.md
+      - Memory cache: host-functions-memory.md
+      - Redis: host-functions-redis.md
+      - CouchBase: host-functions-couchbase.md
+      - Nats: host-functions-nats.md
+      - MQTT: host-functions-mqtt.md
+      - Errors: host-functions-errors.md
     - Tooling: tooling.md
     - CookBook: cookbook.md
     - Refs: references.md
