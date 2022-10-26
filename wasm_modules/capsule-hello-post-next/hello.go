@@ -7,7 +7,7 @@ import (
 
 // main is required.
 func main() {
-	hf.SetHandleHttpNext(Handle)
+	hf.SetHandleHttp(Handle)
 }
 
 func Handle(request hf.Request) (response hf.Response, errResp error) {

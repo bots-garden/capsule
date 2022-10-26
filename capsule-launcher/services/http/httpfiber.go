@@ -1,244 +1,187 @@
 package capsulehttp
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
-	capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
-	"github.com/bots-garden/capsule/commons"
-	"github.com/gofiber/fiber/v2"
-	"github.com/shirou/gopsutil/v3/mem"
-	"net/http"
-	"os/signal"
-	"syscall"
-	"time"
+    "context"
+    "fmt"
+    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
+    capsule "github.com/bots-garden/capsule/capsule-launcher/services/wasmrt"
+    "github.com/bots-garden/capsule/commons"
+    "github.com/gofiber/fiber/v2"
+    "net/http"
+    "os/signal"
+    "syscall"
+    "time"
 )
 
-//import json "github.com/goccy/go-json"
-
 type RemoteWasmModule struct {
-	Url  string `json:"url"`
-	Path string `json:"path"`
+    Url  string `json:"url"`
+    Path string `json:"path"`
 }
 
 func FiberServe(httpPort string, wasmFileModule []byte, crt, key string) {
 
-	// to help to hot reload a wasm module
-	wasmFile := wasmFileModule
+    // to help to hot reload a wasm module
+    wasmFile := wasmFileModule
 
-	// Create context that listens for the interrupt signal from the OS.
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer stop()
+    // Create context that listens for the interrupt signal from the OS.
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+    defer stop()
 
-	hostfunctions.HostInformation = `{"httpPort":` + httpPort + `,"capsuleVersion":"` + commons.CapsuleVersion() + `"}`
-	v, _ := mem.VirtualMemory()
+    // Store some information available for the wasm modules
+    hostfunctions.HostInformation = `{"httpPort":` + httpPort + `,"capsuleVersion":"` + commons.CapsuleVersion() + `"}`
 
-	// OnLoad
-	capsule.CallExportedOnLoad(wasmFile)
+    // This will call the OnLoad function of the wasm module if it exists
+    /*
+       //export OnLoad
+       func OnLoad() {
+           hf.Log("👋 from the OnLoad function")
+       }
+    */
 
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	app := fiber.New(fiber.Config{
-		DisableStartupMessage: true,
-		//DisableKeepalive:      true,
-		//Concurrency:           100000,
-	})
+    capsule.CallExportedOnLoad(wasmFile)
 
-	//app.Use(requestid.New())
+    app := fiber.New(fiber.Config{
+        DisableStartupMessage: true,
+        //DisableKeepalive:      true,
+        //Concurrency:           100000,
+    })
 
-	// host-metrics
-	app.Get("/host-metrics", func(c *fiber.Ctx) error {
-		jsonMap := make(map[string]interface{})
-		json.Unmarshal([]byte(v.String()), &jsonMap)
-		c.Status(http.StatusOK)
-		return c.JSON(jsonMap)
-	})
+    /* TODO: ... one day
+       v, _ := mem.VirtualMemory()
 
-	// health
-	app.Get("/health", func(c *fiber.Ctx) error {
-		c.Status(http.StatusOK)
-		return c.SendString("OK")
-	})
+       app.Get("/host-metrics", func(c *fiber.Ctx) error {
+           jsonMap := make(map[string]interface{})
+           json.Unmarshal([]byte(v.String()), &jsonMap)
+           c.Status(http.StatusOK)
+           return c.JSON(jsonMap)
+       })
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		jsonStr := string(c.Body())
+       app.Get("/health", func(c *fiber.Ctx) error {
+           c.Status(http.StatusOK)
+           return c.SendString("OK")
+       })
+    */
 
-		headersStr := GetHeadersStringFromHeadersRequest(c)
-		uri := c.Request().URI().String()
-		method := c.Method()
+    app.All("/", func(c *fiber.Ctx) error {
+        reqId := hostfunctions.StoreRequestParams(c)
 
-		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-		defer wasmRuntime.Close(ctx)
+        wasmModule, wasmFunction, wasmCtx := capsule.GetModuleFunctionForHttp(wasmFile)
 
-		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
-		defer free.Call(ctx, uriPos)
+        bytes, err := capsule.ExecHandleFunctionForHttp(wasmFunction, wasmModule, wasmCtx, uint64(reqId))
+        if err != nil {
+            c.Status(500)
+            return c.SendString("out of range of memory size")
+        }
 
-		jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
-		defer free.Call(ctx, jsonStrPos)
+        bodyStr, headers := GetBodyAndHeaders(bytes, c)
 
-		headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
-		defer free.Call(ctx, headersStrPos)
+        hostfunctions.DeleteRequestParams(reqId)
 
-		methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
-		defer free.Call(ctx, methodPos)
+        // check the return value
+        if commons.IsErrorString(bodyStr) {
+            return SendErrorMessage(bodyStr, headers, c)
+        } else if IsBodyString(bodyStr) {
+            return SendJsonMessage(bodyStr, headers, c)
+        } else {
+            c.Status(http.StatusOK)
+            return c.SendString(bodyStr)
+        }
 
-		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
-		if err != nil {
-			c.Status(500)
-			return c.SendString("out of range of memory size")
-		}
-		bodyStr, headers := GetBodyAndHeaders(bytes, c)
+    })
 
-		// check the return value
-		if commons.IsErrorString(bodyStr) {
-			return SendErrorMessage(bodyStr, headers, c)
-		} else if IsBodyString(bodyStr) {
-			return SendBodyMessage(bodyStr, headers, c)
-		} else {
-			c.Status(http.StatusOK)
-			return c.SendString(bodyStr)
-		}
-	})
+    // 🖐 use this at your own risk
+    // 🖐 this feature is subject to change
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		jsonStr := string(c.Body())
+    /*
+       CAPSULE_RELOAD_TOKEN
 
-		//fmt.Println("🎃", c.GetReqHeaders())
+       curl -v -X POST \
+         http://localhost:7070/load-wasm-module \
+         -H 'content-type: application/json; charset=utf-8' \
+         -d '{"url": "http://localhost:9090/hello.wasm", "path": "./tmp/hello.wasm"}'
+         echo ""
+    */
 
-		headersStr := GetHeadersStringFromHeadersRequest(c)
-		uri := c.Request().URI().String()
-		method := c.Method()
+    app.Post("/load-wasm-module", func(c *fiber.Ctx) error {
 
-		wasmRuntime, wasmModule, wasmFunction, ctx := capsule.GetNewWasmRuntimeForHttp(wasmFile)
-		defer wasmRuntime.Close(ctx)
+        reloadWasmFile := func() error {
 
-		uriPos, uriLen, free, err := capsule.ReserveMemorySpaceFor(uri, wasmModule, ctx)
-		defer free.Call(ctx, uriPos)
+            wm := new(RemoteWasmModule)
 
-		jsonStrPos, jsonStrLen, free, err := capsule.ReserveMemorySpaceFor(jsonStr, wasmModule, ctx)
-		defer free.Call(ctx, jsonStrPos)
+            if err := c.BodyParser(wm); err != nil {
+                c.Status(500)
+                return c.SendString("😡[/load-wasm-module] " + err.Error())
+            }
 
-		headersStrPos, headersStrLen, free, err := capsule.ReserveMemorySpaceFor(headersStr, wasmModule, ctx)
-		defer free.Call(ctx, headersStrPos)
+            var errWasmFile error
+            wasmFile, errWasmFile = capsule.GetWasmFileFromUrl(wm.Url, wm.Path)
 
-		methodPos, methodLen, free, err := capsule.ReserveMemorySpaceFor(method, wasmModule, ctx)
-		defer free.Call(ctx, methodPos)
+            if errWasmFile != nil {
+                c.Status(500)
+                return c.SendString("😡[/load-wasm-module] " + errWasmFile.Error())
+            }
 
-		bytes, err := capsule.ExecHandleFunction(wasmFunction, wasmModule, ctx, jsonStrPos, jsonStrLen, uriPos, uriLen, headersStrPos, headersStrLen, methodPos, methodLen)
-		if err != nil {
-			c.Status(500)
-			return c.SendString("out of range of memory size")
-		}
-		bodyStr, headers := GetBodyAndHeaders(bytes, c)
+            c.Status(http.StatusOK)
 
-		// check the return value
-		if commons.IsErrorString(bodyStr) {
-			return SendErrorMessage(bodyStr, headers, c)
-		} else if IsBodyString(bodyStr) {
-			return SendJsonMessage(bodyStr, headers, c)
-		} else {
-			c.Status(http.StatusOK)
-			return c.SendString(bodyStr)
-		}
+            capsule.CallExportedOnLoad(wasmFile)
 
-	})
+            return c.SendString("🙂 " + wm.Url + " loaded")
+        }
 
-	// https://docs.gofiber.io/api/ctx#bodyparser
-	//TODO: protect with token
+        headerTokenReload := GetReloadTokenFromHeadersRequest(c)
+        envVarTokenReload := commons.GetEnv("CAPSULE_RELOAD_TOKEN", "")
 
-	// 🖐 use this at your own risk
-	// 🖐 this feature is subject to change
+        if envVarTokenReload != "" { // you need to add a token to the header request
+            if headerTokenReload == envVarTokenReload {
+                return reloadWasmFile()
+            } else {
+                // not authorized: 401 Unauthorized
+                c.Status(401)
+                return c.SendString("😡[/load-wasm-module] Unauthorized")
+            }
+        } else { // you don't need a token
+            return reloadWasmFile()
+        }
 
-	/*
-	       CAPSULE_RELOAD_TOKEN
+    })
 
-	   	   curl -v -X POST \
-	   	     http://localhost:7070/load-wasm-module \
-	   	     -H 'content-type: application/json; charset=utf-8' \
-	   	     -d '{"url": "http://localhost:9090/hello.wasm", "path": "./tmp/hello.wasm"}'
-	   	     echo ""
-	*/
+    go func() {
+        if crt != "" {
+            // certs/procyon-registry.local.crt
+            // certs/procyon-registry.local.key
+            fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🔐🌍")
+            app.ListenTLS(":"+httpPort, crt, key)
 
-	app.Post("/load-wasm-module", func(c *fiber.Ctx) error {
+        } else {
+            fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🌍")
+            app.Listen(":" + httpPort)
+        }
+    }()
 
-		reloadWasmFile := func() error {
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Listen for the interrupt signal.
+    <-ctx.Done()
 
-			wm := new(RemoteWasmModule)
+    // Restore default behavior on the interrupt signal and notify user of shutdown.
+    stop()
+    fmt.Println("💊 Capsule shutting down gracefully ...")
 
-			if err := c.BodyParser(wm); err != nil {
-				c.Status(500)
-				return c.SendString("😡[/load-wasm-module] " + err.Error())
-			}
+    // === Call the OnExit function of the wasm module ===
+    /*
+       It happens only if you add this code to the wasm module
+       //export OnExit
+       func OnExit() {
+           hf.Log("👋 from the OnExit function")
+       }
+    */
 
-			var errWasmFile error
-			wasmFile, errWasmFile = capsule.GetWasmFileFromUrl(wm.Url, wm.Path)
+    capsule.CallExportedOnExit(wasmFile)
 
-			if errWasmFile != nil {
-				c.Status(500)
-				return c.SendString("😡[/load-wasm-module] " + errWasmFile.Error())
-			}
+    // The context is used to inform the server it has 5 seconds to finish
+    // the request it is currently handling
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
 
-			c.Status(http.StatusOK)
-			return c.SendString("🙂 " + wm.Url + " loaded")
-		}
-
-		headerTokenReload := GetReloadTokenFromHeadersRequest(c)
-		envVarTokenReload := commons.GetEnv("CAPSULE_RELOAD_TOKEN", "")
-
-		//fmt.Println("🔑", "header:", headerTokenReload, "env:", envVarTokenReload)
-
-		if envVarTokenReload != "" { // you need to add a token to the header request
-			if headerTokenReload == envVarTokenReload {
-				return reloadWasmFile()
-			} else {
-				// not authorized: 401 Unauthorized
-				c.Status(401)
-				return c.SendString("😡[/load-wasm-module] Unauthorized")
-			}
-		} else { // you don't need a token
-			return reloadWasmFile()
-		}
-
-	})
-
-	go func() {
-		if crt != "" {
-			//TODO: cert & key
-
-			// certs/procyon-registry.local.crt
-			// certs/procyon-registry.local.key
-			fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🔐🌍")
-			app.ListenTLS(":"+httpPort, crt, key)
-
-		} else {
-			fmt.Println("💊 Capsule (", commons.CapsuleVersion(), ") http server is listening on:", httpPort, "🌍")
-			app.Listen(":" + httpPort)
-		}
-	}()
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	// Listen for the interrupt signal.
-	<-ctx.Done()
-
-	// Restore default behavior on the interrupt signal and notify user of shutdown.
-	stop()
-	fmt.Println("💊 Capsule shutting down gracefully ...")
-
-	// === Call the OnExit function of the wasm module ===
-	/*
-	   It happens only if you add this code to the wasm module
-	   //export OnExit
-	   func OnExit() {
-	       hf.Log("👋 from the OnExit function")
-	   }
-	*/
-	capsule.CallExportedOnExit(wasmFile)
-
-	// The context is used to inform the server it has 5 seconds to finish
-	// the request it is currently handling
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	fmt.Println("💊 Capsule exiting")
+    fmt.Println("💊 Capsule exiting")
 
 }

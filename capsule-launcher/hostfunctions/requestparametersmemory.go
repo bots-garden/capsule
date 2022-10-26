@@ -2,7 +2,6 @@ package hostfunctions
 
 import (
 	"errors"
-	"fmt"
 	"github.com/bots-garden/capsule/commons"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -53,7 +52,7 @@ func StoreRequestParams(c *fiber.Ctx) uint32 {
 
 	requestParamsMap.Store(reqId, wrp)
 
-	fmt.Println("🤖[STORE]", wrp, reqId)
+	//fmt.Println("🤖[STORE]", wrp, reqId)
 
 	return reqId
 }
@@ -65,7 +64,7 @@ func GetRequestParams(reqId uint32) (WasmRequestParam, error) {
 
 	if ok {
 
-		fmt.Println("🤖[READ]", wrp, reqId)
+		//fmt.Println("🤖[READ]", wrp, reqId)
 
 		return wrp.(WasmRequestParam), nil
 
