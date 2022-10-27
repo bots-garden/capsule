@@ -12,14 +12,14 @@
         <meta name="author" content="Philippe Charrière (@k33g)">
       
       
-        <link rel="canonical" href="https://bots-garden.github.io/capsule/capsule-faas/">
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/getting-started-cabu-gen/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
     
     
       
-        <title>🧪 Capsule FaaS - Capsule</title>
+        <title>Generate a function - Capsule</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capsule-faas-experimental" class="md-skip">
+        <a href="#getting-started" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🧪 Capsule FaaS
+              Generate a function
             
           </span>
         </div>
@@ -239,12 +239,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
       
       
@@ -279,11 +281,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../getting-started-cabu-gen/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Generate a function
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Generate a function
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-new-project-function" class="md-nav__link">
+    Generate a new project function
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -665,21 +708,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../capsule-faas/" class="md-nav__link">
         🧪 Capsule FaaS
       </a>
-      
     </li>
   
 
@@ -704,6 +737,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-new-project-function" class="md-nav__link">
+    Generate a new project function
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -716,26 +764,96 @@
                 
                   
 
-  <a href="https://github.com/bots-garden/capsule/edit/master/docs/capsule-faas.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/bots-garden/capsule/edit/master/docs/getting-started-cabu-gen.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-<h1 id="capsule-faas-experimental">Capsule FaaS (experimental)</h1>
-<p>There are four additional components to use <strong>Capsule</strong> (the wasm module launcher/executor) in <strong>FaaS</strong> mode:</p>
-<ul>
-<li><a href="https://github.com/bots-garden/capsule-registry">capsule-registry</a>: a wasm module registry (🚧 support of https://wapm.io/ in progress)</li>
-<li><a href="https://github.com/bots-garden/capsule-reverse-proxy">capsule-reverse-proxy</a>: a reverse-proxy to simplify the functions (wasm modules) access</li>
-<li><a href="https://github.com/bots-garden/capsule-worker">capsule-worker</a>: a server to start the functions (wasm modules) remotely</li>
-<li><a href="https://github.com/bots-garden/capsule-ctl">capsule-ctl</a> (short name: <code>caps</code>): a CLI to facilitate the interaction with the worker</li>
-</ul>
+<h1 id="getting-started">🚀 Getting Started</h1>
+<h2 id="generate-a-new-project-function">Generate a new project function</h2>
+<p><strong>Cabu</strong> can generate function project from templates:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># template name: `service-get`</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="c1"># function project name `hello-world`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>cabu generate service-get hello-world
+</code></pre></div></td></tr></table></div>
 <blockquote>
-<ul>
-<li>You can use the capsule registry independently of FaaS mode, only to provide wasm modules to the capsule launcher</li>
-<li>You can use the capsule reverse-proxy independently of FaaS mode, only to get only one access URL</li>
-</ul>
+<p>At the first launch, <strong>Cabu</strong> will pull a docker image with all the necessary resources to build the WASM function.
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span>
+<span class="normal"><a href="#__codelineno-1-3">3</a></span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span>
+<span class="normal"><a href="#__codelineno-1-5">5</a></span>
+<span class="normal"><a href="#__codelineno-1-6">6</a></span>
+<span class="normal"><a href="#__codelineno-1-7">7</a></span>
+<span class="normal"><a href="#__codelineno-1-8">8</a></span>
+<span class="normal"><a href="#__codelineno-1-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>🐳 using k33g/capsule-builder:0.0.2
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>Unable to find image <span class="s1">&#39;k33g/capsule-builder:0.0.2&#39;</span> locally
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="m">0</span>.0.2: Pulling from k33g/capsule-builder
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a>68c15fb212c3: Pull <span class="nb">complete</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a>28b965d0936e: Pull <span class="nb">complete</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a>f7ba6ae51b0b: Pull <span class="nb">complete</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a>Digest: sha256:47ebf274d7c378d1795f6c8a78d71c45e8368b33a7a3ba8e48ef131a08fd9ac4
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>Status: Downloaded newer image <span class="k">for</span> k33g/capsule-builder:0.0.2
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a>✅🙂 hello-world <span class="k">function</span> generated
+</code></pre></div></td></tr></table></div></p>
 </blockquote>
+<p><strong>Cabu</strong> has generated the <code>hello-world</code> project:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>.
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>├── hello-world
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a>│  ├── go.mod
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>│  └── hello-world.go
+</code></pre></div></td></tr></table></div>
+<p>With the following source code:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span>
+<span class="normal"><a href="#__codelineno-3-18">18</a></span>
+<span class="normal"><a href="#__codelineno-3-19">19</a></span>
+<span class="normal"><a href="#__codelineno-3-20">20</a></span>
+<span class="normal"><a href="#__codelineno-3-21">21</a></span>
+<span class="normal"><a href="#__codelineno-3-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w"></span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">    </span><span class="nx">hf</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;</span><span class="w"></span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">    </span><span class="nx">hf</span><span class="p">.</span><span class="nx">SetHandleHttp</span><span class="p">(</span><span class="nx">Handle</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Handle</span><span class="p">(</span><span class="nx">req</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">resp</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">errResp</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">    </span><span class="nx">headers</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">        </span><span class="s">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="nx">resp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="w">        </span><span class="nx">Body</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;h1&gt;👋 hello world 🌍&lt;/h1&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="w">        </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="nx">headers</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-3-20" name="__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">resp</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"></span>
+<a id="__codelineno-3-22" name="__codelineno-3-22"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div></td></tr></table></div></p>
 
 
 
@@ -756,7 +874,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../references/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 📙 Refs" rel="prev">
+        <a href="../getting-started-cabu-inst/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Install the Cabu CLI" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -765,11 +883,26 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              📙 Refs
+              Install the Cabu CLI
             </div>
           </div>
         </a>
       
+      
+        
+        <a href="../getting-started-cabu-build/" class="md-footer__link md-footer__link--next" aria-label="Next: Build the function module" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Build the function module
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
       
     </nav>
   

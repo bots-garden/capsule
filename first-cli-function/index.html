@@ -12,14 +12,14 @@
         <meta name="author" content="Philippe Charrière (@k33g)">
       
       
-        <link rel="canonical" href="https://bots-garden.github.io/capsule/capsule-faas/">
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/first-cli-function/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
     
     
       
-        <title>🧪 Capsule FaaS - Capsule</title>
+        <title>First CLI function - Capsule</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capsule-faas-experimental" class="md-skip">
+        <a href="#developer-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🧪 Capsule FaaS
+              First CLI function
             
           </span>
         </div>
@@ -357,12 +357,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -383,11 +385,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../first-cli-function/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          First CLI function
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         First CLI function
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#first-cli-function" class="md-nav__link">
+    First CLI function
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -665,21 +708,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../capsule-faas/" class="md-nav__link">
         🧪 Capsule FaaS
       </a>
-      
     </li>
   
 
@@ -704,6 +737,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#first-cli-function" class="md-nav__link">
+    First CLI function
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -716,26 +764,96 @@
                 
                   
 
-  <a href="https://github.com/bots-garden/capsule/edit/master/docs/capsule-faas.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/bots-garden/capsule/edit/master/docs/first-cli-function.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-<h1 id="capsule-faas-experimental">Capsule FaaS (experimental)</h1>
-<p>There are four additional components to use <strong>Capsule</strong> (the wasm module launcher/executor) in <strong>FaaS</strong> mode:</p>
-<ul>
-<li><a href="https://github.com/bots-garden/capsule-registry">capsule-registry</a>: a wasm module registry (🚧 support of https://wapm.io/ in progress)</li>
-<li><a href="https://github.com/bots-garden/capsule-reverse-proxy">capsule-reverse-proxy</a>: a reverse-proxy to simplify the functions (wasm modules) access</li>
-<li><a href="https://github.com/bots-garden/capsule-worker">capsule-worker</a>: a server to start the functions (wasm modules) remotely</li>
-<li><a href="https://github.com/bots-garden/capsule-ctl">capsule-ctl</a> (short name: <code>caps</code>): a CLI to facilitate the interaction with the worker</li>
-</ul>
+<h1 id="developer-guide">Developer Guide</h1>
+<h2 id="first-cli-function">First CLI function</h2>
+<p>Create a <code>go.mod</code> file: (<code>go mod init cli-say-hello</code>)
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>module cli-say-hello
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>go 1.18
+</code></pre></div></td></tr></table></div></p>
+<p>Install the Capsule dependencies:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>go get github.com/bots-garden/capsule/capsulemodule/hostfunctions
+</code></pre></div></td></tr></table></div></p>
+<p>Create a <code>hello.go</code> file:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w"></span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nx">hf</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;</span><span class="w"></span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="c1">// main is required.</span><span class="w"></span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="nx">hf</span><span class="p">.</span><span class="nx">SetHandle</span><span class="p">(</span><span class="nx">Handle</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Handle</span><span class="p">(</span><span class="nx">params</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="w"></span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">param</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">        </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Log</span><span class="p">(</span><span class="s">&quot;- parameter is: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">param</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">    </span><span class="nx">ret</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;The first parameter is: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ret</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="c1">// err = nil</span><span class="w"></span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div></td></tr></table></div></p>
 <blockquote>
 <ul>
-<li>You can use the capsule registry independently of FaaS mode, only to provide wasm modules to the capsule launcher</li>
-<li>You can use the capsule reverse-proxy independently of FaaS mode, only to get only one access URL</li>
+<li><code>hf.SetHandle(Handle)</code> defines the called wasm function</li>
+<li><code>hf.Log(string)</code> prints a value</li>
 </ul>
 </blockquote>
+<p>Build the wasm module:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>tinygo build -o hello.wasm -scheduler<span class="o">=</span>none --no-debug -target wasi ./hello.go
+</code></pre></div></td></tr></table></div></p>
+<p>Execute the <code>Handle</code> function:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>./capsule <span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>   -wasm<span class="o">=</span>./hello.wasm <span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>   -mode<span class="o">=</span>cli <span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>   <span class="s2">&quot;👋 hello world 🌍🎃&quot;</span> <span class="m">1234</span> <span class="s2">&quot;Bob Morane&quot;</span>
+</code></pre></div></td></tr></table></div></p>
+<blockquote>
+<ul>
+<li><code>-wasm</code> flag: the path to the wasm file</li>
+<li><code>-mode</code> execution mode</li>
+</ul>
+</blockquote>
+<p><em>output:</em>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>- parameter is: 👋 hello world 🌍🎃
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>- parameter is: <span class="m">1234</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>- parameter is: Bob Morane
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>The first parameter is: 👋 hello world 🌍🎃
+</code></pre></div></td></tr></table></div></p>
 
 
 
@@ -756,7 +874,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../references/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 📙 Refs" rel="prev">
+        <a href="../getting-started-cabu-reload/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reload the module" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -765,11 +883,26 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              📙 Refs
+              Reload the module
             </div>
           </div>
         </a>
       
+      
+        
+        <a href="../first-http-function/" class="md-footer__link md-footer__link--next" aria-label="Next: First HTTP function" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              First HTTP function
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
       
     </nav>
   

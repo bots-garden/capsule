@@ -12,14 +12,14 @@
         <meta name="author" content="Philippe Charrière (@k33g)">
       
       
-        <link rel="canonical" href="https://bots-garden.github.io/capsule/capsule-faas/">
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/host-functions-log/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
     
     
       
-        <title>🧪 Capsule FaaS - Capsule</title>
+        <title>Log - Capsule</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capsule-faas-experimental" class="md-skip">
+        <a href="#host-functions" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🧪 Capsule FaaS
+              Log
             
           </span>
         </div>
@@ -447,12 +447,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
       
       
       
@@ -487,11 +489,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../host-functions-log/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Log
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Log
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#print-a-message" class="md-nav__link">
+    Print a message
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -665,21 +708,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../capsule-faas/" class="md-nav__link">
         🧪 Capsule FaaS
       </a>
-      
     </li>
   
 
@@ -704,6 +737,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#print-a-message" class="md-nav__link">
+    Print a message
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -716,26 +764,16 @@
                 
                   
 
-  <a href="https://github.com/bots-garden/capsule/edit/master/docs/capsule-faas.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/bots-garden/capsule/edit/master/docs/host-functions-log.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-<h1 id="capsule-faas-experimental">Capsule FaaS (experimental)</h1>
-<p>There are four additional components to use <strong>Capsule</strong> (the wasm module launcher/executor) in <strong>FaaS</strong> mode:</p>
-<ul>
-<li><a href="https://github.com/bots-garden/capsule-registry">capsule-registry</a>: a wasm module registry (🚧 support of https://wapm.io/ in progress)</li>
-<li><a href="https://github.com/bots-garden/capsule-reverse-proxy">capsule-reverse-proxy</a>: a reverse-proxy to simplify the functions (wasm modules) access</li>
-<li><a href="https://github.com/bots-garden/capsule-worker">capsule-worker</a>: a server to start the functions (wasm modules) remotely</li>
-<li><a href="https://github.com/bots-garden/capsule-ctl">capsule-ctl</a> (short name: <code>caps</code>): a CLI to facilitate the interaction with the worker</li>
-</ul>
-<blockquote>
-<ul>
-<li>You can use the capsule registry independently of FaaS mode, only to provide wasm modules to the capsule launcher</li>
-<li>You can use the capsule reverse-proxy independently of FaaS mode, only to get only one access URL</li>
-</ul>
-</blockquote>
+<h1 id="host-functions">Host functions</h1>
+<h2 id="print-a-message">Print a message</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nx">hf</span><span class="p">.</span><span class="nx">Log</span><span class="p">(</span><span class="s">&quot;👋 Hello World 🌍&quot;</span><span class="p">)</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
 
 
 
@@ -756,7 +794,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../references/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 📙 Refs" rel="prev">
+        <a href="../host-functions-intro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -765,11 +803,26 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              📙 Refs
+              Introduction
             </div>
           </div>
         </a>
       
+      
+        
+        <a href="../host-functions-files/" class="md-footer__link md-footer__link--next" aria-label="Next: Files" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Files
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
       
     </nav>
   

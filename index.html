@@ -6,10 +6,16 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="**Capsule** is a **WebAssembly Function Runner**.">
       
+      
+        <meta name="author" content="Philippe Charrière (@k33g)">
+      
+      
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
     
     
       
@@ -95,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              🏠 Home
             
           </span>
         </div>
@@ -138,6 +144,18 @@
 </div>
     
     
+      <div class="md-header__source">
+        <a href="https://github.com/bots-garden/capsule" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bots-garden/capsule
+  </div>
+</a>
+      </div>
+    
   </nav>
   
 </header>
@@ -171,6 +189,18 @@
     Capsule
   </label>
   
+    <div class="md-nav__source">
+      <a href="https://github.com/bots-garden/capsule" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bots-garden/capsule
+  </div>
+</a>
+    </div>
+  
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -191,12 +221,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Home
+          🏠 Home
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
-        Home
+        🏠 Home
       </a>
       
         
@@ -233,33 +263,6 @@
     What are the added values of Capsule?
   </a>
   
-    <nav class="md-nav" aria-label="What are the added values of Capsule?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#capsule-brings-superpowers-to-the-wasm-functions" class="md-nav__link">
-    Capsule brings superpowers to the WASM functions
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#information" class="md-nav__link">
-    Information
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-new" class="md-nav__link">
-    What's new
-  </a>
-  
 </li>
       
     </ul>
@@ -279,7 +282,7 @@
   
     <li class="md-nav__item">
       <a href="install/" class="md-nav__link">
-        Install
+        💊 Install Capsule
       </a>
     </li>
   
@@ -292,10 +295,113 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          🚀 Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="🚀 Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          🚀 Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
-        Getting Started
+      <a href="getting-started-cabu-inst/" class="md-nav__link">
+        Install the Cabu CLI
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-cabu-gen/" class="md-nav__link">
+        Generate a function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-cabu-build/" class="md-nav__link">
+        Build the function module
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-cabu-serve/" class="md-nav__link">
+        Serve the function module
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-cabu-serve-url/" class="md-nav__link">
+        Serve the module frome an url
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-cabu-reload/" class="md-nav__link">
+        Reload the module
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -307,10 +413,85 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          📝 Developer guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="📝 Developer guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          📝 Developer guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="dev-guide/" class="md-nav__link">
-        Developer guide
+      <a href="first-cli-function/" class="md-nav__link">
+        First CLI function
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="first-http-function/" class="md-nav__link">
+        First HTTP function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="first-nats-function/" class="md-nav__link">
+        First Nats function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="first-mqtt-function/" class="md-nav__link">
+        First MQTT function
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -322,25 +503,183 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          🛠️ Host functions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="🛠️ Host functions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          🛠️ Host functions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="host-functions/" class="md-nav__link">
-        Host functions
+      <a href="host-functions-intro/" class="md-nav__link">
+        Introduction
       </a>
     </li>
   
 
-    
-      
-      
-      
-
+            
+          
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="tooling/" class="md-nav__link">
-        Tooling
+      <a href="host-functions-log/" class="md-nav__link">
+        Log
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-files/" class="md-nav__link">
+        Files
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-env/" class="md-nav__link">
+        Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-http/" class="md-nav__link">
+        HTTP Requests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-memory/" class="md-nav__link">
+        Memory cache
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-redis/" class="md-nav__link">
+        Redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-couchbase/" class="md-nav__link">
+        CouchBase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-nats/" class="md-nav__link">
+        Nats
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-mqtt/" class="md-nav__link">
+        MQTT
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host-functions-errors/" class="md-nav__link">
+        Errors
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -354,7 +693,7 @@
   
     <li class="md-nav__item">
       <a href="cookbook/" class="md-nav__link">
-        CookBook
+        🥘 CookBook
       </a>
     </li>
   
@@ -369,7 +708,7 @@
   
     <li class="md-nav__item">
       <a href="references/" class="md-nav__link">
-        Refs
+        📙 Refs
       </a>
     </li>
   
@@ -384,7 +723,7 @@
   
     <li class="md-nav__item">
       <a href="capsule-faas/" class="md-nav__link">
-        Capsule FaaS
+        🧪 Capsule FaaS
       </a>
     </li>
   
@@ -435,33 +774,6 @@
     What are the added values of Capsule?
   </a>
   
-    <nav class="md-nav" aria-label="What are the added values of Capsule?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#capsule-brings-superpowers-to-the-wasm-functions" class="md-nav__link">
-    Capsule brings superpowers to the WASM functions
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#information" class="md-nav__link">
-    Information
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-new" class="md-nav__link">
-    What's new
-  </a>
-  
 </li>
       
     </ul>
@@ -478,8 +790,17 @@
                 
                   
 
+  <a href="https://github.com/bots-garden/capsule/edit/master/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
 
 <h1 id="capsule-the-nano-wasm-functions-runner">Capsule: the nano (wasm) functions runner</h1>
+<div class="admonition info">
+<p class="admonition-title">What's new?</p>
+<p><code>v0.2.8 🦤 [dodo]</code>: Capsule uses now <a href="https://github.com/gofiber/fiber">Fiber</a> instead <a href="https://github.com/gin-gonic/gin">Gin</a>. The size of the Capsule Runner Docker image is now 16.8M!</p>
+</div>
 <h2 id="what-is-capsule">What is <strong>Capsule</strong>?</h2>
 <p><strong>Capsule</strong> is a <strong>WebAssembly Function Runner</strong>. It means that <strong>Capsule</strong> is both:</p>
 <ul>
@@ -538,139 +859,16 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="p">}</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 <h2 id="what-are-the-added-values-of-capsule">What are the <strong>added values</strong> of Capsule?</h2>
-<h3 id="capsule-brings-superpowers-to-the-wasm-functions">Capsule brings superpowers to the WASM functions</h3>
-<p>Thanks to <strong>host functions</strong> provided by <strong>Capsule</strong>, the <strong>WASM functions</strong> can:</p>
-<table>
-<thead>
-<tr>
-<th><strong>Description</strong></th>
-<th><strong>Host function</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Print a message to the console</td>
-<td><code>hf.Log(string)</code></td>
-</tr>
-<tr>
-<td>Read files</td>
-<td><code>hf.ReadFile("about.txt")</code></td>
-</tr>
-<tr>
-<td>Write files</td>
-<td><code>hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")</code></td>
-</tr>
-<tr>
-<td><strong>Read value of the environment variables</strong></td>
-<td><code>hf.GetEnv("MESSAGE")</code></td>
-</tr>
-<tr>
-<td>Make HTTP requests</td>
-<td><code>hf.Http("https://httpbin.org/post", "POST", headers, "👋 hello world 🌍")</code></td>
-</tr>
-<tr>
-<td>Use memory cache (set)</td>
-<td><code>hf.MemorySet("message", "🚀 hello is started")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.MemoryGet("message")</code></td>
-</tr>
-<tr>
-<td>Make Redis queries</td>
-<td><code>hf.RedisSet("greetings", "Hello World")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.RedisGet("greetings")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.RedisKeys("bob*")</code></td>
-</tr>
-<tr>
-<td><strong>Make CouchBase N1QL Query</strong></td>
-<td><code>jsonStringArray, err := hf.CouchBaseQuery(query)</code></td>
-</tr>
-<tr>
-<td><strong>Use Nats</strong></td>
-<td><code>hf.NatsPublish("subject", "hello")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.NatsReply("it's a wasm module here", 10)</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.NatsGetSubject()</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.NatsGetServer()</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.NatsConnectPublish("nats.devsecops.fun:4222", "subject", "🖐 Hello from WASM with Nats 💜")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.NatsConnectRequest("nats.devsecops.fun:4222", "subject", "👋 Hello World 🌍", 1)</code></td>
-</tr>
-<tr>
-<td><strong>Use MQTT</strong></td>
-<td><code>hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic", "👋 Hello World 🌍")</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.MqttGetTopic()</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.MqttPublish("topic", "it's a wasm module here")</code></td>
-</tr>
-<tr>
-<td>Manage Errors</td>
-<td><em>🖐 🚧 it's a work in progress</em></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.GetExitError()</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>hf.GetExitCode()</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="information">Information</h2>
-<table>
-<thead>
-<tr>
-<th><strong>Label</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Issues</td>
-<td><a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></td>
-</tr>
-<tr>
-<td>Last release</td>
-<td><code>v0.2.8 🦤 [dodo]</code></td>
-</tr>
-<tr>
-<td>Dev release</td>
-<td><code>v0.2.9 🦜 [parrot]</code> <em>🚧 in progress</em></td>
-</tr>
-<tr>
-<td>Releases</td>
-<td><a href="https://github.com/bots-garden/capsule/releases">https://github.com/bots-garden/capsule/releases</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="whats-new">What's new</h2>
-<p><code>v0.2.8</code>: Capsule uses now <a href="https://github.com/gofiber/fiber">Fiber</a> instead <a href="https://github.com/gin-gonic/gin">Gin</a>. The size of the Capsule Runner Docker image is now 16.8M!</p>
+<p>Capsule brings superpowers to the WASM function modules with <strong>host functions</strong>. Thanks to these <strong>host functions</strong>, a <strong>WASM function</strong> can, for example, prints a message, reads files, writes to files, makes HTTP requests, ... See the <a href="host-functions-intro/">host functions section</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Useful information for this project</p>
+<ul>
+<li>Issues: <a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></li>
+<li>Last release: <code>v0.2.8 🦤 [dodo]</code></li>
+<li>Next release: <code>v0.2.9 🦜 [parrot]</code> <em>🚧 in progress</em></li>
+<li>Releases: <a href="https://github.com/bots-garden/capsule/releases">https://github.com/bots-garden/capsule/releases</a></li>
+</ul>
+</div>
 
 
 
@@ -692,13 +890,13 @@
       
       
         
-        <a href="install/" class="md-footer__link md-footer__link--next" aria-label="Next: Install" rel="next">
+        <a href="install/" class="md-footer__link md-footer__link--next" aria-label="Next: 💊 Install Capsule" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Install
+              💊 Install Capsule
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -711,6 +909,10 @@
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 - 2023 Philippe Charrière
+    </div>
   
   
     Made with
@@ -729,10 +931,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="assets/javascripts/bundle.8492ddcf.min.js"></script>
       
     
   </body>
