@@ -1,8 +1,8 @@
 # Capsule: the nano (wasm) functions runner
 
 !!! info "What's new?"
-
-    `v0.2.8 🦤 [dodo]`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
+    - `v0.2.9 🦜 [parrot]`: Hot reloading of the wasm module [see the "Reload the module" section](getting-started-cabu-reload.md) and HTTP service refactoring.
+    - `v0.2.8 🦤 [dodo]`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
 
 
 ## What is **Capsule**?
@@ -49,7 +49,7 @@ Capsule brings superpowers to the WASM function modules with **host functions**.
 
 
 !!! info "Useful information for this project"
-    - Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
-    - Last release: `v0.2.8 🦤 [dodo]`
-    - Next release: `v0.2.9 🦜 [parrot]` *🚧 in progress*
-    - Releases: [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases)
+    - 🖐 Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
+    - 📦 Last release: `v0.2.9 🦜 [parrot]`
+    - 📦 Next release: `v0.3.0 🎅 [santa]` *🚧 in progress*
+    - 📦 Releases: [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases)

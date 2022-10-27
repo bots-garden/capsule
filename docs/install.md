@@ -7,7 +7,7 @@ Before executing or running a function, you need to install the last release of 
 🖐 **On Linux**:
 
 ```bash
-export CAPSULE_VERSION="v0.2.8"
+export CAPSULE_VERSION="v0.2.9"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 ```
 
@@ -29,7 +29,7 @@ MESSAGE="👋 Hello World 🌍" capsule \
   -httpPort=8080
 ```
 
-> You can download the appropriate release of **Capsule** here: [`v0.2.8 🦤 [dodo]`](https://github.com/bots-garden/capsule/releases/tag/v0.2.8)
+> You can download the appropriate release of **Capsule** here: [`v0.2.9 🦜 [parrot]`](https://github.com/bots-garden/capsule/releases/tag/v0.2.9)
 
 ## Using the Capsule Docker image
 > The documentation is a wip 🚧
@@ -42,7 +42,7 @@ This image will be used to deploy Capsule to CaaS or Kubernetes. You can use it 
 docker run \
   -p 8080:8080 \
   -e MESSAGE="👋 Hello World 🌍" \
-  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.8 \
+  -v $(pwd):/app --rm k33g/capsule-launcher:0.2.9 \
   /capsule \
   -wasm=./app/index.wasm \
   -mode=http \

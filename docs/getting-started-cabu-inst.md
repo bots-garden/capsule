@@ -7,7 +7,7 @@ To write and build wasm function for Capsule, you need to install GoLang and Tin
 ## Install **Cabu** (Capsule Builder)
 
 ```bash
-CAPSULE_BUILDER_VERSION="v0.0.2"
+CAPSULE_BUILDER_VERSION="v0.0.3"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule-function-builder/${CAPSULE_BUILDER_VERSION}/install-capsule-builder.sh | bash
 ```
 
