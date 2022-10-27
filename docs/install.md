@@ -1,4 +1,4 @@
-# Installing Capsule
+# Install Capsule
 
 Before executing or running a function, you need to install the last release of **Capsule**:
 > The script will install **Capsule** in `$HOME/.local/bin`

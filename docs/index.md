@@ -40,35 +40,7 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
 
 ## What are the **added values** of Capsule?
 
-### Capsule brings superpowers to the WASM functions
-
-Thanks to **host functions** provided by **Capsule**, the **WASM functions** can:
-
-| **Description**  | **Host function**  |
-|---|---|
-| Print a message to the console | `hf.Log(string)` |
-| Read files | `hf.ReadFile("about.txt")` |
-| Write files | `hf.WriteFile("hello.txt", "👋 HELLO WORLD 🌍")`|
-| **Read value of the environment variables** | `hf.GetEnv("MESSAGE")` |
-| Make HTTP requests | `hf.Http("https://httpbin.org/post", "POST", headers, "👋 hello world 🌍")` |
-| Use memory cache (set) | `hf.MemorySet("message", "🚀 hello is started")` |
-|  | `hf.MemoryGet("message")` |
-| Make Redis queries | `hf.RedisSet("greetings", "Hello World")` |
-|  | `hf.RedisGet("greetings")` |
-|  | `hf.RedisKeys("bob*")` |
-| **Make CouchBase N1QL Query** | `jsonStringArray, err := hf.CouchBaseQuery(query)` |
-| **Use Nats** | `hf.NatsPublish("subject", "hello")` |
-| | `hf.NatsReply("it's a wasm module here", 10)` |
-| | `hf.NatsGetSubject()` |
-| | `hf.NatsGetServer()` |
-| | `hf.NatsConnectPublish("nats.devsecops.fun:4222", "subject", "🖐 Hello from WASM with Nats 💜")` |
-| | `hf.NatsConnectRequest("nats.devsecops.fun:4222", "subject", "👋 Hello World 🌍", 1)` |
-| **Use MQTT** | `hf.MqttConnectPublish("127.0.0.1:1883", "sensor_id0", "topic", "👋 Hello World 🌍")` |
-| | `hf.MqttGetTopic()` |
-| | `hf.MqttPublish("topic", "it's a wasm module here")` |
-| Manage Errors | *🖐 🚧 it's a work in progress* |
-| | `hf.GetExitError()` |
-| | `hf.GetExitCode()` |
+Capsule brings superpowers to the WASM function modules with **host functions**. Thanks to these **host functions**, a **WASM function** can, for example, prints a message, reads files, writes to files, makes HTTP requests, ... See the [host functions section](host-functions-intro.md).
 
 ## Information
 
