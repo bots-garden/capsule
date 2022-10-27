@@ -9,5 +9,6 @@ replace (
 	github.com/bots-garden/capsule v0.2.5 => ../
 	github.com/bots-garden/capsule v0.2.6 => ../
 	github.com/bots-garden/capsule v0.2.7 => ../
+	github.com/bots-garden/capsule v0.2.8 => ../
 	github.com/bots-garden/capsule v0.2.9 => ../
 )
