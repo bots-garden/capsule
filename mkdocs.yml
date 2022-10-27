@@ -45,6 +45,12 @@ nav:
 theme:
   name: material
 markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
   - pymdownx.highlight:
       use_pygments: true
       auto_title: false

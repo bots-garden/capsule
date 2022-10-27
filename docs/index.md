@@ -1,5 +1,10 @@
 # Capsule: the nano (wasm) functions runner
 
+!!! info "What's new?"
+
+    `v0.2.8 🦤 [dodo]`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
+
+
 ## What is **Capsule**?
 
 **Capsule** is a **WebAssembly Function Runner**. It means that **Capsule** is both:
@@ -42,15 +47,9 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
 
 Capsule brings superpowers to the WASM function modules with **host functions**. Thanks to these **host functions**, a **WASM function** can, for example, prints a message, reads files, writes to files, makes HTTP requests, ... See the [host functions section](host-functions-intro.md).
 
-## Information
 
-| **Label**  | **Description**  |
-|---|---|
-| Issues        | [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)  |
-| Last release  | `v0.2.8 🦤 [dodo]`  |
-| Dev release   | `v0.2.9 🦜 [parrot]` *🚧 in progress*  |
-| Releases      | [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases) |
-
-## What's new
-
-`v0.2.8`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
+!!! info "Useful information for this project"
+    - Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
+    - Last release: `v0.2.8 🦤 [dodo]`
+    - Next release: `v0.2.9 🦜 [parrot]` *🚧 in progress*
+    - Releases: [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases)
