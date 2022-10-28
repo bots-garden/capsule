@@ -5,9 +5,7 @@ We use [mkdocs](https://www.mkdocs.org/)
 ## Install
 
 ```bash
-pip install mkdocs
 pip install mkdocs-material
-
 ```
 
 ## Serve

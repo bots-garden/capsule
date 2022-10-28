@@ -38,7 +38,8 @@ nav:
       - Nats: host-functions-nats.md
       - MQTT: host-functions-mqtt.md
       - Errors: host-functions-errors.md
-    - 🥘 CookBook: cookbook.md
+    - 🥘 CookBook:
+      - Capsule functions on Civo: cookbook-civo.md
     - 📙 Refs: references.md
     - 🧪 Capsule FaaS: capsule-faas.md
 
