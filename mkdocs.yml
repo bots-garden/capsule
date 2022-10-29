@@ -40,7 +40,7 @@ nav:
       - Errors: host-functions-errors.md
     - 🥘 CookBook:
       - Capsule function on Civo: cookbook-civo.md
-      - Capsule function on Fly.yo: cookbook-fly.md
+      - Capsule function on Fly.io: cookbook-fly.md
     - 📙 Refs: references.md
     - 🧪 Capsule FaaS: capsule-faas.md
 
