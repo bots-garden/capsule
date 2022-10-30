@@ -50,6 +50,7 @@ Capsule brings superpowers to the WASM function modules with **host functions**.
 
 !!! info "Useful information for this project"
     - 🖐 Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
+    - 🚧 Milestones: [https://github.com/bots-garden/capsule/milestones](https://github.com/bots-garden/capsule/milestones)
     - 📦 Last release: `v0.2.9 🦜 [parrot]`
     - 📦 Next release: `v0.3.0 🎅 [santa]` *🚧 in progress*
     - 📦 Releases: [https://github.com/bots-garden/capsule/releases](https://github.com/bots-garden/capsule/releases)

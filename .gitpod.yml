@@ -6,6 +6,7 @@ tasks:
       echo "🚀 before..."
     init: |
       echo "🚀 initialize..."
+      pip install mkdocs-material
 
 ports:
   - port: 8080
