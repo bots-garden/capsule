@@ -11,7 +11,7 @@ import (
 
 //export hostRequestParamsGet
 //go:linkname hostRequestParamsGet
-func hostRequestParamsGet(reqId uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostRequestParamsGet(reqId uint32, returnBufferPosition **byte, returnBufferLength *int) uint32
 
 // RequestParamsGet :
 // This function is called by the wasm module

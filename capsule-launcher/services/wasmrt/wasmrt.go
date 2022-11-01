@@ -26,11 +26,11 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 	// 🏠 Add host functions to the wasmModule (to be available from the module)
 	// These functions allows the module to call functions of the host
 	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
+		// hostLogString
 		NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.LogString, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
 		Export("hostLogString").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
-		NewFunctionBuilder().WithFunc(hostfunctions.Ping).Export("hostPing").
 		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").
 		// hostReadFile
 		NewFunctionBuilder().
@@ -64,7 +64,13 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		NewFunctionBuilder().WithFunc(hostfunctions.MqttConnectPublish).Export("hostMqttConnectPublish").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetExitError).Export("hostGetExitError").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetExitCode).Export("hostGetExitCode").
-		NewFunctionBuilder().WithFunc(hostfunctions.RequestParamsGet).Export("hostRequestParamsGet").
+		// hostRequestParamsGet
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.RequestParamsGet,
+			[]api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostRequestParamsGet").
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
