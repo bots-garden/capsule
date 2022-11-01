@@ -23,37 +23,37 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 	wasmRuntime := wazero.NewRuntime(ctx)
 	//https://github.com/tetratelabs/wazero/blob/main/examples/allocation/tinygo/greet.go#L29
 
-	// 🏠 Add host functions to the wasmModule (to be availale from the module)
+	// 🏠 Add host functions to the wasmModule (to be available from the module)
 	// These functions allows the module to call functions of the host
 	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
-		ExportFunction("hostLogString", hostfunctions.LogString).
-		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
-		ExportFunction("hostPing", hostfunctions.Ping).
-		ExportFunction("hostHttp", hostfunctions.Http).
-		ExportFunction("hostReadFile", hostfunctions.ReadFile).
-		ExportFunction("hostWriteFile", hostfunctions.WriteFile).
-		ExportFunction("hostGetEnv", hostfunctions.GetEnv).
-		ExportFunction("hostRedisSet", hostfunctions.RedisSet).
-		ExportFunction("hostRedisGet", hostfunctions.RedisGet).
-		ExportFunction("hostRedisKeys", hostfunctions.RedisKeys).
-		ExportFunction("hostMemorySet", hostfunctions.MemorySet).
-		ExportFunction("hostMemoryGet", hostfunctions.MemoryGet).
-		ExportFunction("hostMemoryKeys", hostfunctions.MemoryKeys).
-		ExportFunction("hostCouchBaseQuery", hostfunctions.CouchBaseQuery).
-		ExportFunction("hostNatsPublish", hostfunctions.NatsPublish).
-		ExportFunction("hostNatsConnectPublish", hostfunctions.NatsConnectPublish).
-		ExportFunction("hostNatsGetSubject", hostfunctions.NatsGetSubject).
-		ExportFunction("hostNatsGetServer", hostfunctions.NatsGetServer).
-		ExportFunction("hostNatsConnectRequest", hostfunctions.NatsConnectRequest).
-		ExportFunction("hostNatsReply", hostfunctions.NatsReply).
-		ExportFunction("hostMqttGetTopic", hostfunctions.MqttGetTopic).
-		ExportFunction("hostMqttGetServer", hostfunctions.MqttGetServer).
-		ExportFunction("hostMqttGetClientId", hostfunctions.MqttGetClientId).
-		ExportFunction("hostMqttPublish", hostfunctions.MqttPublish).
-		ExportFunction("hostMqttConnectPublish", hostfunctions.MqttConnectPublish).
-		ExportFunction("hostGetExitError", hostfunctions.GetExitError).
-		ExportFunction("hostGetExitCode", hostfunctions.GetExitCode).
-		ExportFunction("hostRequestParamsGet", hostfunctions.RequestParamsGet).
+		NewFunctionBuilder().WithFunc(hostfunctions.LogString).Export("hostLogString").
+		NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
+		NewFunctionBuilder().WithFunc(hostfunctions.Ping).Export("hostPing").
+		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").
+		NewFunctionBuilder().WithFunc(hostfunctions.ReadFile).Export("hostReadFile").
+		NewFunctionBuilder().WithFunc(hostfunctions.WriteFile).Export("hostWriteFile").
+		NewFunctionBuilder().WithFunc(hostfunctions.GetEnv).Export("hostGetEnv").
+		NewFunctionBuilder().WithFunc(hostfunctions.RedisSet).Export("hostRedisSet").
+		NewFunctionBuilder().WithFunc(hostfunctions.RedisGet).Export("hostRedisGet").
+		NewFunctionBuilder().WithFunc(hostfunctions.RedisKeys).Export("hostRedisKeys").
+		NewFunctionBuilder().WithFunc(hostfunctions.MemorySet).Export("hostMemorySet").
+		NewFunctionBuilder().WithFunc(hostfunctions.MemoryGet).Export("hostMemoryGet").
+		NewFunctionBuilder().WithFunc(hostfunctions.MemoryKeys).Export("hostMemoryKeys").
+		NewFunctionBuilder().WithFunc(hostfunctions.CouchBaseQuery).Export("hostCouchBaseQuery").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsPublish).Export("hostNatsPublish").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsConnectPublish).Export("hostNatsConnectPublish").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsGetSubject).Export("hostNatsGetSubject").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsGetServer).Export("hostNatsGetServer").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsConnectRequest).Export("hostNatsConnectRequest").
+		NewFunctionBuilder().WithFunc(hostfunctions.NatsReply).Export("hostNatsReply").
+		NewFunctionBuilder().WithFunc(hostfunctions.MqttGetTopic).Export("hostMqttGetTopic").
+		NewFunctionBuilder().WithFunc(hostfunctions.MqttGetServer).Export("hostMqttGetServer").
+		NewFunctionBuilder().WithFunc(hostfunctions.MqttGetClientId).Export("hostMqttGetClientId").
+		NewFunctionBuilder().WithFunc(hostfunctions.MqttPublish).Export("hostMqttPublish").
+		NewFunctionBuilder().WithFunc(hostfunctions.MqttConnectPublish).Export("hostMqttConnectPublish").
+		NewFunctionBuilder().WithFunc(hostfunctions.GetExitError).Export("hostGetExitError").
+		NewFunctionBuilder().WithFunc(hostfunctions.GetExitCode).Export("hostGetExitCode").
+		NewFunctionBuilder().WithFunc(hostfunctions.RequestParamsGet).Export("hostRequestParamsGet").
 		Instantiate(ctx, wasmRuntime)
 
 	if errEnv != nil {
