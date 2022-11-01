@@ -34,7 +34,9 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").
 		NewFunctionBuilder().WithFunc(hostfunctions.ReadFile).Export("hostReadFile").
 		NewFunctionBuilder().WithFunc(hostfunctions.WriteFile).Export("hostWriteFile").
-		NewFunctionBuilder().WithFunc(hostfunctions.GetEnv).Export("hostGetEnv").
+		NewFunctionBuilder().
+		WithGoModuleFunction(hostfunctions.GetEnv, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
+		Export("hostGetEnv").
 		NewFunctionBuilder().WithFunc(hostfunctions.RedisSet).Export("hostRedisSet").
 		NewFunctionBuilder().WithFunc(hostfunctions.RedisGet).Export("hostRedisGet").
 		NewFunctionBuilder().WithFunc(hostfunctions.RedisKeys).Export("hostRedisKeys").

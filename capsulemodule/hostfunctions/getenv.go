@@ -10,7 +10,7 @@ import (
 
 //export hostGetEnv
 //go:linkname hostGetEnv
-func hostGetEnv(varNamePtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostGetEnv(varNamePtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // GetEnv :
 // Call host function: hostGetEnv
