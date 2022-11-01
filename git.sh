@@ -29,7 +29,7 @@ case $1 in
     ;;
 
   # ✨: sparkles
-  sparkles|feature)
+  sparkles)
     message="Introduce new features. $2"
     ;;
 
@@ -269,7 +269,7 @@ case $1 in
     ;;
 
   # ⚗️: alembic
-  alembic|experiments)
+  alembic)
     message="Perform experiments. $2"
     ;;
 
@@ -368,6 +368,11 @@ case $1 in
     message="Add or update code related to validation. $2"
     ;;
 
+  # 🧪: test-tube
+  experiments)
+    message="Experiments"
+    emoji="test_tube"
+    ;;
 
   *)
   message="updated. $2"
@@ -375,4 +380,19 @@ case $1 in
 
 esac
 
-git add .; git commit -m ":$1: $message"; git push
+if [ -z "$emoji" ]
+then
+    # empty
+    git add .; git commit -m ":$1: $message"; git push
+else
+    # not empty
+    if [ -z "$2" ]
+    then
+        git add .; git commit -m ":$emoji: $message"; git push
+    else
+        git add .; git commit -m ":$emoji: $message: $2"; git push
+    fi
+
+fi
+
+
