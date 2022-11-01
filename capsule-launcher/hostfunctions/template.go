@@ -14,14 +14,14 @@ import (
     2- add a reference to this function to `services/wasmrt/wasmrt.go` inside the `CreateWasmRuntime` function
     ```golang
 	// 🏠 Add host functions
-	_, errEnv := wasmRuntime.NewModuleBuilder("env").
-		ExportFunction("hostLogString", hostfunctions.LogString).
-		ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
-		ExportFunction("hostPing", hostfunctions.Ping).
-		ExportFunction("hostHttp", hostfunctions.Http).
-		ExportFunction("hostReadFile", hostfunctions.ReadFile).
-		ExportFunction("hostWriteFile", hostfunctions.WriteFile).
-        ExportFunction("hostFunctionName", hostfunctions.FunctionName). ⬅️
+	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
+		NewFunctionBuilder().WithFunc(hostfunctions.LogString).Export("hostLogString").
+		NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
+		NewFunctionBuilder().WithFunc(hostfunctions.Ping).Export("hostPing").
+		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").
+		NewFunctionBuilder().WithFunc(hostfunctions.ReadFile).Export("hostReadFile").
+		NewFunctionBuilder().WithFunc(hostfunctions.WriteFile).Export("hostWriteFile").
+		NewFunctionBuilder().WithFunc(hostfunctions.FunctionName).Export("hostFunctionName").
 		Instantiate(ctx, wasmRuntime)
     ```
     3- Implement the feature

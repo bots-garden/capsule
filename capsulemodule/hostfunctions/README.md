@@ -23,18 +23,18 @@ func Http(ctx context.Context, module api.Module, urlOffset, urlByteCount, metho
 }
 ```
 
-In `services/common/common.go` add the host funtion to the runtime:
+In `services/common/common.go` add the host function to the runtime:
 
 > Example: `common.go`
 
 ```golang
 // 🏠 Add host functions
-_, errEnv := wasmRuntime.NewModuleBuilder("env").
-  ExportFunction("hostLogString", hostfunctions.LogString).
-  ExportFunction("hostGetHostInformation", hostfunctions.GetHostInformation).
-  ExportFunction("hostPing", hostfunctions.Ping).
-  ExportFunction("hostHttp", hostfunctions.Http). 👋👋👋
-  Instantiate(ctx, wasmRuntime)
+_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
+    NewFunctionBuilder().WithFunc(hostfunctions.LogString).Export("hostLogString").
+    NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
+    NewFunctionBuilder().WithFunc(hostfunctions.Ping).Export("hostPing").
+    NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp"). // 👋👋👋
+    Instantiate(ctx, wasmRuntime)
 ```
 
 In `wasmhostfunctions` directory, create a file `function_name.go` (use this package: `package helpers`

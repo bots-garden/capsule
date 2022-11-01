@@ -19,7 +19,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.39.0
 	github.com/google/uuid v1.3.0
 	github.com/nats-io/nats.go v1.18.0
-	github.com/tetratelabs/wazero v1.0.0-pre.2
+	github.com/tetratelabs/wazero v1.0.0-pre.3
 )
 
 require (
