@@ -9,7 +9,7 @@ import (
 
 //export hostReadFile
 //go:linkname hostReadFile
-func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostReadFile(filePathPtrPos uint32, size uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // ReadFile :
 // Call host function: hostReadFile
