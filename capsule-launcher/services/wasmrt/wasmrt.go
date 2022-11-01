@@ -26,7 +26,9 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 	// 🏠 Add host functions to the wasmModule (to be available from the module)
 	// These functions allows the module to call functions of the host
 	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
-		NewFunctionBuilder().WithFunc(hostfunctions.LogString).Export("hostLogString").
+		NewFunctionBuilder().
+		WithGoModuleFunction(hostfunctions.LogString, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
+		Export("hostLogString").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
 		NewFunctionBuilder().WithFunc(hostfunctions.Ping).Export("hostPing").
 		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").

@@ -6,11 +6,11 @@ import (
 
 //export hostLogString
 //go:linkname hostLogString
-func hostLogString(ptrPos, size uint32)
+func hostLogString(position, length uint32) uint32
 
 // Log : call host function: hostLogString
 // Print a string
 func Log(message string) {
-	ptr, size := getStringPtrPositionAndSize(message)
-	hostLogString(ptr, size)
+	position, length := getStringPtrPositionAndSize(message)
+	hostLogString(position, length)
 }

@@ -172,6 +172,7 @@ case $1 in
   # 👽️: alien
   alien)
     message="Update code due to external API changes"
+    emoji="alien"
     ;;
 
   # 🚚: truck
