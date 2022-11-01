@@ -270,8 +270,9 @@ case $1 in
     ;;
 
   # ⚗️: alembic
-  alembic)
+  alembic|experiments|experiment|xp)
     message="Perform experiments"
+    emoji="alembic"
     ;;
 
   # 🔍️: mag
@@ -367,12 +368,6 @@ case $1 in
   # 🦺: safety-vest
   safety_vest)
     message="Add or update code related to validation"
-    ;;
-
-  # 🧪: test-tube
-  experiments)
-    message="Experiments"
-    emoji="test_tube"
     ;;
 
   *)
