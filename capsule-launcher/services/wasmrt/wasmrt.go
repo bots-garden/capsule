@@ -30,8 +30,28 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.LogString, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
 		Export("hostLogString").
-		NewFunctionBuilder().WithFunc(hostfunctions.GetHostInformation).Export("hostGetHostInformation").
-		NewFunctionBuilder().WithFunc(hostfunctions.Http).Export("hostHttp").
+		// hostGetHostInformation TODO: to be translated
+		NewFunctionBuilder().
+		WithFunc(hostfunctions.GetHostInformation).
+		Export("hostGetHostInformation").
+		// hostHttp
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.Http,
+			[]api.ValueType{
+				api.ValueTypeI32, // url position (in memory)
+				api.ValueTypeI32, // url length
+				api.ValueTypeI32, // method position
+				api.ValueTypeI32, // method length
+				api.ValueTypeI32, // headers position
+				api.ValueTypeI32, // headers length
+				api.ValueTypeI32, // body position
+				api.ValueTypeI32, // body length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostHttp").
 		// hostReadFile
 		NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.ReadFile, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).

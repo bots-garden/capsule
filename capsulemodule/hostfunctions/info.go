@@ -7,7 +7,7 @@ import (
 
 //export hostGetHostInformation
 //go:linkname hostGetHostInformation
-func hostGetHostInformation(retBuffPtrPos **byte, retBuffSize *int)
+func hostGetHostInformation(positionReturnBuffer **byte, lengthReturnBuffer *int)
 
 /*
 Call host function: hostGetHostInformation
