@@ -36,8 +36,15 @@ case $1 in
   # 📝: memo
   memo|doc|documentation)
     message="Add or update documentation"
-    emoji="memo"
+    emoji="📝"
     ;;
+
+  # 🌸: cherry_blossom
+  gardening|garden|clean|cleaning)
+    message="Gardening"
+    emoji="🌸"
+    ;;
+
 
   # 🚀: rocket
   rocket)
@@ -172,7 +179,7 @@ case $1 in
   # 👽️: alien
   alien)
     message="Update code due to external API changes"
-    emoji="alien"
+    emoji="👽️"
     ;;
 
   # 🚚: truck
@@ -273,7 +280,7 @@ case $1 in
   # ⚗️: alembic
   alembic|experiments|experiment|xp)
     message="Perform experiments"
-    emoji="alembic"
+    emoji="⚗"
     ;;
 
   # 🔍️: mag

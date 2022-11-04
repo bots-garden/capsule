@@ -9,7 +9,7 @@ import (
 )
 
 func CallExportedOnLoad(wasmFile []byte) {
-	runtime, module, ctx := CreateWasmRuntimeAndModuleInstances(wasmFile)
+	runtime, module, ctx := GetWasmRuntimeAndModuleInstances(wasmFile)
 	function := module.ExportedFunction("OnLoad")
 
 	if function != nil {
@@ -28,7 +28,7 @@ func CallExportedOnLoad(wasmFile []byte) {
 }
 
 func CallExportedOnExit(wasmFile []byte) {
-	runtime, module, ctx := CreateWasmRuntimeAndModuleInstances(wasmFile)
+	runtime, module, ctx := GetWasmRuntimeAndModuleInstances(wasmFile)
 	function := module.ExportedFunction("OnExit")
 
 	if function != nil {
@@ -59,7 +59,7 @@ func GetModuleFunctionForHttp(wasmFile []byte) (module api.Module, function api.
 // Used by capsule-launcher/services/cli/cli.go
 // - Execute
 func GetNewWasmRuntime(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
-	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
+	runtime, module, context = GetWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callHandle")
 	return runtime, module, function, context
 }
@@ -68,7 +68,7 @@ func GetNewWasmRuntime(wasmFile []byte) (runtime wazero.Runtime, module api.Modu
 // Used by capsule-launcher/services/nats/listen.go
 // - Listen
 func GetNewWasmRuntimeForNats(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
-	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
+	runtime, module, context = GetWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callNatsMessageHandle")
 	return runtime, module, function, context
 }
@@ -77,7 +77,7 @@ func GetNewWasmRuntimeForNats(wasmFile []byte) (runtime wazero.Runtime, module a
 // Used by capsule-launcher/services/mqtt/mqtt.go
 // - setHandler
 func GetNewWasmRuntimeForMqtt(wasmFile []byte) (runtime wazero.Runtime, module api.Module, function api.Function, context context.Context) {
-	runtime, module, context = CreateWasmRuntimeAndModuleInstances(wasmFile)
+	runtime, module, context = GetWasmRuntimeAndModuleInstances(wasmFile)
 	function = module.ExportedFunction("callMqttMessageHandle")
 	return runtime, module, function, context
 }

@@ -3,11 +3,11 @@ package capsule
 import (
 	"context"
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
+	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 	"log"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
-	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 )
 
 // GetPackedPtrPositionAndSize :
@@ -20,22 +20,28 @@ func GetPackedPtrPositionAndSize(result []uint64) (ptrPos uint32, size uint32) {
 
 func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
-	wasmRuntime := wazero.NewRuntime(ctx)
+	//wasmRuntime := wazero.NewRuntime(ctx)
+	wasmRuntime := wazero.NewRuntimeWithConfig(ctx, wazero.NewRuntimeConfigInterpreter())
+
 	//https://github.com/tetratelabs/wazero/blob/main/examples/allocation/tinygo/greet.go#L29
 
 	// 🏠 Add host functions to the wasmModule (to be available from the module)
 	// These functions allows the module to call functions of the host
-	_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
-		// hostLogString
-		NewFunctionBuilder().
+
+	builder := wasmRuntime.NewHostModuleBuilder("env")
+
+	// hostLogString
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.LogString, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
-		Export("hostLogString").
-		// hostGetHostInformation TODO: to be translated
-		NewFunctionBuilder().
+		Export("hostLogString")
+
+	// hostGetHostInformation TODO: to be translated
+	builder.NewFunctionBuilder().
 		WithFunc(hostfunctions.GetHostInformation).
-		Export("hostGetHostInformation").
-		// hostHttp
-		NewFunctionBuilder().
+		Export("hostGetHostInformation")
+
+	// hostHttp
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(
 			hostfunctions.Http,
 			[]api.ValueType{
@@ -51,20 +57,26 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 				api.ValueTypeI32, // returnValue length
 			},
 			[]api.ValueType{api.ValueTypeI32}).
-		Export("hostHttp").
-		// hostReadFile
-		NewFunctionBuilder().
+		Export("hostHttp")
+
+	//_, errEnv := wasmRuntime.NewHostModuleBuilder("env").
+
+	// hostReadFile
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.ReadFile, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
-		Export("hostReadFile").
-		// hostWriteFile
-		NewFunctionBuilder().
+		Export("hostReadFile")
+
+	// hostWriteFile
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.WriteFile, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
-		Export("hostWriteFile").
-		// hostGetEnv
-		NewFunctionBuilder().
+		Export("hostWriteFile")
+
+	// hostGetEnv
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(hostfunctions.GetEnv, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
-		Export("hostGetEnv").
-		NewFunctionBuilder().WithFunc(hostfunctions.RedisSet).Export("hostRedisSet").
+		Export("hostGetEnv")
+
+	builder.NewFunctionBuilder().WithFunc(hostfunctions.RedisSet).Export("hostRedisSet").
 		NewFunctionBuilder().WithFunc(hostfunctions.RedisGet).Export("hostRedisGet").
 		NewFunctionBuilder().WithFunc(hostfunctions.RedisKeys).Export("hostRedisKeys").
 		NewFunctionBuilder().WithFunc(hostfunctions.MemorySet).Export("hostMemorySet").
@@ -83,29 +95,30 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		NewFunctionBuilder().WithFunc(hostfunctions.MqttPublish).Export("hostMqttPublish").
 		NewFunctionBuilder().WithFunc(hostfunctions.MqttConnectPublish).Export("hostMqttConnectPublish").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetExitError).Export("hostGetExitError").
-		NewFunctionBuilder().WithFunc(hostfunctions.GetExitCode).Export("hostGetExitCode").
-		// hostRequestParamsGet
-		NewFunctionBuilder().
+		NewFunctionBuilder().WithFunc(hostfunctions.GetExitCode).Export("hostGetExitCode")
+
+	// hostRequestParamsGet
+	builder.NewFunctionBuilder().
 		WithGoModuleFunction(
 			hostfunctions.RequestParamsGet,
 			[]api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32},
 			[]api.ValueType{api.ValueTypeI32}).
-		Export("hostRequestParamsGet").
-		Instantiate(ctx, wasmRuntime)
+		Export("hostRequestParamsGet")
 
-	if errEnv != nil {
-		log.Panicln("🔴 Error with env module and host function(s):", errEnv)
+	_, errBuilder := builder.Instantiate(ctx, wasmRuntime)
+	if errBuilder != nil {
+		log.Panicln("🔴 Error with env module and host function(s):", errBuilder)
 	}
 
-	_, errInstantiate := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
-	if errInstantiate != nil {
-		log.Panicln("🔴 Error with Instantiate:", errInstantiate)
+	_, errSnapshot := wasi_snapshot_preview1.Instantiate(ctx, wasmRuntime)
+	if errSnapshot != nil {
+		log.Panicln("🔴 Error with SnapShot Instantiate:", errSnapshot)
 	}
 
 	return wasmRuntime
 }
 
-func CreateWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
+func GetWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Module, context.Context) {
 	// Choose the context to use for function calls.
 	ctx := context.Background()
 
@@ -122,21 +135,12 @@ func CreateWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.M
 	return wasmRuntime, wasmModule, ctx
 }
 
-var persistentWasmRuntime wazero.Runtime
-
-func CreatePersistentWasmRuntime(ctx context.Context) wazero.Runtime {
-	if persistentWasmRuntime == nil {
-		return CreateWasmRuntime(ctx)
-	} else {
-		return persistentWasmRuntime
-	}
-}
-
 func GetModuleInstance(wasmFile []byte) (api.Module, context.Context) {
 	// Choose the context to use for function calls.
 	ctx := context.Background()
 
-	wasmRuntime := CreatePersistentWasmRuntime(ctx) // 👋 we must not close the runtime (?)
+	//wasmRuntime := CreatePersistentWasmRuntime(ctx) // 👋 we must not close the runtime (?)
+	wasmRuntime := CreateWasmRuntime(ctx)
 	//defer wasmRuntime.Close(ctx) // This closes everything this Runtime created.
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
