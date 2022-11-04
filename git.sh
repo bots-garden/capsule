@@ -19,8 +19,9 @@ case $1 in
     ;;
 
   # 🐛: bug
-  bug)
+  bug|fix)
     message="Fix a bug"
+    emoji="🐛"
     ;;
 
   # 🚑️: ambulance
@@ -401,10 +402,10 @@ else
     if [ -z "$2" ]
     then
         # empty
-        git add .; git commit -m ":$emoji: $message."; git push
+        git add .; git commit -m "$emoji $message."; git push
     else
         # not empty
-        git add .; git commit -m ":$emoji: $message: $2"; git push
+        git add .; git commit -m "$emoji $message: $2"; git push
     fi
 
 fi
