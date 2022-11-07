@@ -9,19 +9,34 @@ import (
 
 var memoryMap = map[string]string{"capsule_version": commons.CapsuleVersion()} // my little easter 🥚
 
-func MemorySet(ctx context.Context, module api.Module, keyOffset, keyByteCount, valueOffSet, valueByteCount, retBuffPtrPos, retBuffSize uint32) {
-	keyStr := memory.ReadStringFromMemory(ctx, module, keyOffset, keyByteCount)
-	valueStr := memory.ReadStringFromMemory(ctx, module, valueOffSet, valueByteCount)
+var MemorySet = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+	keyPosition := uint32(params[0])
+	keyLength := uint32(params[1])
+	keyStr := memory.ReadStringFromMemory(ctx, module, keyPosition, keyLength)
+
+	valuePosition := uint32(params[2])
+	valueLength := uint32(params[3])
+	valueStr := memory.ReadStringFromMemory(ctx, module, valuePosition, valueLength)
+
 	memoryMap[keyStr] = valueStr
 
 	stringResultFromHost := "[OK](" + keyStr + ":" + valueStr + ")"
 
-	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
+	positionReturnBuffer := uint32(params[4])
+	lengthReturnBuffer := uint32(params[5])
 
-}
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-func MemoryGet(ctx context.Context, module api.Module, keyOffset, keyByteCount, retBuffPtrPos, retBuffSize uint32) {
-	keyStr := memory.ReadStringFromMemory(ctx, module, keyOffset, keyByteCount)
+	return []uint64{0}
+
+})
+
+var MemoryGet = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+
+	keyPosition := uint32(params[0])
+	keyLength := uint32(params[1])
+	keyStr := memory.ReadStringFromMemory(ctx, module, keyPosition, keyLength)
+
 	valueStr := memoryMap[keyStr]
 
 	var stringResultFromHost = ""
@@ -33,15 +48,27 @@ func MemoryGet(ctx context.Context, module api.Module, keyOffset, keyByteCount, 
 		stringResultFromHost = valueStr
 	}
 
-	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
-}
+	positionReturnBuffer := uint32(params[2])
+	lengthReturnBuffer := uint32(params[3])
 
-func MemoryKeys(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+
+	return []uint64{0}
+
+})
+
+var MemoryKeys = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
 	var keys []string
 	for key, _ := range memoryMap {
 		keys = append(keys, key)
 	}
 	stringResultFromHost := commons.CreateStringFromSlice(keys, commons.StrSeparator)
-	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 
-}
+	positionReturnBuffer := uint32(params[0])
+	lengthReturnBuffer := uint32(params[1])
+
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+
+	return []uint64{0}
+
+})

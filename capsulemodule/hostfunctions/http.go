@@ -10,7 +10,7 @@ import (
 
 //export hostHttp
 //go:linkname hostHttp
-func hostHttp(urlOffset uint32, urlByteCount uint32, methodOffSet uint32, methodByteCount uint32, headersOffSet uint32, headersMethodByteCount uint32, bodyOffset uint32, bodyByteCount uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostHttp(urlOffset uint32, urlByteCount uint32, methodOffSet uint32, methodByteCount uint32, headersOffSet uint32, headersMethodByteCount uint32, bodyOffset uint32, bodyByteCount uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func Http(url, method string, headers map[string]string, body string) (string, error) {
 	// Get parameters from the wasm module

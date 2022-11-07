@@ -11,7 +11,7 @@ import (
 
 //export hostCouchBaseQuery
 //go:linkname hostCouchBaseQuery
-func hostCouchBaseQuery(queryPtrPos, querySize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostCouchBaseQuery(queryPtrPos, querySize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // CouchBaseQuery :
 // This function is called by the wasm module

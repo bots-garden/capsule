@@ -12,6 +12,33 @@ import (
 // GetEnv :
 // The wasm module will call this function like this:
 // `func GetEnv(param string) (string, error)`
+var GetEnv = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+
+	positionVariableName := uint32(params[0])
+	lengthVariableName := uint32(params[1])
+
+	variableName := memory.ReadStringFromMemory(ctx, module, positionVariableName, lengthVariableName)
+
+	var stringResultFromHost = ""
+	variableValue := os.Getenv(variableName)
+
+	if variableValue == "" {
+		stringResultFromHost = commons.CreateStringError(variableName+" is empty", 0)
+	} else {
+		stringResultFromHost = variableValue
+	}
+
+	positionReturnBuffer := uint32(params[2])
+	lengthReturnBuffer := uint32(params[3])
+
+	// TODO: I think there is another way (with return, but let's see later with wazero sampleq)
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+
+	return []uint64{0}
+
+})
+
+/* old version
 func GetEnv(ctx context.Context, module api.Module, varNameOffset, varNameByteCount, retBuffPtrPos, retBuffSize uint32) {
 
 	//=========================================================
@@ -38,3 +65,4 @@ func GetEnv(ctx context.Context, module api.Module, varNameOffset, varNameByteCo
 	// Write the new string stringResultFromHost to the "shared memory"
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }
+*/

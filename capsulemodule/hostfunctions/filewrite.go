@@ -9,7 +9,7 @@ import (
 
 //export hostWriteFile
 //go:linkname hostWriteFile
-func hostWriteFile(filePathPtrPos uint32, size uint32, contentPtrPos uint32, contentSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostWriteFile(filePathPosition uint32, filePathLength uint32, contentPosition uint32, contentLength uint32, returnBufferPosition **byte, returnBufferLength *int) uint32
 
 // WriteFile : Call host function: hostReadFile
 // Pass a string as parameter

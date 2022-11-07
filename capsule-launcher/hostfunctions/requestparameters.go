@@ -1,15 +1,40 @@
 package hostfunctions
 
 import (
-	"context"
-	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
-	"github.com/bots-garden/capsule/commons"
-	"github.com/tetratelabs/wazero/api"
+    "context"
+    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
+    "github.com/bots-garden/capsule/commons"
+    "github.com/tetratelabs/wazero/api"
 )
 
 // RequestParamsGet gets from the host memory the values related to an HTTP request
 // And then writes a string which contains: reqParams.JsonData, reqParams.Headers, reqParams.Uri, reqParams.Method
-func RequestParamsGet(ctx context.Context, module api.Module, reqId, retBuffPtrPos, retBuffSize uint32) {
+
+var RequestParamsGet = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+    reqId := uint32(params[0])
+    reqParams, err := GetRequestParams(reqId)
+    // This variable will store the concatenation of reqParams.JsonData, reqParams.Headers, reqParams.Uri, reqParams.Method
+    var stringResultFromHost = ""
+
+    if err != nil {
+        stringResultFromHost = commons.CreateStringError("key (requestId) does not exist", 0)
+        // if code 0 don't display code in the error message
+    } else {
+        stringResultFromHost = commons.CreateStringFromSlice([]string{reqParams.JsonData, reqParams.Headers, reqParams.Uri, reqParams.Method}, commons.StrSeparator)
+    }
+
+    positionReturnBuffer := uint32(params[1])
+    lengthReturnBuffer := uint32(params[2])
+
+    // TODO: I think there is another way (with return, but let's see later with wazero sampleq)
+    // Write the new string stringResultFromHost to the "shared memory"
+    memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+
+    return []uint64{0}
+})
+
+/* old version
+func _RequestParamsGet(ctx context.Context, module api.Module, reqId, retBuffPtrPos, retBuffSize uint32) {
 
 	// reqIdOffset: it's a position
 	// reqIdByteCount: it's a size
@@ -35,3 +60,4 @@ func RequestParamsGet(ctx context.Context, module api.Module, reqId, retBuffPtrP
 	// Write the new string stringResultFromHost to the "shared memory"
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 }
+*/

@@ -1,11 +1,9 @@
 package main
 
-// TinyGo wasm module
 import (
 	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
 )
 
-// main is required.
 func main() {
 	hf.SetHandleHttp(Handle)
 }

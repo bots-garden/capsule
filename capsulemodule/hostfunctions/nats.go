@@ -9,7 +9,7 @@ import (
 
 //export hostNatsGetSubject
 //go:linkname hostNatsGetSubject
-func hostNatsGetSubject(retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsGetSubject(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func NatsGetSubject() string {
 	var buffPtr *byte
@@ -23,7 +23,7 @@ func NatsGetSubject() string {
 
 //export hostNatsGetServer
 //go:linkname hostNatsGetServer
-func hostNatsGetServer(retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsGetServer(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func NatsGetServer() string {
 	var buffPtr *byte
@@ -37,7 +37,7 @@ func NatsGetServer() string {
 
 //export hostNatsConnectPublish
 //go:linkname hostNatsConnectPublish
-func hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsConnectPublish(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func NatsConnectPublish(natsSrv string, subject string, data string) (string, error) {
 
@@ -75,7 +75,7 @@ func NatsConnectPublish(natsSrv string, subject string, data string) (string, er
 
 //export hostNatsConnectRequest
 //go:linkname hostNatsConnectRequest
-func hostNatsConnectRequest(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsConnectRequest(natsSrvPtrPos, natsSrvSize, subjectPtrPos, subjectSize, dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func NatsConnectRequest(natsSrv string, subject string, data string, timeoutSecondDuration uint32) (string, error) {
 
@@ -113,7 +113,7 @@ func NatsConnectRequest(natsSrv string, subject string, data string, timeoutSeco
 
 //export hostNatsPublish
 //go:linkname hostNatsPublish
-func hostNatsPublish(subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsPublish(subjectPtrPos, subjectSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // NatsPublish :
 // Publish data on nats topic
@@ -153,7 +153,7 @@ func NatsPublish(subject string, data string) (string, error) {
 
 //export hostNatsReply
 //go:linkname hostNatsReply
-func hostNatsReply(dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostNatsReply(dataPtrPos, dataSize, timeoutSecondDuration uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // NatsPublish :
 // Publish data on nats topic

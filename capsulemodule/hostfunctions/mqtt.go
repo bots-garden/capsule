@@ -9,7 +9,7 @@ import (
 
 //export hostMqttGetTopic
 //go:linkname hostMqttGetTopic
-func hostMqttGetTopic(retBuffPtrPos **byte, retBuffSize *int)
+func hostMqttGetTopic(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func MqttGetTopic() string {
 	var buffPtr *byte
@@ -23,7 +23,7 @@ func MqttGetTopic() string {
 
 //export hostMqttGetServer
 //go:linkname hostMqttGetServer
-func hostMqttGetServer(retBuffPtrPos **byte, retBuffSize *int)
+func hostMqttGetServer(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func MqttGetServer() string {
 	var buffPtr *byte
@@ -37,7 +37,7 @@ func MqttGetServer() string {
 
 //export hostMqttGetClientId
 //go:linkname hostMqttGetClientId
-func hostMqttGetClientId(retBuffPtrPos **byte, retBuffSize *int)
+func hostMqttGetClientId(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func MqttGetClientId() string {
 	var buffPtr *byte
@@ -51,7 +51,7 @@ func MqttGetClientId() string {
 
 //export hostMqttConnectPublish
 //go:linkname hostMqttConnectPublish
-func hostMqttConnectPublish(mqttSrvPtrPos, mqttSrvSize, clientIdPtrPos, clientIdSize, topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostMqttConnectPublish(mqttSrvPtrPos, mqttSrvSize, clientIdPtrPos, clientIdSize, topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 func MqttConnectPublish(mqttSrv, clientId, topic, data string) (string, error) {
 
@@ -90,7 +90,7 @@ func MqttConnectPublish(mqttSrv, clientId, topic, data string) (string, error) {
 
 //export hostMqttPublish
 //go:linkname hostMqttPublish
-func hostMqttPublish(topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostMqttPublish(topicPtrPos, topicSize, dataPtrPos, dataSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // MqttPublish :
 // Publish data on mqtt topic
