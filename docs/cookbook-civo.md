@@ -120,7 +120,7 @@ go 1.18
 
 *Dockerfile*:
 ```dockerfile
-FROM k33g/capsule-builder:0.0.3
+FROM k33g/capsule-builder:0.0.4
 COPY go.mod ./
 COPY hello.go ./
 RUN  go get -u ./...; go mod tidy;
@@ -165,7 +165,7 @@ docker run -p 8080:8080 --rm ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}
 
 **Output**:
 ```bash
-💊 Capsule ( v0.2.9 🦜 [parrot] ) http server is listening on: 8080 🌍
+💊 Capsule ( v0.3.0 🎄 [Christmas tree] ) http server is listening on: 8080 🌍
 ```
 
 **Test your deployed function**:
