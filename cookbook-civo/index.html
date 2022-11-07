@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://bots-garden.github.io/capsule/cookbook-civo/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.8">
     
     
       
@@ -26,7 +26,7 @@
       <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.815d1a91.min.css">
         
       
       
@@ -1182,7 +1182,7 @@
 <span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
 <span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-8-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-builder:0.0.3</span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-builder:0.0.4</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">COPY</span><span class="w"> </span>go.mod ./
 <a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="k">COPY</span><span class="w"> </span>hello.go ./
 <a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="k">RUN</span><span class="w">  </span>go get -u ./...<span class="p">;</span> go mod tidy<span class="p">;</span>
@@ -1231,7 +1231,7 @@
 <a id="__codelineno-11-3" name="__codelineno-11-3"></a>docker run -p <span class="m">8080</span>:8080 --rm <span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span>/<span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span>
 </code></pre></div></td></tr></table></div>
 <p><strong>Output</strong>:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>💊 Capsule <span class="o">(</span> v0.2.9 🦜 <span class="o">[</span>parrot<span class="o">]</span> <span class="o">)</span> http server is listening on: <span class="m">8080</span> 🌍
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>💊 Capsule <span class="o">(</span> v0.3.0 🎄 <span class="o">[</span>Christmas tree<span class="o">]</span> <span class="o">)</span> http server is listening on: <span class="m">8080</span> 🌍
 </code></pre></div></td></tr></table></div></p>
 <p><strong>Test your deployed function</strong>:
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
@@ -1517,7 +1517,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8492ddcf.min.js"></script>
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
       
     
   </body>

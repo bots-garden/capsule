@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://bots-garden.github.io/capsule/cookbook-fly/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.8">
     
     
       
@@ -26,7 +26,7 @@
       <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.815d1a91.min.css">
         
       
       
@@ -1050,7 +1050,7 @@ It's a very very easy way to deploy a container.</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
 <span class="normal"><a href="#__codelineno-3-2">2</a></span>
 <span class="normal"><a href="#__codelineno-3-3">3</a></span>
-<span class="normal"><a href="#__codelineno-3-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-launcher:0.2.9</span>
+<span class="normal"><a href="#__codelineno-3-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-launcher:0.3.0</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="k">ADD</span><span class="w"> </span>hello.wasm ./
 <a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/capsule&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-wasm=./hello.wasm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-mode=http&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-httpPort=8080&quot;</span><span class="p">]</span>
@@ -1144,7 +1144,7 @@ You should get: <code>{"message":"👋 hello Bob"}</code></p>
 <span class="normal"><a href="#__codelineno-12-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="o">==</span>&gt; Verifying app config
 <a id="__codelineno-12-2" name="__codelineno-12-2"></a>--&gt; Verified app <span class="nv">config</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="o">==</span>&gt; Building image
-<a id="__codelineno-12-4" name="__codelineno-12-4"></a>Searching <span class="k">for</span> image <span class="s1">&#39;k33g/capsule-hello-demo:0.0.3&#39;</span> remotely...
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a>Searching <span class="k">for</span> image <span class="s1">&#39;k33g/capsule-hello-demo:0.0.0&#39;</span> remotely...
 <a id="__codelineno-12-5" name="__codelineno-12-5"></a>image found: <span class="nv">img_ox20prmgxx3vj1zq</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6"></a><span class="o">==</span>&gt; Creating release
 <a id="__codelineno-12-7" name="__codelineno-12-7"></a>--&gt; release v2 created
@@ -1256,7 +1256,7 @@ You should get: <code>{"message":"👋 hello Bob"}</code></p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8492ddcf.min.js"></script>
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
       
     
   </body>
