@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ../../../capsulelauncher
+cd ../../../capsule-launcher
 COUCHBASE_CLUSTER="couchbase://localhost" \
 COUCHBASE_USER="admin" \
 COUCHBASE_PWD="ilovepandas" \
