@@ -255,11 +255,64 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 			[]api.ValueType{api.ValueTypeI32}).
 		Export("hostNatsReply")
 
-	builder.NewFunctionBuilder().WithFunc(hostfunctions.MqttGetTopic).Export("hostMqttGetTopic").
-		NewFunctionBuilder().WithFunc(hostfunctions.MqttGetServer).Export("hostMqttGetServer").
-		NewFunctionBuilder().WithFunc(hostfunctions.MqttGetClientId).Export("hostMqttGetClientId").
-		NewFunctionBuilder().WithFunc(hostfunctions.MqttPublish).Export("hostMqttPublish").
-		NewFunctionBuilder().WithFunc(hostfunctions.MqttConnectPublish).Export("hostMqttConnectPublish")
+	builder.
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MqttGetTopic,
+			[]api.ValueType{
+				api.ValueTypeI32, // retBuffPtrPos
+				api.ValueTypeI32, // retBuffSize
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMqttGetTopic").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MqttGetServer,
+			[]api.ValueType{
+				api.ValueTypeI32, // retBuffPtrPos
+				api.ValueTypeI32, // retBuffSize
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMqttGetServer").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MqttGetClientId,
+			[]api.ValueType{
+				api.ValueTypeI32, // retBuffPtrPos
+				api.ValueTypeI32, // retBuffSize
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMqttGetClientId").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MqttPublish,
+			[]api.ValueType{
+				api.ValueTypeI32, // topicOffset
+				api.ValueTypeI32, // topicByteCount
+				api.ValueTypeI32, // dataOffset
+				api.ValueTypeI32, // dataByteCount
+				api.ValueTypeI32, // retBuffPtrPos
+				api.ValueTypeI32, // retBuffSize
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMqttPublish").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MqttConnectPublish,
+			[]api.ValueType{
+				api.ValueTypeI32, // mqttSrvOffset
+				api.ValueTypeI32, // mqttSrvByteCount
+				api.ValueTypeI32, // clientIdPtrOffset
+				api.ValueTypeI32, // clientIdByteCount
+				api.ValueTypeI32, // topicOffset
+				api.ValueTypeI32, // topicByteCount
+				api.ValueTypeI32, // dataOffset
+				api.ValueTypeI32, // dataByteCount
+				api.ValueTypeI32, // retBuffPtrPos
+				api.ValueTypeI32, // retBuffSize
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMqttConnectPublish")
 
 	builder.NewFunctionBuilder().WithFunc(hostfunctions.GetExitError).Export("hostGetExitError").
 		NewFunctionBuilder().WithFunc(hostfunctions.GetExitCode).Export("hostGetExitCode")
