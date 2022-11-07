@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TAG="v0.2.9"
+TAG="v0.3.0"
 
 git tag -d ${TAG}
 git tag -d commons/${TAG}
