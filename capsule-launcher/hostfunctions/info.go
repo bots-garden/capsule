@@ -2,8 +2,7 @@ package hostfunctions
 
 import (
 	"context"
-	"log"
-
+	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
 	"github.com/tetratelabs/wazero/api"
 )
 
@@ -11,21 +10,14 @@ import (
 var HostInformation = ""
 
 // GetHostInformation returns information about the host
-func GetHostInformation(ctx context.Context, module api.Module, retBuffPtrPos, retBuffSize uint32) {
+var GetHostInformation = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
 
 	message := HostInformation
-	lengthOfTheMessage := len(message)
 
-	// Allocate buffer in the wasm module memory
-	results, err := module.ExportedFunction("allocateBuffer").Call(ctx, uint64(lengthOfTheMessage))
-	if err != nil {
-		log.Panicln(err)
-	}
+	positionReturnBuffer := uint32(params[0])
+	lengthReturnBuffer := uint32(params[1])
 
-	offset := uint32(results[0])
-	module.Memory().WriteUint32Le(ctx, retBuffPtrPos, offset)
-	module.Memory().WriteUint32Le(ctx, retBuffSize, uint32(lengthOfTheMessage))
+	memory.WriteStringToMemory(message, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-	// add the message to the memory of the module
-	module.Memory().Write(ctx, offset, []byte(message))
-}
+	return []uint64{0}
+})

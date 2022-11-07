@@ -11,15 +11,15 @@ import (
 
 //export hostRedisSet
 //go:linkname hostRedisSet
-func hostRedisSet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostRedisSet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 //export hostRedisGet
 //go:linkname hostRedisGet
-func hostRedisGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostRedisGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 //export hostRedisKeys
 //go:linkname hostRedisKeys
-func hostRedisKeys(patternPtrPos, patternSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostRedisKeys(patternPtrPos, patternSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // RedisSet :
 // Call host function: hostRedisSet

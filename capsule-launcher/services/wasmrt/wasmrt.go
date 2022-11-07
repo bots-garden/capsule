@@ -35,9 +35,14 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		WithGoModuleFunction(hostfunctions.LogString, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
 		Export("hostLogString")
 
-	// hostGetHostInformation TODO: to be translated
+	// hostGetHostInformation
 	builder.NewFunctionBuilder().
-		WithFunc(hostfunctions.GetHostInformation).
+		WithGoModuleFunction(hostfunctions.GetHostInformation,
+			[]api.ValueType{
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
 		Export("hostGetHostInformation")
 
 	// hostHttp
@@ -63,7 +68,15 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 
 	// hostReadFile
 	builder.NewFunctionBuilder().
-		WithGoModuleFunction(hostfunctions.ReadFile, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
+		WithGoModuleFunction(
+			hostfunctions.ReadFile,
+			[]api.ValueType{
+				api.ValueTypeI32, // positionFilePathName
+				api.ValueTypeI32, // lengthFilePathName
+				api.ValueTypeI32, // positionReturnBuffer
+				api.ValueTypeI32, // lengthReturnBuffer
+			},
+			[]api.ValueType{api.ValueTypeI32}).
 		Export("hostReadFile")
 
 	// hostWriteFile
@@ -76,13 +89,85 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 		WithGoModuleFunction(hostfunctions.GetEnv, []api.ValueType{api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32, api.ValueTypeI32}, []api.ValueType{api.ValueTypeI32}).
 		Export("hostGetEnv")
 
-	builder.NewFunctionBuilder().WithFunc(hostfunctions.RedisSet).Export("hostRedisSet").
-		NewFunctionBuilder().WithFunc(hostfunctions.RedisGet).Export("hostRedisGet").
-		NewFunctionBuilder().WithFunc(hostfunctions.RedisKeys).Export("hostRedisKeys").
-		NewFunctionBuilder().WithFunc(hostfunctions.MemorySet).Export("hostMemorySet").
-		NewFunctionBuilder().WithFunc(hostfunctions.MemoryGet).Export("hostMemoryGet").
-		NewFunctionBuilder().WithFunc(hostfunctions.MemoryKeys).Export("hostMemoryKeys").
-		NewFunctionBuilder().WithFunc(hostfunctions.CouchBaseQuery).Export("hostCouchBaseQuery").
+	// hostMemorySet
+	// hostMemoryGet
+	// hostMemoryKeys
+	builder.
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MemorySet,
+			[]api.ValueType{
+				api.ValueTypeI32, // keyValue position
+				api.ValueTypeI32, // keyValue length
+				api.ValueTypeI32, // value position
+				api.ValueTypeI32, // value length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMemorySet").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MemoryGet,
+			[]api.ValueType{
+				api.ValueTypeI32, // keyValue position
+				api.ValueTypeI32, // keyValue length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMemoryGet").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.MemoryKeys,
+			[]api.ValueType{
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostMemoryKeys")
+
+	// hostRedisSet
+	// hostRedisGet
+	// hostRedisKeys
+	builder.
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.RedisSet,
+			[]api.ValueType{
+				api.ValueTypeI32, // keyValue position
+				api.ValueTypeI32, // keyValue length
+				api.ValueTypeI32, // value position
+				api.ValueTypeI32, // value length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostRedisSet").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.RedisGet,
+			[]api.ValueType{
+				api.ValueTypeI32, // keyValue position
+				api.ValueTypeI32, // keyValue length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostRedisGet").
+		NewFunctionBuilder().
+		WithGoModuleFunction(
+			hostfunctions.RedisKeys,
+			[]api.ValueType{
+				api.ValueTypeI32, // pattern position
+				api.ValueTypeI32, // pattern length
+				api.ValueTypeI32, // returnValue position
+				api.ValueTypeI32, // returnValue length
+			},
+			[]api.ValueType{api.ValueTypeI32}).
+		Export("hostRedisKeys")
+
+	builder.NewFunctionBuilder().WithFunc(hostfunctions.CouchBaseQuery).Export("hostCouchBaseQuery").
 		NewFunctionBuilder().WithFunc(hostfunctions.NatsPublish).Export("hostNatsPublish").
 		NewFunctionBuilder().WithFunc(hostfunctions.NatsConnectPublish).Export("hostNatsConnectPublish").
 		NewFunctionBuilder().WithFunc(hostfunctions.NatsGetSubject).Export("hostNatsGetSubject").

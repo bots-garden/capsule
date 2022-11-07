@@ -20,7 +20,7 @@ if err != nil {
   hf.Log(err.Error())
 }
 
-for key, value := range keys {
-  hf.Log(key+":"+value)
+for _, value := range keys {
+  hf.Log("key: "+value)
 }
 ```

@@ -178,7 +178,7 @@ case $1 in
     ;;
 
   # 👽️: alien
-  alien)
+  alien|api)
     message="Update code due to external API changes"
     emoji="👽️"
     ;;

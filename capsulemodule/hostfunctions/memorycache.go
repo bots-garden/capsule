@@ -11,15 +11,15 @@ import (
 
 //export hostMemorySet
 //go:linkname hostMemorySet
-func hostMemorySet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostMemorySet(keyPtrPos, keySize, valuePtrPos, valueSize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 //export hostMemoryGet
 //go:linkname hostMemoryGet
-func hostMemoryGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int)
+func hostMemoryGet(keyPtrPos, keySize uint32, retBuffPtrPos **byte, retBuffSize *int) uint32
 
 //export hostMemoryKeys
 //go:linkname hostMemoryKeys
-func hostMemoryKeys(retBuffPtrPos **byte, retBuffSize *int)
+func hostMemoryKeys(retBuffPtrPos **byte, retBuffSize *int) uint32
 
 // MemorySet :
 // Call host function: hostMemorySet
