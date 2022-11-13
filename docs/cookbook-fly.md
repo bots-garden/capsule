@@ -64,7 +64,7 @@ In the directory of the function, create a `Dockerfile`:
 
 *Dockerfile*:
 ```dockerfile
-FROM k33g/capsule-launcher:0.2.9
+FROM k33g/capsule-launcher:0.3.0
 ADD hello.wasm ./
 EXPOSE 8080
 CMD ["/capsule", "-wasm=./hello.wasm", "-mode=http", "-httpPort=8080"]
@@ -145,7 +145,7 @@ flyctl deploy \
 ==> Verifying app config
 --> Verified app config
 ==> Building image
-Searching for image 'k33g/capsule-hello-demo:0.0.3' remotely...
+Searching for image 'k33g/capsule-hello-demo:0.0.0' remotely...
 image found: img_ox20prmgxx3vj1zq
 ==> Creating release
 --> release v2 created
