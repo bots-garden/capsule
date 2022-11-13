@@ -11,3 +11,4 @@ hey -n 300 -c 100 -m POST \
 # Requests/sec: 32.1274
 # Requests/sec: 31.5995
 # Requests/sec: 117.4794 with wazero.NewRuntimeConfigInterpreter()
+# Requests/sec: 123.6958 wasi_snapshot_preview1.MustInstantiate(ctx, wasmRuntime)
