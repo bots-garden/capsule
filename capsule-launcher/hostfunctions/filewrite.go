@@ -9,15 +9,15 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
-var WriteFile = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var WriteFile = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
-	positionFilePathName := uint32(params[0])
-	lengthFilePathName := uint32(params[1])
+	positionFilePathName := uint32(stack[0])
+	lengthFilePathName := uint32(stack[1])
 
 	filePath := memory.ReadStringFromMemory(ctx, module, positionFilePathName, lengthFilePathName)
 
-	positionContent := uint32(params[2])
-	lengthContent := uint32(params[3])
+	positionContent := uint32(stack[2])
+	lengthContent := uint32(stack[3])
 
 	content := memory.ReadStringFromMemory(ctx, module, positionContent, lengthContent)
 
@@ -33,13 +33,13 @@ var WriteFile = api.GoModuleFunc(func(ctx context.Context, module api.Module, pa
 		stringResultFromHost = "file created"
 	}
 
-	positionReturnBuffer := uint32(params[4])
-	lengthReturnBuffer := uint32(params[5])
+	positionReturnBuffer := uint32(stack[4])
+	lengthReturnBuffer := uint32(stack[5])
 
 	// TODO: I think there is another way (with return, but let's see later with wazero sampleq)
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-	return []uint64{0}
+	stack[0] = 0 // return 0
 
 })
 

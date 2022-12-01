@@ -1,40 +1,40 @@
 package hostfunctions
 
 import (
-    "context"
-    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
-    "os"
+	"context"
+	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
+	"os"
 
-    "github.com/bots-garden/capsule/commons"
+	"github.com/bots-garden/capsule/commons"
 
-    "github.com/tetratelabs/wazero/api"
+	"github.com/tetratelabs/wazero/api"
 )
 
 // ReadFile : string parameter, return string
-var ReadFile = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var ReadFile = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
-    positionFilePathName := uint32(params[0])
-    lengthFilePathName := uint32(params[1])
+	positionFilePathName := uint32(stack[0])
+	lengthFilePathName := uint32(stack[1])
 
-    filePath := memory.ReadStringFromMemory(ctx, module, positionFilePathName, lengthFilePathName)
+	filePath := memory.ReadStringFromMemory(ctx, module, positionFilePathName, lengthFilePathName)
 
-    var stringResultFromHost = ""
+	var stringResultFromHost = ""
 
-    data, err := os.ReadFile(filePath)
-    if err != nil {
-        stringResultFromHost = commons.CreateStringError(err.Error(), 0)
-        // if code 0 don't display code in the error message
-    } else {
-        stringResultFromHost = string(data)
-    }
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		stringResultFromHost = commons.CreateStringError(err.Error(), 0)
+		// if code 0 don't display code in the error message
+	} else {
+		stringResultFromHost = string(data)
+	}
 
-    positionReturnBuffer := uint32(params[2])
-    lengthReturnBuffer := uint32(params[3])
+	positionReturnBuffer := uint32(stack[2])
+	lengthReturnBuffer := uint32(stack[3])
 
-    // TODO: I think there is another way (with return, but let's see later with wazero sampleq)
-    memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+	// TODO: I think there is another way (with return, but let's see later with wazero sampleq)
+	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-    return []uint64{0}
+	stack[0] = 0 // return 0
 
 })
 

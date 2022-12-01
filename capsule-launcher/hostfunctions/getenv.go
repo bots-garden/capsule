@@ -12,10 +12,10 @@ import (
 // GetEnv :
 // The wasm module will call this function like this:
 // `func GetEnv(param string) (string, error)`
-var GetEnv = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var GetEnv = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
-	positionVariableName := uint32(params[0])
-	lengthVariableName := uint32(params[1])
+	positionVariableName := uint32(stack[0])
+	lengthVariableName := uint32(stack[1])
 
 	variableName := memory.ReadStringFromMemory(ctx, module, positionVariableName, lengthVariableName)
 
@@ -28,13 +28,13 @@ var GetEnv = api.GoModuleFunc(func(ctx context.Context, module api.Module, param
 		stringResultFromHost = variableValue
 	}
 
-	positionReturnBuffer := uint32(params[2])
-	lengthReturnBuffer := uint32(params[3])
+	positionReturnBuffer := uint32(stack[2])
+	lengthReturnBuffer := uint32(stack[3])
 
 	// TODO: I think there is another way (with return, but let's see later with wazero sampleq)
 	memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-	return []uint64{0}
+	stack[0] = 0 // return 0
 
 })
 

@@ -1,23 +1,23 @@
 package hostfunctions
 
 import (
-	"context"
-	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
-	"github.com/tetratelabs/wazero/api"
+    "context"
+    "github.com/bots-garden/capsule/capsule-launcher/hostfunctions/memory"
+    "github.com/tetratelabs/wazero/api"
 )
 
 // HostInformation updated in `services/http/http.go`
 var HostInformation = ""
 
 // GetHostInformation returns information about the host
-var GetHostInformation = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var GetHostInformation = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
-	message := HostInformation
+    message := HostInformation
 
-	positionReturnBuffer := uint32(params[0])
-	lengthReturnBuffer := uint32(params[1])
+    positionReturnBuffer := uint32(stack[0])
+    lengthReturnBuffer := uint32(stack[1])
 
-	memory.WriteStringToMemory(message, ctx, module, positionReturnBuffer, lengthReturnBuffer)
+    memory.WriteStringToMemory(message, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-	return []uint64{0}
+    stack[0] = 0 // return 0
 })
