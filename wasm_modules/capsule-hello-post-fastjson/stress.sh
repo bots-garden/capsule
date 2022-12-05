@@ -13,3 +13,4 @@ hey -n 300 -c 100 -m POST \
 # Requests/sec: 117.4794 with wazero.NewRuntimeConfigInterpreter()
 # Requests/sec: 123.6958 wasi_snapshot_preview1.MustInstantiate(ctx, wasmRuntime)
 # Requests/sec: 84.0781 deps: updates wazero to 1.0.0-pre.4
+# Requests/sec: 85.5523 use fastjson

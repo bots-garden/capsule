@@ -3,10 +3,10 @@ package main
 // TinyGo wasm module
 import (
     hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+    "github.com/tidwall/sjson"
+
     /* string to json */
     "github.com/tidwall/gjson"
-    /* create json string */
-    "github.com/tidwall/sjson"
 )
 
 // main is required.
@@ -45,6 +45,8 @@ func Handle(request hf.Request) (response hf.Response, errResp error) {
         "Content-Type": "application/json; charset=utf-8",
         "Message":      "👋 hello world 🌍",
     }
+
+    //jsondoc := `{"message": "👋 hey! What's up?", "author": "Bob"}`
 
     jsondoc := `{"message": "", "author": ""}`
     jsondoc, _ = sjson.Set(jsondoc, "message", "👋 hey! What's up?")
