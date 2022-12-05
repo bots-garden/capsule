@@ -33,19 +33,19 @@ func getRedisCli() *redis.Client {
 // RedisSet :
 // The wasm module will call this function like this:
 // `func RedisSet(key string, value) (string, error)`
-var RedisSet = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var RedisSet = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
     InitRedisCli()
     //=========================================================
     // Read arguments values of the function call
     // get strings from the wasm module function (from memory)
     //=========================================================
-    keyPosition := uint32(params[0])
-    keyLength := uint32(params[1])
+    keyPosition := uint32(stack[0])
+    keyLength := uint32(stack[1])
     keyStr := memory.ReadStringFromMemory(ctx, module, keyPosition, keyLength)
 
-    valuePosition := uint32(params[2])
-    valueLength := uint32(params[3])
+    valuePosition := uint32(stack[2])
+    valueLength := uint32(stack[3])
     valueStr := memory.ReadStringFromMemory(ctx, module, valuePosition, valueLength)
 
     //==[👋 Implementation: Start]=============================
@@ -61,26 +61,26 @@ var RedisSet = api.GoModuleFunc(func(ctx context.Context, module api.Module, par
     }
     //==[👋 Implementation: End]===============================
 
-    positionReturnBuffer := uint32(params[4])
-    lengthReturnBuffer := uint32(params[5])
+    positionReturnBuffer := uint32(stack[4])
+    lengthReturnBuffer := uint32(stack[5])
     // Write the new string stringResultFromHost to the "shared memory"
     memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
 // RedisGet :
 // The wasm module will call this function like this:
 // `func RedisGet(key string) (string, error)`
-var RedisGet = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var RedisGet = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
     InitRedisCli()
     //=========================================================
     // Read arguments values of the function call
     // get strings from the wasm module function (from memory)
     //=========================================================
-    keyPosition := uint32(params[0])
-    keyLength := uint32(params[1])
+    keyPosition := uint32(stack[0])
+    keyLength := uint32(stack[1])
     keyStr := memory.ReadStringFromMemory(ctx, module, keyPosition, keyLength)
 
     //==[👋 Implementation: Start]=============================
@@ -95,22 +95,22 @@ var RedisGet = api.GoModuleFunc(func(ctx context.Context, module api.Module, par
         stringResultFromHost = valueStr
     }
     //==[👋 Implementation: End]===============================
-    positionReturnBuffer := uint32(params[2])
-    lengthReturnBuffer := uint32(params[3])
+    positionReturnBuffer := uint32(stack[2])
+    lengthReturnBuffer := uint32(stack[3])
     // Write the new string stringResultFromHost to the "shared memory"
     memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
 // RedisKeys : get all the keys (with a pattern)
 // The wasm module will call this function like this:
 // `func RedisKeys(pattern string) (string, error)`
-var RedisKeys = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var RedisKeys = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
     InitRedisCli()
     // get the pattern parameter
-    patternPosition := uint32(params[0])
-    patternLength := uint32(params[1])
+    patternPosition := uint32(stack[0])
+    patternLength := uint32(stack[1])
     patternStr := memory.ReadStringFromMemory(ctx, module, patternPosition, patternLength)
 
     // call the redis KEYS command
@@ -125,11 +125,11 @@ var RedisKeys = api.GoModuleFunc(func(ctx context.Context, module api.Module, pa
         stringResultFromHost = commons.CreateStringFromSlice(valueStr, commons.StrSeparator)
     }
 
-    positionReturnBuffer := uint32(params[2])
-    lengthReturnBuffer := uint32(params[3])
+    positionReturnBuffer := uint32(stack[2])
+    lengthReturnBuffer := uint32(stack[3])
     // Write the new string stringResultFromHost to the "shared memory"
     memory.WriteStringToMemory(stringResultFromHost, ctx, module, positionReturnBuffer, lengthReturnBuffer)
 
-    return []uint64{0}
+    stack[0] = 0 // return 0
 
 })

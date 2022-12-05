@@ -11,43 +11,43 @@ import (
 )
 
 // MqttGetTopic return the MQTT Topic of the capsule launcher
-var MqttGetTopic = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var MqttGetTopic = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
     topic := mqttconn.GetCapsuleMqttTopic()
-    retBuffPtrPos := uint32(params[0])
-    retBuffSize := uint32(params[1])
+    retBuffPtrPos := uint32(stack[0])
+    retBuffSize := uint32(stack[1])
     memory.WriteStringToMemory(topic, ctx, module, retBuffPtrPos, retBuffSize)
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
-var MqttGetServer = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var MqttGetServer = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
     server := mqttconn.GetCapsuleMqttServer()
-    retBuffPtrPos := uint32(params[0])
-    retBuffSize := uint32(params[1])
+    retBuffPtrPos := uint32(stack[0])
+    retBuffSize := uint32(stack[1])
     memory.WriteStringToMemory(server, ctx, module, retBuffPtrPos, retBuffSize)
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
-var MqttGetClientId = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var MqttGetClientId = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
     server := mqttconn.GetCapsuleMqttClientId()
-    retBuffPtrPos := uint32(params[0])
-    retBuffSize := uint32(params[1])
+    retBuffPtrPos := uint32(stack[0])
+    retBuffSize := uint32(stack[1])
     memory.WriteStringToMemory(server, ctx, module, retBuffPtrPos, retBuffSize)
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
 // MqttConnectPublish :
 // only if context is cli or http
-var MqttConnectPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var MqttConnectPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
     var stringResultFromHost = ""
 
-    mqttSrvOffset := uint32(params[0])
-    mqttSrvByteCount := uint32(params[1])
+    mqttSrvOffset := uint32(stack[0])
+    mqttSrvByteCount := uint32(stack[1])
 
     mqttSrv := memory.ReadStringFromMemory(ctx, module, mqttSrvOffset, mqttSrvByteCount)
 
-    clientIdPtrOffset := uint32(params[2])
-    clientIdByteCount := uint32(params[3])
+    clientIdPtrOffset := uint32(stack[2])
+    clientIdByteCount := uint32(stack[3])
 
     mqttClientId := memory.ReadStringFromMemory(ctx, module, clientIdPtrOffset, clientIdByteCount)
 
@@ -65,13 +65,13 @@ var MqttConnectPublish = api.GoModuleFunc(func(ctx context.Context, module api.M
         stringResultFromHost = commons.CreateStringError(errConn.Error(), 0)
 
     } else {
-        topicOffset := uint32(params[4])
-        topicByteCount := uint32(params[5])
+        topicOffset := uint32(stack[4])
+        topicByteCount := uint32(stack[5])
 
         topic := memory.ReadStringFromMemory(ctx, module, topicOffset, topicByteCount)
 
-        dataOffset := uint32(params[6])
-        dataByteCount := uint32(params[7])
+        dataOffset := uint32(stack[6])
+        dataByteCount := uint32(stack[7])
 
         data := memory.ReadStringFromMemory(ctx, module, dataOffset, dataByteCount)
 
@@ -88,12 +88,12 @@ var MqttConnectPublish = api.GoModuleFunc(func(ctx context.Context, module api.M
             stringResultFromHost = "[OK](" + topic + ":" + data + ")"
         }
     }
-    retBuffPtrPos := uint32(params[8])
-    retBuffSize := uint32(params[9])
+    retBuffPtrPos := uint32(stack[8])
+    retBuffSize := uint32(stack[9])
     // Write the new string stringResultFromHost to the "shared memory"
     memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 
-    return []uint64{0}
+    stack[0] = 0 // return 0
 
 })
 
@@ -101,7 +101,7 @@ var MqttConnectPublish = api.GoModuleFunc(func(ctx context.Context, module api.M
 
 // MqttPublish :
 // only if context is mqtt
-var MqttPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var MqttPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
     mqttClient, errConn := mqttconn.GetCapsuleMqttConn()
     // the connection already exists (we re-used it)
@@ -115,13 +115,13 @@ var MqttPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, 
 
     } else {
 
-        topicOffset := uint32(params[0])
-        topicByteCount := uint32(params[1])
+        topicOffset := uint32(stack[0])
+        topicByteCount := uint32(stack[1])
 
         topic := memory.ReadStringFromMemory(ctx, module, topicOffset, topicByteCount)
 
-        dataOffset := uint32(params[2])
-        dataByteCount := uint32(params[3])
+        dataOffset := uint32(stack[2])
+        dataByteCount := uint32(stack[3])
 
         data := memory.ReadStringFromMemory(ctx, module, dataOffset, dataByteCount)
 
@@ -138,10 +138,10 @@ var MqttPublish = api.GoModuleFunc(func(ctx context.Context, module api.Module, 
             stringResultFromHost = "[OK](" + topic + ":" + data + ")"
         }
     }
-    retBuffPtrPos := uint32(params[4])
-    retBuffSize := uint32(params[5])
+    retBuffPtrPos := uint32(stack[4])
+    retBuffSize := uint32(stack[5])
     // Write the new string stringResultFromHost to the "shared memory"
     memory.WriteStringToMemory(stringResultFromHost, ctx, module, retBuffPtrPos, retBuffSize)
 
-    return []uint64{0}
+    stack[0] = 0 // return 0
 })

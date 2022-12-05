@@ -1,31 +1,31 @@
 package hostfunctions
 
 import (
-	"context"
-	"fmt"
-	"log"
+    "context"
+    "fmt"
+    "log"
 
-	"github.com/tetratelabs/wazero/api"
+    "github.com/tetratelabs/wazero/api"
 )
 
 // LogString : print a string to the console
-var LogString = api.GoModuleFunc(func(ctx context.Context, module api.Module, params []uint64) []uint64 {
+var LogString = api.GoModuleFunc(func(ctx context.Context, module api.Module, stack []uint64) {
 
-	//fmt.Println("🌺", params)
-	//fmt.Println("🖐 position:", params[0])
-	//fmt.Println("🖐 length:", params[1])
+    //fmt.Println("🌺", params)
+    //fmt.Println("🖐 position:", stack[0])
+    //fmt.Println("🖐 length:", stack[1])
 
-	position := uint32(params[0])
-	length := uint32(params[1])
+    position := uint32(stack[0])
+    length := uint32(stack[1])
 
-	buffer, ok := module.Memory().Read(ctx, position, length)
-	if !ok {
-		log.Panicf("🟥 Memory.Read(%d, %d) out of range", position, length)
-	}
-	//fmt.Println("🍭 ", string(buffer))
-	fmt.Println(string(buffer))
+    buffer, ok := module.Memory().Read(ctx, position, length)
+    if !ok {
+        log.Panicf("🟥 Memory.Read(%d, %d) out of range", position, length)
+    }
+    //fmt.Println("🍭 ", string(buffer))
+    fmt.Println(string(buffer))
 
-	return []uint64{0}
+    stack[0] = 0 // return 0
 })
 
 /* old version
