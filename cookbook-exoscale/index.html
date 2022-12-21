@@ -1,0 +1,1686 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="**Capsule** is a **WebAssembly Function Runner**.">
+      
+      
+        <meta name="author" content="Philippe Charrière (@k33g)">
+      
+      
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/cookbook-exoscale/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Capsule function on Exoscale - Capsule</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cookbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Capsule" class="md-header__button md-logo" aria-label="Capsule" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Capsule
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Capsule function on Exoscale
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bots-garden/capsule" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bots-garden/capsule
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Capsule" class="md-nav__button md-logo" aria-label="Capsule" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Capsule
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bots-garden/capsule" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bots-garden/capsule
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        🏠 Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        💊 Install Capsule
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          🚀 Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="🚀 Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          🚀 Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-inst/" class="md-nav__link">
+        Install the Cabu CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-gen/" class="md-nav__link">
+        Generate a function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-build/" class="md-nav__link">
+        Build the function module
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-serve/" class="md-nav__link">
+        Serve the function module
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-serve-url/" class="md-nav__link">
+        Serve the module frome an url
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-cabu-reload/" class="md-nav__link">
+        Reload the module
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          📝 Developer guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="📝 Developer guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          📝 Developer guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-cli-function/" class="md-nav__link">
+        First CLI function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-http-function/" class="md-nav__link">
+        First HTTP function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-nats-function/" class="md-nav__link">
+        First Nats function
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-mqtt-function/" class="md-nav__link">
+        First MQTT function
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          🛠️ Host functions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="🛠️ Host functions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          🛠️ Host functions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-intro/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-log/" class="md-nav__link">
+        Log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-files/" class="md-nav__link">
+        Files
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-env/" class="md-nav__link">
+        Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-http/" class="md-nav__link">
+        HTTP Requests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-memory/" class="md-nav__link">
+        Memory cache
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-redis/" class="md-nav__link">
+        Redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-couchbase/" class="md-nav__link">
+        CouchBase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-nats/" class="md-nav__link">
+        Nats
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-mqtt/" class="md-nav__link">
+        MQTT
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../host-functions-errors/" class="md-nav__link">
+        Errors
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          🥘 CookBook
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="🥘 CookBook" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          🥘 CookBook
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook-civo/" class="md-nav__link">
+        Capsule function on Civo
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook-fly/" class="md-nav__link">
+        Capsule function on Fly.io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Capsule function on Exoscale
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Capsule function on Exoscale
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-a-capsule-function-on-exoscale" class="md-nav__link">
+    Deploy a Capsule function on Exoscale
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy a Capsule function on Exoscale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-sks-cluster-on-exoscale" class="md-nav__link">
+    Create an SKS cluster on Exoscale
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-new-capsule-function" class="md-nav__link">
+    Create a new Capsule function
+  </a>
+  
+    <nav class="md-nav" aria-label="Create a new Capsule function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-the-function-locally" class="md-nav__link">
+    Test the function locally
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-function-on-the-sks-cluster" class="md-nav__link">
+    Deploy the function on the SKS cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-the-function" class="md-nav__link">
+    Call the function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#housekeeping" class="md-nav__link">
+    Housekeeping
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        📙 Refs
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-faas/" class="md-nav__link">
+        🧪 Capsule FaaS
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-a-capsule-function-on-exoscale" class="md-nav__link">
+    Deploy a Capsule function on Exoscale
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy a Capsule function on Exoscale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-sks-cluster-on-exoscale" class="md-nav__link">
+    Create an SKS cluster on Exoscale
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-new-capsule-function" class="md-nav__link">
+    Create a new Capsule function
+  </a>
+  
+    <nav class="md-nav" aria-label="Create a new Capsule function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-the-function-locally" class="md-nav__link">
+    Test the function locally
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-function-on-the-sks-cluster" class="md-nav__link">
+    Deploy the function on the SKS cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-the-function" class="md-nav__link">
+    Call the function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#housekeeping" class="md-nav__link">
+    Housekeeping
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/bots-garden/capsule/edit/master/docs/cookbook-exoscale.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="cookbook">🥘 CookBook</h1>
+<h2 id="deploy-a-capsule-function-on-exoscale">Deploy a Capsule function on Exoscale</h2>
+<div class="admonition info">
+<p class="admonition-title">What is Exoscale?</p>
+<p><strong>Exoscale</strong> is a Swiss cloud provider, that offers a wide range of cloud services like:
+- Compute instances
+- Kubernetes clusters
+- Object storage
+- Databases as a service (PostgreSQL, Redis, Kafka, Opensearch, MySql)
+- DNS
+It has several datacenters in Europe, which is really a nice, not only this gives us the possibility to deploy your
+applications in the datacenter that is closest to your users, but we can also create a high availability setup.</p>
+</div>
+<h3 id="requirements">Requirements</h3>
+<p>To follow this cookbook, you need to have the following tools installed:</p>
+<ul>
+<li>Kubernetes CLI (kubectl)</li>
+<li>Exoscale CLI (exo)</li>
+<li>Cabu (Capsule Builder)</li>
+</ul>
+<p>There are several ways to install these tools, but I will show you how to install them on a macOs machine
+using <a href="https://brew.sh/">brew</a>.</p>
+<ul>
+<li><strong><a href="https://kubernetes.io/docs/tasks/tools/#kubectl">kubectl</a></strong>:
+  <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>brew install kubernetes-cli
+</code></pre></div></td></tr></table></div></li>
+<li><strong><a href="https://community.exoscale.com/documentation/tools/exoscale-command-line-interface/">exo</a></strong>:
+  <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>brew tap exoscale/tap
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>brew install exoscale-cli
+</code></pre></div></td></tr></table></div></li>
+<li><strong><a href="">cabu</a></strong>:
+  <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nv">CAPSULE_BUILDER_VERSION</span><span class="o">=</span><span class="s2">&quot;v0.0.4&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>wget -O - https://raw.githubusercontent.com/bots-garden/capsule-function-builder/<span class="si">${</span><span class="nv">CAPSULE_BUILDER_VERSION</span><span class="si">}</span>/install-capsule-builder.sh <span class="p">|</span> bash
+</code></pre></div></td></tr></table></div></li>
+</ul>
+<h2 id="create-an-sks-cluster-on-exoscale">Create an SKS cluster on Exoscale</h2>
+<p>As soon as you have created an account, you are able to configure the CLI tool.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>exo config
+</code></pre></div></td></tr></table></div>
+<p>The CLI will guide you in the initial configuration.</p>
+<p>Now we can create a Kubernetes cluster on Exoscale, in this example we're going to use as CNI <code>Cilium</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span>
+<span class="normal"><a href="#__codelineno-4-14">14</a></span>
+<span class="normal"><a href="#__codelineno-4-15">15</a></span>
+<span class="normal"><a href="#__codelineno-4-16">16</a></span>
+<span class="normal"><a href="#__codelineno-4-17">17</a></span>
+<span class="normal"><a href="#__codelineno-4-18">18</a></span>
+<span class="normal"><a href="#__codelineno-4-19">19</a></span>
+<span class="normal"><a href="#__codelineno-4-20">20</a></span>
+<span class="normal"><a href="#__codelineno-4-21">21</a></span>
+<span class="normal"><a href="#__codelineno-4-22">22</a></span>
+<span class="normal"><a href="#__codelineno-4-23">23</a></span>
+<span class="normal"><a href="#__codelineno-4-24">24</a></span>
+<span class="normal"><a href="#__codelineno-4-25">25</a></span>
+<span class="normal"><a href="#__codelineno-4-26">26</a></span>
+<span class="normal"><a href="#__codelineno-4-27">27</a></span>
+<span class="normal"><a href="#__codelineno-4-28">28</a></span>
+<span class="normal"><a href="#__codelineno-4-29">29</a></span>
+<span class="normal"><a href="#__codelineno-4-30">30</a></span>
+<span class="normal"><a href="#__codelineno-4-31">31</a></span>
+<span class="normal"><a href="#__codelineno-4-32">32</a></span>
+<span class="normal"><a href="#__codelineno-4-33">33</a></span>
+<span class="normal"><a href="#__codelineno-4-34">34</a></span>
+<span class="normal"><a href="#__codelineno-4-35">35</a></span>
+<span class="normal"><a href="#__codelineno-4-36">36</a></span>
+<span class="normal"><a href="#__codelineno-4-37">37</a></span>
+<span class="normal"><a href="#__codelineno-4-38">38</a></span>
+<span class="normal"><a href="#__codelineno-4-39">39</a></span>
+<span class="normal"><a href="#__codelineno-4-40">40</a></span>
+<span class="normal"><a href="#__codelineno-4-41">41</a></span>
+<span class="normal"><a href="#__codelineno-4-42">42</a></span>
+<span class="normal"><a href="#__codelineno-4-43">43</a></span>
+<span class="normal"><a href="#__codelineno-4-44">44</a></span>
+<span class="normal"><a href="#__codelineno-4-45">45</a></span>
+<span class="normal"><a href="#__codelineno-4-46">46</a></span>
+<span class="normal"><a href="#__codelineno-4-47">47</a></span>
+<span class="normal"><a href="#__codelineno-4-48">48</a></span>
+<span class="normal"><a href="#__codelineno-4-49">49</a></span>
+<span class="normal"><a href="#__codelineno-4-50">50</a></span>
+<span class="normal"><a href="#__codelineno-4-51">51</a></span>
+<span class="normal"><a href="#__codelineno-4-52">52</a></span>
+<span class="normal"><a href="#__codelineno-4-53">53</a></span>
+<span class="normal"><a href="#__codelineno-4-54">54</a></span>
+<span class="normal"><a href="#__codelineno-4-55">55</a></span>
+<span class="normal"><a href="#__codelineno-4-56">56</a></span>
+<span class="normal"><a href="#__codelineno-4-57">57</a></span>
+<span class="normal"><a href="#__codelineno-4-58">58</a></span>
+<span class="normal"><a href="#__codelineno-4-59">59</a></span>
+<span class="normal"><a href="#__codelineno-4-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>exo compute security-group create sks-security-group
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="c1"># Open 30000 to 32767 TCP from all sources for NodePort and LoadBalancer services</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>exo compute security-group rule add sks-security-group <span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a>    --description <span class="s2">&quot;NodePort services&quot;</span> <span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a>    --protocol tcp <span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a>    --network <span class="m">0</span>.0.0.0/0 <span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a>    --port <span class="m">30000</span>-32767
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="c1"># Open 10250 TCP with the security group as a source</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a>exo compute security-group rule add sks-security-group <span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a>    --description <span class="s2">&quot;SKS kubelet&quot;</span> <span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a>    --protocol tcp <span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14"></a>    --port <span class="m">10250</span> <span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15"></a>    --security-group sks-security-group
+<a id="__codelineno-4-16" name="__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="c1"># Open PING (ICMP type 8 &amp; code 0) with the security group as a source for health checks</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19"></a>exo compute security-group rule add sks-security-group <span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20"></a>    --description <span class="s2">&quot;Cilium (healthcheck)&quot;</span> <span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21"></a>    --protocol icmp <span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22"></a>    --icmp-type <span class="m">8</span> <span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23"></a>    --icmp-code <span class="m">0</span> <span class="se">\</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24"></a>    --security-group sks-security-group
+<a id="__codelineno-4-25" name="__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26"></a><span class="c1"># Open 8472 UDP with the security group as a source for VXLAN communication between nodes</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27"></a>exo compute security-group rule add sks-security-group <span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28"></a>    --description <span class="s2">&quot;Cilium (vxlan)&quot;</span> <span class="se">\</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29"></a>    --protocol udp <span class="se">\</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30"></a>    --port <span class="m">8472</span> <span class="se">\</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31"></a>    --security-group sks-security-group
+<a id="__codelineno-4-32" name="__codelineno-4-32"></a>
+<a id="__codelineno-4-33" name="__codelineno-4-33"></a><span class="c1"># 4240 TCP with the security group as a source for network connectivity health API (health-checks)</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34"></a>exo compute security-group rule add sks-security-group <span class="se">\</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35"></a>    --description <span class="s2">&quot;Cilium (healthcheck)&quot;</span> <span class="se">\</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36"></a>    --protocol tcp <span class="se">\</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37"></a>    --port <span class="m">4240</span> <span class="se">\</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38"></a>    --security-group sks-security-group
+<a id="__codelineno-4-39" name="__codelineno-4-39"></a>
+<a id="__codelineno-4-40" name="__codelineno-4-40"></a>
+<a id="__codelineno-4-41" name="__codelineno-4-41"></a><span class="nv">CLUSTER_NAME</span><span class="o">=</span><span class="s2">&quot;swiss-alps&quot;</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42"></a><span class="nv">CLUSTER_NODES</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43"></a><span class="nv">CLUSTER_ZONE</span><span class="o">=</span><span class="s2">&quot;de-fra-1&quot;</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44"></a>
+<a id="__codelineno-4-45" name="__codelineno-4-45"></a><span class="c1"># Create the cluster</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46"></a>
+<a id="__codelineno-4-47" name="__codelineno-4-47"></a>exo compute sks create <span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span> <span class="se">\</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48"></a>    --zone <span class="si">${</span><span class="nv">CLUSTER_ZONE</span><span class="si">}</span> <span class="se">\</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49"></a>    --cni cilium <span class="se">\</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50"></a>    --service-level pro <span class="se">\</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51"></a>    --nodepool-name swiss-alps-nodepool <span class="se">\</span>
+<a id="__codelineno-4-52" name="__codelineno-4-52"></a>    --nodepool-size <span class="si">${</span><span class="nv">CLUSTER_NODES</span><span class="si">}</span> <span class="se">\</span>
+<a id="__codelineno-4-53" name="__codelineno-4-53"></a>    --nodepool-security-group sks-security-group
+<a id="__codelineno-4-54" name="__codelineno-4-54"></a>
+<a id="__codelineno-4-55" name="__codelineno-4-55"></a><span class="c1"># Get the kubeconfig</span>
+<a id="__codelineno-4-56" name="__codelineno-4-56"></a>exo compute sks kubeconfig <span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span> kube-admin <span class="se">\</span>
+<a id="__codelineno-4-57" name="__codelineno-4-57"></a>    --zone <span class="si">${</span><span class="nv">CLUSTER_ZONE</span><span class="si">}</span> <span class="se">\</span>
+<a id="__codelineno-4-58" name="__codelineno-4-58"></a>    --group system:masters &gt; <span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span>.kubeconfig
+<a id="__codelineno-4-59" name="__codelineno-4-59"></a>
+<a id="__codelineno-4-60" name="__codelineno-4-60"></a><span class="nb">export</span> <span class="nv">KUBECONFIG</span><span class="o">=</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span>.kubeconfig
+</code></pre></div></td></tr></table></div>
+<p><strong>Output</strong>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">  1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">  2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">  3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">  4</a></span>
+<span class="normal"><a href="#__codelineno-5-5">  5</a></span>
+<span class="normal"><a href="#__codelineno-5-6">  6</a></span>
+<span class="normal"><a href="#__codelineno-5-7">  7</a></span>
+<span class="normal"><a href="#__codelineno-5-8">  8</a></span>
+<span class="normal"><a href="#__codelineno-5-9">  9</a></span>
+<span class="normal"><a href="#__codelineno-5-10"> 10</a></span>
+<span class="normal"><a href="#__codelineno-5-11"> 11</a></span>
+<span class="normal"><a href="#__codelineno-5-12"> 12</a></span>
+<span class="normal"><a href="#__codelineno-5-13"> 13</a></span>
+<span class="normal"><a href="#__codelineno-5-14"> 14</a></span>
+<span class="normal"><a href="#__codelineno-5-15"> 15</a></span>
+<span class="normal"><a href="#__codelineno-5-16"> 16</a></span>
+<span class="normal"><a href="#__codelineno-5-17"> 17</a></span>
+<span class="normal"><a href="#__codelineno-5-18"> 18</a></span>
+<span class="normal"><a href="#__codelineno-5-19"> 19</a></span>
+<span class="normal"><a href="#__codelineno-5-20"> 20</a></span>
+<span class="normal"><a href="#__codelineno-5-21"> 21</a></span>
+<span class="normal"><a href="#__codelineno-5-22"> 22</a></span>
+<span class="normal"><a href="#__codelineno-5-23"> 23</a></span>
+<span class="normal"><a href="#__codelineno-5-24"> 24</a></span>
+<span class="normal"><a href="#__codelineno-5-25"> 25</a></span>
+<span class="normal"><a href="#__codelineno-5-26"> 26</a></span>
+<span class="normal"><a href="#__codelineno-5-27"> 27</a></span>
+<span class="normal"><a href="#__codelineno-5-28"> 28</a></span>
+<span class="normal"><a href="#__codelineno-5-29"> 29</a></span>
+<span class="normal"><a href="#__codelineno-5-30"> 30</a></span>
+<span class="normal"><a href="#__codelineno-5-31"> 31</a></span>
+<span class="normal"><a href="#__codelineno-5-32"> 32</a></span>
+<span class="normal"><a href="#__codelineno-5-33"> 33</a></span>
+<span class="normal"><a href="#__codelineno-5-34"> 34</a></span>
+<span class="normal"><a href="#__codelineno-5-35"> 35</a></span>
+<span class="normal"><a href="#__codelineno-5-36"> 36</a></span>
+<span class="normal"><a href="#__codelineno-5-37"> 37</a></span>
+<span class="normal"><a href="#__codelineno-5-38"> 38</a></span>
+<span class="normal"><a href="#__codelineno-5-39"> 39</a></span>
+<span class="normal"><a href="#__codelineno-5-40"> 40</a></span>
+<span class="normal"><a href="#__codelineno-5-41"> 41</a></span>
+<span class="normal"><a href="#__codelineno-5-42"> 42</a></span>
+<span class="normal"><a href="#__codelineno-5-43"> 43</a></span>
+<span class="normal"><a href="#__codelineno-5-44"> 44</a></span>
+<span class="normal"><a href="#__codelineno-5-45"> 45</a></span>
+<span class="normal"><a href="#__codelineno-5-46"> 46</a></span>
+<span class="normal"><a href="#__codelineno-5-47"> 47</a></span>
+<span class="normal"><a href="#__codelineno-5-48"> 48</a></span>
+<span class="normal"><a href="#__codelineno-5-49"> 49</a></span>
+<span class="normal"><a href="#__codelineno-5-50"> 50</a></span>
+<span class="normal"><a href="#__codelineno-5-51"> 51</a></span>
+<span class="normal"><a href="#__codelineno-5-52"> 52</a></span>
+<span class="normal"><a href="#__codelineno-5-53"> 53</a></span>
+<span class="normal"><a href="#__codelineno-5-54"> 54</a></span>
+<span class="normal"><a href="#__codelineno-5-55"> 55</a></span>
+<span class="normal"><a href="#__codelineno-5-56"> 56</a></span>
+<span class="normal"><a href="#__codelineno-5-57"> 57</a></span>
+<span class="normal"><a href="#__codelineno-5-58"> 58</a></span>
+<span class="normal"><a href="#__codelineno-5-59"> 59</a></span>
+<span class="normal"><a href="#__codelineno-5-60"> 60</a></span>
+<span class="normal"><a href="#__codelineno-5-61"> 61</a></span>
+<span class="normal"><a href="#__codelineno-5-62"> 62</a></span>
+<span class="normal"><a href="#__codelineno-5-63"> 63</a></span>
+<span class="normal"><a href="#__codelineno-5-64"> 64</a></span>
+<span class="normal"><a href="#__codelineno-5-65"> 65</a></span>
+<span class="normal"><a href="#__codelineno-5-66"> 66</a></span>
+<span class="normal"><a href="#__codelineno-5-67"> 67</a></span>
+<span class="normal"><a href="#__codelineno-5-68"> 68</a></span>
+<span class="normal"><a href="#__codelineno-5-69"> 69</a></span>
+<span class="normal"><a href="#__codelineno-5-70"> 70</a></span>
+<span class="normal"><a href="#__codelineno-5-71"> 71</a></span>
+<span class="normal"><a href="#__codelineno-5-72"> 72</a></span>
+<span class="normal"><a href="#__codelineno-5-73"> 73</a></span>
+<span class="normal"><a href="#__codelineno-5-74"> 74</a></span>
+<span class="normal"><a href="#__codelineno-5-75"> 75</a></span>
+<span class="normal"><a href="#__codelineno-5-76"> 76</a></span>
+<span class="normal"><a href="#__codelineno-5-77"> 77</a></span>
+<span class="normal"><a href="#__codelineno-5-78"> 78</a></span>
+<span class="normal"><a href="#__codelineno-5-79"> 79</a></span>
+<span class="normal"><a href="#__codelineno-5-80"> 80</a></span>
+<span class="normal"><a href="#__codelineno-5-81"> 81</a></span>
+<span class="normal"><a href="#__codelineno-5-82"> 82</a></span>
+<span class="normal"><a href="#__codelineno-5-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-5-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-5-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-5-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-5-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-5-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-5-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-5-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-5-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-5-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-5-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-5-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-5-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-5-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-5-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-5-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-5-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-5-100">100</a></span>
+<span class="normal"><a href="#__codelineno-5-101">101</a></span>
+<span class="normal"><a href="#__codelineno-5-102">102</a></span>
+<span class="normal"><a href="#__codelineno-5-103">103</a></span>
+<span class="normal"><a href="#__codelineno-5-104">104</a></span>
+<span class="normal"><a href="#__codelineno-5-105">105</a></span>
+<span class="normal"><a href="#__codelineno-5-106">106</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a> ✔ Creating Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>┼──────────────────┼──────────────────────────────────────┼
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>│  SECURITY GROUP  │                                      │
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>┼──────────────────┼──────────────────────────────────────┼
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e │
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a>│ Name             │ sks-security-group                   │
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a>│ Description      │                                      │
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a>│ Ingress Rules    │ -                                    │
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a>│ Egress Rules     │ -                                    │
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a>│ External Sources │ -                                    │
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a>┼──────────────────┼──────────────────────────────────────┼
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a> ✔ Adding rule to Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a>│  SECURITY GROUP  │                                                                                              │
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e                                                         │
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a>│ Name             │ sks-security-group                                                                           │
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a>│ Description      │                                                                                              │
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a>│ Ingress Rules    │                                                                                              │
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a>│                  │   3b45b19d-e488-41d6-b78b-1a2410d6b16e   NodePort services   TCP   <span class="m">0</span>.0.0.0/0   <span class="m">30000</span>-32767   │
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a>│                  │                                                                                              │
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a>│ Egress Rules     │ -                                                                                            │
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a>│ External Sources │ -                                                                                            │
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a> ✔ Adding rule to Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a>│  SECURITY GROUP  │                                                                                                          │
+<a id="__codelineno-5-28" name="__codelineno-5-28"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-29" name="__codelineno-5-29"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e                                                                     │
+<a id="__codelineno-5-30" name="__codelineno-5-30"></a>│ Name             │ sks-security-group                                                                                       │
+<a id="__codelineno-5-31" name="__codelineno-5-31"></a>│ Description      │                                                                                                          │
+<a id="__codelineno-5-32" name="__codelineno-5-32"></a>│ Ingress Rules    │                                                                                                          │
+<a id="__codelineno-5-33" name="__codelineno-5-33"></a>│                  │   00ce6538-ea7d-40ba-bd7a-5bf3e30c82ad   SKS kubelet         TCP   SG:sks-security-group   <span class="m">10250</span>         │
+<a id="__codelineno-5-34" name="__codelineno-5-34"></a>│                  │   3b45b19d-e488-41d6-b78b-1a2410d6b16e   NodePort services   TCP   <span class="m">0</span>.0.0.0/0               <span class="m">30000</span>-32767   │
+<a id="__codelineno-5-35" name="__codelineno-5-35"></a>│                  │                                                                                                          │
+<a id="__codelineno-5-36" name="__codelineno-5-36"></a>│ Egress Rules     │ -                                                                                                        │
+<a id="__codelineno-5-37" name="__codelineno-5-37"></a>│ External Sources │ -                                                                                                        │
+<a id="__codelineno-5-38" name="__codelineno-5-38"></a>┼──────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-39" name="__codelineno-5-39"></a> ✔ Adding rule to Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-40" name="__codelineno-5-40"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-41" name="__codelineno-5-41"></a>│  SECURITY GROUP  │                                                                                                                     │
+<a id="__codelineno-5-42" name="__codelineno-5-42"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-43" name="__codelineno-5-43"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e                                                                                │
+<a id="__codelineno-5-44" name="__codelineno-5-44"></a>│ Name             │ sks-security-group                                                                                                  │
+<a id="__codelineno-5-45" name="__codelineno-5-45"></a>│ Description      │                                                                                                                     │
+<a id="__codelineno-5-46" name="__codelineno-5-46"></a>│ Ingress Rules    │                                                                                                                     │
+<a id="__codelineno-5-47" name="__codelineno-5-47"></a>│                  │   00ce6538-ea7d-40ba-bd7a-5bf3e30c82ad   SKS kubelet            TCP    SG:sks-security-group   <span class="m">10250</span>                │
+<a id="__codelineno-5-48" name="__codelineno-5-48"></a>│                  │   3b45b19d-e488-41d6-b78b-1a2410d6b16e   NodePort services      TCP    <span class="m">0</span>.0.0.0/0               <span class="m">30000</span>-32767          │
+<a id="__codelineno-5-49" name="__codelineno-5-49"></a>│                  │   f79c6e84-f430-4a0c-b9e7-a778a86c6db6   Cilium <span class="o">(</span>healthcheck<span class="o">)</span>   ICMP   SG:sks-security-group   ICMP code:0 type:8   │
+<a id="__codelineno-5-50" name="__codelineno-5-50"></a>│                  │                                                                                                                     │
+<a id="__codelineno-5-51" name="__codelineno-5-51"></a>│ Egress Rules     │ -                                                                                                                   │
+<a id="__codelineno-5-52" name="__codelineno-5-52"></a>│ External Sources │ -                                                                                                                   │
+<a id="__codelineno-5-53" name="__codelineno-5-53"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-54" name="__codelineno-5-54"></a> ✔ Adding rule to Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-55" name="__codelineno-5-55"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-56" name="__codelineno-5-56"></a>│  SECURITY GROUP  │                                                                                                                     │
+<a id="__codelineno-5-57" name="__codelineno-5-57"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-58" name="__codelineno-5-58"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e                                                                                │
+<a id="__codelineno-5-59" name="__codelineno-5-59"></a>│ Name             │ sks-security-group                                                                                                  │
+<a id="__codelineno-5-60" name="__codelineno-5-60"></a>│ Description      │                                                                                                                     │
+<a id="__codelineno-5-61" name="__codelineno-5-61"></a>│ Ingress Rules    │                                                                                                                     │
+<a id="__codelineno-5-62" name="__codelineno-5-62"></a>│                  │   00ce6538-ea7d-40ba-bd7a-5bf3e30c82ad   SKS kubelet            TCP    SG:sks-security-group   <span class="m">10250</span>                │
+<a id="__codelineno-5-63" name="__codelineno-5-63"></a>│                  │   3b45b19d-e488-41d6-b78b-1a2410d6b16e   NodePort services      TCP    <span class="m">0</span>.0.0.0/0               <span class="m">30000</span>-32767          │
+<a id="__codelineno-5-64" name="__codelineno-5-64"></a>│                  │   f79c6e84-f430-4a0c-b9e7-a778a86c6db6   Cilium <span class="o">(</span>healthcheck<span class="o">)</span>   ICMP   SG:sks-security-group   ICMP code:0 type:8   │
+<a id="__codelineno-5-65" name="__codelineno-5-65"></a>│                  │   770ff5d5-4d80-49dd-81c9-64c7135e656b   Cilium <span class="o">(</span>vxlan<span class="o">)</span>         UDP    SG:sks-security-group   <span class="m">8472</span>                 │
+<a id="__codelineno-5-66" name="__codelineno-5-66"></a>│                  │                                                                                                                     │
+<a id="__codelineno-5-67" name="__codelineno-5-67"></a>│ Egress Rules     │ -                                                                                                                   │
+<a id="__codelineno-5-68" name="__codelineno-5-68"></a>│ External Sources │ -                                                                                                                   │
+<a id="__codelineno-5-69" name="__codelineno-5-69"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-70" name="__codelineno-5-70"></a> ✔ Adding rule to Security Group <span class="s2">&quot;sks-security-group&quot;</span>... 3s
+<a id="__codelineno-5-71" name="__codelineno-5-71"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-72" name="__codelineno-5-72"></a>│  SECURITY GROUP  │                                                                                                                     │
+<a id="__codelineno-5-73" name="__codelineno-5-73"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-74" name="__codelineno-5-74"></a>│ ID               │ acdaaf51-c2f1-402b-87aa-6b9be44b0e6e                                                                                │
+<a id="__codelineno-5-75" name="__codelineno-5-75"></a>│ Name             │ sks-security-group                                                                                                  │
+<a id="__codelineno-5-76" name="__codelineno-5-76"></a>│ Description      │                                                                                                                     │
+<a id="__codelineno-5-77" name="__codelineno-5-77"></a>│ Ingress Rules    │                                                                                                                     │
+<a id="__codelineno-5-78" name="__codelineno-5-78"></a>│                  │   00ce6538-ea7d-40ba-bd7a-5bf3e30c82ad   SKS kubelet            TCP    SG:sks-security-group   <span class="m">10250</span>                │
+<a id="__codelineno-5-79" name="__codelineno-5-79"></a>│                  │   3b45b19d-e488-41d6-b78b-1a2410d6b16e   NodePort services      TCP    <span class="m">0</span>.0.0.0/0               <span class="m">30000</span>-32767          │
+<a id="__codelineno-5-80" name="__codelineno-5-80"></a>│                  │   00fd91cc-9a61-4a07-9dcf-7ba8f5f5bd03   Cilium <span class="o">(</span>healthcheck<span class="o">)</span>   TCP    SG:sks-security-group   <span class="m">4240</span>                 │
+<a id="__codelineno-5-81" name="__codelineno-5-81"></a>│                  │   f79c6e84-f430-4a0c-b9e7-a778a86c6db6   Cilium <span class="o">(</span>healthcheck<span class="o">)</span>   ICMP   SG:sks-security-group   ICMP code:0 type:8   │
+<a id="__codelineno-5-82" name="__codelineno-5-82"></a>│                  │   770ff5d5-4d80-49dd-81c9-64c7135e656b   Cilium <span class="o">(</span>vxlan<span class="o">)</span>         UDP    SG:sks-security-group   <span class="m">8472</span>                 │
+<a id="__codelineno-5-83" name="__codelineno-5-83"></a>│                  │                                                                                                                     │
+<a id="__codelineno-5-84" name="__codelineno-5-84"></a>│ Egress Rules     │ -                                                                                                                   │
+<a id="__codelineno-5-85" name="__codelineno-5-85"></a>│ External Sources │ -                                                                                                                   │
+<a id="__codelineno-5-86" name="__codelineno-5-86"></a>┼──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-87" name="__codelineno-5-87"></a> ✔ Creating SKS cluster <span class="s2">&quot;swiss-alps&quot;</span>... 1m12s
+<a id="__codelineno-5-88" name="__codelineno-5-88"></a> ✔ Adding Nodepool <span class="s2">&quot;swiss-alps-nodepool&quot;</span>... 3s
+<a id="__codelineno-5-89" name="__codelineno-5-89"></a>┼───────────────┼──────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-90" name="__codelineno-5-90"></a>│  SKS CLUSTER  │                                                                  │
+<a id="__codelineno-5-91" name="__codelineno-5-91"></a>┼───────────────┼──────────────────────────────────────────────────────────────────┼
+<a id="__codelineno-5-92" name="__codelineno-5-92"></a>│ ID            │ 29c1bf5b-5219-497f-a041-6e718ed535d4                             │
+<a id="__codelineno-5-93" name="__codelineno-5-93"></a>│ Name          │ swiss-alps                                                       │
+<a id="__codelineno-5-94" name="__codelineno-5-94"></a>│ Description   │                                                                  │
+<a id="__codelineno-5-95" name="__codelineno-5-95"></a>│ Zone          │ de-fra-1                                                         │
+<a id="__codelineno-5-96" name="__codelineno-5-96"></a>│ Creation Date │ <span class="m">2022</span>-12-21 <span class="m">19</span>:31:12 +0000 UTC                                    │
+<a id="__codelineno-5-97" name="__codelineno-5-97"></a>│ Endpoint      │ https://xxx.sks-de-fra-1.exo.io │
+<a id="__codelineno-5-98" name="__codelineno-5-98"></a>│ Version       │ <span class="m">1</span>.26.0                                                           │
+<a id="__codelineno-5-99" name="__codelineno-5-99"></a>│ Service Level │ pro                                                              │
+<a id="__codelineno-5-100" name="__codelineno-5-100"></a>│ CNI           │ cilium                                                           │
+<a id="__codelineno-5-101" name="__codelineno-5-101"></a>│ Add-Ons       │ exoscale-cloud-controller                                        │
+<a id="__codelineno-5-102" name="__codelineno-5-102"></a>│               │ metrics-server                                                   │
+<a id="__codelineno-5-103" name="__codelineno-5-103"></a>│ State         │ running                                                          │
+<a id="__codelineno-5-104" name="__codelineno-5-104"></a>│ Labels        │ n/a                                                              │
+<a id="__codelineno-5-105" name="__codelineno-5-105"></a>│ Nodepools     │ 4bf4d5ab-fc39-4a42-a9f5-45a5887147ee <span class="p">|</span> swiss-alps-nodepool       │
+<a id="__codelineno-5-106" name="__codelineno-5-106"></a>┼───────────────┼──────────────────────────────────────────────────────────────────┼
+</code></pre></div></td></tr></table></div>
+<p>You can now use the <code>kubectl</code> command to interact with your cluster:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="nb">export</span> <span class="nv">KUBECONFIG</span><span class="o">=</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span>.kubeconfig
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>kubectl get nodes
+</code></pre></div></td></tr></table></div>
+<p>And you should see something like this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>NAME               STATUS   ROLES    AGE   VERSION
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>pool-11cb8-djvbs   Ready    &lt;none&gt;   95s   v1.26.0
+</code></pre></div></td></tr></table></div>
+<h2 id="create-a-new-capsule-function">Create a new Capsule function</h2>
+<p>We're going to use the <code>cabu</code> cli to create a new function.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>cabu generate service-get hello-swiss-robot
+</code></pre></div></td></tr></table></div>
+<p>You should see something like this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>Unable to find image <span class="s1">&#39;k33g/capsule-builder:0.0.4&#39;</span> locally
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="m">0</span>.0.4: Pulling from k33g/capsule-builder
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>ff12a8b5aa85: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a>afe5a53d5555: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a>aa0b3dfc8ee1: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a>e5320b25a8f8: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a>6b9621a83b69: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a>a50259c3276d: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a>0d14b5adb1b9: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10"></a>0e019d286d0c: Pull <span class="nb">complete</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11"></a>Digest: sha256:17649d47bcd43df4c9738323d0a8dc68a47d90b8c64639394a801d7a943907f2
+<a id="__codelineno-9-12" name="__codelineno-9-12"></a>Status: Downloaded newer image <span class="k">for</span> k33g/capsule-builder:0.0.4
+<a id="__codelineno-9-13" name="__codelineno-9-13"></a>WARNING: The requested image<span class="err">&#39;</span>s platform <span class="o">(</span>linux/amd64<span class="o">)</span> does not match the detected host platform <span class="o">(</span>linux/arm64/v8<span class="o">)</span> and no specific platform was requested
+<a id="__codelineno-9-14" name="__codelineno-9-14"></a>✅🙂 hello-swiss-robot <span class="k">function</span> generated
+</code></pre></div></td></tr></table></div>
+<p>This generated a new folder <code>hello-swiss-robot</code> with a <code>go.mod</code> file and a <code>hello-swiss-robot.go</code> file.</p>
+<p>Open the <code>hello-swiss-robot.go</code> file and replace the content with this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span>
+<span class="normal"><a href="#__codelineno-10-14">14</a></span>
+<span class="normal"><a href="#__codelineno-10-15">15</a></span>
+<span class="normal"><a href="#__codelineno-10-16">16</a></span>
+<span class="normal"><a href="#__codelineno-10-17">17</a></span>
+<span class="normal"><a href="#__codelineno-10-18">18</a></span>
+<span class="normal"><a href="#__codelineno-10-19">19</a></span>
+<span class="normal"><a href="#__codelineno-10-20">20</a></span>
+<span class="normal"><a href="#__codelineno-10-21">21</a></span>
+<span class="normal"><a href="#__codelineno-10-22">22</a></span>
+<span class="normal"><a href="#__codelineno-10-23">23</a></span>
+<span class="normal"><a href="#__codelineno-10-24">24</a></span>
+<span class="normal"><a href="#__codelineno-10-25">25</a></span>
+<span class="normal"><a href="#__codelineno-10-26">26</a></span>
+<span class="normal"><a href="#__codelineno-10-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w"></span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="w">    </span><span class="nx">hf</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule/capsulemodule/hostfunctions&quot;</span><span class="w"></span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">    </span><span class="s">&quot;github.com/mattes/go-asciibot&quot;</span><span class="w"></span>
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">    </span><span class="s">&quot;github.com/tidwall/gjson&quot;</span><span class="w"></span>
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-10-8" name="__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="w">    </span><span class="nx">hf</span><span class="p">.</span><span class="nx">SetHandleHttp</span><span class="p">(</span><span class="nx">Handle</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-10-12" name="__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Handle</span><span class="p">(</span><span class="nx">req</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">resp</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">errResp</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-10-14" name="__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15"></a><span class="w">    </span><span class="nx">robot</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">gjson</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">Body</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;robot&quot;</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-10-16" name="__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17"></a><span class="w">    </span><span class="nx">headers</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-10-18" name="__codelineno-10-18"></a><span class="w">        </span><span class="s">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;text/plain&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-10-19" name="__codelineno-10-19"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-10-20" name="__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21"></a><span class="w">    </span><span class="nx">resp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">hf</span><span class="p">.</span><span class="nx">Response</span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-10-22" name="__codelineno-10-22"></a><span class="w">        </span><span class="nx">Body</span><span class="p">:</span><span class="w">    </span><span class="nx">asciibot</span><span class="p">.</span><span class="nx">MustGenerate</span><span class="p">(</span><span class="nx">robot</span><span class="p">.</span><span class="nx">Str</span><span class="p">),</span><span class="w"></span>
+<a id="__codelineno-10-23" name="__codelineno-10-23"></a><span class="w">        </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="nx">headers</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-10-24" name="__codelineno-10-24"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-10-25" name="__codelineno-10-25"></a>
+<a id="__codelineno-10-26" name="__codelineno-10-26"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">resp</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"></span>
+<a id="__codelineno-10-27" name="__codelineno-10-27"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>And modify the <code>go.mod</code> file to add this line:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span>
+<span class="normal"><a href="#__codelineno-11-5">5</a></span>
+<span class="normal"><a href="#__codelineno-11-6">6</a></span>
+<span class="normal"><a href="#__codelineno-11-7">7</a></span>
+<span class="normal"><a href="#__codelineno-11-8">8</a></span>
+<span class="normal"><a href="#__codelineno-11-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nx">module</span><span class="w"> </span><span class="nx">hello</span><span class="o">-</span><span class="nx">swiss</span><span class="o">-</span><span class="nx">robot</span><span class="w"></span>
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="k">go</span><span class="w"> </span><span class="mf">1.18</span><span class="w"></span>
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="nx">require</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">bots</span><span class="o">-</span><span class="nx">garden</span><span class="o">/</span><span class="nx">capsule</span><span class="o">/</span><span class="nx">capsulemodule</span><span class="w"> </span><span class="nx">v0</span><span class="mf">.3.0</span><span class="w"></span>
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">mattes</span><span class="o">/</span><span class="k">go</span><span class="w"> </span><span class="o">-</span><span class="nx">asciibot</span><span class="w"> </span><span class="nx">v0</span><span class="mf">.0.0</span><span class="o">-</span><span class="mi">20190603170252</span><span class="o">-</span><span class="mi">3</span><span class="nx">fa6d766c482</span><span class="w"></span>
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">tidwall</span><span class="o">/</span><span class="nx">gjson</span><span class="w"> </span><span class="nx">v1</span><span class="mf">.14.4</span><span class="w"></span>
+<a id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="p">)</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>To build the function, we will need a <code>Dockerfile</code>. Create a new file named <code>Dockerfile</code> and add this content:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-12-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-12-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-12-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-12-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-12-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-12-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-12-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-12-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-12-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-builder:0.0.4</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">COPY</span><span class="w"> </span>go.mod ./
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="k">COPY</span><span class="w"> </span>hello-swiss-robot.go ./
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="k">RUN</span><span class="w">  </span>go get -u ./...<span class="p">;</span> go mod tidy<span class="p">;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a><span class="k">RUN</span><span class="w"> </span>tinygo build -o hello-swiss-robot.wasm -target wasi hello-swiss-robot.go
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7"></a><span class="k">FROM</span><span class="w"> </span><span class="s">k33g/capsule-launcher:0.2.9</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8"></a><span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span><span class="m">0</span> /home/function/hello-swiss-robot.wasm ./
+<a id="__codelineno-12-9" name="__codelineno-12-9"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/capsule&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-wasm=./hello-swiss-robot.wasm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-mode=http&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-httpPort=8080&quot;</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+<p>We can now build the function thanks to the <code>Dockerfile</code> and its multi-stage capabilities:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span>
+<span class="normal"><a href="#__codelineno-13-5">5</a></span>
+<span class="normal"><a href="#__codelineno-13-6">6</a></span>
+<span class="normal"><a href="#__codelineno-13-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;capsule-hello-swiss-robot&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a>docker login ...
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a>docker build -t <span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span> .
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7"></a>docker images <span class="p">|</span> grep <span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>
+</code></pre></div></td></tr></table></div>
+<p>Finally, we push the image to the Docker Hub:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span>
+<span class="normal"><a href="#__codelineno-14-2">2</a></span>
+<span class="normal"><a href="#__codelineno-14-3">3</a></span>
+<span class="normal"><a href="#__codelineno-14-4">4</a></span>
+<span class="normal"><a href="#__codelineno-14-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;capsule-hello-swiss-robot&quot;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4"></a>docker tag <span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span>/<span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5"></a>docker push <span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span>/<span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="test-the-function-locally">Test the function locally</h3>
+<p>We can now test the function locally:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span>
+<span class="normal"><a href="#__codelineno-15-3">3</a></span>
+<span class="normal"><a href="#__codelineno-15-4">4</a></span>
+<span class="normal"><a href="#__codelineno-15-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;capsule-hello-swiss-robot&quot;</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4"></a>docker run -p <span class="m">8080</span>:8080 <span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span>/<span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5"></a>💊 Capsule <span class="o">(</span> v0.2.9 🎄 <span class="o">[</span>Christmas tree<span class="o">]</span> <span class="o">)</span> http server is listening on: <span class="m">8080</span> 🌍
+</code></pre></div></td></tr></table></div>
+<p>Now let's test the function, we pass a JSON object to the function, with a <code>robot</code> field. This field is a 5 digit
+hexadecimal number, which will be used to generate the robot.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-16-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-16-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-16-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-16-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-16-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-16-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-16-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-16-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-16-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a>curl -X POST http://localhost:8080 <span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a>-H <span class="s1">&#39;content-type: application/json&#39;</span> <span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3"></a>-d <span class="s1">&#39;{&quot;robot&quot;: &quot;10333&quot;}&#39;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4"></a>    <span class="se">\.</span><span class="o">===</span>./
+<a id="__codelineno-16-5" name="__codelineno-16-5"></a>    <span class="p">|</span> d b <span class="p">|</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6"></a>     <span class="se">\_</span>O_/
+<a id="__codelineno-16-7" name="__codelineno-16-7"></a>    /<span class="p">|</span> <span class="o">[]</span><span class="p">|</span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8"></a>  <span class="o">()</span>/<span class="p">|</span>___<span class="p">|</span><span class="se">\(</span><span class="o">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9"></a>     // <span class="se">\\</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10"></a>    _<span class="se">\\</span> //_
+</code></pre></div></td></tr></table></div>
+<h3 id="deploy-the-function-on-the-sks-cluster">Deploy the function on the SKS cluster</h3>
+<p>We can now deploy the function on the SKS cluster. For this I will use the <code>kubectl</code> commands. You can also crate all the Kubernetes resources as YAML files and use <code>kubectl apply -f ...</code>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span>
+<span class="normal"><a href="#__codelineno-17-2">2</a></span>
+<span class="normal"><a href="#__codelineno-17-3">3</a></span>
+<span class="normal"><a href="#__codelineno-17-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;capsule-hello-swiss-robot&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a>kubectl create deployment hello-swiss-robot-deployment --image <span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span>/<span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span> --port <span class="m">8080</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a>kubectl expose deployment hello-swiss-robot-deployment --port<span class="o">=</span><span class="m">8080</span> --target-port<span class="o">=</span><span class="m">8080</span> --type<span class="o">=</span>LoadBalancer
+</code></pre></div></td></tr></table></div>
+<h3 id="call-the-function">Call the function</h3>
+<p>Let's get the IP address of the service using the <code>kubectl</code> command:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a>kubectl get service hello-swiss-robot-deployment -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.status.loadBalancer.ingress[].ip}&quot;</span>
+</code></pre></div></td></tr></table></div>
+<p>And we test the function, to display a new robot:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
+<span class="normal"><a href="#__codelineno-19-2">2</a></span>
+<span class="normal"><a href="#__codelineno-19-3">3</a></span>
+<span class="normal"><a href="#__codelineno-19-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="sb">```</span>bash
+<a id="__codelineno-19-2" name="__codelineno-19-2"></a>curl -X POST http://&lt;IP_ADDRESS&gt;:8080 <span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3"></a>-H <span class="s1">&#39;content-type: application/json&#39;</span> <span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4"></a>-d <span class="s1">&#39;{&quot;robot&quot;: &quot;10233&quot;}&#39;</span>
+</code></pre></div></td></tr></table></div>
+<p>And you should see something like this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span>
+<span class="normal"><a href="#__codelineno-20-2">2</a></span>
+<span class="normal"><a href="#__codelineno-20-3">3</a></span>
+<span class="normal"><a href="#__codelineno-20-4">4</a></span>
+<span class="normal"><a href="#__codelineno-20-5">5</a></span>
+<span class="normal"><a href="#__codelineno-20-6">6</a></span>
+<span class="normal"><a href="#__codelineno-20-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a>    <span class="se">\.</span><span class="o">===</span>./
+<a id="__codelineno-20-2" name="__codelineno-20-2"></a>    <span class="p">|</span> d b <span class="p">|</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3"></a>     <span class="se">\_</span>O_/
+<a id="__codelineno-20-4" name="__codelineno-20-4"></a>    /<span class="p">|</span> <span class="o">[]</span><span class="p">|</span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5"></a>  <span class="o">()</span>/<span class="p">|</span>___<span class="p">|</span><span class="se">\(</span><span class="o">)</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6"></a>    . <span class="se">\_</span>/  .
+<a id="__codelineno-20-7" name="__codelineno-20-7"></a>   . .:::.. .
+</code></pre></div></td></tr></table></div>
+<p>And try another roboter with another hexadecimal number:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-21-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-21-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-21-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-21-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-21-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-21-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-21-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-21-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-21-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>curl -X POST http://&lt;IP_ADDRESS&gt;:8080 <span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2"></a>-H <span class="s1">&#39;content-type: application/json&#39;</span> <span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3"></a>-d <span class="s1">&#39;{&quot;robot&quot;: &quot;f2b11&quot;}&#39;</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4"></a>   _ _,_,_ _
+<a id="__codelineno-21-5" name="__codelineno-21-5"></a>   <span class="se">\(</span> p q <span class="o">)</span>/
+<a id="__codelineno-21-6" name="__codelineno-21-6"></a>     <span class="se">\_</span><span class="o">=</span>_/
+<a id="__codelineno-21-7" name="__codelineno-21-7"></a>    /<span class="p">|</span><span class="o">(</span><span class="se">\)</span><span class="p">|</span><span class="se">\</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8"></a>   d <span class="p">|</span>___<span class="p">|</span> b
+<a id="__codelineno-21-9" name="__codelineno-21-9"></a>     <span class="o">(</span>_<span class="p">|</span>_<span class="o">)</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10"></a>     <span class="o">(</span>o<span class="p">|</span>o<span class="o">)</span>
+</code></pre></div></td></tr></table></div>
+<p>And that's it! You successfully deployed a Capsule function on a Exoscale SKS cluster.</p>
+<h3 id="housekeeping">Housekeeping</h3>
+<div class="admonition info">
+<p class="admonition-title">How to delete the cluster?</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span>
+<span class="normal"><a href="#__codelineno-22-2">2</a></span>
+<span class="normal"><a href="#__codelineno-22-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a>exo compute sks nodepool delete <span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span> swiss-alps-nodepool -z <span class="si">${</span><span class="nv">CLUSTER_ZONE</span><span class="si">}</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2"></a>exo compute sks delete <span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3"></a>exo compute security-group delete sks-security-group
+</code></pre></div></td></tr></table></div>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../cookbook-fly/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Capsule function on Fly.io" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Capsule function on Fly.io
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../references/" class="md-footer__link md-footer__link--next" aria-label="Next: 📙 Refs" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              📙 Refs
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 - 2023 Philippe Charrière
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>
