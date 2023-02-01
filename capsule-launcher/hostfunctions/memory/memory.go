@@ -2,8 +2,9 @@ package memory
 
 import (
 	"context"
-	"github.com/tetratelabs/wazero/api"
 	"log"
+
+	"github.com/tetratelabs/wazero/api"
 )
 
 // WriteStringToMemory :
@@ -22,11 +23,11 @@ func WriteStringToMemory(text string, ctx context.Context, module api.Module,
 	}
 
 	retOffset := uint32(results[0])
-	module.Memory().WriteUint32Le(ctx, retBuffPtrPos, retOffset)
-	module.Memory().WriteUint32Le(ctx, retBuffSize, uint32(lengthOfTheMessage))
+	module.Memory().WriteUint32Le(retBuffPtrPos, retOffset)
+	module.Memory().WriteUint32Le(retBuffSize, uint32(lengthOfTheMessage))
 
 	// add the message to the memory of the module
-	module.Memory().Write(ctx, retOffset, []byte(stringMessageFromHost))
+	module.Memory().Write(retOffset, []byte(stringMessageFromHost))
 
 }
 
@@ -34,7 +35,7 @@ func WriteStringToMemory(text string, ctx context.Context, module api.Module,
 // Get string from the module's memory (written by the module)
 // (argument of a function)
 func ReadStringFromMemory(ctx context.Context, module api.Module, contentOffset, contentByteCount uint32) string {
-	contentBuff, ok := module.Memory().Read(ctx, contentOffset, contentByteCount)
+	contentBuff, ok := module.Memory().Read(contentOffset, contentByteCount)
 	if !ok {
 		log.Panicf("🟥 Memory.Read(%d, %d) out of range", contentOffset, contentByteCount)
 	}
