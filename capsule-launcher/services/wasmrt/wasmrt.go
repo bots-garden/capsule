@@ -2,9 +2,10 @@ package capsule
 
 import (
 	"context"
+	"log"
+
 	"github.com/bots-garden/capsule/capsule-launcher/hostfunctions"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
-	"log"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
@@ -342,7 +343,7 @@ func CreateWasmRuntime(ctx context.Context) wazero.Runtime {
 			[]api.ValueType{api.ValueTypeI32}).
 		Export("hostRequestParamsGet")
 
-	_, errBuilder := builder.Instantiate(ctx, wasmRuntime)
+	_, errBuilder := builder.Instantiate(ctx)
 	if errBuilder != nil {
 		log.Panicln("🔴 Error with env module and host function(s):", errBuilder)
 	}

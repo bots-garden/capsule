@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 )
@@ -106,7 +107,7 @@ func ReserveMemorySpaceFor(s string, wm api.Module, ctx context.Context) (pos ui
 	//defer free.Call(ctx, stringParameterPtrPosition)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if !wm.Memory().Write(ctx, uint32(stringParameterPtrPosition), []byte(s)) {
+	if !wm.Memory().Write(uint32(stringParameterPtrPosition), []byte(s)) {
 		//log.Panicf("😡 Memory.Write(%d, %d) out of range of memory size %d", stringParameterPtrPosition, stringParameterLength, wr.Module.Memory().Size(wr.Ctx))
 		return 0, 0, free, errors.New("😡 Memory.Write out of range of memory size")
 	} else {
@@ -132,7 +133,7 @@ func ExecHandleFunction(function api.Function, module api.Module, ctx context.Co
 
 	// The pointer is a linear memory offset,
 	// which is where we write the name.
-	bytes, ok := module.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize)
+	bytes, ok := module.Memory().Read(handleReturnPtrPos, handleReturnSize)
 	if !ok {
 		return nil, errors.New("😡[execHandleFunction] Memory.Read out of range of memory size")
 	}
@@ -158,7 +159,7 @@ func ExecHandleFunctionForHttp(function api.Function, module api.Module, ctx con
 
 	// The pointer is a linear memory offset,
 	// which is where we write the name.
-	bytes, ok := module.Memory().Read(ctx, handleReturnPtrPos, handleReturnSize)
+	bytes, ok := module.Memory().Read(handleReturnPtrPos, handleReturnSize)
 	if !ok {
 		return nil, errors.New("😡[execHandleFunction] Memory.Read out of range of memory size")
 	}
