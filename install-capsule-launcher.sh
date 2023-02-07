@@ -1,5 +1,5 @@
 #!/bin/bash
-LAST_CAPSULE_VERSION="v0.3.0"
+LAST_CAPSULE_VERSION="v0.3.1"
 echo "System: ${OSTYPE} $(uname -m)"
 
 if [ -z "$CAPSULE_PATH" ]

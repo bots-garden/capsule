@@ -12,4 +12,5 @@ replace (
 	github.com/bots-garden/capsule v0.2.8 => ../
 	github.com/bots-garden/capsule v0.2.9 => ../
 	github.com/bots-garden/capsule v0.3.0 => ../
+	github.com/bots-garden/capsule v0.3.1 => ../
 )
