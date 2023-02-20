@@ -369,7 +369,7 @@ func GetWasmRuntimeAndModuleInstances(wasmFile []byte) (wazero.Runtime, api.Modu
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
 	// 🖐 The main method is called at this moment
-	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+	wasmModule, errInstanceWasmModule := wasmRuntime.Instantiate(ctx, wasmFile)
 
 	if errInstanceWasmModule != nil {
 		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
@@ -387,7 +387,7 @@ func GetModuleInstance(wasmFile []byte) (api.Module, context.Context) {
 
 	// 🥚 Instantiate the wasm module (from the wasm file)
 	// 🖐 The main method is called at this moment
-	wasmModule, errInstanceWasmModule := wasmRuntime.InstantiateModuleFromBinary(ctx, wasmFile)
+	wasmModule, errInstanceWasmModule := wasmRuntime.Instantiate(ctx, wasmFile)
 
 	if errInstanceWasmModule != nil {
 		log.Panicln("🔴 Error while creating module instance:", errInstanceWasmModule)
