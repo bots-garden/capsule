@@ -7,8 +7,8 @@
 # Capsule: the nano (wasm) functions runner
 
 - 🖐 Issues: [https://github.com/bots-garden/capsule/issues](https://github.com/bots-garden/capsule/issues)
-- 📦 Last release: `v0.3.1 🐊 [Tampa Bay]`
-- 📦 Next release: `v0.3.2 TBD` *🚧 in progress*
+- 📦 Last release: `v0.3.2 🤗 [WASM I/O 2023]`
+- 📦 Next release: `v0.3.3 TBD` *🚧 in progress*
 - 📝 Full documentation [https://bots-garden.github.io/capsule/](https://bots-garden.github.io/capsule/)
 
 ## What is **Capsule**?

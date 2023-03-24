@@ -5,4 +5,4 @@ hey -n 300 -c 100 -m POST \
 -d '{"message": "Golang 💚💜 wasm", "author": "Philippe"}' \
 "http://localhost:7070"
 
-#   Requests/sec: 241.3615
+# Requests/sec: 485.4062 deps: updates wazero to 1.0.0-pre.9

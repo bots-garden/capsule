@@ -7,8 +7,8 @@ replace github.com/bots-garden/capsule/capsulemodule => ../../capsulemodule
 replace github.com/bots-garden/capsule/commons => ../../commons
 
 require (
-	github.com/bots-garden/capsule/capsulemodule v0.3.0
-	github.com/valyala/fastjson v1.6.3
+	github.com/bots-garden/capsule/capsulemodule v0.3.1
+	github.com/valyala/fastjson v1.6.4
 )
 
-require github.com/bots-garden/capsule/commons v0.3.0 // indirect
+require github.com/bots-garden/capsule/commons v0.3.1 // indirect
