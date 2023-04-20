@@ -7,7 +7,7 @@ Before executing or running a function, you need to install the last release of 
 🖐 **On Linux**:
 
 ```bash
-export CAPSULE_VERSION="v0.3.2"
+export CAPSULE_VERSION="v0.3.3"
 wget -O - https://raw.githubusercontent.com/bots-garden/capsule/${CAPSULE_VERSION}/install-capsule-launcher.sh| bash
 ```
 
@@ -29,7 +29,7 @@ MESSAGE="👋 Hello World 🌍" capsule \
   -httpPort=8080
 ```
 
-> You can download the appropriate release of **Capsule** here: [`v0.3.2 🤗 [WASM I/O 2023]`](https://github.com/bots-garden/capsule/releases/tag/v0.3.2)
+> You can download the appropriate release of **Capsule** here: [`v0.3.3 🍊 [Tangerine]`](https://github.com/bots-garden/capsule/releases/tag/v0.3.3)
 
 ## Using the Capsule Docker image
 > The documentation is a wip 🚧

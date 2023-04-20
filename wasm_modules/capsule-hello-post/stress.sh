@@ -14,3 +14,5 @@ hey -n 300 -c 100 -m POST \
 # Requests/sec: 123.6958 wasi_snapshot_preview1.MustInstantiate(ctx, wasmRuntime)
 # Requests/sec: 84.0781 deps: updates wazero to 1.0.0-pre.4
 # Requests/sec: 167.1686 deps: updates wazero to 1.0.0-pre.9
+# Requests/sec: 120.3790 deps: updates wazero to 1.0.1
+# Requests/sec: 237.3747 deps: updates wazero to 1.0.2

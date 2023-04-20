@@ -1,6 +1,6 @@
 module github.com/bots-garden/capsule/capsule-launcher
 
-go 1.18
+go 1.20
 
 replace (
 	github.com/bots-garden/capsule/commons => ../commons
@@ -19,7 +19,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.42.0
 	github.com/google/uuid v1.3.0
 	github.com/nats-io/nats.go v1.24.0
-	github.com/tetratelabs/wazero v1.0.1
+	github.com/tetratelabs/wazero v1.0.2
 )
 
 require (

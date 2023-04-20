@@ -20,7 +20,7 @@ capsule \
 ```bash
 docker run \
   -p 8080:8080 \
-  -v $(pwd):/app --rm k33g/capsule-launcher:0.3.2 \
+  -v $(pwd):/app --rm k33g/capsule-launcher:0.3.3 \
   /capsule \
   -wasm=./app/hello-world.wasm \
   -mode=http \

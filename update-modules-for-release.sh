@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TAG="v0.3.2"
+TAG="v0.3.3"
 cd commons
 go mod edit -replace github.com/bots-garden/capsule@${TAG}=../
 

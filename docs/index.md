@@ -1,6 +1,7 @@
 # Capsule: the nano (wasm) functions runner
 
 !!! info "What's new?"
+    - `v0.3.3 🍊 [Tangerine]`: dependencies updates: wazero to 1.0.1 then 1.0.2 (performances: x 1.4 🚀)
     - `v0.3.2 🤗 [WASM I/O 2023]`: dependencies updates: wazero to 1.0.0-pre.9 (Capsule is twice as fast 🚀)
     - `v0.3.1 🐊 [Tampa Bay]`: dependencies updates: wazero to 1.0.0-pre.8
     - `v0.3.0 🎄 [Christmas tree]`: Refactoring (Capsule is at least 4 times faster than the previous version).
