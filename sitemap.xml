@@ -2,142 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://bots-garden.github.io/capsule/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/capsule-faas/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/cookbook-civo/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/cookbook-exoscale/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/cookbook-fly/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/first-cli-function/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/first-http-function/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/first-mqtt-function/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/first-nats-function/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-build/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-gen/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-inst/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-reload/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-serve-url/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cabu-serve/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-couchbase/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-env/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-errors/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-files/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-http/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-intro/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-log/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-memory/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-mqtt/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-nats/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-redis/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/install/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/references/</loc>
-         <lastmod>2023-03-24</lastmod>
+         <lastmod>2023-04-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
