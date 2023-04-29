@@ -3,12 +3,11 @@
   "workbench.colorTheme": "Cobalt2",
   "terminal.integrated.fontSize": 16,
   "editor.fontSize": 16,
+  "go.toolsGopath": "/home/ubuntu/go/",
+  "go.gopath": "/home/ubuntu/go/",
   "go.toolsEnvVars": {
-    "GOOS": "js",
-    "GOARCH": "wasm"
-  },
-  "gopls": {
-    "experimentalWorkspaceModule": true
+    "GOOS": "linux",
+    "GOARCH": "arm64",
   },
   "go.useLanguageServer": true,
   "terminal.integrated.defaultProfile.linux": "bash",
