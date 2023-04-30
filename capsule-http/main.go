@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -29,6 +30,7 @@ type CapsuleFlags struct {
 	crt      string // https (certificate)
 	key      string // https (key)
 	registry string // url to the registry
+	version  bool
 }
 
 func main() {
@@ -46,8 +48,14 @@ func main() {
 	registryPtr := flag.String("registry", "", "url of the wasm registry")
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
+	versionPtr := flag.Bool("version", false, "prints capsule CLI current version")
 
 	flag.Parse()
+
+	if *versionPtr {
+		fmt.Println(version)
+		os.Exit(0)
+	}
 
 	flags := CapsuleFlags{
 		*wasmFilePathPtr,
@@ -56,6 +64,7 @@ func main() {
 		*crtPtr,
 		*keyPtr,
 		*registryPtr,
+		*versionPtr,
 	}
 
 	// Create context that listens for the interrupt signal from the OS.
@@ -94,7 +103,7 @@ func main() {
 	// Load the WebAssembly module
 	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url)
 	if err != nil {
-		log.Println("❌ Error when loading the wasm file", err)
+		log.Println("❌ Error while loading the wasm file", err)
 		os.Exit(1)
 	}
 
@@ -121,10 +130,10 @@ func main() {
 		headersStr := strings.Join(headers[:], ",")
 
 		requestParam := models.Request{
-			Body: string(c.Body()),
-			URI:      c.Request().URI().String(),
-			Method:   c.Method(),
-			Headers:  headersStr,
+			Body:    string(c.Body()),
+			URI:     c.Request().URI().String(),
+			Method:  c.Method(),
+			Headers: headersStr,
 		}
 
 		JSONData, err := json.Marshal(requestParam)
@@ -181,7 +190,7 @@ func main() {
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(errMarshal.Error())
 		}
-		
+
 		c.Status(response.StatusCode)
 
 		// set headers
@@ -192,7 +201,7 @@ func main() {
 		//fmt.Println("🟣 JSONBody", response.JSONBody)
 		//fmt.Println("🟣 TextBody", response.TextBody)
 
-		if len(response.TextBody)> 0 {
+		if len(response.TextBody) > 0 {
 			// send text body
 			return c.SendString(response.TextBody)
 		}
@@ -203,7 +212,7 @@ func main() {
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(errMarshal.Error())
 		}
-		
+
 		return c.Send(jsonStr)
 
 	})

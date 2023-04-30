@@ -5,4 +5,6 @@ use (
     ./capsule-http/functions/hey
     ./capsule-http/functions/index-html
     ./capsule-http
+    ./capsule-cli
+    ./capsule-cli/functions/hello
 )
