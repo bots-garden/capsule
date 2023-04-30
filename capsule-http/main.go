@@ -10,14 +10,13 @@ import (
 	"syscall"
 	"time"
 
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/bots-garden/capsule-host-sdk"
 	"github.com/bots-garden/capsule-host-sdk/models"
-	"github.com/bots-garden/capsule/tools"
+	"github.com/bots-garden/capsule/capsule-http/tools"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -37,7 +36,7 @@ func main() {
 	args := os.Args[1:]
 
 	if len(args) == 0 {
-		fmt.Println("Capsule needs some args to start.")
+		log.Println("Capsule needs some args to start.")
 		os.Exit(0)
 	}
 	// Capsule flags
@@ -84,7 +83,7 @@ func main() {
 	// Instantiate builder and default host functions
 	_, err := builder.Instantiate(ctx)
 	if err != nil {
-		log.Println("Error with env module and host function(s):", err)
+		log.Println("❌ Error with env module and host function(s):", err)
 		os.Exit(1)
 	}
 	// END: host functions
@@ -95,7 +94,7 @@ func main() {
 	// Load the WebAssembly module
 	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url)
 	if err != nil {
-		log.Println("Error when loading the wasm file", err)
+		log.Println("❌ Error when loading the wasm file", err)
 		os.Exit(1)
 	}
 
@@ -105,7 +104,7 @@ func main() {
 	app.All("/", func(c *fiber.Ctx) error {
 		mod, err := runtime.Instantiate(ctx, wasmFile)
 		if err != nil {
-			log.Println("Error with the module instance", err)
+			log.Println("❌ Error with the module instance", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
@@ -131,14 +130,14 @@ func main() {
 		JSONData, err := json.Marshal(requestParam)
 
 		if err != nil {
-			log.Println("Error when reading the request parameter", err)
+			log.Println("❌ Error when reading the request parameter", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
 
 		JSONDataPos, JSONDataSize, err := capsule.CopyDataToMemory(ctx, mod, JSONData)
 		if err != nil {
-			log.Println("Error when copying data to memory", err)
+			log.Println("❌ Error when copying data to memory", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
@@ -148,7 +147,7 @@ func main() {
 		result, err := handleFunction.Call(ctx,
 			JSONDataPos, JSONDataSize)
 		if err != nil {
-			log.Println(err)
+			log.Println("❌ Error when calling callHandleHTTP", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
@@ -157,37 +156,55 @@ func main() {
 
 		responseBuffer, err := capsule.ReadDataFromMemory(mod, responsePos, responseSize)
 		if err != nil {
-			log.Println(err)
+			log.Println("❌ Error when reading the memory", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
 
 		// TODO: ReadStringFromMemory, ReadBytesFromMemory...
 
-		responseBody, err := capsule.Result(responseBuffer)
+		responseFromWasmGuest, err := capsule.Result(responseBuffer)
 		if err != nil {
-			log.Println(err)
+			log.Println("❌ Error when getting the Result", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
 
-		//fmt.Println("🚧", string(responseBody))
+		//fmt.Println("🚧", string(responseFromWasmGuest))
+		// TODO: try unmarshaling with fastjson
 
+		// unmarshal the response
 		var response models.Response
-		errMarshal := json.Unmarshal(responseBody, &response)
+		errMarshal := json.Unmarshal(responseFromWasmGuest, &response)
 		if errMarshal != nil {
-			log.Println(err)
+			log.Println("❌ Error when unmarshal the response", errMarshal)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(errMarshal.Error())
 		}
-
-		//fmt.Println("🚧", response.Body, response.StatusCode, response.Headers) 
+		
 		c.Status(response.StatusCode)
+
 		// set headers
 		for key, value := range response.Headers {
 			c.Set(key, value)
 		}
-		return c.SendString(response.Body)
+
+		//fmt.Println("🟣 JSONBody", response.JSONBody)
+		//fmt.Println("🟣 TextBody", response.TextBody)
+
+		if len(response.TextBody)> 0 {
+			// send text body
+			return c.SendString(response.TextBody)
+		}
+		// send JSON body
+		jsonStr, err := json.Marshal(response.JSONBody)
+		if err != nil {
+			log.Println("❌ Error when marshal the body", err)
+			c.Status(http.StatusInternalServerError) // .🤔
+			return c.SendString(errMarshal.Error())
+		}
+		
+		return c.Send(jsonStr)
 
 	})
 
@@ -197,11 +214,11 @@ func main() {
 		if flags.crt != "" {
 			// certs/capsule.local.crt
 			// certs/capsule.local.key
-			fmt.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🔐🌍")
+			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🔐🌍")
 			app.ListenTLS(":"+httpPort, flags.crt, flags.key)
 
 		} else {
-			fmt.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
+			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
 			app.Listen(":" + httpPort)
 		}
 	}()
@@ -211,12 +228,12 @@ func main() {
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
 	stop()
-	fmt.Println("💊 Capsule shutting down gracefully...")
+	log.Println("💊 Capsule shutting down gracefully...")
 
 	// The context is used to inform the server it has 5 seconds to finish
 	// the request it is currently handling
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	fmt.Println("💊 Capsule exiting...")
+	log.Println("💊 Capsule exiting...")
 }

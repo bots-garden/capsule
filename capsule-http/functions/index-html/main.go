@@ -13,8 +13,12 @@ func main() {
 func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	
 	return capsule.HTTPResponse{
-		Body: "<h1>👋 Hello World! 🌍</h1>",
-		Headers: `{"Content-Type": "text/html; charset=utf-8"}`,
+		TextBody: "<h1>👋 Hello World! 🌍</h1>",
+		Headers: `{
+			"Content-Type": "text/html; charset=utf-8",
+			"Cache-Control": "no-cache",
+			"X-Powered-By": "capsule-module-sdk"
+		}`,
 		StatusCode: 200,
 	}, nil
 }

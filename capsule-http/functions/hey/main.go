@@ -18,7 +18,7 @@ func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	capsule.Print("👒: " + param.Headers)
 	
 	return capsule.HTTPResponse{
-		Body: "👋 Hey " + param.Body + "!",
+		TextBody: "👋 Hey " + param.Body +" !",
 		Headers: `{"Content-Type": "text/plain; charset=utf-8"}`,
 		StatusCode: 200,
 	}, nil

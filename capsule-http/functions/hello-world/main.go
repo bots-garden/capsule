@@ -30,7 +30,7 @@ func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	capsule.Log(message)
 
 	response := capsule.HTTPResponse{
-		Body: message,
+		JSONBody: `{"message": "`+message+`", "things":{"id":1212}}`,
 		Headers: `{"Content-Type": "application/json; charset=utf-8"}`,
 		StatusCode: 200,
 	}

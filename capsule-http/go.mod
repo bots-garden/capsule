@@ -1,4 +1,4 @@
-module github.com/bots-garden/capsule
+module github.com/bots-garden/capsule/capsule-http
 
 go 1.20
 
