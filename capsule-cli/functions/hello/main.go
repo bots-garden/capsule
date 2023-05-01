@@ -11,7 +11,7 @@ func main() {
 }
 
 // Handle function
-func Handle(param []byte) ([]byte, error) {
+func Handle(params []byte) ([]byte, error) {
 
 	capsule.Print("Environment variable → MESSAGE: " + capsule.GetEnv("MESSAGE"))
 
@@ -28,6 +28,6 @@ func Handle(param []byte) ([]byte, error) {
 	capsule.Print("📝: " + string(data))
 	
 
-	return []byte("👋 Hello " + string(param)), nil
+	return []byte("👋 Hello " + string(params)), nil
 
 }
