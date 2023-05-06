@@ -13,6 +13,7 @@ chmod +x capsule-http
 ## Serve a WASM Capsule module
 
 To run a WASM Capsule module you need to set 2 flags:
+
 - `--wasm`: the path to the WASM module
 - `--params`: the parameter to pass to the WASM module
 
