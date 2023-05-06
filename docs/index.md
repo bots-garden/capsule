@@ -19,6 +19,7 @@ Capsule is a set of **WASM runners**. Right now, the Capsule project is composed
 - The **Capsule** applications are developed thanks to the [Capsule Host SDK (HDK)](https://bots-garden.github.io/capsule-host-sdk/)
 - The **Capsule** modules executed by the The **Capsule** applications are developed thanks to the [Capsule Module SDK (MDK)](https://bots-garden.github.io/capsule-module-sdk/)
 
+**🎉 That leans, since now, it's possible to develop various runners thanks to the Capsule HostSDK**
 
 ## What does a **WASM Capsule module** look like?
 
