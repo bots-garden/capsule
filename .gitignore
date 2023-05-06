@@ -1,7 +1,6 @@
 *.wasm
 .DS_Store
 dump.rdb
-things.todo
 capsule-http/capsule-http
 capsule-http/.fuse*
 capsule-cli/capsule

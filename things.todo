@@ -1,0 +1,36 @@
+# TODO
+
+- documentation: capsule is a set of runners
+- guide for the host functions
+- guide for the SDK / PDK
+- first release of the SDK and PDK (or MDK==module development kit)
+
+## Capsule http & CLI
+
+- Create a mod file for local build https://stackoverflow.com/questions/68764637/how-to-use-an-alternate-go-mod-file-for-local-development
+- Load wasm plugin from url +with token
+- Load wasm plugin from S3 +with token
+  - https://min.io/docs/minio/linux/developers/go/API.html
+  - https://hub.docker.com/r/bitnami/minio/
+- Load wasm plugin from package registry +with token (GitLab, Nexus, GitHub)
+  - https://hub.docker.com/r/sonatype/nexus3/
+- Load wasm plugin from OCI registry +with token
+  - https://hub.docker.com/r/bitnami/harbor-registry/
+
+## Capsule http
+
+- protect the routes
+- hot reload of the wasm module
+
+## Host functions
+
+- Redis
+- Prometheus?
+- CouchBase?
+- PostGreSQL?
+- MQTT?
+- NATS?
+
+## Something else
+
+- Creating a native Node.js addon using the golang library: https://morioh.com/p/cfe8050589db
