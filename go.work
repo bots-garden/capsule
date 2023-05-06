@@ -7,4 +7,8 @@ use (
     ./capsule-http
     ./capsule-cli
     ./capsule-cli/functions/hello
+    ./capsule-cli/functions/hey-people
+    ./capsule-cli/functions/mem-db
+
+
 )

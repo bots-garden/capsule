@@ -1,0 +1,52 @@
+site_name: Capsule
+site_url: https://bots-garden.github.io/capsule/
+site_author: Philippe Charrière (@k33g)
+site_description: >-
+  **Capsule** is a **WebAssembly Function Runner**.
+# Repository
+repo_name: bots-garden/capsule
+repo_url: https://github.com/bots-garden/capsule
+
+# Copyright
+copyright: Copyright &copy; 2023 - 2024 Philippe Charrière
+
+
+nav:
+    - 🏠 Home: index.md
+    - 🚀 Getting Started:
+      - Capsule CLI and modules: getting-started-cli.md
+      - Capsule HTTP and modules: getting-started-http.md
+    - 🛠️ Host functions: host-functions-intro.md
+
+
+theme:
+  name: material
+  palette:
+    primary: teal
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - pymdownx.highlight:
+      use_pygments: true
+      auto_title: false
+      linenums: true
+      anchor_linenums: true
+  - pymdownx.superfences
+
+
+
+
+#theme:
+#    name: readthedocs
+#    highlightjs: true
+#    hljs_languages:
+#        - yaml
+#        - rust
+#        - golang
+#        - bash
+#        - javascript

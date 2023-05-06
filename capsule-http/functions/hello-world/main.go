@@ -4,7 +4,7 @@ package main
 import (
 	"strconv"
 
-	capsule "github.com/bots-garden/capsule-module-sdk"
+	"github.com/bots-garden/capsule-module-sdk"
 	"github.com/valyala/fastjson"
 )
 
@@ -30,7 +30,7 @@ func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	capsule.Log(message)
 
 	response := capsule.HTTPResponse{
-		JSONBody: `{"message": "`+message+`", "things":{"id":1212}}`,
+		JSONBody: `{"message": "`+message+`", "things":{"emoji":"🐯"}}`,
 		Headers: `{"Content-Type": "application/json; charset=utf-8"}`,
 		StatusCode: 200,
 	}

@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"os/signal"
 	"strings"
+
+	//"strings"
 	"syscall"
 	"time"
 
@@ -20,6 +22,8 @@ import (
 	"github.com/bots-garden/capsule/capsule-http/tools"
 
 	"github.com/gofiber/fiber/v2"
+	//"github.com/minio/minio-go/v7"
+	//"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -71,6 +75,29 @@ func main() {
 	// This context will be used for function calls.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	//! --- THIS IS A TEST ---
+	/*
+		- https://min.io/docs/minio/linux/developers/go/API.html
+		- https://github.com/minio/minio-go
+		endpoint := "play.min.io"
+		accessKeyID := "Q3AM3UQ867SPQQA43P2F"
+		secretAccessKey := "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+		useSSL := true
+
+		// Initialize minio client object.
+		minioClient, errMinio := minio.New(endpoint, &minio.Options{
+			Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
+			Secure: useSSL,
+		})
+		if errMinio != nil {
+			log.Fatalln(errMinio)
+		}
+
+		log.Printf("%#v\n", minioClient) // minioClient is now setup
+	*/
+
+	//! --- THIS IS A TEST ---
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
@@ -130,7 +157,9 @@ func main() {
 		headersStr := strings.Join(headers[:], ",")
 
 		requestParam := models.Request{
-			Body:    string(c.Body()),
+			Body: string(c.Body()),
+			//JSONBody: string(c.Body()), //! to use in the future
+			//TextBody: string(c.Body()), //! to use in the future
 			URI:     c.Request().URI().String(),
 			Method:  c.Method(),
 			Headers: headersStr,

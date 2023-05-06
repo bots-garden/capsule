@@ -1,0 +1,188 @@
+version: '3'
+# task build-capsule-http build-hello-world test-hello-world
+# task build-capsule-http build-hello-world test-hello-world-remote
+# task stress-hello-world
+# task build-capsule-http build-hey test-hey
+# task stress-hey
+# task build-capsule-http build-index-html test-index-html
+# task stress-index-html
+
+tasks:
+  # Build of capsule-http
+  build-capsule-http:
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        go build -o capsule-http
+        ls -lh capsule-http
+
+  build-hello-world:    
+    cmds:
+      - |
+        echo "📦 Building hello-world.wasm module..."
+        cd functions/hello-world
+        tinygo build -o hello-world.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  # Testing capsule-http
+  test-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hello-world..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+      - killport ${HTTP_PORT}
+
+  test-hello-world-remote:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './tmp/hello-world.wasm'
+      DOWNLOAD_URL: 'http://localhost:5000/hello-world.wasm'
+    cmds:
+      - |
+        echo "🌍 Serving the wasm file..."
+        cd functions/hello-world
+        echo "🌍 you can download the wasm file with this url:"
+        echo "http://localhost:5000/hello-world.wasm"
+        python3 -m http.server 5000 &
+        sleep 1
+      - | 
+        echo "🚀 Testing hello-world..."
+        ./capsule-http \
+        --url=${DOWNLOAD_URL} \
+        --wasm=${WASM_FILE} \
+        --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+      - killport ${HTTP_PORT}
+      - pkill python3
+
+
+  stress-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        echo "🚀 Stressing hello-world..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: application/json; charset=utf-8" \
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+      - killport ${HTTP_PORT}
+
+
+  build-hey:
+    cmds:
+      - |
+        echo "📦 Building hey.wasm module..."
+        cd functions/hey
+        tinygo build -o hey.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-hey:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8888'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hey/hey.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hey..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: text/plain; charset=utf-8' \
+          -d "${DATA}"
+      - killport ${HTTP_PORT}
+
+  stress-hey:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hey/hey.wasm'
+    cmds:
+      - | 
+        echo "🚀 Stressing hey..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+      - killport ${HTTP_PORT}
+
+
+  build-index-html:
+    cmds:
+      - |
+        echo "📦 Building index-html.wasm module..."
+        cd functions/index-html
+        tinygo build -o index.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-index-html:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '7777'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/index-html/index.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hey..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -v ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} 
+      - killport ${HTTP_PORT}
+
+  stress-index-html:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/index-html/index.wasm'
+    cmds:
+      - | 
+        echo "🚀 Stressing hey..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        hey -n 300 -c 100 -m GET \
+        ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+      - killport ${HTTP_PORT}

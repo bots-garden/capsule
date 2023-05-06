@@ -2,7 +2,6 @@
 package main
 
 import (
-
 	capsule "github.com/bots-garden/capsule-module-sdk"
 )
 
@@ -20,14 +19,12 @@ func Handle(params []byte) ([]byte, error) {
 		capsule.Print(err.Error())
 	}
 
-	
 	data, err := capsule.ReadFile("./hello.txt")
 	if err != nil {
 		capsule.Print(err.Error())
 	}
 	capsule.Print("📝: " + string(data))
 	
-
 	return []byte("👋 Hello " + string(params)), nil
 
 }

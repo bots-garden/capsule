@@ -1,0 +1,31 @@
+version: '3'
+# task install-mkdocs
+# task serve-mkdocs
+# task publish-mkdocs
+# task release
+
+tasks:
+  # Generate the documentation
+  # We use [mkdocs](https://www.mkdocs.org/)
+  install-mkdocs:
+    cmds:
+      - pip install mkdocs-material
+  serve-mkdocs:
+    cmds:
+      - mkdocs serve
+  publish-mkdocs: # on the `main` branch
+    cmds:
+      - mkdocs gh-deploy
+
+  # Generate a release of the capsule MDK
+  # v0.3.4 🍋 [lemon]
+  release:
+    env:
+      TAG: "v0.3.4"
+      #TAG: "v0.3.5" # next release
+    cmds:
+      - echo "📦 Generating release..."
+      - git add .
+      - git commit -m "📦 updates HDK for ${TAG}"
+      - git tag ${TAG}
+      - git push origin main ${TAG}
