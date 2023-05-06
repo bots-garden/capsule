@@ -1,0 +1,37 @@
+name: Release Capsule Binaries
+# WIP
+on:
+  release:
+    types: [created]
+
+# read this https://stackoverflow.com/questions/68764637/how-to-use-an-alternate-go-mod-file-for-local-development
+
+jobs:
+  releases-matrix-launcher:
+    name: Release Capsule CLI Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/amd64
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wangyoucao577/go-release-action@v1.16
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          project_path: "./capsule-cli"
+          binary_name: "capsule"
+          ldflags: "-s -w"
+          goversion: "https://dl.google.com/go/go1.20.linux-amd64.tar.gz"
+      - uses: wangyoucao577/go-release-action@v1.16
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          project_path: "./capsule-http"
+          binary_name: "capsule-http"
+          ldflags: "-s -w"
+          goversion: "https://dl.google.com/go/go1.20.linux-amd64.tar.gz"

@@ -57,3 +57,10 @@ tasks:
         env GOOS=linux GOARCH=arm64 go build -o capsule-http-${TAG}-linux-arm64
         env GOOS=linux GOARCH=amd64 go build -o capsule-http-${TAG}-linux-amd64
         mv capsule-http-${TAG}-* ../release
+
+
+#replace github.com/bots-garden/capsule-host-sdk  => ../../capsule-host-sdk
+#replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk
+
+
+
