@@ -8,6 +8,10 @@ version: '3'
 # task stress-index-html
 
 tasks:
+  refresh-packages:
+    cmds:
+      - go get -u ./...
+
   # Build of capsule-http
   build-capsule-http:
     cmds:

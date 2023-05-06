@@ -4,6 +4,10 @@ version: '3'
 # task build-capsule-cli build-hey-people test-hey-people
 
 tasks:
+  refresh-packages:
+    cmds:
+      - go get -u ./...
+
   # Build of capsule
   build-capsule-cli:
     cmds:

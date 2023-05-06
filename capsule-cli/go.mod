@@ -5,7 +5,7 @@ go 1.20
 require github.com/tetratelabs/wazero v1.1.0 // indirect
 
 require (
-	github.com/bots-garden/capsule-host-sdk v0.0.0
+	github.com/bots-garden/capsule-host-sdk v0.0.1
 	github.com/gofiber/fiber/v2 v2.44.0
 )
 
@@ -29,6 +29,6 @@ require (
 	golang.org/x/sys v0.7.0 // indirect
 )
 
-replace github.com/bots-garden/capsule-host-sdk => ../../capsule-host-sdk
-
+replace github.com/bots-garden/capsule-host-sdk  => ../../capsule-host-sdk
 replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk
+
