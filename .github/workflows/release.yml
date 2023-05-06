@@ -25,17 +25,6 @@ jobs:
           binary_name: "capsule"
           ldflags: "-s -w"
           goversion: "https://dl.google.com/go/go1.20.linux-amd64.tar.gz"
-
-  releases-matrix-launcher:
-    name: Release Capsule HTTP Binary
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # build and publish in parallel: linux/amd64
-        goos: [linux, darwin]
-        goarch: [amd64, arm64]
-    steps:
-      - uses: actions/checkout@v2
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

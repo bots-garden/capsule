@@ -30,3 +30,10 @@ tasks:
       - git commit -m "📦 updates HDK for ${TAG}"
       - git tag ${TAG}
       - git push origin main ${TAG}
+
+  remove-tag:
+    env:
+      TAG: "v0.3.4"
+    cmds:
+      - git tag -d ${TAG}
+
