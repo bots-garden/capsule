@@ -38,3 +38,22 @@ tasks:
     cmds:
       - git tag -d ${TAG}
 
+  build-releases:
+    env:
+      TAG: "v0.3.4"
+    cmds:
+      - | 
+        cd capsule-cli
+        env GOOS=darwin GOARCH=arm64 go build -o capsule-${TAG}-darwin-arm64
+        env GOOS=darwin GOARCH=amd64 go build -o capsule-${TAG}-darwin-amd64
+        env GOOS=linux GOARCH=arm64 go build -o capsule-${TAG}-linux-arm64
+        env GOOS=linux GOARCH=amd64 go build -o capsule-${TAG}-linux-amd64
+        mv capsule-${TAG}-* ../release
+
+      - |
+        cd capsule-http
+        env GOOS=darwin GOARCH=arm64 go build -o capsule-http-${TAG}-darwin-arm64
+        env GOOS=darwin GOARCH=amd64 go build -o capsule-http-${TAG}-darwin-amd64
+        env GOOS=linux GOARCH=arm64 go build -o capsule-http-${TAG}-linux-arm64
+        env GOOS=linux GOARCH=amd64 go build -o capsule-http-${TAG}-linux-amd64
+        mv capsule-http-${TAG}-* ../release
