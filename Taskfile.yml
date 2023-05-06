@@ -19,6 +19,7 @@ tasks:
 
   # Generate a release of the capsule MDK
   # v0.3.4 🍋 [lemon]
+  # `v0.3.4 🍋 [lemon]`: Capsule next generation (performances: x 10 🚀)
   # Then create the release manually on GitHub
   release:
     env:
