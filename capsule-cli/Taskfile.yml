@@ -1,0 +1,77 @@
+version: '3'
+# task build-capsule-cli build-hello test-hello
+# task build-capsule-cli build-mem-db test-mem-db
+# task build-capsule-cli build-hey-people test-hey-people
+
+tasks:
+  # Build of capsule
+  build-capsule-cli:
+    cmds:
+      - |
+        echo "📦 Building capsule-cli..."
+        go build -o capsule
+        ls -lh capsule
+
+  build-hello:
+    cmds:
+      - |
+        echo "📦 Building hello.wasm module..."
+        cd functions/hello
+        tinygo build -o hello.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-hello:
+    env:
+      MESSAGE: "👋 Hello, World! 🌍🤗" # export MESSAGE="Hello, World!"
+      PARAMS: "Bob Morane, 42, 🤗"
+      WASM_FILE: './functions/hello/hello.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hello..."
+        ./capsule --wasm=${WASM_FILE} --params="${PARAMS}"
+
+  build-mem-db:
+    cmds:
+      - |
+        echo "📦 Building mem-db..."
+        cd functions/mem-db
+        tinygo build -o mem-db.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-mem-db:
+    env:
+      WASM_FILE: './functions/mem-db/mem-db.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hello..."
+        ./capsule --wasm=${WASM_FILE}
+
+  build-hey-people:
+    cmds:
+      - |
+        echo "📦 Building hey-people..."
+        cd functions/hey-people
+        tinygo build -o hey-people.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-hey-people:
+    env:
+      WASM_FILE: './functions/hey-people/hey-people.wasm'
+      HTTP_PORT: '3000'
+    cmds:
+      - | 
+        echo "🌍 running Node.js http-server..."
+        node functions/hey-people/http-server.js &
+      - | 
+        echo "🚀 Testing hello..."
+        ./capsule --wasm=${WASM_FILE}
+      - killport ${HTTP_PORT}

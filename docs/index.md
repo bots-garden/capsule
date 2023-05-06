@@ -1,54 +1,105 @@
-# Capsule: the nano (wasm) functions runner
+# Capsule Project: the nano wasm runners
 
 !!! info "What's new?"
-    - `v0.3.3 🍊 [Tangerine]`: dependencies updates: wazero to 1.0.1 then 1.0.2 (performances: x 1.4 🚀)
-    - `v0.3.2 🤗 [WASM I/O 2023]`: dependencies updates: wazero to 1.0.0-pre.9 (Capsule is twice as fast 🚀)
-    - `v0.3.1 🐊 [Tampa Bay]`: dependencies updates: wazero to 1.0.0-pre.8
-    - `v0.3.0 🎄 [Christmas tree]`: Refactoring (Capsule is at least 4 times faster than the previous version).
-    - `v0.2.9 🦜 [parrot]`: Hot reloading of the wasm module [see the "Reload the module" section](getting-started-cabu-reload.md) and HTTP service refactoring.
-    - `v0.2.8 🦤 [dodo]`: Capsule uses now [Fiber](https://github.com/gofiber/fiber) instead [Gin](https://github.com/gin-gonic/gin). The size of the Capsule Runner Docker image is now 16.8M!
+    - `v0.3.4 🍋 [lemon]`: Capsule next generation (performances: x 10 🚀)
+    - 🤚 With the previous version of the project, Capsule was an only one application to run as an HTTP server, a CLI, a NATS subscriber and publisher and a MQTT subscriber and publisher. In the future, we will reintroduce the capabilities of NATS and MQTT, but with separate runners.
 
-## What is **Capsule**?
+## What is the **Capsule** project?
 
-**Capsule** is a **WebAssembly Function Runner**. It means that **Capsule** is both:
+Capsule is a set of **WASM runners**. Right now, the Capsule project is composed of:
 
-- An **HTTP server** that serves **WebAssembly functions**
-- A **NATS** subscriber and publisher (written with WebAssembly)
-- A **MQTT** subscriber and publisher (written with WebAssembly)
-- A **CLI**, you can simply execute a WASM function in a terminal
+- Capsule **CLI**: to simply execute a **WebAssembly module** in a terminal
+- Capsule **HTTP** server to serve a **WebAssembly module** like a micro service or a function.
 
-> - **Capsule** is developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project
+> - **Capsule** applications are developed with GoLang and thanks to the 💜 **[Wazero](https://github.com/tetratelabs/wazero)** project. 
 > - The wasm modules are developed in GoLang and compiled with **[TinyGo](https://tinygo.org/)** 💜 (with the WASI specification)
 
-## What does a **WASM function** look like with Capsule?
+### Host DK & Module DK
 
+- The **Capsule** applications are developed thanks to the [Capsule Host SDK (HDK)](https://bots-garden.github.io/capsule-host-sdk/)
+- The **Capsule** modules executed by the The **Capsule** applications are developed thanks to the [Capsule Module SDK (MDK)](https://bots-garden.github.io/capsule-module-sdk/)
+
+**🎉 That leans, since now, it's possible to develop various runners thanks to the Capsule HostSDK**
+
+## What does a **WASM Capsule module** look like?
+
+### WASM Module for the Capsule CLI
 ```golang
 package main
 
 import (
-	hf "github.com/bots-garden/capsule/capsulemodule/hostfunctions"
+	capsule "github.com/bots-garden/capsule-module-sdk"
 )
 
 func main() {
-
-	hf.SetHandleHttp(Handle)
+	capsule.SetHandle(Handle)
 }
 
-func Handle(request hf.Request) (response hf.Response, errResp error) {
+// Handle function
+func Handle(params []byte) ([]byte, error) {
 
-	headersResp := map[string]string{
-		"Content-Type": "application/json; charset=utf-8",
+	capsule.Print("Environment variable → MESSAGE: " + capsule.GetEnv("MESSAGE"))
+
+	err := capsule.WriteFile("./hello.txt", []byte("👋 Hello World! 🌍"))
+	if err != nil {
+		capsule.Print(err.Error())
 	}
 
-	jsondoc := `{"message": "👋 Hello World 🌍"}`
+	data, err := capsule.ReadFile("./hello.txt")
+	if err != nil {
+		capsule.Print(err.Error())
+	}
+	capsule.Print("📝: " + string(data))
+	
+	return []byte("👋 Hello " + string(params)), nil
+}
 
-	return hf.Response{Body: jsondoc, Headers: headersResp}, err
+```
+
+### WASM Module for the Capsule HTTP server
+```golang
+// Package main
+package main
+
+import (
+	"strconv"
+	"github.com/bots-garden/capsule-module-sdk"
+	"github.com/valyala/fastjson"
+)
+
+func main() {
+	capsule.SetHandleHTTP(Handle)
+}
+
+// Handle function 
+func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
+	
+	capsule.Print("📝: " + param.Body)
+	capsule.Print("🔠: " + param.Method)
+	capsule.Print("🌍: " + param.URI)
+	capsule.Print("👒: " + param.Headers)
+	
+	var p fastjson.Parser
+	v, err := p.Parse(param.Body)
+	if err != nil {
+		capsule.Log(err.Error())
+	}
+	message := string(v.GetStringBytes("name")) + " " + strconv.Itoa(v.GetInt("age"))
+	capsule.Log(message)
+
+	response := capsule.HTTPResponse{
+		JSONBody: `{"message": "`+message+`", "things":{"emoji":"🐯"}}`,
+		Headers: `{"Content-Type": "application/json; charset=utf-8"}`,
+		StatusCode: 200,
+	}
+
+	return response, nil
 }
 ```
 
 ## What are the **added values** of Capsule?
 
-Capsule brings superpowers to the WASM function modules with **host functions**. Thanks to these **host functions**, a **WASM function** can, for example, prints a message, reads files, writes to files, makes HTTP requests, ... See the [host functions section](host-functions-intro.md).
+Capsule applications bring superpowers to the WASM modules with **host functions**. Thanks to these **host functions**, a **WASM function** can, for example, prints a message, reads files, writes to files, makes HTTP requests, ... See the [host functions section](host-functions-intro.md).
 
 
 !!! info "Useful information for this project"

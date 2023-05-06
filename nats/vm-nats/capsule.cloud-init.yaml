@@ -1,3 +1,0 @@
-package_update: true
-
-manage_etc_hosts: "localhost"

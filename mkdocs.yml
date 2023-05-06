@@ -8,45 +8,22 @@ repo_name: bots-garden/capsule
 repo_url: https://github.com/bots-garden/capsule
 
 # Copyright
-copyright: Copyright &copy; 2022 - 2023 Philippe Charrière
+copyright: Copyright &copy; 2023 - 2024 Philippe Charrière
 
 
 nav:
     - 🏠 Home: index.md
-    - 💊 Install Capsule: install.md
     - 🚀 Getting Started:
-      - Install the Cabu CLI: getting-started-cabu-inst.md
-      - Generate a function: getting-started-cabu-gen.md
-      - Build the function module: getting-started-cabu-build.md
-      - Serve the function module: getting-started-cabu-serve.md
-      - Serve the module frome an url: getting-started-cabu-serve-url.md
-      - Reload the module: getting-started-cabu-reload.md
-    - 📝 Developer guide:
-      - First CLI function: first-cli-function.md
-      - First HTTP function: first-http-function.md
-      - First Nats function: first-nats-function.md
-      - First MQTT function: first-mqtt-function.md
-    - 🛠️ Host functions:
-      - Introduction: host-functions-intro.md
-      - Log: host-functions-log.md
-      - Files: host-functions-files.md
-      - Environment: host-functions-env.md
-      - HTTP Requests: host-functions-http.md
-      - Memory cache: host-functions-memory.md
-      - Redis: host-functions-redis.md
-      - CouchBase: host-functions-couchbase.md
-      - Nats: host-functions-nats.md
-      - MQTT: host-functions-mqtt.md
-      - Errors: host-functions-errors.md
-    - 🥘 CookBook:
-      - Capsule function on Civo: cookbook-civo.md
-      - Capsule function on Fly.io: cookbook-fly.md
-      - Capsule function on Exoscale: cookbook-exoscale.md
-    - 📙 Refs: references.md
-    - 🧪 Capsule FaaS: capsule-faas.md
+      - Capsule CLI and modules: getting-started-cli.md
+      - Capsule HTTP and modules: getting-started-http.md
+    - 🛠️ Host functions: host-functions-intro.md
+
 
 theme:
   name: material
+  palette:
+    primary: teal
+
 markdown_extensions:
   - abbr
   - admonition

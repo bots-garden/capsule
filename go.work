@@ -1,0 +1,14 @@
+go 1.20
+
+use (
+    ./capsule-http/functions/hello-world
+    ./capsule-http/functions/hey
+    ./capsule-http/functions/index-html
+    ./capsule-http
+    ./capsule-cli
+    ./capsule-cli/functions/hello
+    ./capsule-cli/functions/hey-people
+    ./capsule-cli/functions/mem-db
+
+
+)

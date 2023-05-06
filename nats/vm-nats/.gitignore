@@ -1,9 +1,0 @@
-certs/*.crt
-certs/*.key
-*.wasm
-config/*.config
-apps/capsule*
-caps
-faas/registry
-
-
