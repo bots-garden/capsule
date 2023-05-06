@@ -19,6 +19,7 @@ tasks:
 
   # Generate a release of the capsule MDK
   # v0.3.4 🍋 [lemon]
+  # Then create the release manually on GitHub
   release:
     env:
       TAG: "v0.3.4"
