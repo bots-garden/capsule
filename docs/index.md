@@ -2,6 +2,7 @@
 
 !!! info "What's new?"
     - `v0.3.4 🍋 [lemon]`: Capsule next generation (performances: x 10 🚀)
+    - 🌍 Downloads: [https://github.com/bots-garden/capsule/releases/tag/v0.3.4](https://github.com/bots-garden/capsule/releases/tag/v0.3.4)
     - 🤚 With the previous version of the project, Capsule was an only one application to run as an HTTP server, a CLI, a NATS subscriber and publisher and a MQTT subscriber and publisher. In the future, we will reintroduce the capabilities of NATS and MQTT, but with separate runners.
 
 ## What is the **Capsule** project?
@@ -19,7 +20,9 @@ Capsule is a set of **WASM runners**. Right now, the Capsule project is composed
 - The **Capsule** applications are developed thanks to the [Capsule Host SDK (HDK)](https://bots-garden.github.io/capsule-host-sdk/)
 - The **Capsule** modules executed by the The **Capsule** applications are developed thanks to the [Capsule Module SDK (MDK)](https://bots-garden.github.io/capsule-module-sdk/)
 
-**🎉 That means, since now, it's possible to develop various runners thanks to the Capsule HostSDK**
+**🎉 That means, since now, it's possible to develop various runners thanks to the Capsule Host SDK**
+
+> Tutorials are coming soon!
 
 ## What does a **WASM Capsule module** look like?
 
