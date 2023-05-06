@@ -41,13 +41,6 @@ You can remotely download  the WASM module with the `--url` flag:
 ## Develop a WASM Capsule module
 
 Have a look to these samples:
+
 - [capsule-http/functions](https://github.com/bots-garden/capsule/tree/main/capsule-http/functions)
 - [Samples of the Capsule MDK](https://github.com/bots-garden/capsule-module-sdk/tree/main/samples)
-
-
-
-
-
-
-
-

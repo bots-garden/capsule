@@ -32,17 +32,7 @@ You can remotely download  the WASM module with the `--url` flag:
 ## Develop a WASM Capsule module
 
 Have a look to these samples:
+
 - [capsule-cli/functions](https://github.com/bots-garden/capsule/tree/main/capsule-cli/functions)
 - [Samples of the Capsule MDK](https://github.com/bots-garden/capsule-module-sdk/tree/main/samples)
-
-
-
-
-```bash
-VERSION="v0.3.4" OS="linux" ARCH="arm64"
-wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
-chmod +x capsule-http
-```
-
-
 
