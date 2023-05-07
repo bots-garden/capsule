@@ -7,6 +7,9 @@
 
 ## Capsule http & CLI
 
+- Change the message of --version: "Capsule CLI v0.3.4 🍋 [lemon]" & "Capsule HTTP v0.3.4 🍋 [lemon]"
+- Create the Docker images for every runner
+- 🧩 finalize the first version of capsule builder (ide like)
 - Create a mod file for local build https://stackoverflow.com/questions/68764637/how-to-use-an-alternate-go-mod-file-for-local-development
 - Load wasm plugin from url +with token
 - Load wasm plugin from S3 +with token

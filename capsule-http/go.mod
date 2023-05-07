@@ -31,4 +31,4 @@ require (
 
 replace github.com/bots-garden/capsule-host-sdk => ../../capsule-host-sdk
 
-replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk
+//replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk

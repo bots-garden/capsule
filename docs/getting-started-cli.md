@@ -34,6 +34,7 @@ You can remotely download  the WASM module with the `--url` flag:
 
 Have a look to these samples:
 
+- [Capsule MDK documentation: first CLI module](https://bots-garden.github.io/capsule-module-sdk/first-cli-module/)
 - [capsule-cli/functions](https://github.com/bots-garden/capsule/tree/main/capsule-cli/functions)
 - [Samples of the Capsule MDK](https://github.com/bots-garden/capsule-module-sdk/tree/main/samples)
 
