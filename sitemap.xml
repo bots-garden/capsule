@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://bots-garden.github.io/capsule/</loc>
-         <lastmod>2023-05-06</lastmod>
+         <lastmod>2023-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-cli/</loc>
-         <lastmod>2023-05-06</lastmod>
+         <lastmod>2023-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/getting-started-http/</loc>
-         <lastmod>2023-05-06</lastmod>
+         <lastmod>2023-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bots-garden.github.io/capsule/host-functions-intro/</loc>
-         <lastmod>2023-05-06</lastmod>
+         <lastmod>2023-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
