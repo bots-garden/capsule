@@ -22,8 +22,8 @@ tasks:
   release:
     env:
       #TAG: "v0.3.4"
-      #TAG: "v0.3.5"
-      TAG: "v0.3.6" # next release
+      TAG: "v0.3.5"
+      #TAG: "v0.3.6" # next release
     cmds:
       - echo "📦 Generating release..."
       - git add .
@@ -33,7 +33,7 @@ tasks:
 
   remove-tag:
     env:
-      TAG: "v0.3.4"
+      TAG: "v0.3.5"
     cmds:
       - git tag -d ${TAG}
 

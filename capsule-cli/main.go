@@ -23,7 +23,7 @@ type CapsuleFlags struct {
 }
 
 func main() {
-	version := "v0.3.4 🍋 [lemon]"
+	version := "v0.3.5 🍓 [strawberry]"
 	args := os.Args[1:]
 
 	if len(args) == 0 {
