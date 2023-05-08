@@ -39,7 +39,7 @@ tasks:
 
   build-releases:
     env:
-      TAG: "v0.3.4"
+      TAG: "v0.3.5"
     cmds:
       - | 
         cd capsule-cli
