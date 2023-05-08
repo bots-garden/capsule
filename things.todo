@@ -22,6 +22,7 @@
 
 ## Capsule http
 
+- monitoring features
 - protect the routes
 - hot reload of the wasm module
 

@@ -18,13 +18,12 @@ tasks:
       - mkdocs gh-deploy
 
   # Generate a release of the capsule MDK
-  # v0.3.4 🍋 [lemon]
-  # `v0.3.4 🍋 [lemon]`: Capsule next generation (performances: x 10 🚀)
   # Then create the release manually on GitHub
   release:
     env:
-      TAG: "v0.3.4"
-      #TAG: "v0.3.5" # next release
+      #TAG: "v0.3.4"
+      TAG: "v0.3.5"
+      #TAG: "v0.3.6" # next release
     cmds:
       - echo "📦 Generating release..."
       - git add .

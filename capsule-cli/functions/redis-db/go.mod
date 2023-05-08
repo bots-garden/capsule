@@ -1,4 +1,4 @@
-module mem-db
+module redis-db
 
 go 1.20
 

@@ -53,7 +53,7 @@ tasks:
       WASM_FILE: './functions/mem-db/mem-db.wasm'
     cmds:
       - | 
-        echo "🚀 Testing hello..."
+        echo "🚀 Testing mem-db..."
         ./capsule --wasm=${WASM_FILE}
 
   build-hey-people:
@@ -79,3 +79,28 @@ tasks:
         echo "🚀 Testing hello..."
         ./capsule --wasm=${WASM_FILE}
       - killport ${HTTP_PORT}
+
+  build-redis-db:
+    cmds:
+      - |
+        echo "📦 Building redis-db..."
+        cd functions/redis-db
+        tinygo build -o redis-db.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  test-redis-db:
+    env:
+      WASM_FILE: './functions/redis-db/redis-db.wasm'
+    cmds:
+      - sudo systemctl start redis-server
+      - | 
+        echo "🚀 Testing redis..."
+        REDIS_ADDR="localhost:6379" \
+        REDIS_PWD="" \
+        ./capsule --wasm=${WASM_FILE}
+      - sudo systemctl stop redis-server
+      
+
