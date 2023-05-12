@@ -22,8 +22,9 @@ import (
 	"github.com/bots-garden/capsule/capsule-http/tools"
 
 	"github.com/gofiber/fiber/v2"
-	//"github.com/minio/minio-go/v7"
-	//"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/ansrivas/fiberprometheus/v2"
+	// go get -u github.com/ansrivas/fiberprometheus/v2
+
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -76,34 +77,13 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	//! --- THIS IS A TEST ---
-	/*
-		- https://min.io/docs/minio/linux/developers/go/API.html
-		- https://github.com/minio/minio-go
-		endpoint := "play.min.io"
-		accessKeyID := "Q3AM3UQ867SPQQA43P2F"
-		secretAccessKey := "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
-		useSSL := true
-
-		// Initialize minio client object.
-		minioClient, errMinio := minio.New(endpoint, &minio.Options{
-			Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
-			Secure: useSSL,
-		})
-		if errMinio != nil {
-			log.Fatalln(errMinio)
-		}
-
-		log.Printf("%#v\n", minioClient) // minioClient is now setup
-	*/
-
-	//! --- THIS IS A TEST ---
-
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		//DisableKeepalive:      true,
 		//Concurrency:           100000,
 	})
+
+	httpPort := flags.httpPort
 
 	// Create a new WebAssembly Runtime.
 	runtime := capsule.GetRuntime(ctx)
@@ -112,9 +92,10 @@ func main() {
 	// Get the builder and load the default host functions
 	builder := capsule.GetBuilder(runtime)
 
-	// Add your host functions here
+
+	// * Add your host functions here
 	// 🏠
-	// End of of you hostfunction
+	// * End of of you hostfunction
 
 	// Instantiate builder and default host functions
 	_, err := builder.Instantiate(ctx)
@@ -127,16 +108,28 @@ func main() {
 	// This closes everything this Runtime created.
 	defer runtime.Close(ctx)
 
+	// -----------------------------------
 	// Load the WebAssembly module
+	// -----------------------------------
 	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url)
 	if err != nil {
 		log.Println("❌ Error while loading the wasm file", err)
 		os.Exit(1)
 	}
 
-	// TODO: POST and GET (eg: html) (even DELETE and PUT)
+	// -----------------------------------
+	// Prometheus
+	// -----------------------------------
+	prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
+	prometheus.RegisterAt(app, "/metrics")
+	app.Use(prometheus.Middleware)
+
+	// -----------------------------------
+	// Handler to call the WASM function
+	// -----------------------------------
 	// TODO: protect routes
-	// TODO: systematic load tests
+	// TODO: externalise the handler
+	// TODO: create helpers to simplify the code
 	app.All("/", func(c *fiber.Ctx) error {
 		mod, err := runtime.Instantiate(ctx, wasmFile)
 		if err != nil {
@@ -146,7 +139,7 @@ func main() {
 		}
 
 		// Get the reference to the WebAssembly function: "callHandle"
-		// callHandle is exported by the Capsule plugin
+		//! callHandle is exported by the Capsule plugin
 		handleFunction := capsule.GetHandleHTTP(mod)
 
 		// build headers JSON string
@@ -199,17 +192,12 @@ func main() {
 			return c.SendString(err.Error())
 		}
 
-		// TODO: ReadStringFromMemory, ReadBytesFromMemory...
-
 		responseFromWasmGuest, err := capsule.Result(responseBuffer)
 		if err != nil {
 			log.Println("❌ Error when getting the Result", err)
 			c.Status(http.StatusInternalServerError) // .🤔
 			return c.SendString(err.Error())
 		}
-
-		//fmt.Println("🚧", string(responseFromWasmGuest))
-		// TODO: try unmarshaling with fastjson
 
 		// unmarshal the response
 		var response models.Response
@@ -227,9 +215,6 @@ func main() {
 			c.Set(key, value)
 		}
 
-		//fmt.Println("🟣 JSONBody", response.JSONBody)
-		//fmt.Println("🟣 TextBody", response.TextBody)
-
 		if len(response.TextBody) > 0 {
 			// send text body
 			return c.SendString(response.TextBody)
@@ -246,9 +231,11 @@ func main() {
 
 	})
 
+	// -----------------------------------
+	// Start listening
+	// -----------------------------------
 	go func() {
-		httpPort := flags.httpPort
-
+		
 		if flags.crt != "" {
 			// certs/capsule.local.crt
 			// certs/capsule.local.key

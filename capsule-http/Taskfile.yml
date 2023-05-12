@@ -80,6 +80,72 @@ tasks:
       - killport ${HTTP_PORT}
       - pkill python3
 
+  # These tasks are used to test the Prometheus metrics
+
+  # serving capsule-http
+  serve-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        echo "🚀 Serving hello-world..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+
+  # killing capsule-http
+  kill-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        echo "🚀 Killing hello-world..."
+        killport ${HTTP_PORT}
+
+  # query capsule-http
+  query-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+
+  # metrics capsule-http
+  metrics-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/metrics
+
+  stress-metrics-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: application/json; charset=utf-8" \
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+
+
+  # grafana/grafana-oss
+  # docker run -d -p 3000:3000 grafana/grafana-oss
 
   stress-hello-world:
     env:
