@@ -33,13 +33,13 @@ tasks:
 
   remove-tag:
     env:
-      TAG: "v0.3.5"
+      TAG: "v0.3.6"
     cmds:
       - git tag -d ${TAG}
 
   build-releases:
     env:
-      TAG: "v0.3.5"
+      TAG: "v0.3.6"
     cmds:
       - | 
         cd capsule-cli
