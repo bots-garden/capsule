@@ -1,3 +1,4 @@
 capsule-*
 *.sh
 tmp
+config
