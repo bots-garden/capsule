@@ -120,7 +120,9 @@ func main() {
 	// -----------------------------------
 	// Prometheus
 	// -----------------------------------
-	prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
+	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
+	prometheus := fiberprometheus.New("capsule")
+
 	prometheus.RegisterAt(app, "/metrics")
 	app.Use(prometheus.Middleware)
 
