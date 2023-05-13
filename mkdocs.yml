@@ -17,7 +17,7 @@ nav:
       - Capsule CLI and modules: getting-started-cli.md
       - Capsule HTTP and modules: getting-started-http.md
     - 🛠️ Host functions: host-functions-intro.md
-
+    - 🐳 Capsule HTTP Docker image: docker-capsule-http.md
 
 theme:
   name: material

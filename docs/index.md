@@ -1,7 +1,7 @@
 # Capsule Project: the nano wasm runners
 
 !!! info "What's new?"
-    - `v0.3.6 🫐 [blueberries]`: Prometheus metrics
+    - `v0.3.6 🫐 [blueberries]`: Prometheus metrics + 🐳 Docker images
     - `v0.3.5 🍓 [strawberry]`: Update with HDK & MDK `v0.0.2`
     - `v0.3.4 🍋 [lemon]`: Capsule next generation (performances: x 10 🚀)
     - 🌍 Downloads: [https://github.com/bots-garden/capsule/releases/tag/v0.3.5](https://github.com/bots-garden/capsule/releases/tag/v0.3.5)

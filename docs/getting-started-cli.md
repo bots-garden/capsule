@@ -2,7 +2,7 @@
 
 ## Use the Capsule CLI
 
-First, download the last version of the Capsule CLI for the appropriate OS & ARCH:
+First, download the last version of the Capsule CLI for the appropriate OS & ARCH (and release version):
 
 ```bash
 VERSION="v0.3.5" OS="linux" ARCH="arm64"
