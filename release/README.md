@@ -4,6 +4,8 @@
 
 ## Prerequisites
 
+👋 **be on the main branch**
+
 ### Update documentation content with the new tag
 
 - `docs/getting-started-cli.md`
