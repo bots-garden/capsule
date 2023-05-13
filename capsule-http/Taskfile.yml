@@ -50,6 +50,50 @@ tasks:
           -d "${JSON_DATA}"
       - killport ${HTTP_PORT}
 
+  # ----------------------------------------
+  # 🐳 Testing Docker image of capsule-http
+  # ----------------------------------------
+  test-hello-world-with-docker:
+    env:
+      JSON_DATA: '{"name":"🤣 Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+      GOOS: "linux" 
+      GOARCH: "arm64"
+      IMAGE_BASE_NAME: "capsule-http"
+      IMAGE_TAG: "draft"
+    cmds:
+      - | 
+        IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
+        echo "🚀 Testing hello-world with 🐳..."
+        echo "🖼️ ${IMAGE_NAME}"
+        docker run \
+          -p ${HTTP_PORT}:${HTTP_PORT} \
+          -v $(pwd)/functions/hello-world:/app --rm ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
+          /capsule-http \
+          --wasm=./app/hello-world.wasm \
+          --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+      - |
+        IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
+        docker stop $(docker ps -q --filter ancestor=${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} )
+
+        #Use it with a remote file (to be tested):
+        #docker run \
+        #  -p 8080:8080 \
+        #  -v $(pwd)/functions/hello-world:/app --rm ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
+        #  /capsule-http \
+        #  --url=http://172.17.0.1:5000/hello-world.wasm \
+        #  --wasm=./app/hello-world.wasm \
+        #  --httpPort=8080
+
+
   test-hello-world-remote:
     env:
       JSON_DATA: '{"name":"Bob Morane","age":42}'
@@ -256,3 +300,4 @@ tasks:
         hey -n 300 -c 100 -m GET \
         ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
       - killport ${HTTP_PORT}
+

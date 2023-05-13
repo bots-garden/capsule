@@ -61,5 +61,76 @@ tasks:
 #replace github.com/bots-garden/capsule-host-sdk  => ../../capsule-host-sdk
 #replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk
 
+  # Build of capsule-http Docker image
+  build-push-docker-image:
+    vars:
+      IMAGE_BASE_NAME: "capsule-http"
+      IMAGE_TAG: "draft"
+    cmds:
+      - echo "👋 {{.IMAGE_BASE_NAME}}-{{.GOOS}}-{{.GOARCH}}:{{.IMAGE_TAG}}"
+      - |
+        cd capsule-http
+        docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
+        docker buildx build --platform {{.GOOS}}/{{.GOARCH}} --push -t ${DOCKER_USER}/{{.IMAGE_BASE_NAME}}-{{.GOOS}}-{{.GOARCH}}:{{.IMAGE_TAG}} .
+
+  build-capsule-http-for-docker:
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd capsule-http
+        CGO_ENABLED=0 GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -a -installsuffix cgo -o capsule-http .
+        ls -lh capsule-http
+
+  build-docker-capsule-http-image-darwin-arm64:
+    vars:
+      GOOS: "darwin" 
+      GOARCH: "arm64"
+    cmds:
+      - task: build-capsule-http-for-docker
+        vars: { GOOS: '{{.GOOS}}', GOARCH: '{{.GOARCH}}' }
+      - task: build-push-docker-image
+        vars: { 
+          GOOS: '{{.GOOS}}', 
+          GOARCH: '{{.GOARCH}}'
+        }
+
+  build-docker-capsule-http-image-darwin-amd64:
+    vars:
+      GOOS: "darwin" 
+      GOARCH: "amd64"
+    cmds:
+      - task: build-capsule-http-for-docker
+        vars: { GOOS: '{{.GOOS}}', GOARCH: '{{.GOARCH}}' }
+      - task: build-push-docker-image
+        vars: { 
+          GOOS: '{{.GOOS}}', 
+          GOARCH: '{{.GOARCH}}'
+        }
+
+  build-docker-capsule-http-image-linux-amd64:
+    vars:
+      GOOS: "linux" 
+      GOARCH: "amd64"
+    cmds:
+      - task: build-capsule-http-for-docker
+        vars: { GOOS: '{{.GOOS}}', GOARCH: '{{.GOARCH}}' }
+      - task: build-push-docker-image
+        vars: { 
+          GOOS: '{{.GOOS}}', 
+          GOARCH: '{{.GOARCH}}'
+        }
+
+  build-docker-capsule-http-image-linux-arm64:
+    vars:
+      GOOS: "linux" 
+      GOARCH: "arm64"
+    cmds:
+      - task: build-capsule-http-for-docker
+        vars: { GOOS: '{{.GOOS}}', GOARCH: '{{.GOARCH}}' }
+      - task: build-push-docker-image
+        vars: { 
+          GOOS: '{{.GOOS}}', 
+          GOARCH: '{{.GOARCH}}'
+        }
 
 

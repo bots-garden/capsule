@@ -2,10 +2,10 @@
 
 ## Use the Capsule HTTP server
 
-First, download the last version of the Capsule HTTP server for the appropriate OS & ARCH:
+First, download the last version of the Capsule HTTP server for the appropriate OS & ARCH (and release version):
 
 ```bash
-VERSION="v0.3.5" OS="linux" ARCH="arm64"
+VERSION="v0.3.6" OS="linux" ARCH="arm64"
 wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
 chmod +x capsule-http
 ```
