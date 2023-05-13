@@ -6,6 +6,8 @@
 
 👋 **be on the main branch**
 
+Last release: `v0.3.6 🫐 [blueberries]`
+
 ### Update documentation content with the new tag
 
 - `docs/getting-started-cli.md`
