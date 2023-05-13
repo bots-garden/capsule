@@ -56,6 +56,10 @@ tasks:
         env GOOS=linux GOARCH=arm64 go build -o capsule-http-${TAG}-linux-arm64
         env GOOS=linux GOARCH=amd64 go build -o capsule-http-${TAG}-linux-amd64
         mv capsule-http-${TAG}-* ../release
+      
+      - |
+        cd ../relase
+        chmod +x capsule-http-*
 
 
 #replace github.com/bots-garden/capsule-host-sdk  => ../../capsule-host-sdk
@@ -65,7 +69,7 @@ tasks:
   build-push-docker-image:
     vars:
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "draft"
+      IMAGE_TAG: "0.3.6"
     cmds:
       - echo "👋 {{.IMAGE_BASE_NAME}}-{{.GOOS}}-{{.GOARCH}}:{{.IMAGE_TAG}}"
       - |
@@ -132,5 +136,4 @@ tasks:
           GOOS: '{{.GOOS}}', 
           GOARCH: '{{.GOARCH}}'
         }
-
 
