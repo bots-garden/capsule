@@ -371,6 +371,25 @@
 <p>🚧 this is a work in progress, each host function will be detailed with samples.</p>
 </blockquote>
 <p>The <strong>Capsule</strong> applications (and the Capsule HDK) offer some capabilities to the wasm modules by providing some "host functions".</p>
+<p>This is the list of the available host functions:</p>
+<ul>
+<li>Print a message: <code>Print(message string)</code>, usage: <code>capsule.Print("👋 Hello Worls 🌍")</code></li>
+<li>Log a message: <code>Log(message string)</code>, usage: <code>capsule.Log("😡 something wrong")</code></li>
+<li>Get the value of an environment variable: <code>GetEnv(variableName string) string</code>, usage: <code>capsule.GetEnv("MESSAGE")</code></li>
+<li>Read a text file: <code>ReadFile(filePath string) ([]byte, error)</code>, usage: <code>data, err := capsule.ReadFile("./hello.txt")</code></li>
+<li>Write a content to a text file: <code>WriteFile(filePath string, content []byte) error</code>, usage: <code>err := capsule.WriteFile("./hello.txt", []byte("👋 Hello World! 🌍"))</code></li>
+<li>Make an HTTP request: <code>HTTP(request HTTPRequest) (HTTPResponse, error)</code>, usage: <code>respJSON, err := capsule.HTTP(capsule.HTTPRequest{})</code>, see the <a href="https://github.com/bots-garden/capsule/blob/main/capsule-cli/functions/hey-people/main.go#L15">"hey-people" sample</a></li>
+<li>Memory Cache: see the <a href="https://github.com/bots-garden/capsule/blob/main/capsule-cli/functions/mem-db/main.go">"mem-db" sample</a></li>
+<li><code>CacheSet(key string, value []byte) []byte</code></li>
+<li><code>CacheGet(key string) ([]byte, error)</code></li>
+<li><code>CacheDel(key string) []byte</code></li>
+<li><code>CacheKeys(filter string) ([]string, error)</code> (right now, you can only use this filter: <code>*</code>)</li>
+<li>Redis Cache: see the <a href="https://github.com/bots-garden/capsule/blob/main/capsule-cli/functions/redis-db/main.go">"redis-db" sample</a></li>
+<li><code>RedisSet(key string, value []byte) ([]byte, error)</code></li>
+<li><code>RedisGet(key string) ([]byte, error)</code></li>
+<li><code>RedisDel(key string) ([]byte, error)</code></li>
+<li><code>RedisKeys(filter string) ([]string, error)</code></li>
+</ul>
 
 
 
