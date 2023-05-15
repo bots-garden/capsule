@@ -174,7 +174,7 @@ tasks:
       - | 
         curl ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/metrics
 
-  stress-metrics-hello-world:
+  stress-average-hello-world:
     env:
       JSON_DATA: '{"name":"Bob Morane","age":42}'
       HTTP_PORT: '6666'
@@ -186,6 +186,20 @@ tasks:
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
         -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+
+  stress-high-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        hey -n 10000 -c 6000 -m POST \
+        -H "Content-Type: application/json; charset=utf-8" \
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
+
 
 
   # grafana/grafana-oss
