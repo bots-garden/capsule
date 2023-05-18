@@ -198,17 +198,24 @@ tasks:
         ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
         sleep 1
 
-  # killing capsule-http
-  kill-hello-world:
+  # serving capsule-http with ngrok
+  serve-ngrok-hello-world:
     env:
       HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
       WASM_FILE: './functions/hello-world/hello-world.wasm'
     cmds:
       - | 
+        echo "🚀 Serving hello-world..."
+        NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN}" ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
+        sleep 1
+
+
+  # killing capsule-http
+  kill-capsule-http:
+    cmds:
+      - | 
         echo "🚀 Killing hello-world..."
-        killport ${HTTP_PORT}
+        pkill capsule-http
 
   # query capsule-http
   query-hello-world:
@@ -220,6 +227,18 @@ tasks:
     cmds:
       - | 
         curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+
+  # query capsule-http with ngrok
+  query-ngrok-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+    cmds:
+      - | 
+        NGROK_URL="$(cat ngrok.url)"
+        echo "🌍 ${NGROK_URL}"
+        curl -X POST ${NGROK_URL} \
           -H 'Content-Type: application/json; charset=utf-8' \
           -d "${JSON_DATA}"
 

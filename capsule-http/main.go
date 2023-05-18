@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"os/signal"
+	"path/filepath"
 	"strings"
 
 	//"strings"
@@ -23,7 +24,11 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
+
 	// go get -u github.com/ansrivas/fiberprometheus/v2
+
+	"golang.ngrok.com/ngrok"
+	"golang.ngrok.com/ngrok/config"
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -250,6 +255,46 @@ func main() {
 
 		} else {
 			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
+			
+			// Ngrok support: https://ngrok.com
+			// https://ngrok.com/blog-post/ngrok-go
+			if ngrok.WithAuthtokenFromEnv() != nil {
+				tun, err := ngrok.Listen(ctx,
+					config.HTTPEndpoint(),
+					ngrok.WithAuthtokenFromEnv(),
+				)
+				if err != nil {
+					log.Println("❌ Error while creating tunnel:", err)
+				}
+				
+				log.Println("👋 Ngrok tunnel created:", tun.URL())
+				
+				ex, err := os.Executable()
+				if err != nil {
+					log.Fatal("❌ Error after creating tunnel:", err)
+				}
+				exPath := filepath.Dir(ex)
+
+				f, err := os.Create(exPath + "/ngrok.url")
+
+				if err != nil {
+					log.Fatal("❌ Error when creating ngrok.url:", err)
+
+				}
+				
+				defer f.Close()
+			
+				_, errWrite := f.WriteString(tun.URL())
+			
+				if errWrite != nil {
+					log.Fatal("❌ Error when writing ngrok.url:", errWrite)
+				}
+
+				log.Println("🤚 Ngrok URL:", exPath+ "/ngrok.url")
+
+				app.Listener(tun)
+			}
+
 			app.Listen(":" + httpPort)
 		}
 	}()
