@@ -16,6 +16,7 @@ nav:
     - 🚀 Getting Started:
       - Capsule CLI and modules: getting-started-cli.md
       - Capsule HTTP and modules: getting-started-http.md
+      - Capsule HTTP and Ngrok: getting-started-http-ngrok.md
     - 🛠️ Host functions: host-functions-intro.md
     - 🐳 Capsule HTTP Docker image: docker-capsule-http.md
 
