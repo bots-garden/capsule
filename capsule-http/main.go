@@ -53,7 +53,6 @@ func main() {
 	wasmFileURLPtr := flag.String("url", "", "url for downloading wasm module file")
 	authHeaderNamePtr := flag.String("authHeaderName", "", "header authentication for downloading wasm module file")
 	authHeaderValuePtr := flag.String("authHeaderValue", "", "header authentication value for downloading wasm module file")
-
 	registryPtr := flag.String("registry", "", "url of the wasm registry")
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")

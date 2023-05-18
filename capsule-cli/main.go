@@ -15,11 +15,13 @@ import (
 
 // CapsuleFlags handles params for the capsule-http command
 type CapsuleFlags struct {
-	wasm     string // wasm file location
-	url      string // to download the wasm file
-	registry string // url to the registry
-	version  bool
-	params   string
+	wasm            string // wasm file location
+	url             string // to download the wasm file
+	authHeaderName  string // if needed for authentication
+	authHeaderValue string // if needed for authentication
+	registry        string // url to the registry
+	version         bool
+	params          string
 }
 
 func main() {
@@ -33,6 +35,8 @@ func main() {
 	// Capsule flags
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
 	wasmFileURLPtr := flag.String("url", "", "url for downloading wasm module file")
+	authHeaderNamePtr := flag.String("authHeaderName", "", "header authentication for downloading wasm module file")
+	authHeaderValuePtr := flag.String("authHeaderValue", "", "header authentication value for downloading wasm module file")
 	registryPtr := flag.String("registry", "", "url of the wasm registry")
 	paramsPtr := flag.String("params", "", "parameter(s) for the capsule CLI")
 	versionPtr := flag.Bool("version", false, "prints capsule CLI current version")
@@ -47,6 +51,8 @@ func main() {
 	flags := CapsuleFlags{
 		*wasmFilePathPtr,
 		*wasmFileURLPtr,
+		*authHeaderNamePtr,
+		*authHeaderValuePtr,
 		*registryPtr,
 		*versionPtr,
 		*paramsPtr,
@@ -78,7 +84,7 @@ func main() {
 	defer runtime.Close(ctx)
 
 	// Load the WebAssembly module
-	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url)
+	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
 	if err != nil {
 		log.Println("❌ Error while loading the wasm file", err)
 		os.Exit(1)
