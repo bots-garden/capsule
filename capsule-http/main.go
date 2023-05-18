@@ -21,21 +21,22 @@ import (
 	"github.com/bots-garden/capsule-host-sdk/models"
 	"github.com/bots-garden/capsule/capsule-http/tools"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/ansrivas/fiberprometheus/v2"
+	"github.com/gofiber/fiber/v2"
 	// go get -u github.com/ansrivas/fiberprometheus/v2
-
 )
 
 // CapsuleFlags handles params for the capsule-http command
 type CapsuleFlags struct {
-	wasm     string // wasm file location
-	httpPort string
-	url      string // to download the wasm file
-	crt      string // https (certificate)
-	key      string // https (key)
-	registry string // url to the registry
-	version  bool
+	wasm            string // wasm file location
+	httpPort        string
+	url             string // to download the wasm file
+	authHeaderName  string // if needed for authentication
+	authHeaderValue string // if needed for authentication
+	crt             string // https (certificate)
+	key             string // https (key)
+	registry        string // url to the registry
+	version         bool
 }
 
 func main() {
@@ -50,6 +51,9 @@ func main() {
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
 	httpPortPtr := flag.String("httpPort", "8080", "http port")
 	wasmFileURLPtr := flag.String("url", "", "url for downloading wasm module file")
+	authHeaderNamePtr := flag.String("authHeaderName", "", "header authentication for downloading wasm module file")
+	authHeaderValuePtr := flag.String("authHeaderValue", "", "header authentication value for downloading wasm module file")
+
 	registryPtr := flag.String("registry", "", "url of the wasm registry")
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
@@ -66,6 +70,8 @@ func main() {
 		*wasmFilePathPtr,
 		*httpPortPtr,
 		*wasmFileURLPtr,
+		*authHeaderNamePtr,
+		*authHeaderValuePtr,
 		*crtPtr,
 		*keyPtr,
 		*registryPtr,
@@ -92,7 +98,6 @@ func main() {
 	// Get the builder and load the default host functions
 	builder := capsule.GetBuilder(runtime)
 
-
 	// * Add your host functions here
 	// 🏠
 	// * End of of you hostfunction
@@ -111,7 +116,7 @@ func main() {
 	// -----------------------------------
 	// Load the WebAssembly module
 	// -----------------------------------
-	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url)
+	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
 	if err != nil {
 		log.Println("❌ Error while loading the wasm file", err)
 		os.Exit(1)
@@ -237,7 +242,7 @@ func main() {
 	// Start listening
 	// -----------------------------------
 	go func() {
-		
+
 		if flags.crt != "" {
 			// certs/capsule.local.crt
 			// certs/capsule.local.key

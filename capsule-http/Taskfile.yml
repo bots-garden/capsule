@@ -124,6 +124,65 @@ tasks:
       - killport ${HTTP_PORT}
       - pkill python3
 
+  # Public GitLab Registry
+  # task build-capsule-http
+  run-hello-world-from-gitlab-registry:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './tmp/hello-world.wasm'
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      WASM_PACKAGE: "capsule"
+      WASM_MODULE: "hello-world.wasm"
+      WASM_VERSION: "0.0.0"
+    cmds:
+      - | 
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+        echo "🚀 Testing hello-world..."
+        echo "${DOWNLOAD_URL}"
+        ./capsule-http \
+        --url=${DOWNLOAD_URL} \
+        --wasm=${WASM_FILE} \
+        --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+      - killport ${HTTP_PORT}
+
+  run-hello-world-from-private-gitlab-registry:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './tmp/hello-world.wasm'
+      GITLAB_WASM_PROJECT_ID: "46123319"
+      WASM_PACKAGE: "capsule"
+      WASM_MODULE: "hello-world.wasm"
+      WASM_VERSION: "0.0.0"
+    cmds:
+      - | 
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+        echo "🚀 Testing hello-world..."
+        echo "${DOWNLOAD_URL}"
+        ./capsule-http \
+        --url=${DOWNLOAD_URL} \
+        --authHeaderName="PRIVATE-TOKEN" \
+        --authHeaderValue="${GITLAB_WASM_TOKEN}" \
+        --wasm=${WASM_FILE} \
+        --httpPort=${HTTP_PORT} &
+        sleep 1
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+      - killport ${HTTP_PORT}
+
+
   # These tasks are used to test the Prometheus metrics
 
   # serving capsule-http
