@@ -5,9 +5,15 @@ import (
 	"github.com/bots-garden/capsule-host-sdk/helpers"
 )
 
+
+// TODO:
+// Create several function to download the wasm files
+// one function per use case
+// then chose the appropriate function with a flag
+
 // GetWasmFile load or downloads the wasm file
-func GetWasmFile(wasmFilePath, wasmFileURL string) ([]byte, error) {
-	//TODO; add authentication with headers
+func GetWasmFile(wasmFilePath, wasmFileURL, authHeaderName, authHeaderValue string) ([]byte, error) {
+	//TODO: add authentication with headers
 	if len(wasmFileURL) == 0 {
 		wasmFile, err := helpers.LoadWasmFile(wasmFilePath)
 		/*
@@ -20,7 +26,7 @@ func GetWasmFile(wasmFilePath, wasmFileURL string) ([]byte, error) {
 		return wasmFile, err
 
 	}
-	wasmFile, err := helpers.DownloadWasmFile(wasmFileURL, wasmFilePath)
+	wasmFile, err := helpers.DownloadWasmFile(wasmFileURL, wasmFilePath, authHeaderName, authHeaderValue)
 	/*
 	if err != nil {
 		log.Println("❌ Error while downloading the wasm file:", err)

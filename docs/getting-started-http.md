@@ -38,6 +38,17 @@ You can remotely download  the WASM module with the `--url` flag:
 --httpPort=8080
 ```
 
+> 👋 if you need to set an authentication header you can use these flags: `--authHeaderName` and `--authHeaderValue`:
+>
+> ```bash
+> ./capsule-http \
+> --url=${DOWNLOAD_URL} \
+> --authHeaderName="PRIVATE-TOKEN" \
+> --authHeaderValue="${TOKEN}" \
+> --wasm=${WASM_FILE} \
+> --httpPort=${HTTP_PORT}
+> ```
+
 ## Monitoring the service
 
 Capsule HTTP server exposes a REST API that can be used to monitor the service. It's a Prometheus route. You only need to call the `/metrics` endpoint.
