@@ -2,9 +2,12 @@
 package tools
 
 import (
+	"net"
+	"os"
+	"strconv"
+
 	"github.com/bots-garden/capsule-host-sdk/helpers"
 )
-
 
 // TODO:
 // Create several function to download the wasm files
@@ -36,4 +39,23 @@ func GetWasmFile(wasmFilePath, wasmFileURL, authHeaderName, authHeaderValue stri
 	}
 	*/
 	return wasmFile, err
+}
+
+// GetEnv returns the environment variable
+func GetEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
+// GetHTTPPort returns a unique http port
+func GetHTTPPort() string {
+	listener, err := net.Listen("tcp", ":0")
+	if err != nil {
+		panic(err)
+	}
+	httpPort := strconv.Itoa(listener.Addr().(*net.TCPAddr).Port)
+	listener.Close()
+	return httpPort
 }
