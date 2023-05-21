@@ -16,12 +16,12 @@ import (
 
 var runningCapsules sync.Map
 
-// StartCapsuleHTTP is a Go function that handles HTTP requests
+// StartNewCapsuleHTTP is a Go function that handles HTTP requests
 // for starting a capsule.
 //
 // It takes in a pointer to a fiber.Ctx object.
 // It returns an error object.
-func StartCapsuleHTTP(c *fiber.Ctx) error {
+func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	//TODO check if the process exists
 
 	functionName := c.Params("function_name")
@@ -34,7 +34,7 @@ func StartCapsuleHTTP(c *fiber.Ctx) error {
 	args := []string{
 		"",
 		"-wasm=./functions/hello-world/hello-world.wasm",
-		"-httpPort="+ httpPort,
+		"-httpPort=" + httpPort,
 	}
 	// try without the httport too
 
@@ -62,20 +62,19 @@ func StartCapsuleHTTP(c *fiber.Ctx) error {
 	httpClient := resty.New()
 
 	/*
-	for key, value := range req.Headers {
-		httpClient.SetHeader(key, value)
-	}
+		for key, value := range req.Headers {
+			httpClient.SetHeader(key, value)
+		}
 	*/
 	time.Sleep(1 * time.Second) // Wait for 1 seconds
 	// TODO use health check before launch
-
 
 	//TODO test request method
 	resp, err := httpClient.R().EnableTrace().SetBody(string(bodyRequest)).Post("http://localhost:" + httpPort)
 
 	if err != nil {
 		return c.Send([]byte(err.Error()))
-	} 
+	}
 	return c.Send([]byte(resp.String()))
 
 }
@@ -88,3 +87,13 @@ func StartCapsuleHTTP(c *fiber.Ctx) error {
      "-httpPort=59746"
    ],
 */
+
+// CallExternalFunction is a Go function that handles calls to an external function.
+//
+// c *fiber.Ctx: a pointer to a fiber context object that contains information about the http request.
+// error: returns an error if the external function call fails.
+func CallExternalFunction(c *fiber.Ctx) error {
+
+	return nil
+}
+

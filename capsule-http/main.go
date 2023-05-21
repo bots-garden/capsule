@@ -20,9 +20,7 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-
 	// go get -u github.com/ansrivas/fiberprometheus/v2
-
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -37,7 +35,6 @@ type CapsuleFlags struct {
 	registry        string // url to the registry
 	version         bool
 }
-
 
 func main() {
 	version := "v0.3.6 🫐 [blueberries]"
@@ -90,7 +87,6 @@ func main() {
 		//Concurrency:           100000,
 	})
 
-
 	// Create a new WebAssembly Runtime.
 	runtime := capsule.GetRuntime(ctx)
 
@@ -136,8 +132,18 @@ func main() {
 
 	// ----------------------------------------
 	// Handler to launch a new Capsule process
+	// and create a revision for a function
 	// ----------------------------------------
-	app.All("/functions/:function_name/:function_revision", handlers.StartCapsuleHTTP)
+	app.All("/functions/start/:function_name/:function_revision", handlers.StartNewCapsuleHTTP)
+
+
+	// ----------------------------------------
+	// Handler to the revision oe an external
+	// function
+	// ----------------------------------------
+	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)
+
+
 
 	// -----------------------------------
 	// Handler to call the WASM function
@@ -153,13 +159,12 @@ func main() {
 	go func() {
 
 		var httpPort string
-	
+
 		if flags.httpPort == "" {
 			httpPort = tools.GetHTTPPort()
 		} else {
 			httpPort = flags.httpPort
 		}
-	
 
 		if flags.crt != "" {
 			// certs/capsule.local.crt
