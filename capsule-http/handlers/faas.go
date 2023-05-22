@@ -8,43 +8,61 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/bots-garden/capsule/capsule-http/data"
 	"github.com/bots-garden/capsule/capsule-http/tools"
 	"github.com/go-resty/resty/v2"
 	"github.com/gofiber/fiber/v2"
 )
-
-
 
 // StartNewCapsuleHTTP is a Go function that handles HTTP requests
 // for starting a capsule.
 // ! this a work in progress
 // It takes in a pointer to a fiber.Ctx object.
 // It returns an error object.
+// TODO: protect this route with a middleware
 func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	//TODO check if the process exists
 
-	functionName := c.Params("function_name")
-	functionRevision := c.Params("function_revision")
-	httpPort := tools.GetHTTPPort()
+	/*
+	type CapsuleTask struct {
+		FunctionName     string   `json:"name"`
+		FunctionRevision string   `json:"revision"`
+		Description      string   `json:"description"`
+		Path             string   `json:"path"`
+		Args             []string `json:"args"`
+		Env              []string `json:"env"`
+	}
+	*/
+
+	capsuleTask := data.CapsuleTask{}
+	jsonPostPayloadErr := c.BodyParser(&capsuleTask)
+	if jsonPostPayloadErr != nil {
+		return jsonPostPayloadErr
+	}
+
+	httpPort := tools.GetNewHTTPPort()
+
+	capsuleTask.Args = append(capsuleTask.Args, "-httpPort=" + httpPort)
+
 	// TODO: store somewhere the processes that are running (or not)
 
-	fmt.Println(functionName, functionRevision, httpPort)
+	fmt.Println("🔷", capsuleTask.Args)
 
-	args := []string{
-		"",
-		"-wasm=./functions/hello-world/hello-world.wasm",
-		"-httpPort=" + httpPort,
-	}
 	// try without the httport too
 
+	if capsuleTask.Path == "" {
+		capsuleTask.Path = "capsule-http" //! had to be installed
+	}
+
 	//? How to get the path of the current working directory
+	//! default value is "capsule-http" (if installed)
 	cmd := &exec.Cmd{
-		Path:   "./capsule-http",
-		Args:   args,
+		Path:   capsuleTask.Path, 
+		Args:   capsuleTask.Args,
 		Stdout: os.Stdout,
 		Stderr: os.Stdout,
 	}
-	newEnv := append(os.Environ(), []string{"MESSAGE=Hello"}...)
+	newEnv := append(os.Environ(), capsuleTask.Env...)
 	cmd.Env = newEnv
 
 	err := cmd.Start()
@@ -55,31 +73,30 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 		log.Println("🚙", cmd.Args)
 	}
 
-	//TODO make an HTTP request to the function
-	bodyRequest := c.Body()
-	//headersRequest := c.GetReqHeaders()
-
-	httpClient := resty.New()
-
-	/*
-		for key, value := range req.Headers {
-			httpClient.SetHeader(key, value)
-		}
-	*/
-	time.Sleep(1 * time.Second) // Wait for 1 seconds
-	// TODO use health check before launch
-
-	//? how to get the appropriate URI?
-	//! eg: how to know we are on https?
-	//TODO test request method
-	resp, err := httpClient.R().EnableTrace().SetBody(string(bodyRequest)).Post("http://localhost:" + httpPort)
-
-
-
-	if err != nil {
-		return c.Send([]byte(err.Error()))
+	//! Save the process
+	capsuleRecord := data.CapsuleProcess{
+		FunctionName:      capsuleTask.FunctionName,
+		FunctionRevision:  capsuleTask.FunctionRevision,
+		HTTPPort:          httpPort,
+		Description:       capsuleTask.Description,
+		CurrentStatus:     0,
+		StatusDescription: "",
+		CreatedAt:         time.Now(),
+		StartedAt:         time.Now(),
+		FinishedAt:        time.Now(),
+		CancelledAt:       time.Now(),
+		FailedAt:          time.Now(),
+		CheckedAt:         time.Now(),
+		Pid:               cmd.Process.Pid,
+		Path:              capsuleTask.Path,
+		Args:              capsuleTask.Args,
+		Env:               newEnv,
+		Cmd:               cmd,
 	}
-	return c.Send([]byte(resp.String()))
+	idOfTheProcess := data.CreateCapsuleProcessRecord(capsuleRecord)
+
+	fmt.Println("🤖 id of the process:", idOfTheProcess)
+	return c.Send([]byte(idOfTheProcess))
 
 }
 
@@ -97,8 +114,41 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 // c *fiber.Ctx: a pointer to a fiber context object that contains information about the http request.
 // error: returns an error if the external function call fails.
 func CallExternalFunction(c *fiber.Ctx) error {
+
 	functionName := c.Params("function_name")
 	functionRevision := c.Params("function_revision")
-	fmt.Println(functionName, functionRevision)
-	return nil
+	functionIndex := c.Params("function_index") // ! default index is 0
+
+	if functionRevision == "" {
+		functionRevision = "default"
+	}
+	if functionIndex == "" {
+		functionIndex = "0"
+	}
+
+	key:= functionName+"/"+functionRevision+"/"+functionIndex
+
+	fmt.Println("🌍",key)
+
+	process, err := data.GetCapsuleProcessRecord(key)
+
+	if err != nil {
+		//TODO handle error
+		fmt.Println("😡", err.Error())
+	}
+
+	fmt.Println("👋", process)
+
+	bodyRequest := c.Body()
+	//headersRequest := c.GetReqHeaders()
+	httpClient := resty.New()
+
+	// it could be GET, PUT or DELETE
+	resp, err := httpClient.R().EnableTrace().SetBody(string(bodyRequest)).Post("http://localhost:" + process.HTTPPort)
+
+	if err != nil {
+		return c.Send([]byte(err.Error()))
+	}
+	return c.Send([]byte(resp.String()))
 }
+// 	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)

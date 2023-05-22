@@ -136,16 +136,17 @@ func main() {
 	//
 	// TODO: protect this route
 	// ----------------------------------------
-	app.All("/functions/start", handlers.StartNewCapsuleHTTP)
-
+	app.Post("/functions/start", handlers.StartNewCapsuleHTTP)
 
 	// ----------------------------------------
 	// Handler to the revision of an external
 	// function
 	// ----------------------------------------
-	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)
+	app.All("/functions/:function_name", handlers.CallExternalFunction)
+	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
+	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
 
-
+	//TODO: check with index.wasm
 
 	// -----------------------------------
 	// Handler to call the WASM function
@@ -163,7 +164,7 @@ func main() {
 		var httpPort string
 
 		if flags.httpPort == "" {
-			httpPort = tools.GetHTTPPort()
+			httpPort = tools.GetNewHTTPPort()
 		} else {
 			httpPort = flags.httpPort
 		}
