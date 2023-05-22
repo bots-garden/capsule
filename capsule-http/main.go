@@ -133,12 +133,14 @@ func main() {
 	// ----------------------------------------
 	// Handler to launch a new Capsule process
 	// and create a revision for a function
+	//
+	// TODO: protect this route
 	// ----------------------------------------
-	app.All("/functions/start/:function_name/:function_revision", handlers.StartNewCapsuleHTTP)
+	app.All("/functions/start", handlers.StartNewCapsuleHTTP)
 
 
 	// ----------------------------------------
-	// Handler to the revision oe an external
+	// Handler to the revision of an external
 	// function
 	// ----------------------------------------
 	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)
