@@ -21,8 +21,6 @@ import (
 // It returns an error object.
 // TODO: protect this route with a middleware
 func StartNewCapsuleHTTP(c *fiber.Ctx) error {
-	//TODO check if the process exists
-
 	/*
 		type CapsuleTask struct {
 			FunctionName     string   `json:"name"`
@@ -34,29 +32,29 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 		}
 	*/
 
+	// Read the body of the request
 	capsuleTask := data.CapsuleTask{}
 	jsonPostPayloadErr := c.BodyParser(&capsuleTask)
 	if jsonPostPayloadErr != nil {
 		return jsonPostPayloadErr
 	}
 
+	// Get a new HTTP Port
 	httpPort := tools.GetNewHTTPPort()
 
+	// Update the arguments before starting a new capsule process
 	capsuleTask.Args = append(capsuleTask.Args, "-httpPort="+httpPort)
 
-	// TODO: store somewhere the processes that are running (or not)
-
+	// ! this a work in progress 🚧
 	fmt.Println("🔷", capsuleTask.Args)
 	fmt.Println("🔷", capsuleTask.Env)
 
-	// try without the httport too
-
+	// ? or use an environment variable?
 	if capsuleTask.Path == "" {
+		// Default value
 		capsuleTask.Path = "capsule-http" //! had to be installed
 	}
 
-	//? How to get the path of the current working directory
-	//! default value is "capsule-http" (if installed)
 	cmd := &exec.Cmd{
 		Path:   capsuleTask.Path,
 		Args:   capsuleTask.Args,
@@ -66,55 +64,136 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	newEnv := append(os.Environ(), capsuleTask.Env...)
 	cmd.Env = newEnv
 
+	/* Example:
+	   "path": "./services/capsule/capsule-http",
+	   "args": [
+	     "",
+	     "-wasm=./services/capsule/hello-world.wasm",
+	     "-httpPort=59746"
+	   ],
+	*/
 	err := cmd.Start()
 
 	if err != nil {
-		log.Println("🚗", err.Error())
-	} else {
-		log.Println("🚙", cmd.Args)
+		log.Println("🔴 Error when starting a new Capsule process:", err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Send([]byte(err.Error()))
 	}
 
-	//! Save the process
+	// Create a new record of the Capsule Process
+	// TODO: Save the process (to be implemented)
 	capsuleRecord := data.CapsuleProcess{
-		FunctionName:      capsuleTask.FunctionName,
-		FunctionRevision:  capsuleTask.FunctionRevision,
-		HTTPPort:          httpPort,
-		Description:       capsuleTask.Description,
-		CurrentStatus:     0,
-		StatusDescription: "",
-		CreatedAt:         time.Now(),
-		StartedAt:         time.Now(),
-		FinishedAt:        time.Now(),
-		CancelledAt:       time.Now(),
-		FailedAt:          time.Now(),
-		CheckedAt:         time.Now(),
-		Pid:               cmd.Process.Pid,
-		Path:              capsuleTask.Path,
-		Args:              capsuleTask.Args,
-		Env:               newEnv,
-		Cmd:               cmd,
+		FunctionName:     capsuleTask.FunctionName,
+		FunctionRevision: capsuleTask.FunctionRevision,
+		HTTPPort:         httpPort,
+		Description:      capsuleTask.Description,
+		CurrentStatus:    data.Started,
+		CreatedAt:        time.Now(),
+		StartedAt:        time.Now(),
+		FinishedAt:       time.Now(),
+		CancelledAt:      time.Now(),
+		FailedAt:         time.Now(),
+		CheckedAt:        time.Now(),
+		Pid:              cmd.Process.Pid,
+		Path:             capsuleTask.Path,
+		Args:             capsuleTask.Args,
+		Env:              newEnv,
+		Cmd:              cmd,
 	}
 	idOfTheProcess := data.CreateCapsuleProcessRecord(capsuleRecord)
 
-	fmt.Println("🤖 id of the process:", idOfTheProcess)
+	c.Status(fiber.StatusOK)
 	return c.Send([]byte(idOfTheProcess))
 
 }
 
-/*
-   "path": "./services/capsule/capsule-http",
-   "args": [
-     "",
-     "-wasm=./services/capsule/hello-world.wasm",
-     "-httpPort=59746"
-   ],
-*/
+// GetListOfCapsuleHTTPProcesses retrieves the list of external Capsule processes
+// and sends it as a JSON response.
+//
+// c *fiber.Ctx: A pointer to the fiber context.
+// error: An error indicating if there was a problem with the retrieval of the data.
+// error: An error indicating if there was a problem with sending the JSON response.
+func GetListOfCapsuleHTTPProcesses(c *fiber.Ctx) error {
+
+	// app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
+
+	jsonProcesses, err := data.GetJSONCapsuleProcesses()
+	if err != nil {
+		log.Println("🔴 Error when getting the list of external Capsule processes:", err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Send([]byte(err.Error()))
+	}
+
+	c.Status(fiber.StatusOK)
+	return c.Send(jsonProcesses)
+}
+
+// StopCapsuleHTTPProcess stops the HTTP process for the given Fiber context.
+//
+// c: a pointer to a fiber.Ctx object representing the context of the HTTP request.
+// error: an error object that indicates whether an error occurred during the function execution.
+func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
+
+	/*
+		app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
+		app.Delete("/functions/stop/:function_name/:function_revision", handlers.StopCapsuleHTTPProcess)
+		app.Delete("/functions/stop/:function_name/:function_revision/:function_index", handlers.StopCapsuleHTTPProcess)
+	*/
+
+	// linked to a function + revision + index
+	functionName := c.Params("function_name")
+	functionRevision := c.Params("function_revision")
+	functionIndex := c.Params("function_index") // ! default index is 0
+
+	if functionRevision == "" {
+		functionRevision = "default"
+	}
+	if functionIndex == "" {
+		functionIndex = "0" // ! default index is 0
+	}
+
+	// the unique key to identify a Capsule Process
+	key := functionName + "/" + functionRevision + "/" + functionIndex
+	
+	process, err := data.GetCapsuleProcessRecord(key)
+
+	if err != nil {
+		log.Println("🔴 Error when calling the external Capsule process:", err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Send([]byte(err.Error()))
+	}
+
+	errProcessToKill := process.Cmd.Process.Kill()
+	if errProcessToKill != nil {
+		process.CurrentStatus = data.Stucked
+		data.SetCapsuleProcessRecord(process)
+
+		log.Println("🔴 Error when killing the external Capsule process:", err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Send([]byte(errProcessToKill.Error()))
+	}
+
+	process.CurrentStatus = data.Killed
+	deletedKey := data.SetCapsuleProcessRecord(process)
+
+	//? should I delete the record?
+	//data.DeleteCapsuleProcessRecord(key)
+
+	c.Status(fiber.StatusOK)
+	return c.Send([]byte(deletedKey))
+}
 
 // CallExternalFunction is a Go function that handles calls to an external function.
 // ! this a work in progress
 // c *fiber.Ctx: a pointer to a fiber context object that contains information about the http request.
 // error: returns an error if the external function call fails.
 func CallExternalFunction(c *fiber.Ctx) error {
+
+	/*
+	app.All("/functions/:function_name", handlers.CallExternalFunction)
+	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
+	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
+	*/
 
 	functionName := c.Params("function_name")
 	functionRevision := c.Params("function_revision")
@@ -124,18 +203,19 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		functionRevision = "default"
 	}
 	if functionIndex == "" {
-		functionIndex = "0"
+		functionIndex = "0" // ! default index is 0
 	}
 
+	// the unique key to identify a Capsule Process
 	key := functionName + "/" + functionRevision + "/" + functionIndex
 
-	fmt.Println("🌍", key)
+	//fmt.Println("🌍", key)
 
 	process, err := data.GetCapsuleProcessRecord(key)
 
 	if err != nil {
-		//TODO handle error
-		fmt.Println("😡", err.Error())
+		log.Println("🔴 Error when calling the external Capsule process:", err.Error())
+		return c.Send([]byte(err.Error()))
 	}
 
 	bodyRequest := c.Body()
@@ -146,8 +226,7 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		httpClient.SetHeader(key, value)
 	}
 
-	// TODO: use an environment variable?
-	capsuleDomain := "http://localhost"
+	capsuleDomain := tools.GetEnv("CAPSULE_DOMAIN", c.Protocol()+"://"+c.IP()) // ! temporary solution... Or not
 	capsuleURI := capsuleDomain + ":" + process.HTTPPort
 	strBodyRequest := string(bodyRequest)
 
@@ -172,8 +251,6 @@ func CallExternalFunction(c *fiber.Ctx) error {
 
 	case "POST":
 		resp, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Post(capsuleURI)
-		//resp, err := httpClient.R().SetBody(string(bodyRequest)).Post(capsuleURI)
-
 		restyHeadersToFiberHeaders(resp)
 		c.Status(resp.StatusCode())
 
@@ -206,7 +283,7 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		return c.Send([]byte(resp.String()))
 
 	default:
-		return nil // TODO: return something else
+		return c.Send([]byte("method not supported"))
 	}
 
 }

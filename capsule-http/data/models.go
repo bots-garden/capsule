@@ -27,6 +27,8 @@ const (
 	Finished  Status = 2
 	Failed    Status = 3
 	Cancelled Status = 4
+	Stucked   Status = 5
+	Killed    Status = 6
 )
 
 // CapsuleTask is a struct with the parameters to start a Capsule process
@@ -44,7 +46,7 @@ type CapsuleTask struct {
 
 // CapsuleProcess is a struct to describe a running Capsule process
 type CapsuleProcess struct {
-	Index             int    `json:"index"`
+	Index             int       `json:"index"`
 	FunctionName      string    `json:"name"`
 	FunctionRevision  string    `json:"revision"`
 	HTTPPort          string    `json:"httpPort"`
@@ -64,12 +66,53 @@ type CapsuleProcess struct {
 	Cmd               *exec.Cmd `json:"-"`
 }
 
+// GetJSONCapsuleProcesses retrieves a JSON-encoded list of running capsule processes.
+//
+// This function takes no parameters and returns a slice of bytes and an error.
+func GetJSONCapsuleProcesses() ([]byte, error) {
+
+	jsonProcesses := make(map[string]interface{})
+
+	runningCapsules.Range(func(key, value interface{}) bool {
+		process := value.(CapsuleProcess)
+		//process.Env = []string{}
+		jsonProcesses[key.(string)] = CapsuleProcess{
+			Index:             process.Index,
+			FunctionName:      process.FunctionName,
+			FunctionRevision:  process.FunctionRevision,
+			HTTPPort:          process.HTTPPort,
+			Description:       process.Description,
+			CurrentStatus:     process.CurrentStatus,
+			StatusDescription: process.StatusDescription, // TODO: add the status description
+			CreatedAt:         process.CreatedAt,
+			StartedAt:         process.StartedAt,
+			FinishedAt:        process.FinishedAt,
+			CancelledAt:       process.CancelledAt,
+			FailedAt:          process.FailedAt,
+			CheckedAt:         process.CheckedAt,
+			Pid:               process.Pid,
+			Path:              process.Path,
+			Args:              process.Args,
+			//Env:               process.Env, //? hot to filter the environment variables?
+			//Cmd:               process.Cmd,
+
+		}
+		return true
+	})
+
+	jsonProcessesList, err := json.Marshal(&jsonProcesses)
+	if err != nil {
+		return nil, err
+	}
+	return jsonProcessesList, nil
+}
+
 // SetCapsuleProcessRecord stores a CapsuleProcess for a given key in the runningCapsules map.
 //
 // key: a string representing the key to store the CapsuleProcess.
 // process: a CapsuleProcess to be stored in the runningCapsules map.
 func SetCapsuleProcessRecord(process CapsuleProcess) string {
-	key:= process.FunctionName+"/"+process.FunctionRevision+"/"+strconv.Itoa(process.Index)
+	key := process.FunctionName + "/" + process.FunctionRevision + "/" + strconv.Itoa(process.Index)
 	//fmt.Println("🔑", key)
 	runningCapsules.Store(key, process)
 	return key
@@ -98,7 +141,6 @@ func SearchLastIndexOfProcessRecord(functionName, functionRevision string) int {
 	}
 	return orderNum
 }
-
 
 // CreateCapsuleProcessRecord creates a new CapsuleProcess record and returns its key.
 //

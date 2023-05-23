@@ -138,6 +138,13 @@ func main() {
 	// ----------------------------------------
 	app.Post("/functions/start", handlers.StartNewCapsuleHTTP)
 
+	app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
+
+	// TODO: protect this routes
+	app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
+	app.Delete("/functions/stop/:function_name/:function_revision", handlers.StopCapsuleHTTPProcess)
+	app.Delete("/functions/stop/:function_name/:function_revision/:function_index", handlers.StopCapsuleHTTPProcess)
+
 	// ----------------------------------------
 	// Handler to the revision of an external
 	// function
@@ -145,8 +152,6 @@ func main() {
 	app.All("/functions/:function_name", handlers.CallExternalFunction)
 	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
 	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
-
-	//TODO: check with index.wasm
 
 	// -----------------------------------
 	// Handler to call the WASM function
