@@ -253,22 +253,11 @@ func SaveCapsuleProcessRecords() error {
 	return err
 }
 
-// ChangeFunctionRevision changes the revision of a function
-func ChangeFunctionRevision() {
-	// TODO
-	// ? arguments
-	// example: hello-name/blue -> hello-name/green (or default)
-	// set the FormerRevision to the CurrentRevision before doing the change
-	// ! I cannot change the key!!!
-	// ! Can I copy a record with the process ?
-}
-
-
-// DuplicateProcess creates a new record with the same process (PID) but with different revision.
+// DuplicateProcessWithNewRevision creates a new record with the same process (PID) but with different revision.
 //
 // It takes in the function name, new function revision, an index, and a CapsuleProcess object.
 // It returns a CapsuleProcess object.
-func DuplicateProcess(functionName, newFunctionRevision string, index int, process CapsuleProcess) CapsuleProcess {
+func DuplicateProcessWithNewRevision(functionName, newFunctionRevision string, index int, process CapsuleProcess) CapsuleProcess {
 	// Create a new record with the same process (PID) but with different revision
 
 	newProcess := CapsuleProcess{

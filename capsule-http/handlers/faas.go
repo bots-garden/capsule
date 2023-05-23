@@ -2,7 +2,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -47,8 +46,9 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	capsuleTask.Args = append(capsuleTask.Args, "-httpPort="+httpPort)
 
 	// ! this a work in progress 🚧
-	fmt.Println("🔷", capsuleTask.Args)
-	fmt.Println("🔷", capsuleTask.Env)
+	//fmt.Println("🔷", capsuleTask.Args)
+	//fmt.Println("🔷", capsuleTask.Env)
+	// TODO: test environment variables
 
 	// ? or use an environment variable?
 	if capsuleTask.Path == "" {
@@ -155,7 +155,7 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 
 	// the unique key to identify a Capsule Process
 	key := functionName + "/" + functionRevision + "/" + functionIndex
-	
+
 	process, err := data.GetCapsuleProcessRecord(key)
 
 	if err != nil {
@@ -191,9 +191,9 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 func CallExternalFunction(c *fiber.Ctx) error {
 
 	/*
-	app.All("/functions/:function_name", handlers.CallExternalFunction)
-	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
-	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
+		app.All("/functions/:function_name", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
 	*/
 
 	functionName := c.Params("function_name")
@@ -293,7 +293,6 @@ func CallExternalFunction(c *fiber.Ctx) error {
 
 // 	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)
 
-
 // DuplicateExternalFunction duplicates a given function and returns its new function name.
 //
 // c: a fiber context that contains information about the request.
@@ -323,7 +322,7 @@ func DuplicateExternalFunction(c *fiber.Ctx) error {
 	}
 
 	// Create a new record with the same process (PID) but with different revision
-	newProcess := data.DuplicateProcess(functionName, newFunctionRevision, index, processToCopy)
+	newProcess := data.DuplicateProcessWithNewRevision(functionName, newFunctionRevision, index, processToCopy)
 
 	c.Status(fiber.StatusOK)
 	return c.Send([]byte(newProcess.FunctionName))
@@ -332,4 +331,3 @@ func DuplicateExternalFunction(c *fiber.Ctx) error {
 
 // "/functions/duplicate/hello-world/default/saved"
 // app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", handlers.DuplicateExternalFunction)
-
