@@ -46,24 +46,50 @@ type CapsuleTask struct {
 
 // CapsuleProcess is a struct to describe a running Capsule process
 type CapsuleProcess struct {
-	Index             int       `json:"index"`
-	FunctionName      string    `json:"name"`
-	FunctionRevision  string    `json:"revision"`
-	HTTPPort          string    `json:"httpPort"`
-	Description       string    `json:"description"`
-	CurrentStatus     Status    `json:"currentStatus"`
-	StatusDescription string    `json:"statusDescription"`
-	CreatedAt         time.Time `json:"createdAt"` // record the time the event was requested
-	StartedAt         time.Time `json:"startedAt"`
-	FinishedAt        time.Time `json:"finishedAt"`
-	CancelledAt       time.Time `json:"cancelledAt"`
-	FailedAt          time.Time `json:"failedAt"`
-	CheckedAt         time.Time `json:"checkedAt"`
-	Pid               int       `json:"pid"`
-	Path              string    `json:"path"`
-	Args              []string  `json:"args"`
-	Env               []string  `json:"env"`
-	Cmd               *exec.Cmd `json:"-"`
+	Index                  int       `json:"index"`
+	FunctionName           string    `json:"functionName"`
+	FunctionRevision       string    `json:"functionRevision"`
+	FormerFunctionRevision string    `json:"formerFunctionRevision"`
+	HTTPPort               string    `json:"httpPort"`
+	Description            string    `json:"description"`
+	CurrentStatus          Status    `json:"currentStatus"`
+	StatusDescription      string    `json:"statusDescription"`
+	CreatedAt              time.Time `json:"createdAt"` // record the time the event was requested
+	StartedAt              time.Time `json:"startedAt"`
+	FinishedAt             time.Time `json:"finishedAt"`
+	CancelledAt            time.Time `json:"cancelledAt"`
+	FailedAt               time.Time `json:"failedAt"`
+	CheckedAt              time.Time `json:"checkedAt"`
+	Pid                    int       `json:"pid"`
+	Path                   string    `json:"path"`
+	Args                   []string  `json:"args"`
+	Env                    []string  `json:"env"`
+	Cmd                    *exec.Cmd `json:"-"`
+}
+
+// GetStatusLabel returns the status label for a given status.
+//
+// status: a Status type representing the current status of the process.
+// Returns a string representing the label for the current status.
+func GetStatusLabel(status Status) string {
+	switch status {
+	case Waiting:
+		return "Waiting"
+	case Started:
+		return "Started"
+	case Finished:
+		return "Finished"
+	case Failed:
+		return "Failed"
+	case Cancelled:
+		return "Cancelled"
+	case Stucked:
+		return "Stucked"
+	case Killed:
+		return "Killed"
+	default:
+		return "Unknown"
+	}
 }
 
 // GetJSONCapsuleProcesses retrieves a JSON-encoded list of running capsule processes.
@@ -76,24 +102,28 @@ func GetJSONCapsuleProcesses() ([]byte, error) {
 	runningCapsules.Range(func(key, value interface{}) bool {
 		process := value.(CapsuleProcess)
 		//process.Env = []string{}
+
+		//fmt.Println("🟢", process.FunctionName, process.FunctionRevision)
+
 		jsonProcesses[key.(string)] = CapsuleProcess{
-			Index:             process.Index,
-			FunctionName:      process.FunctionName,
-			FunctionRevision:  process.FunctionRevision,
-			HTTPPort:          process.HTTPPort,
-			Description:       process.Description,
-			CurrentStatus:     process.CurrentStatus,
-			StatusDescription: process.StatusDescription, // TODO: add the status description
-			CreatedAt:         process.CreatedAt,
-			StartedAt:         process.StartedAt,
-			FinishedAt:        process.FinishedAt,
-			CancelledAt:       process.CancelledAt,
-			FailedAt:          process.FailedAt,
-			CheckedAt:         process.CheckedAt,
-			Pid:               process.Pid,
-			Path:              process.Path,
-			Args:              process.Args,
-			//Env:               process.Env, //? hot to filter the environment variables?
+			Index:                  process.Index,
+			FunctionName:           process.FunctionName,
+			FunctionRevision:       process.FunctionRevision,
+			FormerFunctionRevision: process.FormerFunctionRevision,
+			HTTPPort:               process.HTTPPort,
+			Description:            process.Description,
+			CurrentStatus:          process.CurrentStatus,
+			StatusDescription:      GetStatusLabel(process.CurrentStatus), // add the status description
+			CreatedAt:              process.CreatedAt,
+			StartedAt:              process.StartedAt,
+			FinishedAt:             process.FinishedAt,
+			CancelledAt:            process.CancelledAt,
+			FailedAt:               process.FailedAt,
+			CheckedAt:              process.CheckedAt,
+			Pid:                    process.Pid,
+			Path:                   process.Path,
+			Args:                   process.Args,
+			//Env:               process.Env, //? how to filter the environment variables?
 			//Cmd:               process.Cmd,
 
 		}
@@ -222,3 +252,53 @@ func SaveCapsuleProcessRecords() error {
 	}
 	return err
 }
+
+// ChangeFunctionRevision changes the revision of a function
+func ChangeFunctionRevision() {
+	// TODO
+	// ? arguments
+	// example: hello-name/blue -> hello-name/green (or default)
+	// set the FormerRevision to the CurrentRevision before doing the change
+	// ! I cannot change the key!!!
+	// ! Can I copy a record with the process ?
+}
+
+
+// DuplicateProcess creates a new record with the same process (PID) but with different revision.
+//
+// It takes in the function name, new function revision, an index, and a CapsuleProcess object.
+// It returns a CapsuleProcess object.
+func DuplicateProcess(functionName, newFunctionRevision string, index int, process CapsuleProcess) CapsuleProcess {
+	// Create a new record with the same process (PID) but with different revision
+
+	newProcess := CapsuleProcess{
+		Index:                  index,
+		FunctionName:           functionName,
+		FunctionRevision:       newFunctionRevision,
+		FormerFunctionRevision: process.FunctionRevision,
+		HTTPPort:               process.HTTPPort,
+		Description:            process.Description,
+		CurrentStatus:          process.CurrentStatus,
+		StatusDescription:      GetStatusLabel(process.CurrentStatus), // add the status description
+		CreatedAt:              process.CreatedAt,
+		StartedAt:              process.StartedAt,
+		FinishedAt:             process.FinishedAt,
+		CancelledAt:            process.CancelledAt,
+		FailedAt:               process.FailedAt,
+		CheckedAt:              process.CheckedAt,
+		Pid:                    process.Pid,
+		Path:                   process.Path,
+		Args:                   process.Args,
+		Env:                    process.Env,
+		Cmd:                    process.Cmd,
+	}
+	CreateCapsuleProcessRecord(newProcess)
+	return newProcess
+}
+
+/*
+
+
+
+
+ */

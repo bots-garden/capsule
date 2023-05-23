@@ -140,6 +140,9 @@ func main() {
 
 	app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
 
+	// TODO: do it with index too?
+	app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", handlers.DuplicateExternalFunction)
+
 	// TODO: protect this routes
 	app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
 	app.Delete("/functions/stop/:function_name/:function_revision", handlers.StopCapsuleHTTPProcess)
