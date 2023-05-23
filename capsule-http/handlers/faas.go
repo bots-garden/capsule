@@ -24,14 +24,14 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	//TODO check if the process exists
 
 	/*
-	type CapsuleTask struct {
-		FunctionName     string   `json:"name"`
-		FunctionRevision string   `json:"revision"`
-		Description      string   `json:"description"`
-		Path             string   `json:"path"`
-		Args             []string `json:"args"`
-		Env              []string `json:"env"`
-	}
+		type CapsuleTask struct {
+			FunctionName     string   `json:"name"`
+			FunctionRevision string   `json:"revision"`
+			Description      string   `json:"description"`
+			Path             string   `json:"path"`
+			Args             []string `json:"args"`
+			Env              []string `json:"env"`
+		}
 	*/
 
 	capsuleTask := data.CapsuleTask{}
@@ -42,11 +42,12 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 
 	httpPort := tools.GetNewHTTPPort()
 
-	capsuleTask.Args = append(capsuleTask.Args, "-httpPort=" + httpPort)
+	capsuleTask.Args = append(capsuleTask.Args, "-httpPort="+httpPort)
 
 	// TODO: store somewhere the processes that are running (or not)
 
 	fmt.Println("🔷", capsuleTask.Args)
+	fmt.Println("🔷", capsuleTask.Env)
 
 	// try without the httport too
 
@@ -57,7 +58,7 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	//? How to get the path of the current working directory
 	//! default value is "capsule-http" (if installed)
 	cmd := &exec.Cmd{
-		Path:   capsuleTask.Path, 
+		Path:   capsuleTask.Path,
 		Args:   capsuleTask.Args,
 		Stdout: os.Stdout,
 		Stderr: os.Stdout,
@@ -126,9 +127,9 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		functionIndex = "0"
 	}
 
-	key:= functionName+"/"+functionRevision+"/"+functionIndex
+	key := functionName + "/" + functionRevision + "/" + functionIndex
 
-	fmt.Println("🌍",key)
+	fmt.Println("🌍", key)
 
 	process, err := data.GetCapsuleProcessRecord(key)
 
@@ -137,18 +138,77 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		fmt.Println("😡", err.Error())
 	}
 
-	fmt.Println("👋", process)
-
 	bodyRequest := c.Body()
-	//headersRequest := c.GetReqHeaders()
+	headersRequest := c.GetReqHeaders()
 	httpClient := resty.New()
 
-	// it could be GET, PUT or DELETE
-	resp, err := httpClient.R().EnableTrace().SetBody(string(bodyRequest)).Post("http://localhost:" + process.HTTPPort)
-
-	if err != nil {
-		return c.Send([]byte(err.Error()))
+	for key, value := range headersRequest {
+		httpClient.SetHeader(key, value)
 	}
-	return c.Send([]byte(resp.String()))
+
+	// TODO: use an environment variable?
+	capsuleDomain := "http://localhost"
+	capsuleURI := capsuleDomain + ":" + process.HTTPPort
+	strBodyRequest := string(bodyRequest)
+
+	restyHeadersToFiberHeaders := func(resp *resty.Response) {
+		for key, value := range resp.Header() {
+			c.Response().Header.Set(key, value[0])
+		}
+	}
+
+	switch what := c.Method(); what {
+	case "GET":
+		resp, err := httpClient.R().EnableTrace().Get(capsuleURI)
+
+		restyHeadersToFiberHeaders(resp)
+		c.Status(resp.StatusCode())
+
+		if err != nil {
+			return c.Send([]byte(err.Error()))
+		}
+
+		return c.Send([]byte(resp.String()))
+
+	case "POST":
+		resp, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Post(capsuleURI)
+		//resp, err := httpClient.R().SetBody(string(bodyRequest)).Post(capsuleURI)
+
+		restyHeadersToFiberHeaders(resp)
+		c.Status(resp.StatusCode())
+
+		if err != nil {
+			return c.Send([]byte(err.Error()))
+		}
+
+		return c.Send([]byte(resp.String()))
+
+	case "PUT":
+		resp, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Put(capsuleURI)
+		restyHeadersToFiberHeaders(resp)
+		c.Status(resp.StatusCode())
+
+		if err != nil {
+			return c.Send([]byte(err.Error()))
+		}
+
+		return c.Send([]byte(resp.String()))
+
+	case "DELETE":
+		resp, err := httpClient.R().EnableTrace().Delete(capsuleURI)
+		restyHeadersToFiberHeaders(resp)
+		c.Status(resp.StatusCode())
+
+		if err != nil {
+			return c.Send([]byte(err.Error()))
+		}
+
+		return c.Send([]byte(resp.String()))
+
+	default:
+		return nil // TODO: return something else
+	}
+
 }
+
 // 	app.All("/functions/call/:function_name/:function_revision", handlers.CallExternalFunction)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JSON_DATA='{"name":"Bob Morane","age":42}'
+JSON_DATA='{"name":"Bob Morane 🤣","age":42}'
 
 curl -X POST http://localhost:8080/functions/hello-world/default/0 \
           -H 'Content-Type: application/json; charset=utf-8' \
@@ -23,3 +23,5 @@ curl -X POST http://localhost:8080/functions/hello-world \
 echo "------"
 
 #curl -X GET http://localhost:8080/functions/hello-world/default/1
+
+#http://capsule-ide.local:8080/functions/index-html

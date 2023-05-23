@@ -1,5 +1,5 @@
 #!/bin/bash
-task build-capsule-http build-hello-world
+task build-capsule-http build-hello-world build-index-html
 
 #unset NGROK_AUTHTOKEN
 WASM_FILE='./functions/hello-world/hello-world.wasm'

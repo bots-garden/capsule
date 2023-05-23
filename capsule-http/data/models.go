@@ -4,7 +4,6 @@ package data
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os/exec"
@@ -71,9 +70,7 @@ type CapsuleProcess struct {
 // process: a CapsuleProcess to be stored in the runningCapsules map.
 func SetCapsuleProcessRecord(process CapsuleProcess) string {
 	key:= process.FunctionName+"/"+process.FunctionRevision+"/"+strconv.Itoa(process.Index)
-
-	fmt.Println("🔑", key)
-
+	//fmt.Println("🔑", key)
 	runningCapsules.Store(key, process)
 	return key
 }
@@ -117,7 +114,6 @@ func CreateCapsuleProcessRecord(process CapsuleProcess) string {
 // key string: the key to look up in the runningCapsules map.
 // CapsuleProcess: the CapsuleProcess associated with the given key, or an empty CapsuleProcess if the key is not found.
 func GetCapsuleProcessRecord(key string) (CapsuleProcess, error) {
-	fmt.Println("🔴", runningCapsules)
 	process, ok := runningCapsules.Load(key)
 	if !ok {
 		return CapsuleProcess{}, errors.New("Capsule process not found")
