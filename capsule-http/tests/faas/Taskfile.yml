@@ -173,10 +173,6 @@ tasks:
         -H "Content-Type: text/plain; charset=utf-8" \
         -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello
 
-  # curl -X POST http://localhost:8080/functions/hello/default/0 \
-  #        -H 'Content-Type: text/plain; charset=utf-8' \
-  #        -d "Bob Morane"
-
   stress-high-hello:
     env:
       DATA: 'Bob Morane'
