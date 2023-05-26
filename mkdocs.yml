@@ -17,8 +17,11 @@ nav:
       - Capsule CLI and modules: getting-started-cli.md
       - Capsule HTTP and modules: getting-started-http.md
       - Capsule HTTP and Ngrok: getting-started-http-ngrok.md
+      - Capsule HTTP flags: capsule-http-flags.md
     - 🛠️ Host functions: host-functions-intro.md
     - 🐳 Capsule HTTP Docker image: docker-capsule-http.md
+    - 🚀 Capsule HTTP FaaS mode: capsule-http-faas-mode.md
+    - 🏭 Capsule HTTP Enterprise: capsule-http-enterprise.md
 
 theme:
   name: material

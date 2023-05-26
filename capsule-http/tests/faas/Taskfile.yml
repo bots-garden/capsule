@@ -52,7 +52,59 @@ tasks:
           -target wasi ./main.go 
         ls -lh *.wasm
 
-  
+  publish-hello-functions-to-gitlab:
+  # GitLab registry
+  # https://gitlab.com/wasmkitchen/wasm.registry/-/packages
+    env:
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      WASM_PACKAGE: "capsule"
+    cmds:
+      - |
+        FUNCTION_NAME="hello"
+        WASM_VERSION="default"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        cd functions/${FUNCTION_NAME}-${WASM_VERSION}
+        WASM_FILE="./${WASM_MODULE}"
+        echo "📦 ${WASM_PACKAGE}"
+        echo "📝 ${WASM_MODULE} ${WASM_VERSION}"
+        curl --header "PRIVATE-TOKEN: ${GITLAB_WASM_TOKEN}" \
+             --upload-file ${WASM_FILE} \
+             "https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+      - |
+        FUNCTION_NAME="hello"
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        cd functions/${FUNCTION_NAME}-${WASM_VERSION}
+        WASM_FILE="./${WASM_MODULE}"
+        echo "📦 ${WASM_PACKAGE}"
+        echo "📝 ${WASM_MODULE} ${WASM_VERSION}"
+        curl --header "PRIVATE-TOKEN: ${GITLAB_WASM_TOKEN}" \
+             --upload-file ${WASM_FILE} \
+             "https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+      - |
+        FUNCTION_NAME="hello"
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        cd functions/${FUNCTION_NAME}-${WASM_VERSION}
+        WASM_FILE="./${WASM_MODULE}"
+        echo "📦 ${WASM_PACKAGE}"
+        echo "📝 ${WASM_MODULE} ${WASM_VERSION}"
+        curl --header "PRIVATE-TOKEN: ${GITLAB_WASM_TOKEN}" \
+             --upload-file ${WASM_FILE} \
+             "https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+      - |
+        FUNCTION_NAME="hello"
+        WASM_VERSION="orange"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        cd functions/${FUNCTION_NAME}-${WASM_VERSION}
+        WASM_FILE="./${WASM_MODULE}"
+        echo "📦 ${WASM_PACKAGE}"
+        echo "📝 ${WASM_MODULE} ${WASM_VERSION}"
+        curl --header "PRIVATE-TOKEN: ${GITLAB_WASM_TOKEN}" \
+             --upload-file ${WASM_FILE} \
+             "https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+
   # Start main capsule process
   start-capsule-http:
     env:
@@ -64,9 +116,6 @@ tasks:
         # you can use http://capsule-ide.local:8080/
 
   launch-hello-functions:
-    env:
-      HTTP_PORT: '8080'
-      WASM_FILE: './functions/index-page/index-page.wasm'
     cmds:
       - | 
         FUNCTION_NAME="hello"
@@ -84,10 +133,11 @@ tasks:
             "env": []
         }
         EOF
-      - | 
+      - | # 👋 the hello blue function stops after 30 seconds
         FUNCTION_NAME="hello"
         FUNCTION_REVISION="blue"
         WASM_FILE="./functions/hello-blue/hello-blue.wasm"
+        DURATION=30
         curl -X POST localhost:8080/functions/start \
         -H 'Content-Type: application/json; charset=utf-8' \
         -d @- << EOF
@@ -96,7 +146,7 @@ tasks:
             "revision":"${FUNCTION_REVISION}",
             "description":"hello function",
             "path":"/usr/local/bin/capsule-http",
-            "args": ["", "-wasm=${WASM_FILE}"],
+            "args": ["", "-wasm=${WASM_FILE}", "-stopAfter=${DURATION}"],
             "env": []
         }
         EOF
@@ -133,6 +183,91 @@ tasks:
         }
         EOF
 
+  launch-remote-hello-functions:
+    env:
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      WASM_PACKAGE: "capsule"
+    cmds:
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="default"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | # 👋 the hello blue function stops after 30 seconds
+        FUNCTION_NAME="hello"
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        DURATION=30
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-stopAfter=${DURATION}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="orange"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+
+
+
   call-hello-functions:
     env:
       DATA: 'Bob Morane'
@@ -145,20 +280,64 @@ tasks:
         -H 'Content-Type: text/plain; charset=utf-8' \
         -d "${DATA}"
         echo ""
+        echo ""
       - | 
         curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue \
         -H 'Content-Type: text/plain; charset=utf-8' \
         -d "${DATA}"
+        echo ""
         echo ""
       - | 
         curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/green \
         -H 'Content-Type: text/plain; charset=utf-8' \
         -d "${DATA}"
         echo ""
+        echo ""
       - | 
         curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/orange \
         -H 'Content-Type: text/plain; charset=utf-8' \
         -d "${DATA}"
+        echo ""
+        echo ""
+
+  kill-hello-default-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/default
+        echo ""
+
+  kill-hello-blue-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/blue
+        echo ""
+
+  kill-hello-green-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/green
+        echo ""
+
+  kill-hello-orange-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/orange
         echo ""
 
   stress-average-hello:
@@ -185,355 +364,13 @@ tasks:
         -H "Content-Type: text/plain; charset=utf-8" \
         -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello
 
-
-
-
-
-
-
-
-
-
-  # ----------------------------------------
-  # 🐳 Testing Docker image of capsule-http
-  # ----------------------------------------
-  test-hello-world-with-docker:
-    env:
-      JSON_DATA: '{"name":"🤣 Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-      GOOS: "linux" 
-      GOARCH: "arm64"
-      IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.3.6"
-    cmds:
-      - | 
-        IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
-        echo "🚀 Testing hello-world with 🐳..."
-        echo "🖼️ ${IMAGE_NAME}"
-        docker run \
-          -p ${HTTP_PORT}:${HTTP_PORT} \
-          -v $(pwd)/functions/hello-world:/app --rm ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
-          /capsule-http \
-          --wasm=./app/hello-world.wasm \
-          --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-      - |
-        IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
-        docker stop $(docker ps -q --filter ancestor=${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} )
-
-        #Use it with a remote file (to be tested):
-        #docker run \
-        #  -p 8080:8080 \
-        #  -v $(pwd)/functions/hello-world:/app --rm ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
-        #  /capsule-http \
-        #  --url=http://172.17.0.1:5000/hello-world.wasm \
-        #  --wasm=./app/hello-world.wasm \
-        #  --httpPort=8080
-
-
-  test-hello-world-remote:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './tmp/hello-world.wasm'
-      DOWNLOAD_URL: 'http://localhost:5000/hello-world.wasm'
-    cmds:
-      - |
-        echo "🌍 Serving the wasm file..."
-        cd functions/hello-world
-        echo "🌍 you can download the wasm file with this url:"
-        echo "http://localhost:5000/hello-world.wasm"
-        python3 -m http.server 5000 &
-        sleep 1
-      - | 
-        echo "🚀 Testing hello-world..."
-        ./capsule-http \
-        --url=${DOWNLOAD_URL} \
-        --wasm=${WASM_FILE} \
-        --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-      - killport ${HTTP_PORT}
-      - pkill python3
-
-  # Public GitLab Registry
-  # task build-capsule-http
-  run-hello-world-from-gitlab-registry:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './tmp/hello-world.wasm'
-      GITLAB_WASM_PROJECT_ID: "45020306"
-      WASM_PACKAGE: "capsule"
-      WASM_MODULE: "hello-world.wasm"
-      WASM_VERSION: "0.0.0"
-    cmds:
-      - | 
-        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
-        echo "🚀 Testing hello-world..."
-        echo "${DOWNLOAD_URL}"
-        ./capsule-http \
-        --url=${DOWNLOAD_URL} \
-        --wasm=${WASM_FILE} \
-        --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-      - killport ${HTTP_PORT}
-
-  run-hello-world-from-private-gitlab-registry:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './tmp/hello-world.wasm'
-      GITLAB_WASM_PROJECT_ID: "46123319"
-      WASM_PACKAGE: "capsule"
-      WASM_MODULE: "hello-world.wasm"
-      WASM_VERSION: "0.0.0"
-    cmds:
-      - | 
-        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
-        echo "🚀 Testing hello-world..."
-        echo "${DOWNLOAD_URL}"
-        ./capsule-http \
-        --url=${DOWNLOAD_URL} \
-        --authHeaderName="PRIVATE-TOKEN" \
-        --authHeaderValue="${GITLAB_WASM_TOKEN}" \
-        --wasm=${WASM_FILE} \
-        --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-      - killport ${HTTP_PORT}
-
-
-  # These tasks are used to test the Prometheus metrics
-
-  # serving capsule-http
-  serve-hello-world:
-    env:
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-    cmds:
-      - | 
-        echo "🚀 Serving hello-world..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-
-  # serving capsule-http with ngrok
-  serve-ngrok-hello-world:
-    env:
-      HTTP_PORT: '6666'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-    cmds:
-      - | 
-        echo "🚀 Serving hello-world..."
-        NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN}" ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-
-
-  # killing capsule-http
-  kill-capsule-http:
-    cmds:
-      - | 
-        echo "🚀 Killing hello-world..."
-        pkill capsule-http
-
-  # query capsule-http
-  query-hello-world:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-    cmds:
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-
-  # query capsule-http with ngrok
-  query-ngrok-hello-world:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-    cmds:
-      - | 
-        NGROK_URL="$(cat ngrok.url)"
-        echo "🌍 ${NGROK_URL}"
-        curl -X POST ${NGROK_URL} \
-          -H 'Content-Type: application/json; charset=utf-8' \
-          -d "${JSON_DATA}"
-
-  # metrics capsule-http
-  metrics-hello-world:
-    env:
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-    cmds:
-      - | 
-        curl ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/metrics
-
-  stress-average-hello-world:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-    cmds:
-      - | 
-        hey -n 300 -c 100 -m POST \
-        -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
-
-  stress-high-hello-world:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-    cmds:
-      - | 
-        hey -n 10000 -c 6000 -m POST \
-        -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
-
-
-
-  # grafana/grafana-oss
-  # docker run -d -p 3000:3000 grafana/grafana-oss
-
-  stress-hello-world:
-    env:
-      JSON_DATA: '{"name":"Bob Morane","age":42}'
-      HTTP_PORT: '6666'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
-    cmds:
-      - | 
-        echo "🚀 Stressing hello-world..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        hey -n 300 -c 100 -m POST \
-        -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
-      - killport ${HTTP_PORT}
-
-
-  build-hey:
-    cmds:
-      - |
-        echo "📦 Building hey.wasm module..."
-        cd functions/hey
-        tinygo build -o hey.wasm \
-          -scheduler=none \
-          --no-debug \
-          -target wasi ./main.go 
-        ls -lh *.wasm
-
-  test-hey:
-    env:
-      DATA: 'Bob Morane'
-      HTTP_PORT: '8888'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hey/hey.wasm'
-    cmds:
-      - | 
-        echo "🚀 Testing hey..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
-          -H 'Content-Type: text/plain; charset=utf-8' \
-          -d "${DATA}"
-      - killport ${HTTP_PORT}
-
-  stress-hey:
-    env:
-      DATA: 'Bob Morane'
-      HTTP_PORT: '8080'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/hey/hey.wasm'
-    cmds:
-      - | 
-        echo "🚀 Stressing hey..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        hey -n 300 -c 100 -m POST \
-        -H "Content-Type: text/plain; charset=utf-8" \
-        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
-      - killport ${HTTP_PORT}
-
-
-  build-index-html:
-    cmds:
-      - |
-        echo "📦 Building index-html.wasm module..."
-        cd functions/index-html
-        tinygo build -o index.wasm \
-          -scheduler=none \
-          --no-debug \
-          -target wasi ./main.go 
-        ls -lh *.wasm
-
-  test-index-html:
-    env:
-      DATA: 'Bob Morane'
-      HTTP_PORT: '7777'
-      DOMAIN: 'localhost'
-      PROTOCOL: 'http'
-      WASM_FILE: './functions/index-html/index.wasm'
-    cmds:
-      - | 
-        echo "🚀 Testing hey..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        curl -v ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} 
-      - killport ${HTTP_PORT}
-
-  stress-index-html:
+  processes-list:
     env:
       HTTP_PORT: '8080'
       DOMAIN: 'localhost'
       PROTOCOL: 'http'
-      WASM_FILE: './functions/index-html/index.wasm'
     cmds:
       - | 
-        echo "🚀 Stressing hey..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
-      - | 
-        hey -n 300 -c 100 -m GET \
-        ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
-      - killport ${HTTP_PORT}
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/processes
+
 

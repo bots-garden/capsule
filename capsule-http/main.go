@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os/signal"
+	"strconv"
 
 	//"strings"
 	"syscall"
@@ -27,6 +28,7 @@ import (
 type CapsuleFlags struct {
 	wasm            string // wasm file location
 	httpPort        string
+	stopAfter       string // stop after a delay if not used
 	url             string // to download the wasm file
 	authHeaderName  string // if needed for authentication
 	authHeaderValue string // if needed for authentication
@@ -47,6 +49,7 @@ func main() {
 	// Capsule flags
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
 	httpPortPtr := flag.String("httpPort", "", "http port")
+	stopAfterPtr := flag.String("stopAfter", "", "stop after n seconds if not used")
 	wasmFileURLPtr := flag.String("url", "", "url for downloading wasm module file")
 	authHeaderNamePtr := flag.String("authHeaderName", "", "header authentication for downloading wasm module file")
 	authHeaderValuePtr := flag.String("authHeaderValue", "", "header authentication value for downloading wasm module file")
@@ -65,6 +68,7 @@ func main() {
 	flags := CapsuleFlags{
 		*wasmFilePathPtr,
 		*httpPortPtr,
+		*stopAfterPtr,
 		*wasmFileURLPtr,
 		*authHeaderNamePtr,
 		*authHeaderValuePtr,
@@ -78,6 +82,7 @@ func main() {
 	// This context will be used for function calls.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
 
 	handlers.StoreContext(ctx)
 
@@ -116,7 +121,7 @@ func main() {
 	// -----------------------------------
 	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
 	if err != nil {
-		log.Println("❌ Error while loading the wasm file", err)
+		log.Println("❌📝 Error while loading the wasm file", err)
 		os.Exit(1)
 	}
 	handlers.StoreWasmFile(wasmFile)
@@ -124,26 +129,33 @@ func main() {
 	// -----------------------------------
 	// Prometheus
 	// -----------------------------------
+	// ! this is experimental and subject to change 
 	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
 	prometheus := fiberprometheus.New("capsule")
 
 	prometheus.RegisterAt(app, "/metrics")
 	app.Use(prometheus.Middleware)
 
+	// TODO: protect these routes
+
 	// ----------------------------------------
 	// Handler to launch a new Capsule process
 	// and create a revision for a function
-	//
-	// TODO: protect this route
 	// ----------------------------------------
-	app.Post("/functions/start", handlers.StartNewCapsuleHTTP)
+	app.Post("/functions/start", handlers.StartNewCapsuleHTTPProcess)
 
+	// Start a new Capsule HTTP process, the shutdown after a delay
+	app.Post("/functions/start/shutdown", handlers.StartNewCapsuleHTTPProcessThenShutdownItAfterDelay)
+
+
+	// Get the list of processes
 	app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
 
 	// TODO: do it with index too?
+	// Duplicate a process
 	app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", handlers.DuplicateExternalFunction)
 
-	// TODO: protect this routes
+	// Stop a process
 	app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
 	app.Delete("/functions/stop/:function_name/:function_revision", handlers.StopCapsuleHTTPProcess)
 	app.Delete("/functions/stop/:function_name/:function_revision/:function_index", handlers.StopCapsuleHTTPProcess)
@@ -159,9 +171,6 @@ func main() {
 	// -----------------------------------
 	// Handler to call the WASM function
 	// -----------------------------------
-	// TODO: protect routes
-	// TODO: externalise the handler
-	// TODO: create helpers to simplify the code
 	app.All("/", handlers.CallWasmFunction)
 
 	// -----------------------------------
@@ -176,6 +185,8 @@ func main() {
 		} else {
 			httpPort = flags.httpPort
 		}
+
+		log.Println("📦 wasm module loaded:", flags.wasm)
 
 		if flags.crt != "" {
 			// certs/capsule.local.crt
@@ -196,17 +207,38 @@ func main() {
 		}
 	}()
 
+	go func() {
+		// Set a value for the last call
+		if flags.stopAfter == "" {
+			return
+		} 
+		duration, _ := strconv.ParseFloat(flags.stopAfter, 64)
+		handlers.SetLastCall(time.Now())
+		for {
+			time.Sleep(1 * time.Second)
+			if time.Since(handlers.GetLastCall()).Seconds()  >= duration  {
+				stop()
+				//log.Println("👋 Bye!")
+			} 
+			//else {
+			//	log.Println("🟢 Last call since:", time.Since(handlers.GetLastCall()).Seconds())
+			//}
+		}
+
+	}()
+
 	// Listen for the interrupt signal.
 	<-ctx.Done()
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
 	stop()
-	log.Println("💊 Capsule shutting down gracefully...")
+	
+	log.Println("💊 Capsule shutting down...", flags.wasm)
 
 	// The context is used to inform the server it has 5 seconds to finish
 	// the request it is currently handling
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	log.Println("💊 Capsule exiting...")
+	log.Println("💊 Capsule stopped", flags.wasm)
 }

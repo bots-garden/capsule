@@ -14,13 +14,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// StartNewCapsuleHTTP is a Go function that handles HTTP requests
+// StartNewCapsuleHTTPProcess is a Go function that handles HTTP requests
 // for starting a capsule.
 // ! this a work in progress
 // It takes in a pointer to a fiber.Ctx object.
 // It returns an error object.
 // TODO: protect this route with a middleware
-func StartNewCapsuleHTTP(c *fiber.Ctx) error {
+func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
+
 	/*
 		type CapsuleTask struct {
 			FunctionName     string   `json:"name"`
@@ -55,6 +56,8 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 		// Default value
 		capsuleTask.Path = "capsule-http" //! had to be installed
 	}
+
+	//fmt.Println("🔷", capsuleTask.Path)
 
 	cmd := &exec.Cmd{
 		Path:   capsuleTask.Path,
@@ -106,6 +109,22 @@ func StartNewCapsuleHTTP(c *fiber.Ctx) error {
 	c.Status(fiber.StatusOK)
 	return c.Send([]byte(idOfTheProcess))
 
+}
+
+// StartNewCapsuleHTTPProcessThenShutdownItAfterDelay is a Go function that handles HTTP requests
+func StartNewCapsuleHTTPProcessThenShutdownItAfterDelay(c *fiber.Ctx) error {
+	// TODO: implement this function
+	// ! it should be a flag of the Capsule process
+	// ! the process is killed after a given delay
+	// ! except if it used
+	return nil
+}
+
+// ReStartCapsuleHTTPProcess is a Go function that handles HTTP requests
+func ReStartCapsuleHTTPProcess(c *fiber.Ctx) error {
+	// TODO: implement this function
+	// ??? do i really need it?
+	return nil
 }
 
 // GetListOfCapsuleHTTPProcesses retrieves the list of external Capsule processes
@@ -164,7 +183,10 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 		return c.Send([]byte(err.Error()))
 	}
 
-	errProcessToKill := process.Cmd.Process.Kill()
+	//errProcessToKill := process.Cmd.Process.Kill()
+	// Capsule shutting down gracefully
+	errProcessToKill := process.Cmd.Process.Signal(os.Interrupt)
+
 	if errProcessToKill != nil {
 		process.CurrentStatus = data.Stucked
 		data.SetCapsuleProcessRecord(process)
@@ -189,6 +211,8 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 // c *fiber.Ctx: a pointer to a fiber context object that contains information about the http request.
 // error: returns an error if the external function call fails.
 func CallExternalFunction(c *fiber.Ctx) error {
+	// register the las call
+	SetLastCall(time.Now())
 
 	/*
 		app.All("/functions/:function_name", handlers.CallExternalFunction)
@@ -215,6 +239,7 @@ func CallExternalFunction(c *fiber.Ctx) error {
 	process, err := data.GetCapsuleProcessRecord(key)
 
 	// TODO try another index if one does not exist
+	// TODO or restart the process
 
 	if err != nil {
 		log.Println("🔴 Error when calling the external Capsule process:", err.Error())

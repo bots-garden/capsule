@@ -1,0 +1,58 @@
+version: '3'
+
+tasks:
+
+  build-and-install-capsctl:
+    cmds:
+      - |
+        echo "📦 Building capsctl..."
+        go build -ldflags="-s -w" -o capsctl
+        ls -lh capsctl
+        sudo cp capsctl  /usr/local/bin/capsctl
+        capsctl --version
+
+  download-and-start-wasm-module:
+    env:
+      CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+      CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      FUNCTION_NAME: "hello"
+      WASM_PACKAGE: "capsule"
+      DOWNLOAD_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/tmp"
+    cmds:
+      - | # hello-blue
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        GITLAB_REGISTRY_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+        DOWNLOADED_FILE_LOCATION="${DOWNLOAD_LOCATION}/${WASM_MODULE}"
+        
+        capsctl \
+          --cmd=start \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --description="hello blue deployment" \
+          --path=${CAPSULE_INSTALL_PATH} \
+          --stopAfter=30 \
+          --env='["MESSAGE=hello blue"]'\
+          --wasm=${DOWNLOADED_FILE_LOCATION} \
+          --url=${GITLAB_REGISTRY_URL}
+
+  start-local-wasm-module:
+    env:
+        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+        FUNCTION_NAME: "hello"
+        WASM_PACKAGE: "capsule"
+        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=start \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --description="hello green deployment" \
+          --path=${CAPSULE_INSTALL_PATH} \
+          --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}

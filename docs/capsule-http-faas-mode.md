@@ -1,0 +1,2 @@
+# 🚀 Capsule HTTP FaaS mode
+

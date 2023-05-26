@@ -129,8 +129,8 @@ func GetJSONCapsuleProcesses() ([]byte, error) {
 		}
 		return true
 	})
-
-	jsonProcessesList, err := json.Marshal(&jsonProcesses)
+	// json.MarshalIndent(data, "", "    ")
+	jsonProcessesList, err := json.MarshalIndent(&jsonProcesses, "", "  ")
 	if err != nil {
 		return nil, err
 	}
