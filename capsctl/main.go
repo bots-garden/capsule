@@ -2,6 +2,7 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -51,8 +52,12 @@ type CapsCtlFlags struct {
 	version     bool
 }
 
+//go:embed description.txt
+var textVersion []byte
+
+
 func main() {
-	version := "v0.3.6 🫐 [blueberries]"
+	version := string(textVersion)
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -104,8 +109,6 @@ func main() {
 		var value map[string][]string
 
 		json.Unmarshal([]byte(envStr), &value)
-
-		//envBuff, _ := json.Marshal(envStr)
 
 		bodyRequest := StartFunctionParameters{
 			Name:        flags.name,

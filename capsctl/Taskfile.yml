@@ -1,5 +1,6 @@
 version: '3'
 
+# capsctl usages
 tasks:
 
   build-and-install-capsctl:
@@ -33,9 +34,40 @@ tasks:
           --description="hello blue deployment" \
           --path=${CAPSULE_INSTALL_PATH} \
           --stopAfter=30 \
-          --env='["MESSAGE=hello blue"]'\
+          --env='["MESSAGE=🔵","GREETING=🎉"]'\
           --wasm=${DOWNLOADED_FILE_LOCATION} \
           --url=${GITLAB_REGISTRY_URL}
+
+  call-hello-blue:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  stress-average-hello:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue
+
+
+  # TODO: if when calling there is an error, restart the service
+  # TODO: check if there is another function with anoter index?
+  # TODO: check env variables
 
   start-local-wasm-module:
     env:

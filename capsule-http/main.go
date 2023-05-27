@@ -3,12 +3,12 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"flag"
 	"fmt"
 	"os/signal"
 	"strconv"
 
-	//"strings"
 	"syscall"
 	"time"
 
@@ -21,7 +21,6 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-	// go get -u github.com/ansrivas/fiberprometheus/v2
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -38,8 +37,12 @@ type CapsuleFlags struct {
 	version         bool
 }
 
+//go:embed description.txt
+var textVersion []byte
+
 func main() {
-	version := "v0.3.6 🫐 [blueberries]"
+
+	version := string(textVersion)
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -82,7 +85,6 @@ func main() {
 	// This context will be used for function calls.
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-
 
 	handlers.StoreContext(ctx)
 
@@ -129,7 +131,7 @@ func main() {
 	// -----------------------------------
 	// Prometheus
 	// -----------------------------------
-	// ! this is experimental and subject to change 
+	// ! this is experimental and subject to change
 	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
 	prometheus := fiberprometheus.New("capsule")
 
@@ -145,8 +147,7 @@ func main() {
 	app.Post("/functions/start", handlers.StartNewCapsuleHTTPProcess)
 
 	// Start a new Capsule HTTP process, the shutdown after a delay
-	app.Post("/functions/start/shutdown", handlers.StartNewCapsuleHTTPProcessThenShutdownItAfterDelay)
-
+	//app.Post("/functions/start/shutdown", handlers.StartNewCapsuleHTTPProcessThenShutdownItAfterDelay)
 
 	// Get the list of processes
 	app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
@@ -211,15 +212,15 @@ func main() {
 		// Set a value for the last call
 		if flags.stopAfter == "" {
 			return
-		} 
+		}
 		duration, _ := strconv.ParseFloat(flags.stopAfter, 64)
 		handlers.SetLastCall(time.Now())
 		for {
 			time.Sleep(1 * time.Second)
-			if time.Since(handlers.GetLastCall()).Seconds()  >= duration  {
+			if time.Since(handlers.GetLastCall()).Seconds() >= duration {
 				stop()
 				//log.Println("👋 Bye!")
-			} 
+			}
 			//else {
 			//	log.Println("🟢 Last call since:", time.Since(handlers.GetLastCall()).Seconds())
 			//}
@@ -232,7 +233,7 @@ func main() {
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
 	stop()
-	
+
 	log.Println("💊 Capsule shutting down...", flags.wasm)
 
 	// The context is used to inform the server it has 5 seconds to finish

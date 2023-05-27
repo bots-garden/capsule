@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"flag"
 	"fmt"
 
@@ -24,8 +25,12 @@ type CapsuleFlags struct {
 	params          string
 }
 
+//go:embed description.txt
+var textVersion []byte
+
 func main() {
-	version := "v0.3.6 🫐 [blueberries]"
+
+	version := string(textVersion)
 	args := os.Args[1:]
 
 	if len(args) == 0 {
