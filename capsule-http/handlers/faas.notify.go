@@ -3,18 +3,17 @@ package handlers
 
 import (
 	"log"
-	"os"
-	"os/exec"
-	"time"
 
 	"github.com/bots-garden/capsule/capsule-http/data"
 	"github.com/gofiber/fiber/v2"
 )
 
+// NotifiedMainCapsuleHTTPProcess is triggered when
+// a Capsule HTTP child process notifies
+// the parent process (main Capsule HTTP process)
+func NotifiedMainCapsuleHTTPProcess(c *fiber.Ctx) error {
 
-// ReStartCapsuleHTTPProcess restarts an existing stopped process
-// Called by CallExternalFunction
-func ReStartCapsuleHTTPProcess(c *fiber.Ctx) error {
+	// linked to a function + revision + index
 	functionName := c.Params("function_name")
 	functionRevision := c.Params("function_revision")
 	functionIndex := c.Params("function_index") // ! default index is 0
@@ -29,6 +28,8 @@ func ReStartCapsuleHTTPProcess(c *fiber.Ctx) error {
 	// the unique key to identify a Capsule Process
 	key := functionName + "/" + functionRevision + "/" + functionIndex
 
+
+	// TODO: handle the error
 	process, err := data.GetCapsuleProcessRecord(key)
 
 	if err != nil {
@@ -37,32 +38,12 @@ func ReStartCapsuleHTTPProcess(c *fiber.Ctx) error {
 		return c.Send([]byte(err.Error()))
 	}
 
-	cmd := &exec.Cmd{
-		Path:   process.Path,
-		Args:   process.Args,
-		Stdout: os.Stdout,
-		Stderr: os.Stdout,
-	}
-	newEnv := append(os.Environ(), process.Env...)
-	cmd.Env = newEnv
-
-	err = cmd.Start()
-
-	if err != nil {
-		log.Println("🔴 Error when starting a new Capsule process:", err.Error())
-		c.Status(fiber.StatusInternalServerError)
-		return c.Send([]byte(err.Error()))
-	}
-
-	process.StartedAt = time.Now()
-
-	process.CurrentStatus = data.Started
-	process.StatusDescription = data.GetStatusLabel(data.Started)
+	process.CurrentStatus = data.Stopped
+	process.StatusDescription = data.GetStatusLabel(data.Stopped)
 
 	// Save(Update)
-	idOfTheProcess := data.SetCapsuleProcessRecord(process)
+	data.SetCapsuleProcessRecord(process)
 
 	c.Status(fiber.StatusOK)
-	return c.Send([]byte(idOfTheProcess))
+	return c.Send([]byte(key))
 }
-

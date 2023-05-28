@@ -90,6 +90,7 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 		HTTPPort:         httpPort,
 		Description:      capsuleTask.Description,
 		CurrentStatus:    data.Started,
+		StatusDescription: data.GetStatusLabel(data.Started),
 		CreatedAt:        time.Now(),
 		StartedAt:        time.Now(),
 		FinishedAt:       time.Now(),
@@ -102,7 +103,23 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 		Env:              newEnv,
 		Cmd:              cmd,
 	}
-	idOfTheProcess := data.CreateCapsuleProcessRecord(capsuleRecord)
+	// index is(will be) used with the scaling feature (it's a work in progress 🚧)
+	idOfTheProcess, _ := data.CreateCapsuleProcessRecord(capsuleRecord)
+
+	// Update the current capsule process
+	// Useful when exiting to save the status in the processes list
+	// (when using the FaaS mode)
+
+	// ! silly idea
+	/*
+	data.SetCurrentCapsuleProcess(data.CurrentCapsuleProcess{
+		FunctionName: capsuleRecord.FunctionName,
+		FunctionRevision: capsuleRecord.FunctionRevision,
+		Index: index,
+	})
+	log.Println("🎃", data.GetCurrentCapsuleProcess())
+	*/
+
 
 	c.Status(fiber.StatusOK)
 	return c.Send([]byte(idOfTheProcess))

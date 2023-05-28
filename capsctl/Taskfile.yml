@@ -44,13 +44,32 @@ tasks:
       HTTP_PORT: '8080'
       DOMAIN: 'localhost'
       PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "blue"
     cmds:
       - | 
-        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue \
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
         -H 'Content-Type: text/plain; charset=utf-8' \
         -d "${DATA}"
         echo ""
         echo ""
+
+  call-hello-green:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "green"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
 
   stress-average-hello:
     env:
@@ -74,7 +93,7 @@ tasks:
         CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
         CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
         FUNCTION_NAME: "hello"
-        WASM_PACKAGE: "capsule"
+        #WASM_PACKAGE: "capsule"
         WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
     cmds:
       - | # hello-green
@@ -83,8 +102,46 @@ tasks:
 
         capsctl \
           --cmd=start \
+          --stopAfter=10 \
           --name=${FUNCTION_NAME} \
           --revision=${WASM_VERSION} \
           --description="hello green deployment" \
+          --env='["MESSAGE=🟢","GREETING=🤗"]'\
           --path=${CAPSULE_INSTALL_PATH} \
           --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}
+
+  drop-wasm-modules:
+    env:
+        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+        FUNCTION_NAME: "hello"
+        #WASM_PACKAGE: "capsule"
+        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=drop \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION}
+      - | # hello-blue
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=drop \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION}
+
+
+  processes-list:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/processes
+

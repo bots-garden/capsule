@@ -18,6 +18,7 @@ import (
 	"github.com/bots-garden/capsule-host-sdk"
 	"github.com/bots-garden/capsule/capsule-http/handlers"
 	"github.com/bots-garden/capsule/capsule-http/tools"
+	"github.com/go-resty/resty/v2"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
@@ -35,6 +36,11 @@ type CapsuleFlags struct {
 	key             string // https (key)
 	registry        string // url to the registry
 	version         bool
+	parentEndpoint  string // url to the parent endpoint (use by faas mode / main capsule process)
+	moduleName      string // functionName/revision (use by faas mode only)
+	moduleRevision  string // functionName/revision (use by faas mode only)
+
+	// faasToken?
 }
 
 //go:embed description.txt
@@ -60,6 +66,9 @@ func main() {
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
 	versionPtr := flag.Bool("version", false, "prints capsule CLI current version")
+	parentEndpointPtr := flag.String("parentEndpoint", "", "TBD 🚧/Only for FaaS mode")
+	moduleNamePtr := flag.String("moduleName", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
+	moduleRevisionPtr := flag.String("moduleRevision", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
 
 	flag.Parse()
 
@@ -79,6 +88,9 @@ func main() {
 		*keyPtr,
 		*registryPtr,
 		*versionPtr,
+		*parentEndpointPtr,
+		*moduleNamePtr,
+		*moduleRevisionPtr,
 	}
 
 	// Create context that listens for the interrupt signal from the OS.
@@ -128,9 +140,9 @@ func main() {
 	}
 	handlers.StoreWasmFile(wasmFile)
 
-	// -----------------------------------
+	// --------------------------------------------
 	// Prometheus
-	// -----------------------------------
+	// --------------------------------------------
 	// ! this is experimental and subject to change
 	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
 	prometheus := fiberprometheus.New("capsule")
@@ -140,10 +152,10 @@ func main() {
 
 	// TODO: protect these routes
 
-	// ----------------------------------------
+	// --------------------------------------------
 	// Handler to launch a new Capsule process
 	// and create a revision for a function
-	// ----------------------------------------
+	// --------------------------------------------
 	app.Post("/functions/start", handlers.StartNewCapsuleHTTPProcess)
 
 	// Start a new Capsule HTTP process, the shutdown after a delay
@@ -157,26 +169,32 @@ func main() {
 	app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", handlers.DuplicateExternalFunction)
 
 	// Stop a process
-	app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
-	app.Delete("/functions/stop/:function_name/:function_revision", handlers.StopCapsuleHTTPProcess)
-	app.Delete("/functions/stop/:function_name/:function_revision/:function_index", handlers.StopCapsuleHTTPProcess)
+	app.Delete("/functions/drop/:function_name", handlers.StopAndKillCapsuleHTTPProcess)
+	app.Delete("/functions/drop/:function_name/:function_revision", handlers.StopAndKillCapsuleHTTPProcess)
+	app.Delete("/functions/drop/:function_name/:function_revision/:function_index", handlers.StopAndKillCapsuleHTTPProcess)
 
-	// ----------------------------------------
+	// --------------------------------------------
 	// Handler to the revision of an external
 	// function
-	// ----------------------------------------
+	// --------------------------------------------
 	app.All("/functions/:function_name", handlers.CallExternalFunction)
 	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
 	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
 
-	// -----------------------------------
+	// --------------------------------------------
+	// Handler to notify the main capsule process
+	// --------------------------------------------
+	app.All("/notify/:function_name/:function_revision", handlers.NotifiedMainCapsuleHTTPProcess)
+	app.All("/notify/:function_name/:function_revision/:function_index", handlers.NotifiedMainCapsuleHTTPProcess)
+
+	// --------------------------------------------
 	// Handler to call the WASM function
-	// -----------------------------------
+	// --------------------------------------------
 	app.All("/", handlers.CallWasmFunction)
 
-	// -----------------------------------
+	// --------------------------------------------
 	// Start listening
-	// -----------------------------------
+	// --------------------------------------------
 	go func() {
 
 		var httpPort string
@@ -228,6 +246,21 @@ func main() {
 
 	}()
 
+	// It's only for debugging
+	/*
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			processes := data.GetAllCapsuleProcessRecords()
+			if len(processes) > 0 { // I'm the main process
+				for _, p := range processes {
+					fmt.Println("📳 ->", p.FunctionName, p.FunctionRevision, p.Index, p.Description, p.StatusDescription)
+				}
+			}
+		}
+	}()
+	*/
+
 	// Listen for the interrupt signal.
 	<-ctx.Done()
 
@@ -241,5 +274,19 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	log.Println("💊 Capsule stopped", flags.wasm)
+	// flags.parentEndpoint, flags.moduleName and flags.moduleRevision are set only
+	// if the process was triggered by another Capsule process with **capsctl**
+	// (faas mode)
+	log.Println("💊 Capsule stopped", flags.wasm, flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+
+	// Telling the main process that I'm exiting...
+	if flags.parentEndpoint != "" {
+		log.Println("Ⓜ️ sending notification", flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+		httpClient := resty.New()
+		_, err := httpClient.R().EnableTrace().Get(flags.parentEndpoint+"/notify/"+flags.moduleName+"/"+flags.moduleRevision)
+		if err != nil {
+			log.Println("❌ Error while sending notification:", err)
+		}
+	}
+
 }

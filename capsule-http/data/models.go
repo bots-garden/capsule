@@ -29,6 +29,7 @@ const (
 	Cancelled Status = 4
 	Stucked   Status = 5
 	Killed    Status = 6
+	Stopped   Status = 7
 )
 
 // CapsuleTask is a struct with the parameters to start a Capsule process
@@ -67,6 +68,7 @@ type CapsuleProcess struct {
 	Cmd                    *exec.Cmd `json:"-"`
 }
 
+
 // GetStatusLabel returns the status label for a given status.
 //
 // status: a Status type representing the current status of the process.
@@ -87,6 +89,8 @@ func GetStatusLabel(status Status) string {
 		return "Stucked"
 	case Killed:
 		return "Killed"
+	case Stopped:
+		return "Stopped"
 	default:
 		return "Unknown"
 	}
@@ -176,9 +180,9 @@ func SearchLastIndexOfProcessRecord(functionName, functionRevision string) int {
 //
 // process: a CapsuleProcess struct containing information about the process.
 // string: the key of the newly created CapsuleProcess record.
-func CreateCapsuleProcessRecord(process CapsuleProcess) string {
+func CreateCapsuleProcessRecord(process CapsuleProcess) (string, int) {
 	process.Index = SearchLastIndexOfProcessRecord(process.FunctionName, process.FunctionRevision) + 1
-	return SetCapsuleProcessRecord(process)
+	return SetCapsuleProcessRecord(process), process.Index
 }
 
 // GetCapsuleProcessRecord retrieves the CapsuleProcess associated with a given key.

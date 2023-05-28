@@ -10,12 +10,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-
-// StopCapsuleHTTPProcess stops the HTTP process for the given Fiber context.
+// StopAndKillCapsuleHTTPProcess stops the HTTP process for the given Fiber context.
 //
 // c: a pointer to a fiber.Ctx object representing the context of the HTTP request.
 // error: an error object that indicates whether an error occurred during the function execution.
-func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
+func StopAndKillCapsuleHTTPProcess(c *fiber.Ctx) error {
 
 	/*
 		app.Delete("/functions/stop/:function_name", handlers.StopCapsuleHTTPProcess)
@@ -37,6 +36,8 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 
 	// the unique key to identify a Capsule Process
 	key := functionName + "/" + functionRevision + "/" + functionIndex
+
+	//fmt.Println("🗑️🌍", key)
 
 	process, err := data.GetCapsuleProcessRecord(key)
 
@@ -62,8 +63,10 @@ func StopCapsuleHTTPProcess(c *fiber.Ctx) error {
 	process.CurrentStatus = data.Killed
 	deletedKey := data.SetCapsuleProcessRecord(process)
 
-	//? should I delete the record?
-	//data.DeleteCapsuleProcessRecord(key)
+	//fmt.Println("🗑️🔐", deletedKey)
+
+	// ! delete the record
+	data.DeleteCapsuleProcessRecord(key)
 
 	c.Status(fiber.StatusOK)
 	return c.Send([]byte(deletedKey))

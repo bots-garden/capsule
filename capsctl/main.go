@@ -55,7 +55,6 @@ type CapsCtlFlags struct {
 //go:embed description.txt
 var textVersion []byte
 
-
 func main() {
 	version := string(textVersion)
 	args := os.Args[1:]
@@ -102,8 +101,30 @@ func main() {
 	httpClient.SetHeader("Content-Type", "application/json; charset=utf-8")
 
 	switch what := flags.cmd; what {
+	case "launch":
+		// this is a work in progress
+		// run a first capsule instance
+		// is it useful ?
 	case "start":
-		args := []string{"", "-wasm=" + flags.wasm, "-stopAfter=" + flags.stopAfter, "-url=" + flags.url}
+		/* example:
+		   capsctl \
+		     --cmd=start \
+		     --name=${FUNCTION_NAME} \
+		     --revision=${WASM_VERSION} \
+		     --description="hello green deployment" \
+		     --path=${CAPSULE_INSTALL_PATH} \
+		     --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}
+		*/
+		args := []string{
+			"",
+			"-wasm=" + flags.wasm,
+			"-stopAfter=" + flags.stopAfter,
+			"-url=" + flags.url,
+			"-parentEndpoint=" + capsuleURI,
+			"-moduleName=" + flags.name,
+			"-moduleRevision=" + flags.revision,
+		}
+
 		envStr := `{"env":` + flags.env + `}`
 
 		var value map[string][]string
@@ -130,6 +151,34 @@ func main() {
 		fmt.Println("✅", flags.name+"/"+flags.revision, "is started")
 		// resp.String(),
 		fmt.Println("ℹ️", "url:", capsuleURI+"/functions/"+flags.name+"/"+flags.revision)
+	case "drop":
+		/* example:
+		   capsctl \
+		     --cmd=stop \
+		     --name=${FUNCTION_NAME} \
+		     --revision=${WASM_VERSION} \
+		*/
+		_, err := httpClient.R().EnableTrace().Delete(capsuleURI + "/functions/drop/" + flags.name + "/" + flags.revision)
+
+		if err != nil {
+			fmt.Println("🔴 Error when dropping a wasm module", flags.wasm, err)
+		}
+		fmt.Println("✅", flags.name+"/"+flags.revision, "is dropped")
+		// resp.String(),
+		fmt.Println("ℹ️", "url:", capsuleURI+"/functions/"+flags.name+"/"+flags.revision)
+
+	case "duplicate":
+		// this is a work in progress
+
+	case "scale":
+		// this is a work in progress
+	case "processes":
+		// this is a work in progress
+	case "publish":
+		// this is a work in progress
+
+	case "call":
+		// this is a work in progress
 
 	default:
 		fmt.Printf("🔴 Unknown command: %s\n", what)

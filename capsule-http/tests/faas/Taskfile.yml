@@ -267,7 +267,6 @@ tasks:
         EOF
 
 
-
   call-hello-functions:
     env:
       DATA: 'Bob Morane'
