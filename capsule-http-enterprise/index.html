@@ -12,20 +12,18 @@
         <meta name="author" content="Philippe Charrière (@k33g)">
       
       
-        <link rel="canonical" href="https://bots-garden.github.io/capsule/docker-capsule-http/">
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/capsule-http-enterprise/">
       
       
-        <link rel="prev" href="../host-functions-intro/">
+        <link rel="prev" href="../capsule-http-faas-mode/">
       
-      
-        <link rel="next" href="../capsule-http-faas-mode/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.9">
     
     
       
-        <title>🐳 Capsule HTTP Docker image - Capsule</title>
+        <title>🏭 Capsule HTTP Enterprise - Capsule</title>
       
     
     
@@ -73,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capsule-http-docker-image" class="md-skip">
+        <a href="#capsule-http-enterprise" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🐳 Capsule HTTP Docker image
+              🏭 Capsule HTTP Enterprise
             
           </span>
         </div>
@@ -339,59 +337,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          🐳 Capsule HTTP Docker image
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../docker-capsule-http/" class="md-nav__link">
         🐳 Capsule HTTP Docker image
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-use-it" class="md-nav__link">
-    How to use it
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dockerize-capsule-http-and-a-wasm-module" class="md-nav__link">
-    Dockerize Capsule HTTP and a WASM module
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -417,11 +367,21 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../capsule-http-enterprise/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         🏭 Capsule HTTP Enterprise
       </a>
+      
     </li>
   
 
@@ -446,28 +406,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-use-it" class="md-nav__link">
-    How to use it
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dockerize-capsule-http-and-a-wasm-module" class="md-nav__link">
-    Dockerize Capsule HTTP and a WASM module
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -484,81 +422,10 @@
   
 
 
-<h1 id="capsule-http-docker-image">🐳 Capsule HTTP Docker image</h1>
-<div class="admonition info">
-<p class="admonition-title">Capsule HTTP Docker images v0.3.7 🥦 [broccoli]</p>
-<ul>
-<li><code>botsgarden/capsule-http-linux-arm64:0.3.7</code></li>
-<li><code>botsgarden/capsule-http-linux-amd64:0.3.7</code></li>
-<li><code>botsgarden/capsule-http-darwin-arm64:0.3.7</code></li>
-<li><code>botsgarden/capsule-http-darwin-amd64:0.3.7</code></li>
-</ul>
-</div>
+<h1 id="capsule-http-enterprise">🏭 Capsule HTTP Enterprise</h1>
 <blockquote>
-<p>https://hub.docker.com/repositories/botsgarden</p>
+<p>🚧 stay tuned for new features</p>
 </blockquote>
-<h2 id="how-to-use-it">How to use it</h2>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">GOOS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span>
-<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nv">GOARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;0.3.7&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;botsgarden/capsule-http-</span><span class="si">${</span><span class="nv">GOOS</span><span class="si">}</span><span class="s2">-</span><span class="si">${</span><span class="nv">GOARCH</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/functions/hello-world:/app<span class="w"> </span>--rm<span class="w"> </span><span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">IMAGE_TAG</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">  </span>/capsule-http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span>--wasm<span class="o">=</span>./app/hello-world.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">    </span>--httpPort<span class="o">=</span><span class="m">8080</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="dockerize-capsule-http-and-a-wasm-module">Dockerize Capsule HTTP and a WASM module</h2>
-<p>Create a new <code>Dockerfile</code>:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
-<span class="normal"><a href="#__codelineno-1-2">2</a></span>
-<span class="normal"><a href="#__codelineno-1-3">3</a></span>
-<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">botsgarden/capsule-http-linux-arm64:0.3.7</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">COPY</span><span class="w"> </span>hello-world.wasm<span class="w"> </span>.
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/capsule-http&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--wasm=./hello-world.wasm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--httpPort=8080&quot;</span><span class="p">]</span>
-</code></pre></div></td></tr></table></div>
-<p>Build the image:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
-<span class="normal"><a href="#__codelineno-2-2">2</a></span>
-<span class="normal"><a href="#__codelineno-2-3">3</a></span>
-<span class="normal"><a href="#__codelineno-2-4">4</a></span>
-<span class="normal"><a href="#__codelineno-2-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;demo-capsule-http&quot;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a>docker<span class="w"> </span>login<span class="w"> </span>-u<span class="w"> </span><span class="si">${</span><span class="nv">DOCKER_USER</span><span class="si">}</span><span class="w"> </span>-p<span class="w"> </span><span class="si">${</span><span class="nv">DOCKER_PWD</span><span class="si">}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span><span class="w"> </span>.<span class="w"> </span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a>docker<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>
-</code></pre></div></td></tr></table></div>
-<p>Run the container:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
-<span class="normal"><a href="#__codelineno-3-2">2</a></span>
-<span class="normal"><a href="#__codelineno-3-3">3</a></span>
-<span class="normal"><a href="#__codelineno-3-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;demo-capsule-http&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">  </span>--rm<span class="w"> </span><span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>
-</code></pre></div></td></tr></table></div>
-<p>Call the service:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
-<span class="normal"><a href="#__codelineno-4-2">2</a></span>
-<span class="normal"><a href="#__codelineno-4-3">3</a></span>
-<span class="normal"><a href="#__codelineno-4-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nv">JSON_DATA</span><span class="o">=</span><span class="s1">&#39;{&quot;name&quot;:&quot;Bob Morane&quot;,&quot;age&quot;:42}&#39;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JSON_DATA</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div></td></tr></table></div>
 
 
 

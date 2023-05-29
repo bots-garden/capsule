@@ -18,7 +18,7 @@
         <link rel="prev" href="../getting-started-cli/">
       
       
-        <link rel="next" href="../host-functions-intro/">
+        <link rel="next" href="../getting-started-http-ngrok/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.9">
@@ -348,6 +348,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-http-ngrok/" class="md-nav__link">
+        Capsule HTTP and Ngrok
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-flags/" class="md-nav__link">
+        Capsule HTTP flags
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -379,6 +407,36 @@
     <li class="md-nav__item">
       <a href="../docker-capsule-http/" class="md-nav__link">
         🐳 Capsule HTTP Docker image
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-faas-mode/" class="md-nav__link">
+        🚀 Capsule HTTP FaaS mode
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-enterprise/" class="md-nav__link">
+        🏭 Capsule HTTP Enterprise
       </a>
     </li>
   
@@ -461,7 +519,7 @@
 <p>First, download the last version of the Capsule HTTP server for the appropriate OS &amp; ARCH (and release version):</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
-<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.6&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.7&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule-http<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-http-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule-http
 </code></pre></div></td></tr></table></div>
@@ -493,6 +551,21 @@
 <a id="__codelineno-3-3" name="__codelineno-3-3"></a>--wasm<span class="o">=</span>./tmp/hello-world.wasm<span class="w"> </span>
 <a id="__codelineno-3-4" name="__codelineno-3-4"></a>--httpPort<span class="o">=</span><span class="m">8080</span>
 </code></pre></div></td></tr></table></div></p>
+<blockquote>
+<p>👋 if you need to set an authentication header you can use these flags: <code>--authHeaderName</code> and <code>--authHeaderValue</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>--url<span class="o">=</span><span class="si">${</span><span class="nv">DOWNLOAD_URL</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>--authHeaderName<span class="o">=</span><span class="s2">&quot;PRIVATE-TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>--authHeaderValue<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a>--wasm<span class="o">=</span><span class="si">${</span><span class="nv">WASM_FILE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a>--httpPort<span class="o">=</span><span class="si">${</span><span class="nv">HTTP_PORT</span><span class="si">}</span>
+</code></pre></div></td></tr></table></div>
+</blockquote>
 <h2 id="monitoring-the-service">Monitoring the service</h2>
 <p>Capsule HTTP server exposes a REST API that can be used to monitor the service. It's a Prometheus route. You only need to call the <code>/metrics</code> endpoint.</p>
 <blockquote>
