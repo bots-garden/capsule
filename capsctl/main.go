@@ -43,6 +43,7 @@ type CapsCtlFlags struct {
 	cmd         string
 	name        string
 	revision    string
+	newRevision string
 	description string
 	wasm        string // wasm file location
 	stopAfter   string // stop after a delay if not used
@@ -68,6 +69,7 @@ func main() {
 	cmdPtr := flag.String("cmd", "", "CapsCtl command")
 	namePtr := flag.String("name", "", "function/module name")
 	revisionPtr := flag.String("revision", "", "function/module revision")
+	newRevisionPtr := flag.String("newRevision", "", "used when duplicationg an existing revision")
 	description := flag.String("description", "", "function/module description")
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
 	stopAfterPtr := flag.String("stopAfter", "", "stop after n seconds if not used")
@@ -87,6 +89,7 @@ func main() {
 		*cmdPtr,
 		*namePtr,
 		*revisionPtr,
+		*newRevisionPtr,
 		*description,
 		*wasmFilePathPtr,
 		*stopAfterPtr,
@@ -100,11 +103,16 @@ func main() {
 	capsuleURI := GetEnv("CAPSULE_MAIN_PROCESS_URL", "http://localhost:8080")
 	httpClient.SetHeader("Content-Type", "application/json; charset=utf-8")
 
+	capsuleFaasToken := GetEnv("CAPSULE_FAAS_TOKEN", "")
+	httpClient.SetHeader("CAPSULE_FAAS_TOKEN", capsuleFaasToken)
+	
+
 	switch what := flags.cmd; what {
 	case "launch":
 		// this is a work in progress
 		// run a first capsule instance
 		// is it useful ?
+		// TODO: plan to add a flag "faas" to Capsule HTTP
 	case "start":
 		/* example:
 		   capsctl \
@@ -118,7 +126,7 @@ func main() {
 		args := []string{
 			"",
 			"-wasm=" + flags.wasm,
-			"-stopAfter=" + flags.stopAfter,
+			"-stopAfter=" + flags.stopAfter, // if the module is not used, it will be stopped after n seconds
 			"-url=" + flags.url,
 			"-parentEndpoint=" + capsuleURI,
 			"-moduleName=" + flags.name,
@@ -143,14 +151,22 @@ func main() {
 		buff, _ := json.Marshal(bodyRequest)
 		strBodyRequest := string(buff)
 
-		_, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Post(capsuleURI + "/functions/start")
+		resp, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Post(capsuleURI + "/functions/start")
 
 		if err != nil {
 			fmt.Println("🔴 Error when starting a wasm module", flags.wasm, err)
+			return
 		}
+		if resp.StatusCode() == 404 {
+			fmt.Println("🤚", resp.String(), resp.Status())
+			fmt.Println("🔴 It faas mode not activated or bad token")
+			return
+		}
+
 		fmt.Println("✅", flags.name+"/"+flags.revision, "is started")
-		// resp.String(),
+		
 		fmt.Println("ℹ️", "url:", capsuleURI+"/functions/"+flags.name+"/"+flags.revision)
+
 	case "drop":
 		/* example:
 		   capsctl \
@@ -158,27 +174,79 @@ func main() {
 		     --name=${FUNCTION_NAME} \
 		     --revision=${WASM_VERSION} \
 		*/
-		_, err := httpClient.R().EnableTrace().Delete(capsuleURI + "/functions/drop/" + flags.name + "/" + flags.revision)
+		resp, err := httpClient.R().EnableTrace().Delete(capsuleURI + "/functions/drop/" + flags.name + "/" + flags.revision)
 
 		if err != nil {
 			fmt.Println("🔴 Error when dropping a wasm module", flags.wasm, err)
 		}
+		if resp.StatusCode() == 404 {
+			fmt.Println("🤚", resp.String(), resp.Status())
+			fmt.Println("🔴 It faas mode not activated or bad token")
+			return
+		}
+
 		fmt.Println("✅", flags.name+"/"+flags.revision, "is dropped")
-		// resp.String(),
 		fmt.Println("ℹ️", "url:", capsuleURI+"/functions/"+flags.name+"/"+flags.revision)
 
-	case "duplicate":
-		// this is a work in progress
+	case "duplicate": // fork?
+		/* example:
+		   capsctl \
+		     --cmd=duplicate \
+		     --name=${FUNCTION_NAME} \
+		     --revision=${WASM_VERSION} \
+			 --newRevision=saved_${WASM_VERSION}
+		*/
+		// !------------------------------------------------
+		// ! It's the same process (from a PID perspective)
+		// !------------------------------------------------
+		// It's like creating a revision with the same module
+		// curl -X PUT http://localhost:8080/functions/duplicate/hello-world/default/saved
+		// then call the duplicate:
+		/*
+			JSON_DATA='{"name":"Bob Morane 🤣","age":42}'
+
+			curl -X POST http://localhost:8080/functions/hello-world/saved \
+					-H 'Content-Type: application/json; charset=utf-8' \
+					-d "${JSON_DATA}"
+		*/
+		
+		/* kind of 🔵🟢 deployment (to be tested)
+			duplicate the current "defautl" revision to "saved" revision
+			duplicate the "blue" revision to "default"
+			drop the "saved" revision
+		*/
+
+		resp, err := httpClient.R().EnableTrace().
+			Put(capsuleURI +
+				"/functions/duplicate/" +
+				flags.name + "/" +
+				flags.revision + "/" +
+				flags.newRevision)
+
+		if err != nil {
+			fmt.Println("🔴 Error when duplication a wasm module revision", flags.wasm, err)
+		}
+
+		if resp.StatusCode() == 404 {
+			fmt.Println("🤚", resp.String(), resp.Status())
+			fmt.Println("🔴 faas mode not activated or bad token")
+			return
+		}
+
+		fmt.Println("✅", flags.name+"/"+flags.revision, "is duplicated to", flags.newRevision)
+		fmt.Println("ℹ️", "url:", capsuleURI+"/functions/"+flags.name+"/"+flags.newRevision)
 
 	case "scale":
 		// this is a work in progress
 	case "processes":
 		// this is a work in progress
+
 	case "publish":
 		// this is a work in progress
+		// publish a wasm file to a store (eg: GitLab registry, wapm.io, ...)
 
 	case "call":
-		// this is a work in progress
+		fmt.Println("🙏 Please, use curl to call a function")
 
 	default:
 		fmt.Printf("🔴 Unknown command: %s\n", what)

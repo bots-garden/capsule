@@ -110,9 +110,10 @@ tasks:
     env:
       HTTP_PORT: '8080'
       WASM_FILE: './functions/index-page/index-page.wasm'
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
     cmds:
-      - | 
-        capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+      - | # use --faas=true to activate the faas mode of Capsule HTTP
+        capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} --faas=true
         # you can use http://capsule-ide.local:8080/
 
   launch-hello-functions:

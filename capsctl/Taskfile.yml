@@ -14,6 +14,7 @@ tasks:
 
   download-and-start-wasm-module:
     env:
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
       CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
       CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
       GITLAB_WASM_PROJECT_ID: "45020306"
@@ -37,6 +38,58 @@ tasks:
           --env='["MESSAGE=🔵","GREETING=🎉"]'\
           --wasm=${DOWNLOADED_FILE_LOCATION} \
           --url=${GITLAB_REGISTRY_URL}
+
+  start-local-wasm-module:
+    env:
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+        FUNCTION_NAME: "hello"
+        #WASM_PACKAGE: "capsule"
+        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=start \
+          --stopAfter=10 \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --description="hello green deployment" \
+          --env='["MESSAGE=🟢","GREETING=🤗"]'\
+          --path=${CAPSULE_INSTALL_PATH} \
+          --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}
+
+  duplicate-local-wasm-module:
+    env:
+        FUNCTION_NAME: "hello"
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+
+        capsctl \
+          --cmd=duplicate \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --newRevision=saved_${WASM_VERSION}
+
+  duplicate-blue-wasm-module:
+    env:
+        FUNCTION_NAME: "hello"
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="blue"
+
+        capsctl \
+          --cmd=duplicate \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --newRevision=saved_${WASM_VERSION}
+
 
   call-hello-blue:
     env:
@@ -70,6 +123,38 @@ tasks:
         echo ""
         echo ""
 
+  call-hello-saved_green:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "saved_green"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  call-hello-saved_blue:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "saved_blue"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
 
   stress-average-hello:
     env:
@@ -81,34 +166,11 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: text/plain; charset=utf-8" \
-        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/green
 
 
-  # TODO: if when calling there is an error, restart the service
-  # TODO: check if there is another function with anoter index?
-  # TODO: check env variables
 
-  start-local-wasm-module:
-    env:
-        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
-        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
-        FUNCTION_NAME: "hello"
-        #WASM_PACKAGE: "capsule"
-        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
-    cmds:
-      - | # hello-green
-        WASM_VERSION="green"
-        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
 
-        capsctl \
-          --cmd=start \
-          --stopAfter=10 \
-          --name=${FUNCTION_NAME} \
-          --revision=${WASM_VERSION} \
-          --description="hello green deployment" \
-          --env='["MESSAGE=🟢","GREETING=🤗"]'\
-          --path=${CAPSULE_INSTALL_PATH} \
-          --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}
 
   drop-wasm-modules:
     env:

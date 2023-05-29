@@ -16,7 +16,7 @@ import (
 //
 // ! this a work in progress
 // The handler duplicate an existing function record with a different revision name
-// With the same process (it's a pointer to the same process).
+// !With the same process (it's a pointer to the same process).
 func DuplicateExternalFunction(c *fiber.Ctx) error {
 
 	functionName := c.Params("function_name")

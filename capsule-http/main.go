@@ -22,6 +22,7 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/skip"
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -39,6 +40,7 @@ type CapsuleFlags struct {
 	parentEndpoint  string // url to the parent endpoint (use by faas mode / main capsule process)
 	moduleName      string // functionName/revision (use by faas mode only)
 	moduleRevision  string // functionName/revision (use by faas mode only)
+	faas            bool
 
 	// faasToken?
 }
@@ -69,6 +71,7 @@ func main() {
 	parentEndpointPtr := flag.String("parentEndpoint", "", "TBD 🚧/Only for FaaS mode")
 	moduleNamePtr := flag.String("moduleName", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
 	moduleRevisionPtr := flag.String("moduleRevision", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
+	faasPtr := flag.Bool("faas", false, "TBD 🚧TBD 🚧/Only for FaaS mode")
 
 	flag.Parse()
 
@@ -91,6 +94,7 @@ func main() {
 		*parentEndpointPtr,
 		*moduleNamePtr,
 		*moduleRevisionPtr,
+		*faasPtr,
 	}
 
 	// Create context that listens for the interrupt signal from the OS.
@@ -152,40 +156,55 @@ func main() {
 
 	// TODO: protect these routes
 
-	// --------------------------------------------
-	// Handler to launch a new Capsule process
-	// and create a revision for a function
-	// --------------------------------------------
-	app.Post("/functions/start", handlers.StartNewCapsuleHTTPProcess)
+	if flags.faas == true {
+		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
 
-	// Start a new Capsule HTTP process, the shutdown after a delay
-	//app.Post("/functions/start/shutdown", handlers.StartNewCapsuleHTTPProcessThenShutdownItAfterDelay)
+		log.Println("🚀 faas mode activated!")
 
-	// Get the list of processes
-	app.Get("/functions/processes", handlers.GetListOfCapsuleHTTPProcesses)
+		checkToken := func(c *fiber.Ctx) bool {
+			predicate := c.Get("CAPSULE_FAAS_TOKEN") != capsuleFaasToken
+			if predicate == true {
+				log.Println("🔴🤚 FAAS mode activated, you need to set CAPSULE_FAAS_TOKEN!")
+				//c.Status(fiber.StatusUnauthorized)
+			}
+			return predicate
+		}
 
-	// TODO: do it with index too?
-	// Duplicate a process
-	app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", handlers.DuplicateExternalFunction)
+		// --------------------------------------------
+		// ! This is the FAAS mode of Capsule HTTP 🚀
+		// --------------------------------------------
+		// --------------------------------------------
+		// Handler to launch a new Capsule process
+		// and create a revision for a function
+		// --------------------------------------------
+		app.Post("/functions/start", skip.New(handlers.StartNewCapsuleHTTPProcess, checkToken))
 
-	// Stop a process
-	app.Delete("/functions/drop/:function_name", handlers.StopAndKillCapsuleHTTPProcess)
-	app.Delete("/functions/drop/:function_name/:function_revision", handlers.StopAndKillCapsuleHTTPProcess)
-	app.Delete("/functions/drop/:function_name/:function_revision/:function_index", handlers.StopAndKillCapsuleHTTPProcess)
+		// Get the list of processes
+		app.Get("/functions/processes", skip.New(handlers.GetListOfCapsuleHTTPProcesses, checkToken))
 
-	// --------------------------------------------
-	// Handler to the revision of an external
-	// function
-	// --------------------------------------------
-	app.All("/functions/:function_name", handlers.CallExternalFunction)
-	app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
-	app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
+		// ???: do it with index too?
+		// Duplicate a process
+		app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", skip.New(handlers.DuplicateExternalFunction, checkToken))
 
-	// --------------------------------------------
-	// Handler to notify the main capsule process
-	// --------------------------------------------
-	app.All("/notify/:function_name/:function_revision", handlers.NotifiedMainCapsuleHTTPProcess)
-	app.All("/notify/:function_name/:function_revision/:function_index", handlers.NotifiedMainCapsuleHTTPProcess)
+		// Stop a process
+		app.Delete("/functions/drop/:function_name", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+		app.Delete("/functions/drop/:function_name/:function_revision", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+		app.Delete("/functions/drop/:function_name/:function_revision/:function_index", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+
+		// --------------------------------------------
+		// Handler to call the revision of an external
+		// function (module)
+		// --------------------------------------------
+		app.All("/functions/:function_name", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
+
+		// --------------------------------------------
+		// Handler to notify the main capsule process
+		// --------------------------------------------
+		app.All("/notify/:function_name/:function_revision", handlers.NotifiedMainCapsuleHTTPProcess)
+		app.All("/notify/:function_name/:function_revision/:function_index", handlers.NotifiedMainCapsuleHTTPProcess)
+	}
 
 	// --------------------------------------------
 	// Handler to call the WASM function
@@ -237,28 +256,24 @@ func main() {
 			time.Sleep(1 * time.Second)
 			if time.Since(handlers.GetLastCall()).Seconds() >= duration {
 				stop()
-				//log.Println("👋 Bye!")
 			}
-			//else {
-			//	log.Println("🟢 Last call since:", time.Since(handlers.GetLastCall()).Seconds())
-			//}
 		}
 
 	}()
 
 	// It's only for debugging
 	/*
-	go func() {
-		for {
-			time.Sleep(1 * time.Second)
-			processes := data.GetAllCapsuleProcessRecords()
-			if len(processes) > 0 { // I'm the main process
-				for _, p := range processes {
-					fmt.Println("📳 ->", p.FunctionName, p.FunctionRevision, p.Index, p.Description, p.StatusDescription)
+		go func() {
+			for {
+				time.Sleep(1 * time.Second)
+				processes := data.GetAllCapsuleProcessRecords()
+				if len(processes) > 0 { // I'm the main process
+					for _, p := range processes {
+						fmt.Println("📳 ->", p.FunctionName, p.FunctionRevision, p.Index, p.Description, p.StatusDescription)
+					}
 				}
 			}
-		}
-	}()
+		}()
 	*/
 
 	// Listen for the interrupt signal.
@@ -274,19 +289,24 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// flags.parentEndpoint, flags.moduleName and flags.moduleRevision are set only
-	// if the process was triggered by another Capsule process with **capsctl**
-	// (faas mode)
-	log.Println("💊 Capsule stopped", flags.wasm, flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+	if flags.faas == true {
 
-	// Telling the main process that I'm exiting...
-	if flags.parentEndpoint != "" {
-		log.Println("Ⓜ️ sending notification", flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
-		httpClient := resty.New()
-		_, err := httpClient.R().EnableTrace().Get(flags.parentEndpoint+"/notify/"+flags.moduleName+"/"+flags.moduleRevision)
-		if err != nil {
-			log.Println("❌ Error while sending notification:", err)
+		// flags.parentEndpoint, flags.moduleName and flags.moduleRevision are set only
+		// if the process was triggered by another Capsule process with **capsctl**
+		// (faas mode)
+		log.Println("💊 Capsule stopped", flags.wasm, flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+
+		// Telling the main process that I'm exiting...
+		if flags.parentEndpoint != "" {
+			log.Println("Ⓜ️ sending notification", flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+			httpClient := resty.New()
+			_, err := httpClient.R().EnableTrace().Get(flags.parentEndpoint + "/notify/" + flags.moduleName + "/" + flags.moduleRevision)
+			if err != nil {
+				log.Println("❌ Error while sending notification:", err)
+			}
 		}
+	} else {
+		log.Println("💊 Capsule stopped", flags.wasm)
 	}
 
 }
