@@ -3,38 +3,33 @@ package main
 
 import (
 	"context"
-	"encoding/json"
+	_ "embed"
 	"flag"
 	"fmt"
 	"os/signal"
-	"path/filepath"
-	"strings"
+	"strconv"
 
-	//"strings"
 	"syscall"
 	"time"
 
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/bots-garden/capsule-host-sdk"
-	"github.com/bots-garden/capsule-host-sdk/models"
+	"github.com/bots-garden/capsule/capsule-http/handlers"
 	"github.com/bots-garden/capsule/capsule-http/tools"
+	"github.com/go-resty/resty/v2"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-
-	// go get -u github.com/ansrivas/fiberprometheus/v2
-
-	"golang.ngrok.com/ngrok"
-	"golang.ngrok.com/ngrok/config"
+	"github.com/gofiber/fiber/v2/middleware/skip"
 )
 
 // CapsuleFlags handles params for the capsule-http command
 type CapsuleFlags struct {
 	wasm            string // wasm file location
 	httpPort        string
+	stopAfter       string // stop after a delay if not used
 	url             string // to download the wasm file
 	authHeaderName  string // if needed for authentication
 	authHeaderValue string // if needed for authentication
@@ -42,10 +37,20 @@ type CapsuleFlags struct {
 	key             string // https (key)
 	registry        string // url to the registry
 	version         bool
+	parentEndpoint  string // url to the parent endpoint (use by faas mode / main capsule process)
+	moduleName      string // functionName/revision (use by faas mode only)
+	moduleRevision  string // functionName/revision (use by faas mode only)
+	faas            bool
+
+	// faasToken?
 }
 
+//go:embed description.txt
+var textVersion []byte
+
 func main() {
-	version := "v0.3.6 🫐 [blueberries]"
+
+	version := string(textVersion)
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -54,7 +59,8 @@ func main() {
 	}
 	// Capsule flags
 	wasmFilePathPtr := flag.String("wasm", "", "wasm module file path")
-	httpPortPtr := flag.String("httpPort", "8080", "http port")
+	httpPortPtr := flag.String("httpPort", "", "http port")
+	stopAfterPtr := flag.String("stopAfter", "", "stop after n seconds if not used")
 	wasmFileURLPtr := flag.String("url", "", "url for downloading wasm module file")
 	authHeaderNamePtr := flag.String("authHeaderName", "", "header authentication for downloading wasm module file")
 	authHeaderValuePtr := flag.String("authHeaderValue", "", "header authentication value for downloading wasm module file")
@@ -62,6 +68,10 @@ func main() {
 	crtPtr := flag.String("crt", "", "certificate")
 	keyPtr := flag.String("key", "", "key")
 	versionPtr := flag.Bool("version", false, "prints capsule CLI current version")
+	parentEndpointPtr := flag.String("parentEndpoint", "", "TBD 🚧/Only for FaaS mode")
+	moduleNamePtr := flag.String("moduleName", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
+	moduleRevisionPtr := flag.String("moduleRevision", "", "TBD 🚧TBD 🚧/Only for FaaS mode")
+	faasPtr := flag.Bool("faas", false, "TBD 🚧TBD 🚧/Only for FaaS mode")
 
 	flag.Parse()
 
@@ -73,6 +83,7 @@ func main() {
 	flags := CapsuleFlags{
 		*wasmFilePathPtr,
 		*httpPortPtr,
+		*stopAfterPtr,
 		*wasmFileURLPtr,
 		*authHeaderNamePtr,
 		*authHeaderValuePtr,
@@ -80,6 +91,10 @@ func main() {
 		*keyPtr,
 		*registryPtr,
 		*versionPtr,
+		*parentEndpointPtr,
+		*moduleNamePtr,
+		*moduleRevisionPtr,
+		*faasPtr,
 	}
 
 	// Create context that listens for the interrupt signal from the OS.
@@ -87,13 +102,13 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	handlers.StoreContext(ctx)
+
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		//DisableKeepalive:      true,
 		//Concurrency:           100000,
 	})
-
-	httpPort := flags.httpPort
 
 	// Create a new WebAssembly Runtime.
 	runtime := capsule.GetRuntime(ctx)
@@ -117,199 +132,181 @@ func main() {
 	// This closes everything this Runtime created.
 	defer runtime.Close(ctx)
 
+	handlers.StoreRuntime(runtime)
+
 	// -----------------------------------
 	// Load the WebAssembly module
 	// -----------------------------------
 	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
 	if err != nil {
-		log.Println("❌ Error while loading the wasm file", err)
+		log.Println("❌📝 Error while loading the wasm file", err)
 		os.Exit(1)
 	}
+	handlers.StoreWasmFile(wasmFile)
 
-	// -----------------------------------
+	// --------------------------------------------
 	// Prometheus
-	// -----------------------------------
+	// --------------------------------------------
+	// ! this is experimental and subject to change
 	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
 	prometheus := fiberprometheus.New("capsule")
 
 	prometheus.RegisterAt(app, "/metrics")
 	app.Use(prometheus.Middleware)
 
-	// -----------------------------------
+	// TODO: protect these routes
+
+	if flags.faas == true {
+		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
+
+		log.Println("🚀 faas mode activated!")
+
+		checkToken := func(c *fiber.Ctx) bool {
+			predicate := c.Get("CAPSULE_FAAS_TOKEN") != capsuleFaasToken
+			if predicate == true {
+				log.Println("🔴🤚 FAAS mode activated, you need to set CAPSULE_FAAS_TOKEN!")
+				//c.Status(fiber.StatusUnauthorized)
+			}
+			return predicate
+		}
+
+		// --------------------------------------------
+		// ! This is the FAAS mode of Capsule HTTP 🚀
+		// --------------------------------------------
+		// --------------------------------------------
+		// Handler to launch a new Capsule process
+		// and create a revision for a function
+		// --------------------------------------------
+		app.Post("/functions/start", skip.New(handlers.StartNewCapsuleHTTPProcess, checkToken))
+
+		// Get the list of processes
+		app.Get("/functions/processes", skip.New(handlers.GetListOfCapsuleHTTPProcesses, checkToken))
+
+		// ???: do it with index too?
+		// Duplicate a process
+		app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", skip.New(handlers.DuplicateExternalFunction, checkToken))
+
+		// Stop a process
+		app.Delete("/functions/drop/:function_name", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+		app.Delete("/functions/drop/:function_name/:function_revision", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+		app.Delete("/functions/drop/:function_name/:function_revision/:function_index", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
+
+		// --------------------------------------------
+		// Handler to call the revision of an external
+		// function (module)
+		// --------------------------------------------
+		app.All("/functions/:function_name", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
+		app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
+
+		// --------------------------------------------
+		// Handler to notify the main capsule process
+		// --------------------------------------------
+		app.All("/notify/:function_name/:function_revision", handlers.NotifiedMainCapsuleHTTPProcess)
+		app.All("/notify/:function_name/:function_revision/:function_index", handlers.NotifiedMainCapsuleHTTPProcess)
+	}
+
+	// --------------------------------------------
 	// Handler to call the WASM function
-	// -----------------------------------
-	// TODO: protect routes
-	// TODO: externalise the handler
-	// TODO: create helpers to simplify the code
-	app.All("/", func(c *fiber.Ctx) error {
-		mod, err := runtime.Instantiate(ctx, wasmFile)
-		if err != nil {
-			log.Println("❌ Error with the module instance", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
+	// --------------------------------------------
+	app.All("/", handlers.CallWasmFunction)
 
-		// Get the reference to the WebAssembly function: "callHandle"
-		//! callHandle is exported by the Capsule plugin
-		handleFunction := capsule.GetHandleHTTP(mod)
-
-		// build headers JSON string
-		var headers []string
-		for field, value := range c.GetReqHeaders() {
-			headers = append(headers, `"`+field+`":"`+value+`"`)
-		}
-		headersStr := strings.Join(headers[:], ",")
-
-		requestParam := models.Request{
-			Body: string(c.Body()),
-			//JSONBody: string(c.Body()), //! to use in the future
-			//TextBody: string(c.Body()), //! to use in the future
-			URI:     c.Request().URI().String(),
-			Method:  c.Method(),
-			Headers: headersStr,
-		}
-
-		JSONData, err := json.Marshal(requestParam)
-
-		if err != nil {
-			log.Println("❌ Error when reading the request parameter", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
-
-		JSONDataPos, JSONDataSize, err := capsule.CopyDataToMemory(ctx, mod, JSONData)
-		if err != nil {
-			log.Println("❌ Error when copying data to memory", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
-
-		// Now, we can call "callHandleHTTP"
-		// the result type is []uint64
-		result, err := handleFunction.Call(ctx,
-			JSONDataPos, JSONDataSize)
-		if err != nil {
-			log.Println("❌ Error when calling callHandleHTTP", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
-
-		responsePos, responseSize := capsule.UnPackPosSize(result[0])
-
-		responseBuffer, err := capsule.ReadDataFromMemory(mod, responsePos, responseSize)
-		if err != nil {
-			log.Println("❌ Error when reading the memory", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
-
-		responseFromWasmGuest, err := capsule.Result(responseBuffer)
-		if err != nil {
-			log.Println("❌ Error when getting the Result", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(err.Error())
-		}
-
-		// unmarshal the response
-		var response models.Response
-		errMarshal := json.Unmarshal(responseFromWasmGuest, &response)
-		if errMarshal != nil {
-			log.Println("❌ Error when unmarshal the response", errMarshal)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(errMarshal.Error())
-		}
-
-		c.Status(response.StatusCode)
-
-		// set headers
-		for key, value := range response.Headers {
-			c.Set(key, value)
-		}
-
-		if len(response.TextBody) > 0 {
-			// send text body
-			return c.SendString(response.TextBody)
-		}
-		// send JSON body
-		jsonStr, err := json.Marshal(response.JSONBody)
-		if err != nil {
-			log.Println("❌ Error when marshal the body", err)
-			c.Status(http.StatusInternalServerError) // .🤔
-			return c.SendString(errMarshal.Error())
-		}
-
-		return c.Send(jsonStr)
-
-	})
-
-	// -----------------------------------
+	// --------------------------------------------
 	// Start listening
-	// -----------------------------------
+	// --------------------------------------------
 	go func() {
+
+		var httpPort string
+
+		if flags.httpPort == "" {
+			httpPort = tools.GetNewHTTPPort()
+		} else {
+			httpPort = flags.httpPort
+		}
+
+		log.Println("📦 wasm module loaded:", flags.wasm)
 
 		if flags.crt != "" {
 			// certs/capsule.local.crt
 			// certs/capsule.local.key
 			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🔐🌍")
+
 			app.ListenTLS(":"+httpPort, flags.crt, flags.key)
 
 		} else {
 			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
-			
-			// Ngrok support: https://ngrok.com
-			// https://ngrok.com/blog-post/ngrok-go
-			if ngrok.WithAuthtokenFromEnv() != nil {
-				tun, err := ngrok.Listen(ctx,
-					config.HTTPEndpoint(),
-					ngrok.WithAuthtokenFromEnv(),
-				)
-				if err != nil {
-					log.Println("❌ Error while creating tunnel:", err)
-				}
-				
-				log.Println("👋 Ngrok tunnel created:", tun.URL())
-				
-				ex, err := os.Executable()
-				if err != nil {
-					log.Fatal("❌ Error after creating tunnel:", err)
-				}
-				exPath := filepath.Dir(ex)
 
-				f, err := os.Create(exPath + "/ngrok.url")
-
-				if err != nil {
-					log.Fatal("❌ Error when creating ngrok.url:", err)
-
-				}
-				
-				defer f.Close()
-			
-				_, errWrite := f.WriteString(tun.URL())
-			
-				if errWrite != nil {
-					log.Fatal("❌ Error when writing ngrok.url:", errWrite)
-				}
-
-				log.Println("🤚 Ngrok URL:", exPath+ "/ngrok.url")
-
-				app.Listener(tun)
+			if tools.GetEnv("NGROK_AUTH_TOKEN", "") != "" {
+				tools.ActivateNgrokTunnel(ctx, app)
 			}
 
 			app.Listen(":" + httpPort)
+
 		}
 	}()
+
+	go func() {
+		// Set a value for the last call
+		if flags.stopAfter == "" {
+			return
+		}
+		duration, _ := strconv.ParseFloat(flags.stopAfter, 64)
+		handlers.SetLastCall(time.Now())
+		for {
+			time.Sleep(1 * time.Second)
+			if time.Since(handlers.GetLastCall()).Seconds() >= duration {
+				stop()
+			}
+		}
+
+	}()
+
+	// It's only for debugging
+	/*
+		go func() {
+			for {
+				time.Sleep(1 * time.Second)
+				processes := data.GetAllCapsuleProcessRecords()
+				if len(processes) > 0 { // I'm the main process
+					for _, p := range processes {
+						fmt.Println("📳 ->", p.FunctionName, p.FunctionRevision, p.Index, p.Description, p.StatusDescription)
+					}
+				}
+			}
+		}()
+	*/
 
 	// Listen for the interrupt signal.
 	<-ctx.Done()
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
 	stop()
-	log.Println("💊 Capsule shutting down gracefully...")
+
+	log.Println("💊 Capsule shutting down...", flags.wasm)
 
 	// The context is used to inform the server it has 5 seconds to finish
 	// the request it is currently handling
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	log.Println("💊 Capsule exiting...")
+	if flags.faas == true {
+
+		// flags.parentEndpoint, flags.moduleName and flags.moduleRevision are set only
+		// if the process was triggered by another Capsule process with **capsctl**
+		// (faas mode)
+		log.Println("💊 Capsule stopped", flags.wasm, flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+
+		// Telling the main process that I'm exiting...
+		if flags.parentEndpoint != "" {
+			log.Println("Ⓜ️ sending notification", flags.parentEndpoint, flags.moduleName, flags.moduleRevision)
+			httpClient := resty.New()
+			_, err := httpClient.R().EnableTrace().Get(flags.parentEndpoint + "/notify/" + flags.moduleName + "/" + flags.moduleRevision)
+			if err != nil {
+				log.Println("❌ Error while sending notification:", err)
+			}
+		}
+	} else {
+		log.Println("💊 Capsule stopped", flags.wasm)
+	}
+
 }

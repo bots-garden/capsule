@@ -17,8 +17,9 @@ Last release: `v0.3.6 🫐 [blueberries]`
 
 ### Update version number in Go source
 
-- `capsule-http/main.go`
-- `capsule-cli/main.go`
+- `capsule-http/description.txt`
+- `capsule-cli/description.txt`
+- `capsctl/description.txt`
 
 ### Update version tag in Dockerfile
 

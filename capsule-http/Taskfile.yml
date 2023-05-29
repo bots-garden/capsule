@@ -17,7 +17,7 @@ tasks:
     cmds:
       - |
         echo "📦 Building capsule-http..."
-        go build -o capsule-http
+        go build -ldflags="-s -w" -o capsule-http
         ls -lh capsule-http
 
   build-hello-world:    

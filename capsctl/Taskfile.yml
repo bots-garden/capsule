@@ -1,0 +1,209 @@
+version: '3'
+
+# capsctl usages
+tasks:
+
+  build-and-install-capsctl:
+    cmds:
+      - |
+        echo "📦 Building capsctl..."
+        go build -ldflags="-s -w" -o capsctl
+        ls -lh capsctl
+        sudo cp capsctl  /usr/local/bin/capsctl
+        capsctl --version
+
+  download-and-start-wasm-module:
+    env:
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+      CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+      CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      FUNCTION_NAME: "hello"
+      WASM_PACKAGE: "capsule"
+      DOWNLOAD_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/tmp"
+    cmds:
+      - | # hello-blue
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        GITLAB_REGISTRY_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+        DOWNLOADED_FILE_LOCATION="${DOWNLOAD_LOCATION}/${WASM_MODULE}"
+        
+        capsctl \
+          --cmd=start \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --description="hello blue deployment" \
+          --path=${CAPSULE_INSTALL_PATH} \
+          --stopAfter=30 \
+          --env='["MESSAGE=🔵","GREETING=🎉"]'\
+          --wasm=${DOWNLOADED_FILE_LOCATION} \
+          --url=${GITLAB_REGISTRY_URL}
+
+  start-local-wasm-module:
+    env:
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+        FUNCTION_NAME: "hello"
+        #WASM_PACKAGE: "capsule"
+        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=start \
+          --stopAfter=10 \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --description="hello green deployment" \
+          --env='["MESSAGE=🟢","GREETING=🤗"]'\
+          --path=${CAPSULE_INSTALL_PATH} \
+          --wasm=${WASM_FILES_LOCATION}/${FUNCTION_NAME}-${WASM_VERSION}/${WASM_MODULE}
+
+  duplicate-local-wasm-module:
+    env:
+        FUNCTION_NAME: "hello"
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+
+        capsctl \
+          --cmd=duplicate \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --newRevision=saved_${WASM_VERSION}
+
+  duplicate-blue-wasm-module:
+    env:
+        FUNCTION_NAME: "hello"
+        CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="blue"
+
+        capsctl \
+          --cmd=duplicate \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION} \
+          --newRevision=saved_${WASM_VERSION}
+
+
+  call-hello-blue:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "blue"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  call-hello-green:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "green"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  call-hello-saved_green:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "saved_green"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  call-hello-saved_blue:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      FUNCTION_NAME: "hello"
+      REVISION: "saved_blue"
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/${FUNCTION_NAME}/${REVISION} \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+
+  stress-average-hello:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/green
+
+
+
+
+
+  drop-wasm-modules:
+    env:
+        CAPSULE_MAIN_PROCESS_URL: "http://localhost:8080"
+        CAPSULE_INSTALL_PATH: "/usr/local/bin/capsule-http" # on the target platform
+        FUNCTION_NAME: "hello"
+        #WASM_PACKAGE: "capsule"
+        WASM_FILES_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/functions"
+    cmds:
+      - | # hello-green
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=drop \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION}
+      - | # hello-blue
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+
+        capsctl \
+          --cmd=drop \
+          --name=${FUNCTION_NAME} \
+          --revision=${WASM_VERSION}
+
+
+  processes-list:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/processes
+
