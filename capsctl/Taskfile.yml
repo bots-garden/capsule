@@ -166,11 +166,7 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: text/plain; charset=utf-8" \
-        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/green
-
-
-
-
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue
 
   drop-wasm-modules:
     env:

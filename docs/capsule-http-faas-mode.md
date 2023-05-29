@@ -35,6 +35,7 @@ capsctl --version
 ## Start Capsule HTTP FaaS mode
 
 ```bash
+CAPSULE_DOMAIN="http://localhost" \
 CAPSULE_FAAS_TOKEN="ILOVEPANDAS" \
 capsule-http \
 --wasm=./functions/index-page/index-page.wasm \
