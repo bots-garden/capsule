@@ -23,7 +23,8 @@ tasks:
     env:
       #TAG: "v0.3.4"
       #TAG: "v0.3.5"
-      TAG: "v0.3.6" # next release
+      #TAG: "v0.3.6" # next release
+      TAG: "v0.3.7" # next release (this is a pre-release)
     cmds:
       - echo "📦 Generating release..."
       - git add .
@@ -33,13 +34,13 @@ tasks:
 
   remove-tag:
     env:
-      TAG: "v0.3.6"
+      TAG: "v0.3.7"
     cmds:
       - git tag -d ${TAG}
 
   build-releases:
     env:
-      TAG: "v0.3.6"
+      TAG: "v0.3.7"
     cmds:
       - | 
         cd capsule-cli
@@ -72,7 +73,7 @@ tasks:
   build-push-docker-image:
     vars:
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.3.6"
+      IMAGE_TAG: "0.3.7"
     cmds:
       - echo "👋 {{.IMAGE_BASE_NAME}}-{{.GOOS}}-{{.GOARCH}}:{{.IMAGE_TAG}}"
       - |

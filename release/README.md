@@ -6,7 +6,7 @@
 
 👋 **be on the main branch**
 
-Last release: `v0.3.6 🫐 [blueberries]`
+Last release: `v0.3.7 🥦 [broccoli]`
 
 ### Update documentation content with the new tag
 
