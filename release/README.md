@@ -14,6 +14,7 @@ Last release: `v0.3.7 🥦 [broccoli]`
 - `docs/getting-started-http.md`
 - `docs/index.md`
 - `docs/docker-capsule-http.md`
+- `docks/capsule-http-faas-mode.md`
 
 ### Update version number in Go source
 

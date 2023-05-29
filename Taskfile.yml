@@ -60,11 +60,11 @@ tasks:
 
       - |
         cd capsctl
-        env GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o cpasctl-${TAG}-darwin-arm64
-        env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o cpasctl-${TAG}-darwin-amd64
-        env GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o cpasctl-${TAG}-linux-arm64
-        env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o cpasctl${TAG}-linux-amd64
-        mv cpasctl-${TAG}-* ../release
+        env GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o capsctl-${TAG}-darwin-arm64
+        env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o capsctl-${TAG}-darwin-amd64
+        env GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o capsctl-${TAG}-linux-arm64
+        env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o capsctl-${TAG}-linux-amd64
+        mv capsctl-${TAG}-* ../release
 
 #replace github.com/bots-garden/capsule-host-sdk  => ../../capsule-host-sdk
 #replace github.com/bots-garden/capsule-module-sdk => ../../capsule-module-sdk
