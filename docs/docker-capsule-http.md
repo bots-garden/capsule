@@ -3,8 +3,6 @@
 !!! info "Capsule HTTP Docker images v0.3.7 🥦 [broccoli]"
     - `botsgarden/capsule-http-linux-arm64:0.3.7`
     - `botsgarden/capsule-http-linux-amd64:0.3.7`
-    - `botsgarden/capsule-http-darwin-arm64:0.3.7`
-    - `botsgarden/capsule-http-darwin-amd64:0.3.7`
 
 > https://hub.docker.com/repositories/botsgarden
 

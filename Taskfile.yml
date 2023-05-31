@@ -84,9 +84,9 @@ tasks:
   build-capsule-http-for-docker:
     cmds:
       - |
-        echo "📦 Building capsule-http..."
+        echo "📦 Building capsule-http... GOOS={{.GOOS}} GOARCH={{.GOARCH}}"
         cd capsule-http
-        CGO_ENABLED=0 GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -a -installsuffix cgo -o capsule-http .
+        CGO_ENABLED=0 GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags="-s -w" -a -installsuffix cgo -o capsule-http .
         ls -lh capsule-http
 
   build-docker-capsule-http-image-darwin-arm64:
