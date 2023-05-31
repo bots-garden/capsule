@@ -21,6 +21,7 @@ tasks:
       FUNCTION_NAME: "hello"
       WASM_PACKAGE: "capsule"
       DOWNLOAD_LOCATION: "/home/ubuntu/workspaces/capsule/capsule-http/tests/faas/tmp"
+      #DOWNLOAD_LOCATION: "/Users/k33g/bots-garden/capsule-ide/workspaces/capsule/capsule-http/tests/faas/tmp"
     cmds:
       - | # hello-blue
         WASM_VERSION="blue"

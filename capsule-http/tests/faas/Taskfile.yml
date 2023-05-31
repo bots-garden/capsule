@@ -39,7 +39,7 @@ tasks:
         ls -lh *.wasm
       - | # hello-orange
         cd functions/hello-orange
-        tinygo build -o hello-orange.wasm \
+        tinygo build -o hello-orange.wasm -llvm-features "+bulk-memory" \
           -scheduler=none \
           --no-debug \
           -target wasi ./main.go 
