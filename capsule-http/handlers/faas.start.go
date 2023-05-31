@@ -17,7 +17,6 @@ import (
 // ! this a work in progress
 // It takes in a pointer to a fiber.Ctx object.
 // It returns an error object.
-// TODO: protect this route with a middleware
 func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 
 	/*
