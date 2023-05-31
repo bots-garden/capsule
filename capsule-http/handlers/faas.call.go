@@ -18,7 +18,7 @@ import (
 // c *fiber.Ctx: a pointer to a fiber context object that contains information about the http request.
 // error: returns an error if the external function call fails.
 func CallExternalFunction(c *fiber.Ctx) error {
-	// register the las call
+	// register the last call
 	SetLastCall(time.Now())
 
 	/*
@@ -41,7 +41,7 @@ func CallExternalFunction(c *fiber.Ctx) error {
 	// the unique key to identify a Capsule Process
 	key := functionName + "/" + functionRevision + "/" + functionIndex
 
-	//fmt.Println("🌍", key)
+	//log.Println("🤔 key:", key) //!DEBUG
 
 	process, err := data.GetCapsuleProcessRecord(key)
 
@@ -62,7 +62,11 @@ func CallExternalFunction(c *fiber.Ctx) error {
 	}
 
 	capsuleDomain := tools.GetEnv("CAPSULE_DOMAIN", c.Protocol()+"://"+c.IP()) // ! temporary solution... Or not
+	//log.Println("🤔 capsuleDomain:", capsuleDomain) //!DEBUG
+	
 	capsuleURI := capsuleDomain + ":" + process.HTTPPort
+	//log.Println("🤔 capsuleURI:", capsuleURI) //!DEBUG
+	
 	strBodyRequest := string(bodyRequest)
 
 	restyHeadersToFiberHeaders := func(resp *resty.Response) {
@@ -121,6 +125,8 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		return c.Send([]byte(resp.String()))
 
 	case "POST":
+		//log.Println("🤔 POST REQUEST") //!DEBUG
+
 		postRequest := func() (*resty.Response, error) {
 			resp, err := httpClient.R().EnableTrace().SetBody(strBodyRequest).Post(capsuleURI)
 			restyHeadersToFiberHeaders(resp)
