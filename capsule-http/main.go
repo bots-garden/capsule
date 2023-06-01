@@ -48,6 +48,11 @@ type CapsuleFlags struct {
 //go:embed description.txt
 var textVersion []byte
 
+// GetVersion returns the current version
+func GetVersion() string {
+	return string(textVersion)
+}
+
 func main() {
 
 	version := string(textVersion)
@@ -137,12 +142,21 @@ func main() {
 	// -----------------------------------
 	// Load the WebAssembly module
 	// -----------------------------------
-	wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
-	if err != nil {
-		log.Println("❌📝 Error while loading the wasm file", err)
-		os.Exit(1)
+	if flags.wasm != "" {
+		wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
+		if err != nil {
+			log.Println("❌📝 Error while loading the wasm file", err)
+			os.Exit(1)
+		}
+		handlers.StoreWasmFile(wasmFile)
+	} else {
+		// the wasm file is not mandatory in faas mode
+		// otherwise it's an error
+		if flags.faas != true {
+			log.Println("❌📝 Error while loading the wasm file (empty)")
+			os.Exit(1)
+		}
 	}
-	handlers.StoreWasmFile(wasmFile)
 
 	// --------------------------------------------
 	// Prometheus
@@ -154,7 +168,6 @@ func main() {
 	prometheus.RegisterAt(app, "/metrics")
 	app.Use(prometheus.Middleware)
 
-	// TODO: protect these routes
 
 	if flags.faas == true {
 		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
@@ -209,8 +222,14 @@ func main() {
 	// --------------------------------------------
 	// Handler to call the WASM function
 	// --------------------------------------------
-	app.All("/", handlers.CallWasmFunction)
-
+	if flags.faas == true && flags.wasm == "" {
+		app.All("/", func(c *fiber.Ctx) error {
+			return c.SendString("Capsule " + GetVersion() + "[faas]")
+		})
+	} else {
+		app.All("/", handlers.CallWasmFunction)
+	}
+	
 	// --------------------------------------------
 	// Start listening
 	// --------------------------------------------
