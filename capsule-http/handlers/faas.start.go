@@ -44,14 +44,15 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 	capsuleTask.Args = append(capsuleTask.Args, "-httpPort="+httpPort)
 
 	// ! this a work in progress 🚧
-	//fmt.Println("🔷", capsuleTask.Args)
-	//fmt.Println("🔷", capsuleTask.Env)
+
 	// TODO: test environment variables
 
 	// ? or use an environment variable?
 	if capsuleTask.Path == "" {
 		// Default value
 		capsuleTask.Path = "capsule-http" //! had to be installed
+		// ! this does not work
+		// ? how to get the path where I'm installed
 	}
 
 	//fmt.Println("🔷", capsuleTask.Path)
@@ -82,7 +83,6 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 	}
 
 	// Create a new record of the Capsule Process
-	// TODO: Save the process (to be implemented)
 	capsuleRecord := data.CapsuleProcess{
 		FunctionName:     capsuleTask.FunctionName,
 		FunctionRevision: capsuleTask.FunctionRevision,
@@ -104,21 +104,6 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 	}
 	// index is(will be) used with the scaling feature (it's a work in progress 🚧)
 	idOfTheProcess, _ := data.CreateCapsuleProcessRecord(capsuleRecord)
-
-	// Update the current capsule process
-	// Useful when exiting to save the status in the processes list
-	// (when using the FaaS mode)
-
-	// ! silly idea
-	/*
-	data.SetCurrentCapsuleProcess(data.CurrentCapsuleProcess{
-		FunctionName: capsuleRecord.FunctionName,
-		FunctionRevision: capsuleRecord.FunctionRevision,
-		Index: index,
-	})
-	log.Println("🎃", data.GetCurrentCapsuleProcess())
-	*/
-
 
 	c.Status(fiber.StatusOK)
 	return c.Send([]byte(idOfTheProcess))
