@@ -12,6 +12,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var mainCapsuleTaskPath string
+
+// SetMainCapsuleTaskPath sets the path where the main Capsule HTTP process is installed
+func SetMainCapsuleTaskPath(path string) {
+	mainCapsuleTaskPath = path
+}
+
+// GetMainCapsuleTaskPath returns the path where the main Capsule HTTP process is installed
+func GetMainCapsuleTaskPath() string {
+	return mainCapsuleTaskPath
+}
+
 // StartNewCapsuleHTTPProcess is a Go function that handles HTTP requests
 // for starting a capsule.
 // ! this a work in progress
@@ -47,12 +59,21 @@ func StartNewCapsuleHTTPProcess(c *fiber.Ctx) error {
 
 	// TODO: test environment variables
 
-	// ? or use an environment variable?
+	// the client (capsctl) can override the path of the executable
+	// to run another version of the capsule program
+	// ! that's why you need to use a token to authenticate
+	// ! I'm not sure to keep this feature in the future
+	/*
+	capsctl \
+		--cmd=start \
+		--name=hello \
+		--revision=orange \
+		--path=/home/ubuntu/capsule-http \
+		--wasm=./hello-orange.wasm
+	*/
 	if capsuleTask.Path == "" {
 		// Default value
-		capsuleTask.Path = "capsule-http" //! had to be installed
-		// ! this does not work
-		// ? how to get the path where I'm installed
+		capsuleTask.Path = GetMainCapsuleTaskPath()
 	}
 
 	//fmt.Println("🔷", capsuleTask.Path)

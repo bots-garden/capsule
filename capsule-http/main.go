@@ -172,7 +172,9 @@ func main() {
 	if flags.faas == true {
 		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
 
-		log.Println("🚀 faas mode activated!")
+		ex, _ := os.Executable()
+		handlers.SetMainCapsuleTaskPath(os.Args[0])
+		log.Println("🚀 faas mode activated!", "["+ex+"]", handlers.GetMainCapsuleTaskPath())
 
 		checkToken := func(c *fiber.Ctx) bool {
 			predicate := c.Get("CAPSULE_FAAS_TOKEN") != capsuleFaasToken
