@@ -166,3 +166,5 @@ func CallWasmFunction(c *fiber.Ctx) error {
 
 	return c.Send(jsonStr)
 }
+
+

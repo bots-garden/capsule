@@ -12,6 +12,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// This value is used when the main Capsule HTTP process makes an HTTP request
+// To another Capsule HTTP process
+// the default value is "http://0.0.0.0"
+// you can override it with the CAPSULE_DOMAIN environment variable
+// eg: http://localhost or http://127.0.0.1 (or with https)
+// the value can be set when the main Capsule HTTP process starts:
+// ```
+// export CAPSULE_DOMAIN="http://0.0.0.0"
+// export CAPSULE_FAAS_TOKEN="ILOVEPANDAS"
+// ./capsule-http \
+// --wasm=./index-page.wasm \
+// --httpPort=8080 \
+// --faas=true
+// ```
+var capsuleDomain = tools.GetEnv("CAPSULE_DOMAIN", "http://0.0.0.0")
 
 // CallExternalFunction calls the WASM module of another Capsule HTTP process
 // ! this a work in progress
@@ -61,8 +76,6 @@ func CallExternalFunction(c *fiber.Ctx) error {
 		httpClient.SetHeader(key, value)
 	}
 
-	capsuleDomain := tools.GetEnv("CAPSULE_DOMAIN", c.Protocol()+"://"+c.IP()) // ! temporary solution... Or not
-	//log.Println("🤔 capsuleDomain:", capsuleDomain) //!DEBUG
 	
 	capsuleURI := capsuleDomain + ":" + process.HTTPPort
 	//log.Println("🤔 capsuleURI:", capsuleURI) //!DEBUG
