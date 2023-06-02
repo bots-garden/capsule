@@ -63,7 +63,7 @@ tasks:
       GOOS: "linux" 
       GOARCH: "arm64"
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.3.7"
+      IMAGE_TAG: "0.3.8"
     cmds:
       - | 
         IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"

@@ -5,7 +5,7 @@
 First, download the last version of the Capsule CLI for the appropriate OS & ARCH (and release version):
 
 ```bash
-VERSION="v0.3.7" OS="linux" ARCH="arm64"
+VERSION="v0.3.8" OS="linux" ARCH="arm64"
 wget -O capsule https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-${VERSION}-${OS}-${ARCH}
 chmod +x capsule
 ```

@@ -6,6 +6,7 @@
 
 👋 **be on the main branch**
 
+Last release: `v0.3.8 🥬 [leafy greens]` 
 Last release: `v0.3.7 🥦 [broccoli]`
 
 ### Update documentation content with the new tag
@@ -46,8 +47,8 @@ Run:
 ```bash
 task release
 task build-releases
-task build-docker-capsule-http-image-darwin-arm64
-task build-docker-capsule-http-image-darwin-amd64
+#task build-docker-capsule-http-image-darwin-arm64
+#task build-docker-capsule-http-image-darwin-amd64
 task build-docker-capsule-http-image-linux-amd64
 task build-docker-capsule-http-image-linux-arm64
 ```
