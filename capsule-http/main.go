@@ -225,11 +225,11 @@ func main() {
 	// Handler to call the WASM function
 	// --------------------------------------------
 	if flags.faas == true && flags.wasm == "" {
-		app.All("/", func(c *fiber.Ctx) error {
+		app.All("/*", func(c *fiber.Ctx) error {
 			return c.SendString("Capsule " + GetVersion() + "[faas]")
 		})
 	} else {
-		app.All("/", handlers.CallWasmFunction)
+		app.All("/*", handlers.CallWasmFunction)
 	}
 	
 	// --------------------------------------------

@@ -138,6 +138,8 @@ func CallWasmFunction(c *fiber.Ctx) error {
 
 	// unmarshal the response
 	var response models.Response
+
+	//! if TextBody contains "\n" or quotes there is an error (fix something in capsule-module-sdk/hande.http.go => callHandleHTTP)
 	errMarshal := json.Unmarshal(responseFromWasmGuest, &response)
 	if errMarshal != nil {
 		log.Println("❌ Error when unmarshal the response", errMarshal)
