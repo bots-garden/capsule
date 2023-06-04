@@ -21,6 +21,9 @@ nav:
     - 🛠️ Host functions: host-functions-intro.md
     - 🐳 Capsule HTTP Docker image: docker-capsule-http.md
     - 🚀 Capsule HTTP FaaS mode: capsule-http-faas-mode.md
+    - 🥘 Recipes:
+      - Serve HTML: capsule-http-serve-html.md
+      - Install Capsule on a Pi: capsule-http-install-pi.md
     - 🏭 Capsule HTTP Enterprise: capsule-http-enterprise.md
 
 theme:

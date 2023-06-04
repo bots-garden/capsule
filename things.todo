@@ -1,17 +1,11 @@
 # TODO
 
-- documentation: capsule is a set of runners
 - guide for the host functions
 - guide for the SDK / PDK
-- first release of the SDK and PDK (or MDK==module development kit)
 
 ## Capsule http & CLI
 
 - How to use STDIN/STDOUT/STDERR
-- Create the Docker images for every runner
-- 🧩 finalize the first version of capsule builder (ide like)
-- Create a mod file for local build https://stackoverflow.com/questions/68764637/how-to-use-an-alternate-go-mod-file-for-local-development
-- Load wasm plugin from url +with token
 - Load wasm plugin from S3 +with token
   - https://min.io/docs/minio/linux/developers/go/API.html
   - https://hub.docker.com/r/bitnami/minio/
@@ -23,13 +17,10 @@
 ## Capsule http
 
 - monitoring features
-- protect the routes
 - hot reload of the wasm module
 
 ## Host functions
 
-- Redis
-- Prometheus?
 - CouchBase?
 - PostGreSQL?
 - MQTT?

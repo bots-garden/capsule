@@ -6,16 +6,14 @@
 
 👋 **be on the main branch**
 
+Last release: `v0.3.9 🥒 [cucumber]`
 Last release: `v0.3.8 🥬 [leafy greens]` 
 Last release: `v0.3.7 🥦 [broccoli]`
 
 ### Update documentation content with the new tag
 
-- `docs/getting-started-cli.md`
-- `docs/getting-started-http.md`
-- `docs/index.md`
-- `docs/docker-capsule-http.md`
-- `docks/capsule-http-faas-mode.md`
+Check every documents:
+- `docs/*.md`
 
 ### Update version number in Go source
 

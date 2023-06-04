@@ -63,7 +63,7 @@ tasks:
       GOOS: "linux" 
       GOARCH: "arm64"
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.3.8"
+      IMAGE_TAG: "0.3.9"
     cmds:
       - | 
         IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
@@ -364,6 +364,17 @@ tasks:
           --no-debug \
           -target wasi ./main.go 
         ls -lh *.wasm
+
+  start-index-html:
+    env:
+      HTTP_PORT: '7777'
+      WASM_FILE: './functions/index-html/index.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hey..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+
 
   test-index-html:
     env:

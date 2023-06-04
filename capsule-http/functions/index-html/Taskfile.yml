@@ -1,0 +1,35 @@
+version: '3'
+
+# capsctl usages
+tasks:
+
+  # build capsule-http and deploy on OVH
+  install:
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd ../..
+        pwd
+        env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o capsule-http
+        ls -lh capsule-http
+        sudo cp capsule-http  /usr/local/bin/capsule-http
+        capsule-http --version
+
+  build:
+    cmds:
+      - |
+        echo "📦 Building index.wasm module..."
+        tinygo build -o index.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  serve:
+    env:
+      HTTP_PORT: '7070'
+      WASM_FILE: './index.wasm'
+    cmds:
+      - | 
+        capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+

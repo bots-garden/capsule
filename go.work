@@ -1,20 +1,20 @@
 go 1.20
 
 use (
-    ./capsule-http/functions/hello-world
-    ./capsule-http/functions/hey
-    ./capsule-http/functions/index-html
-    ./capsule-http/tests/faas/functions/index-page
-    ./capsule-http/tests/faas/functions/hello-default
-    ./capsule-http/tests/faas/functions/hello-green
-    ./capsule-http/tests/faas/functions/hello-blue
-    ./capsule-http/tests/faas/functions/hello-orange
-    ./capsule-http
-    ./capsule-cli
-    ./capsule-cli/functions/hello
-    ./capsule-cli/functions/hey-people
-    ./capsule-cli/functions/mem-db
-    ./capsule-cli/functions/redis-db
-    ./capsctl
+	./capsctl
+	./capsule-cli
+	./capsule-cli/functions/hello
+	./capsule-cli/functions/hey-people
+	./capsule-cli/functions/mem-db
+	./capsule-cli/functions/redis-db
+	./capsule-http
+	./capsule-http/functions/hello-world
+	./capsule-http/functions/hey
+	./capsule-http/functions/index-html
+	./capsule-http/tests/faas/functions/hello-blue
+	./capsule-http/tests/faas/functions/hello-default
+	./capsule-http/tests/faas/functions/hello-green
+	./capsule-http/tests/faas/functions/hello-orange
+	./capsule-http/tests/faas/functions/index-page
 
 )

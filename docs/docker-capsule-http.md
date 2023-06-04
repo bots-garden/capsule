@@ -1,8 +1,8 @@
 # 🐳 Capsule HTTP Docker image
 
-!!! info "Capsule HTTP Docker images v0.3.8 🥬 [leafy greens]"
-    - `botsgarden/capsule-http-linux-arm64:0.3.8`
-    - `botsgarden/capsule-http-linux-amd64:0.3.8`
+!!! info "Capsule HTTP Docker images v0.3.9 🥒 [cucumber]"
+    - `botsgarden/capsule-http-linux-arm64:0.3.9`
+    - `botsgarden/capsule-http-linux-amd64:0.3.9`
 
 > https://hub.docker.com/repositories/botsgarden
 
@@ -13,7 +13,7 @@
 ```bash
 GOOS="linux" 
 GOARCH="arm64"
-IMAGE_TAG="0.3.8"
+IMAGE_TAG="0.3.9"
 IMAGE_NAME="botsgarden/capsule-http-${GOOS}-${GOARCH}"
 
 docker run \
@@ -29,7 +29,7 @@ docker run \
 Create a new `Dockerfile`:
 
 ```dockerfile
-FROM botsgarden/capsule-http-linux-arm64:0.3.8
+FROM botsgarden/capsule-http-linux-arm64:0.3.9
 COPY hello-world.wasm .
 EXPOSE 8080
 CMD ["/capsule-http", "--wasm=./hello-world.wasm", "--httpPort=8080"]

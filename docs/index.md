@@ -1,6 +1,7 @@
 # Capsule Project: the nano wasm runners
 
 !!! info "What's new?"
+    - `v0.3.9 🥒 [cucumber]`: update of [HDK 0.0.3](https://github.com/bots-garden/capsule-host-sdk) with [Wazero 1.2.0](https://github.com/tetratelabs/wazero/releases/tag/v1.2.0) and [MDK 0.0.2](https://github.com/bots-garden/capsule-module-sdk) (encoding of the HTML string into JSON string, then it's easier to serve HTML)
     - `v0.3.8 🥬 [leafy greens]`: 🐛 fixes of the **FaaS** mode
     - `v0.3.7 🥦 [broccoli]`: 🚀 **FaaS** mode (documentation in progress) + **NGrok** integration
     - `v0.3.6 🫐 [blueberries]`: Prometheus metrics + 🐳 Docker images
@@ -26,7 +27,10 @@ Capsule is a set of **WASM runners**. Right now, the Capsule project is composed
 
 **🎉 That means, since now, it's possible to develop various runners thanks to the Capsule Host SDK**
 
-> Tutorials are coming soon!
+#### Tutorials
+> More tutorials are coming soon!
+
+- [Capsule: the WASM runners project](https://k33g.hashnode.dev/capsule-the-wasm-runners-project): with this blog post I explain how to create WASM modules (with the **MDK**) for the Capsule CLI and the Capsule HTTP server, but too, how to create your Capsule application (with the **HDK**).
 
 ## What does a **WASM Capsule module** look like?
 
