@@ -625,21 +625,19 @@
 <span class="normal"><a href="#__codelineno-4-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># start a function using capsctl</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://capsulezero.local:8080&quot;</span><span class="w"> </span>
 <a id="__codelineno-4-3" name="__codelineno-4-3"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">    </span>--stopAfter<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">    </span>--name<span class="o">=</span>index-page<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/index-page/index-page.wasm
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">  </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">  </span>--stopAfter<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">  </span>--name<span class="o">=</span>hey<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">  </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">  </span>--wasm<span class="o">=</span>./functions/hey/hey.wasm
 </code></pre></div></td></tr></table></div>
-<blockquote>
-<ul>
-<li><code>--path</code> allows to define where the capsule-http binary is located</li>
-<li>the default value of <code>--path</code> is <code>./capsule-http</code></li>
-</ul>
-</blockquote>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
-<span class="normal"><a href="#__codelineno-5-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1"># Call the function</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2"></a>curl<span class="w"> </span>http://capsulezero.local:8080/functions/index-page/default
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1"># Call the function</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://capsulezero.local:8080/functions/hey/default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
 </code></pre></div></td></tr></table></div>
 <h2 id="stop-capsule-http-faas-mode">Stop Capsule HTTP FaaS mode</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>ssh<span class="w"> </span>k33g@capsulezero.local<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;pkill capsule-http&quot;</span>
