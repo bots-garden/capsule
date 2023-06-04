@@ -5,8 +5,7 @@ tasks:
   build:
     cmds:
       - |
-        echo "📦 Building index.wasm module..."
-        tinygo build -o index.wasm \
+        tinygo build -o hello-world.wasm \
           -scheduler=none \
           --no-debug \
           -target wasi ./main.go 
