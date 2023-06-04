@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -155,8 +156,11 @@ func CallWasmFunction(c *fiber.Ctx) error {
 	}
 
 	if len(response.TextBody) > 0 {
+		decodedStrAsByteSlice, _ := base64.StdEncoding.DecodeString(string(response.TextBody))
+
 		// send text body
-		return c.SendString(response.TextBody)
+		//return c.SendString(response.TextBody)
+		return c.SendString(string(decodedStrAsByteSlice))
 	}
 	// send JSON body
 	jsonStr, err := json.Marshal(response.JSONBody)

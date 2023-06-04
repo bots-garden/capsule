@@ -1,1 +1,1 @@
-CapsCtl v0.3.8 🥬 [leafy greens]
+CapsCtl v0.3.9 🥒 [cucumber]

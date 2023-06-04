@@ -17,5 +17,4 @@ use (
     ./capsule-cli/functions/redis-db
     ./capsctl
 
-    ./capsule-http/debug/index-page
 )

@@ -168,7 +168,6 @@ func main() {
 	prometheus.RegisterAt(app, "/metrics")
 	app.Use(prometheus.Middleware)
 
-
 	if flags.faas == true {
 		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
 
@@ -231,7 +230,7 @@ func main() {
 	} else {
 		app.All("/*", handlers.CallWasmFunction)
 	}
-	
+
 	// --------------------------------------------
 	// Start listening
 	// --------------------------------------------
