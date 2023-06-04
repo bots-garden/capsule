@@ -2,6 +2,8 @@
 
 > the nano wasm functions runners
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/bots-garden/capsule)
+
 ## What is the **Capsule** project?
 
 Capsule is a set of **WASM runners**. Right now, the Capsule project is composed of:
