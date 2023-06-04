@@ -264,6 +264,19 @@
     Host DK &amp; Module DK
   </a>
   
+    <nav class="md-nav" aria-label="Host DK &amp; Module DK">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tutorials" class="md-nav__link">
+    Tutorials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -456,6 +469,69 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          🥘 Recipes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          🥘 Recipes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="capsule-http-serve-html/" class="md-nav__link">
+        Serve HTML
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="capsule-http-install-pi/" class="md-nav__link">
+        Install Capsule on a Pi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     <li class="md-nav__item">
       <a href="capsule-http-enterprise/" class="md-nav__link">
         🏭 Capsule HTTP Enterprise
@@ -502,6 +578,19 @@
   <a href="#host-dk-module-dk" class="md-nav__link">
     Host DK &amp; Module DK
   </a>
+  
+    <nav class="md-nav" aria-label="Host DK &amp; Module DK">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tutorials" class="md-nav__link">
+    Tutorials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -566,6 +655,7 @@
 <div class="admonition info">
 <p class="admonition-title">What's new?</p>
 <ul>
+<li><code>v0.3.9 🥒 [cucumber]</code>: update of <a href="https://github.com/bots-garden/capsule-host-sdk">HDK 0.0.3</a> with <a href="https://github.com/tetratelabs/wazero/releases/tag/v1.2.0">Wazero 1.2.0</a> and <a href="https://github.com/bots-garden/capsule-module-sdk">MDK 0.0.3</a> (encoding of the HTML string into JSON string, then it's easier to serve HTML)</li>
 <li><code>v0.3.8 🥬 [leafy greens]</code>: 🐛 fixes of the <strong>FaaS</strong> mode</li>
 <li><code>v0.3.7 🥦 [broccoli]</code>: 🚀 <strong>FaaS</strong> mode (documentation in progress) + <strong>NGrok</strong> integration</li>
 <li><code>v0.3.6 🫐 [blueberries]</code>: Prometheus metrics + 🐳 Docker images</li>
@@ -593,9 +683,13 @@
 <li>The <strong>Capsule</strong> modules executed by the The <strong>Capsule</strong> applications are developed thanks to the <a href="https://bots-garden.github.io/capsule-module-sdk/">Capsule Module SDK (MDK)</a></li>
 </ul>
 <p><strong>🎉 That means, since now, it's possible to develop various runners thanks to the Capsule Host SDK</strong></p>
+<h4 id="tutorials">Tutorials</h4>
 <blockquote>
-<p>Tutorials are coming soon!</p>
+<p>More tutorials are coming soon!</p>
 </blockquote>
+<ul>
+<li><a href="https://k33g.hashnode.dev/capsule-the-wasm-runners-project">Capsule: the WASM runners project</a>: with this blog post I explain how to create WASM modules (with the <strong>MDK</strong>) for the Capsule CLI and the Capsule HTTP server, but too, how to create your Capsule application (with the <strong>HDK</strong>).</li>
+</ul>
 <h2 id="what-does-a-wasm-capsule-module-look-like">What does a <strong>WASM Capsule module</strong> look like?</h2>
 <h3 id="wasm-module-for-the-capsule-cli">WASM Module for the Capsule CLI</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>

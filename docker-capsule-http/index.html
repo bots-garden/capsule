@@ -418,6 +418,69 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          🥘 Recipes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          🥘 Recipes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-serve-html/" class="md-nav__link">
+        Serve HTML
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-install-pi/" class="md-nav__link">
+        Install Capsule on a Pi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     <li class="md-nav__item">
       <a href="../capsule-http-enterprise/" class="md-nav__link">
         🏭 Capsule HTTP Enterprise
@@ -486,10 +549,10 @@
 
 <h1 id="capsule-http-docker-image">🐳 Capsule HTTP Docker image</h1>
 <div class="admonition info">
-<p class="admonition-title">Capsule HTTP Docker images v0.3.8 🥬 [leafy greens]</p>
+<p class="admonition-title">Capsule HTTP Docker images v0.3.9 🥒 [cucumber]</p>
 <ul>
-<li><code>botsgarden/capsule-http-linux-arm64:0.3.8</code></li>
-<li><code>botsgarden/capsule-http-linux-amd64:0.3.8</code></li>
+<li><code>botsgarden/capsule-http-linux-arm64:0.3.9</code></li>
+<li><code>botsgarden/capsule-http-linux-amd64:0.3.9</code></li>
 </ul>
 </div>
 <blockquote>
@@ -509,7 +572,7 @@
 <span class="normal"><a href="#__codelineno-0-10">10</a></span>
 <span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">GOOS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nv">GOARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;0.3.8&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;0.3.9&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;botsgarden/capsule-http-</span><span class="si">${</span><span class="nv">GOOS</span><span class="si">}</span><span class="s2">-</span><span class="si">${</span><span class="nv">GOARCH</span><span class="si">}</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
@@ -524,7 +587,7 @@
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
 <span class="normal"><a href="#__codelineno-1-2">2</a></span>
 <span class="normal"><a href="#__codelineno-1-3">3</a></span>
-<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">botsgarden/capsule-http-linux-arm64:0.3.8</span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">botsgarden/capsule-http-linux-arm64:0.3.9</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">COPY</span><span class="w"> </span>hello-world.wasm<span class="w"> </span>.
 <a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/capsule-http&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--wasm=./hello-world.wasm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--httpPort=8080&quot;</span><span class="p">]</span>

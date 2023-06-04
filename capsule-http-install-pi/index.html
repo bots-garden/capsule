@@ -12,20 +12,20 @@
         <meta name="author" content="Philippe Charrière (@k33g)">
       
       
-        <link rel="canonical" href="https://bots-garden.github.io/capsule/getting-started-cli/">
+        <link rel="canonical" href="https://bots-garden.github.io/capsule/capsule-http-install-pi/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../capsule-http-serve-html/">
       
       
-        <link rel="next" href="../getting-started-http/">
+        <link rel="next" href="../capsule-http-enterprise/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.9">
     
     
       
-        <title>Capsule CLI and modules - Capsule</title>
+        <title>Install Capsule on a Pi - Capsule</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#run-a-faas-on-a-raspberry-pi" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capsule CLI and modules
+              Install Capsule on a Pi
             
           </span>
         </div>
@@ -233,16 +233,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
       
       
       
@@ -251,7 +249,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
           🚀 Getting Started
@@ -262,66 +260,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Capsule CLI and modules
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../getting-started-cli/" class="md-nav__link">
         Capsule CLI and modules
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#use-the-capsule-cli" class="md-nav__link">
-    Use the Capsule CLI
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-a-wasm-capsule-module" class="md-nav__link">
-    Run a WASM Capsule module
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#develop-a-wasm-capsule-module" class="md-nav__link">
-    Develop a WASM Capsule module
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -426,14 +369,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
       
       
       
@@ -442,7 +387,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
           🥘 Recipes
@@ -467,11 +412,73 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../capsule-http-install-pi/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Install Capsule on a Pi
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Install Capsule on a Pi
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-capsule-http" class="md-nav__link">
+    Install Capsule HTTP
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-capsule-http-faas-mode" class="md-nav__link">
+    Start Capsule HTTP FaaS mode
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-some-functions" class="md-nav__link">
+    Deploy some functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-capsule-http-faas-mode" class="md-nav__link">
+    Stop Capsule HTTP FaaS mode
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -525,22 +532,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-the-capsule-cli" class="md-nav__link">
-    Use the Capsule CLI
+  <a href="#install-capsule-http" class="md-nav__link">
+    Install Capsule HTTP
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-a-wasm-capsule-module" class="md-nav__link">
-    Run a WASM Capsule module
+  <a href="#start-capsule-http-faas-mode" class="md-nav__link">
+    Start Capsule HTTP FaaS mode
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#develop-a-wasm-capsule-module" class="md-nav__link">
-    Develop a WASM Capsule module
+  <a href="#deploy-some-functions" class="md-nav__link">
+    Deploy some functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-capsule-http-faas-mode" class="md-nav__link">
+    Stop Capsule HTTP FaaS mode
   </a>
   
 </li>
@@ -563,41 +577,73 @@
   
 
 
-<h1 id="getting-started">🚀 Getting Started</h1>
-<h2 id="use-the-capsule-cli">Use the Capsule CLI</h2>
-<p>First, download the last version of the Capsule CLI for the appropriate OS &amp; ARCH (and release version):</p>
+<h1 id="run-a-faas-on-a-raspberry-pi">Run a FaaS on a Raspberry PI</h1>
+<blockquote>
+<p>I did this on a Pi3A+ with the Raspberry PI OS Lite 64-bit</p>
+</blockquote>
+<h2 id="install-capsule-http">Install Capsule HTTP</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
-<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule
+<span class="normal"><a href="#__codelineno-0-3">3</a></span>
+<span class="normal"><a href="#__codelineno-0-4">4</a></span>
+<span class="normal"><a href="#__codelineno-0-5">5</a></span>
+<span class="normal"><a href="#__codelineno-0-6">6</a></span>
+<span class="normal"><a href="#__codelineno-0-7">7</a></span>
+<span class="normal"><a href="#__codelineno-0-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># connect to the PI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>ssh<span class="w"> </span>k33g@capsulezero.local
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="c1">## Install Capsule HTTP</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule-http<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-http-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule-http
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>./capsule-http<span class="w"> </span>--version
 </code></pre></div></td></tr></table></div>
-<h2 id="run-a-wasm-capsule-module">Run a WASM Capsule module</h2>
-<p>To run a WASM Capsule module you need to set 2 flags:</p>
-<ul>
-<li><code>--wasm</code>: the path to the WASM module</li>
-<li><code>--params</code>: the parameter to pass to the WASM module</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
-<span class="normal"><a href="#__codelineno-1-2">2</a></span>
-<span class="normal"><a href="#__codelineno-1-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>./capsule<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a>--wasm<span class="o">=</span>./functions/hello/hello.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a>--params<span class="o">=</span><span class="s2">&quot;Hello World&quot;</span>
+<p>Or you can copy the appropriate Capsule HTTP binary from your computer to the RPI:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>scp<span class="w"> </span>capsule-http-v0.3.9-linux-arm64<span class="w"> </span>k33g@capsulezero.local:./
 </code></pre></div></td></tr></table></div>
-<p>You can remotely download  the WASM module with the <code>--url</code> flag:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
-<span class="normal"><a href="#__codelineno-2-2">2</a></span>
-<span class="normal"><a href="#__codelineno-2-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>./capsule<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a>--url<span class="o">=</span>http://localhost:5000/hello-world.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a>--wasm<span class="o">=</span>./tmp/hello-world.wasm<span class="w"> </span>
-</code></pre></div></td></tr></table></div></p>
-<h2 id="develop-a-wasm-capsule-module">Develop a WASM Capsule module</h2>
-<p>Have a look to these samples:</p>
+<h2 id="start-capsule-http-faas-mode">Start Capsule HTTP FaaS mode</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>ssh<span class="w"> </span>k33g@capsulezero.local<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;./capsule-http --httpPort=8080 --faas=true&quot;</span>
+</code></pre></div></td></tr></table></div>
+<p>Try: <code>curl http://capsulezero.local:8080</code>, you should get <code>Capsule [HTTP] v0.3.9 🥒 [cucumber][faas]</code></p>
+<h2 id="deploy-some-functions">Deploy some functions</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># copy the functions to the RPI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>capsule-http/tests/faas
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a>scp<span class="w"> </span>-r<span class="w"> </span>./functions<span class="w"> </span>k33g@capsulezero.local:./
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>requirement, install <strong>CapsCtl</strong>: <a href="../capsule-http-faas-mode/">capsule-http-faas-mode</a></p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span>
+<span class="normal"><a href="#__codelineno-4-7">7</a></span>
+<span class="normal"><a href="#__codelineno-4-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># start a function using capsctl</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://capsulezero.local:8080&quot;</span><span class="w"> </span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">    </span>--stopAfter<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">    </span>--name<span class="o">=</span>index-page<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/index-page/index-page.wasm
+</code></pre></div></td></tr></table></div>
+<blockquote>
 <ul>
-<li><a href="https://bots-garden.github.io/capsule-module-sdk/first-cli-module/">Capsule MDK documentation: first CLI module</a></li>
-<li><a href="https://github.com/bots-garden/capsule/tree/main/capsule-cli/functions">capsule-cli/functions</a></li>
-<li><a href="https://github.com/bots-garden/capsule-module-sdk/tree/main/samples">Samples of the Capsule MDK</a></li>
+<li><code>--path</code> allows to define where the capsule-http binary is located</li>
+<li>the default value of <code>--path</code> is <code>./capsule-http</code></li>
 </ul>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1"># Call the function</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>curl<span class="w"> </span>http://capsulezero.local:8080/functions/index-page/default
+</code></pre></div></td></tr></table></div>
+<h2 id="stop-capsule-http-faas-mode">Stop Capsule HTTP FaaS mode</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>ssh<span class="w"> </span>k33g@capsulezero.local<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;pkill capsule-http&quot;</span>
+</code></pre></div></td></tr></table></div>
 
 
 

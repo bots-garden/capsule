@@ -18,7 +18,7 @@
         <link rel="prev" href="../docker-capsule-http/">
       
       
-        <link rel="next" href="../capsule-http-enterprise/">
+        <link rel="next" href="../capsule-http-serve-html/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.9">
@@ -424,16 +424,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#launch-another-capsule-http-server" class="md-nav__link">
-    Launch another Capsule HTTP server
+  <a href="#start-a-function" class="md-nav__link">
+    Start a function
   </a>
   
-    <nav class="md-nav" aria-label="Launch another Capsule HTTP server">
+    <nav class="md-nav" aria-label="Start a function">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#call-the-hello-green-function" class="md-nav__link">
     Call the hello green function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-revision" class="md-nav__link">
+    Default revision
   </a>
   
 </li>
@@ -444,11 +451,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#launch-another-capsule-http-server-process" class="md-nav__link">
-    Launch another Capsule HTTP server process
+  <a href="#launch-another-function" class="md-nav__link">
+    Launch another function
   </a>
   
-    <nav class="md-nav" aria-label="Launch another Capsule HTTP server process">
+    <nav class="md-nav" aria-label="Launch another function">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -464,8 +471,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stop-and-remove-a-running-capsule-http-server-process" class="md-nav__link">
-    Stop and remove a running Capsule HTTP server process
+  <a href="#drop-stop-and-remove-a-running-function" class="md-nav__link">
+    Drop: stop and remove a running function
   </a>
   
 </li>
@@ -490,10 +497,93 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#download-the-wasm-module-before-starting-the-function" class="md-nav__link">
+    Download the wasm module before starting the function
+  </a>
+  
+    <nav class="md-nav" aria-label="Download the wasm module before starting the function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-of-the-downlad" class="md-nav__link">
+    Authentication of the downlad
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          🥘 Recipes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          🥘 Recipes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-serve-html/" class="md-nav__link">
+        Serve HTML
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-install-pi/" class="md-nav__link">
+        Install Capsule on a Pi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -574,16 +664,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#launch-another-capsule-http-server" class="md-nav__link">
-    Launch another Capsule HTTP server
+  <a href="#start-a-function" class="md-nav__link">
+    Start a function
   </a>
   
-    <nav class="md-nav" aria-label="Launch another Capsule HTTP server">
+    <nav class="md-nav" aria-label="Start a function">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#call-the-hello-green-function" class="md-nav__link">
     Call the hello green function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-revision" class="md-nav__link">
+    Default revision
   </a>
   
 </li>
@@ -594,11 +691,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#launch-another-capsule-http-server-process" class="md-nav__link">
-    Launch another Capsule HTTP server process
+  <a href="#launch-another-function" class="md-nav__link">
+    Launch another function
   </a>
   
-    <nav class="md-nav" aria-label="Launch another Capsule HTTP server process">
+    <nav class="md-nav" aria-label="Launch another function">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -614,8 +711,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stop-and-remove-a-running-capsule-http-server-process" class="md-nav__link">
-    Stop and remove a running Capsule HTTP server process
+  <a href="#drop-stop-and-remove-a-running-function" class="md-nav__link">
+    Drop: stop and remove a running function
   </a>
   
 </li>
@@ -631,6 +728,26 @@
           <li class="md-nav__item">
   <a href="#call-the-hello-green-function_1" class="md-nav__link">
     Call the hello green function
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-the-wasm-module-before-starting-the-function" class="md-nav__link">
+    Download the wasm module before starting the function
+  </a>
+  
+    <nav class="md-nav" aria-label="Download the wasm module before starting the function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-of-the-downlad" class="md-nav__link">
+    Authentication of the downlad
   </a>
   
 </li>
@@ -673,7 +790,7 @@
 <span class="normal"><a href="#__codelineno-0-3">3</a></span>
 <span class="normal"><a href="#__codelineno-0-4">4</a></span>
 <span class="normal"><a href="#__codelineno-0-5">5</a></span>
-<span class="normal"><a href="#__codelineno-0-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.8&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<span class="normal"><a href="#__codelineno-0-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule-http<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-http-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule-http
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a>sudo<span class="w"> </span>cp<span class="w"> </span>capsule-http<span class="w">  </span>/usr/local/bin/capsule-http
@@ -690,7 +807,7 @@
 <span class="normal"><a href="#__codelineno-1-3">3</a></span>
 <span class="normal"><a href="#__codelineno-1-4">4</a></span>
 <span class="normal"><a href="#__codelineno-1-5">5</a></span>
-<span class="normal"><a href="#__codelineno-1-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.8&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<span class="normal"><a href="#__codelineno-1-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsctl<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsctl-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsctl
 <a id="__codelineno-1-4" name="__codelineno-1-4"></a>sudo<span class="w"> </span>cp<span class="w"> </span>capsctl<span class="w">  </span>/usr/local/bin/capsctl
@@ -702,27 +819,33 @@
 <span class="normal"><a href="#__codelineno-2-2">2</a></span>
 <span class="normal"><a href="#__codelineno-2-3">3</a></span>
 <span class="normal"><a href="#__codelineno-2-4">4</a></span>
-<span class="normal"><a href="#__codelineno-2-5">5</a></span>
-<span class="normal"><a href="#__codelineno-2-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nv">CAPSULE_DOMAIN</span><span class="o">=</span><span class="s2">&quot;http://localhost&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a>capsule-http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a>--wasm<span class="o">=</span>./functions/index-page/index-page.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a>--httpPort<span class="o">=</span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6"></a>--faas<span class="o">=</span><span class="nb">true</span>
+<span class="normal"><a href="#__codelineno-2-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a>--wasm<span class="o">=</span>./functions/index-page/index-page.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>--httpPort<span class="o">=</span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a>--faas<span class="o">=</span><span class="nb">true</span>
 </code></pre></div></td></tr></table></div>
+<blockquote>
+<p><strong>Remarks:</strong>: if you use SSL certificates, use these options:
+- <code>--crt=faas.capsule.foundation.crt</code>
+- <code>--key=faas.capsule.foundation.key</code></p>
+</blockquote>
 <p>You should get an output like this:
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
 <span class="normal"><a href="#__codelineno-3-2">2</a></span>
 <span class="normal"><a href="#__codelineno-3-3">3</a></span>
 <span class="normal"><a href="#__codelineno-3-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>2023/05/29 15:12:18 🚀 faas mode activated!
 <a id="__codelineno-3-2" name="__codelineno-3-2"></a>2023/05/29 15:12:18 📦 wasm module loaded: ./functions/index-page/index-page.wasm
-<a id="__codelineno-3-3" name="__codelineno-3-3"></a>2023/05/29 15:12:18 💊 Capsule [HTTP] v0.3.8 🥬 [leafy greens]
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a>2023/05/29 15:12:18 💊 Capsule [HTTP] v0.3.9 🥒 [cucumber]
 <a id="__codelineno-3-4" name="__codelineno-3-4"></a> http server is listening on: 8080 🌍
 </code></pre></div></td></tr></table></div></p>
 <blockquote>
-<p>In a future version, the wasm file won't be mandatory anymore.</p>
+<p><strong>Remarks:</strong>
+- the wasm file (<code>--wasm</code>) is optional (a default message is served if not specified)
+- <code>CAPSULE_FAAS_TOKEN</code> is used to authenticate the <code>capsctl</code> CLI</p>
 </blockquote>
-<h2 id="launch-another-capsule-http-server">Launch another Capsule HTTP server</h2>
+<h2 id="start-a-function">Start a function</h2>
+<p>With the FaaS mode activated, you can start functions. It' like running another <strong>Capsule HTTP</strong> processes (one wasm function == one Capsule HTTP process).</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
@@ -734,8 +857,7 @@
 <span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
 <span class="normal"><a href="#__codelineno-4-10">10</a></span>
 <span class="normal"><a href="#__codelineno-4-11">11</a></span>
-<span class="normal"><a href="#__codelineno-4-12">12</a></span>
-<span class="normal"><a href="#__codelineno-4-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="c1"># the main Capsule HTTP process is listeninhg on port 8080</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="w"> </span>
 <a id="__codelineno-4-4" name="__codelineno-4-4"></a>
@@ -746,15 +868,16 @@
 <a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="w">    </span>--revision<span class="o">=</span>green<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="w">    </span>--description<span class="o">=</span><span class="s2">&quot;this the hello module, green revision&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">    </span>--env<span class="o">=</span><span class="s1">&#39;[&quot;MESSAGE=🟢&quot;,&quot;GREETING=🤗&quot;]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="w">    </span>--path<span class="o">=</span><span class="s2">&quot;/usr/local/bin/capsule-http&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/hello-green/hello-green.wasm
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/hello-green/hello-green.wasm
 </code></pre></div></td></tr></table></div>
 <blockquote>
 <ul>
-<li><code>--stopAfter=10</code> this will stop the Capsule HTTP server process after 10 seconds</li>
+<li><code>--stopAfter=10</code> this will stop the Capsule HTTP server process after 10 seconds ()optional</li>
 <li><code>--stopAfter</code> is not mandatory (then the Capsule HTTP server process will never stop)</li>
-<li>if the process is stopped, the Capsule HTTP server will be restarted at every call</li>
-<li><code>--path</code> means you can use various version of Capsule HTTP</li>
+<li>if the process is stopped, the Capsule HTTP server will be restarted at next call</li>
+<li><code>--description=</code> is optional</li>
+<li><code>--env='["MESSAGE=🟢","GREETING=🤗"]'</code> allows to pass environment variables to the function (optional)</li>
+<li><code>--wasm</code>: where to find the wasm file</li>
 </ul>
 </blockquote>
 <p><strong>Now you can use this URL <code>http://localhost:8080/functions/hello/green</code> to call the hello green function</strong></p>
@@ -765,88 +888,124 @@
 <a id="__codelineno-5-2" name="__codelineno-5-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
 </code></pre></div></td></tr></table></div>
-<h2 id="launch-another-capsule-http-server-process">Launch another Capsule HTTP server process</h2>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-6-10">10</a></span>
-<span class="normal"><a href="#__codelineno-6-11">11</a></span>
-<span class="normal"><a href="#__codelineno-6-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_INSTALL_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin/capsule-http&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="w">    </span>--stopAfter<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="w">    </span>--revision<span class="o">=</span>blue<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">    </span>--description<span class="o">=</span><span class="s2">&quot;this the hello module, blue revision&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">    </span>--env<span class="o">=</span><span class="s1">&#39;[&quot;MESSAGE=🔵&quot;,&quot;GREETING=🎉&quot;]&#39;</span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="w">    </span>--path<span class="o">=</span><span class="s2">&quot;/usr/local/bin/capsule-http&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/hello-blue/hello-blue.wasm
+<h3 id="default-revision">Default revision</h3>
+<p>If you don't specify a revision, the default revision is called <strong>default</strong>, then you can call the function like this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
 </code></pre></div></td></tr></table></div>
-<p><strong>Now you can use this URL <code>http://localhost:8080/functions/hello/blue</code> to call the hello blue function</strong></p>
-<h3 id="call-the-hello-blue-function">Call the hello blue function</h3>
+<p>Or like this:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
 <span class="normal"><a href="#__codelineno-7-2">2</a></span>
-<span class="normal"><a href="#__codelineno-7-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/blue<span class="w"> </span><span class="se">\</span>
+<span class="normal"><a href="#__codelineno-7-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/default<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
 </code></pre></div></td></tr></table></div>
-<h2 id="stop-and-remove-a-running-capsule-http-server-process">Stop and remove a running Capsule HTTP server process</h2>
+<blockquote>
+<p>👋 the revision concept is useful to handle several version of a wasm module/function.</p>
+</blockquote>
+<h2 id="launch-another-function">Launch another function</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
 <span class="normal"><a href="#__codelineno-8-2">2</a></span>
 <span class="normal"><a href="#__codelineno-8-3">3</a></span>
 <span class="normal"><a href="#__codelineno-8-4">4</a></span>
 <span class="normal"><a href="#__codelineno-8-5">5</a></span>
 <span class="normal"><a href="#__codelineno-8-6">6</a></span>
-<span class="normal"><a href="#__codelineno-8-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span>
+<span class="normal"><a href="#__codelineno-8-7">7</a></span>
+<span class="normal"><a href="#__codelineno-8-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="w"> </span>
 <a id="__codelineno-8-3" name="__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">    </span>--cmd<span class="o">=</span>drop<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">    </span>--revision<span class="o">=</span>blue
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">    </span>--revision<span class="o">=</span>blue<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="w">    </span>--wasm<span class="o">=</span>./functions/hello-blue/hello-blue.wasm
 </code></pre></div></td></tr></table></div>
-<h2 id="duplicate-a-running-capsule-http-server-process-with-a-new-revision-name">Duplicate a running Capsule HTTP server process with a new revision name</h2>
+<p><strong>Now you can use this URL <code>http://localhost:8080/functions/hello/blue</code> to call the hello blue function</strong></p>
+<h3 id="call-the-hello-blue-function">Call the hello blue function</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
 <span class="normal"><a href="#__codelineno-9-2">2</a></span>
-<span class="normal"><a href="#__codelineno-9-3">3</a></span>
-<span class="normal"><a href="#__codelineno-9-4">4</a></span>
-<span class="normal"><a href="#__codelineno-9-5">5</a></span>
-<span class="normal"><a href="#__codelineno-9-6">6</a></span>
-<span class="normal"><a href="#__codelineno-9-7">7</a></span>
-<span class="normal"><a href="#__codelineno-9-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="w"> </span>
-<a id="__codelineno-9-3" name="__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="w">    </span>--cmd<span class="o">=</span>duplicate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="w">    </span>--revision<span class="o">=</span>green<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="w">    </span>--newRevision<span class="o">=</span>saved_green
+<span class="normal"><a href="#__codelineno-9-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/blue<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
 </code></pre></div></td></tr></table></div>
-<blockquote>
-<p>It remains the same process (same <code>PID</code>), but you can access the function with this URL: <code>http://localhost:8080/functions/hello/saved_green</code> and this URL: <code>http://localhost:8080/functions/hello/green</code></p>
-</blockquote>
-<h3 id="call-the-hello-green-function_1">Call the hello green function</h3>
+<h2 id="drop-stop-and-remove-a-running-function">Drop: stop and remove a running function</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
 <span class="normal"><a href="#__codelineno-10-2">2</a></span>
 <span class="normal"><a href="#__codelineno-10-3">3</a></span>
 <span class="normal"><a href="#__codelineno-10-4">4</a></span>
 <span class="normal"><a href="#__codelineno-10-5">5</a></span>
 <span class="normal"><a href="#__codelineno-10-6">6</a></span>
-<span class="normal"><a href="#__codelineno-10-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/saved_green<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/green<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
+<span class="normal"><a href="#__codelineno-10-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">    </span>--cmd<span class="o">=</span>drop<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="w">    </span>--revision<span class="o">=</span>blue
+</code></pre></div></td></tr></table></div>
+<h2 id="duplicate-a-running-capsule-http-server-process-with-a-new-revision-name">Duplicate a running Capsule HTTP server process with a new revision name</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span>
+<span class="normal"><a href="#__codelineno-11-5">5</a></span>
+<span class="normal"><a href="#__codelineno-11-6">6</a></span>
+<span class="normal"><a href="#__codelineno-11-7">7</a></span>
+<span class="normal"><a href="#__codelineno-11-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="w"> </span>
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="w">    </span>--cmd<span class="o">=</span>duplicate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">    </span>--revision<span class="o">=</span>green<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="w">    </span>--newRevision<span class="o">=</span>saved_green
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>It remains the same process (same <code>PID</code>), but you can access the function with this URL: <code>http://localhost:8080/functions/hello/saved_green</code> and this URL: <code>http://localhost:8080/functions/hello/green</code></p>
+</blockquote>
+<h3 id="call-the-hello-green-function_1">Call the hello green function</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span>
+<span class="normal"><a href="#__codelineno-12-2">2</a></span>
+<span class="normal"><a href="#__codelineno-12-3">3</a></span>
+<span class="normal"><a href="#__codelineno-12-4">4</a></span>
+<span class="normal"><a href="#__codelineno-12-5">5</a></span>
+<span class="normal"><a href="#__codelineno-12-6">6</a></span>
+<span class="normal"><a href="#__codelineno-12-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/saved_green<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/functions/hello/green<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7"></a>-d<span class="w"> </span><span class="s2">&quot;Bob Morane&quot;</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="download-the-wasm-module-before-starting-the-function">Download the wasm module before starting the function</h2>
+<p>You can specify to the Capsule HTTP process with the <code>--url</code> option, where to download the wasm file and where to save it before starting with the <code>--wasm</code> option:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span>
+<span class="normal"><a href="#__codelineno-13-5">5</a></span>
+<span class="normal"><a href="#__codelineno-13-6">6</a></span>
+<span class="normal"><a href="#__codelineno-13-7">7</a></span>
+<span class="normal"><a href="#__codelineno-13-8">8</a></span>
+<span class="normal"><a href="#__codelineno-13-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="w">    </span>--revision<span class="o">=</span><span class="m">0</span>.0.1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8"></a><span class="w">    </span>--wasm<span class="o">=</span><span class="w"> </span>./store/hello.0.0.1.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="w">    </span>--url<span class="o">=</span>http://wasm.files.com/hello/0.0.1/hello.0.0.1.wasm
+</code></pre></div></td></tr></table></div>
+<h3 id="authentication-of-the-downlad">Authentication of the downlad</h3>
+<p>If you need to provide an authentication token, you can use these options:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span>
+<span class="normal"><a href="#__codelineno-14-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a>--authHeaderName<span class="o">=</span><span class="s2">&quot;PRIVATE-TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2"></a>--authHeaderValue<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GITLAB_WASM_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 </code></pre></div></td></tr></table></div>
 
 
