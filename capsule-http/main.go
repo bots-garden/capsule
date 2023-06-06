@@ -45,17 +45,12 @@ type CapsuleFlags struct {
 	// faasToken?
 }
 
-//go:embed description.txt
-var textVersion []byte
-
-// GetVersion returns the current version
-func GetVersion() string {
-	return string(textVersion)
-}
 
 func main() {
 
-	version := string(textVersion)
+	//version := string(textVersion)
+	version := tools.GetVersion()
+
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -229,10 +224,21 @@ func main() {
 	// Handler to call the WASM function
 	// --------------------------------------------
 	if flags.faas == true && flags.wasm == "" {
+		
+		// TODO:
+		// if "/*"
+		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
+		// and function name is index.page
+		app.All("/*", handlers.CallExternalIndexPageFunction)
+
+		// Previous version
+		/*
 		app.All("/*", func(c *fiber.Ctx) error {
-			return c.SendString("Capsule " + GetVersion() + "[faas]")
+			return c.SendString("Capsule " + tools.GetVersion() + "[faas]")
 		})
-	} else {
+		*/
+
+	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
 		app.All("/*", handlers.CallWasmFunction)
 	}
 
