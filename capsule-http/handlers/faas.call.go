@@ -243,3 +243,8 @@ func CallExternalFunction(c *fiber.Ctx) error {
 	}
 
 }
+
+
+func CallExternalIndexPageFunction(c *fiber.Ctx) error {
+	return c.Send([]byte("Hello, World!"))
+}

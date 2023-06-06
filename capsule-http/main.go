@@ -229,10 +229,16 @@ func main() {
 	// Handler to call the WASM function
 	// --------------------------------------------
 	if flags.faas == true && flags.wasm == "" {
+		
+		// TODO:
+		// if "/*"
+		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
+		// and function name is index
+
 		app.All("/*", func(c *fiber.Ctx) error {
 			return c.SendString("Capsule " + GetVersion() + "[faas]")
 		})
-	} else {
+	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
 		app.All("/*", handlers.CallWasmFunction)
 	}
 
