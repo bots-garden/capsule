@@ -20,7 +20,6 @@ import (
 	"github.com/bots-garden/capsule/capsule-http/tools"
 	"github.com/go-resty/resty/v2"
 
-	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/skip"
 )
@@ -152,16 +151,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
-
-	// --------------------------------------------
-	// Prometheus
-	// --------------------------------------------
-	// ! this is experimental and subject to change
-	//prometheus := fiberprometheus.New("capsule-http:"+httpPort+"|"+version+"("+flags.wasm+")")
-	prometheus := fiberprometheus.New("capsule")
-
-	prometheus.RegisterAt(app, "/metrics")
-	app.Use(prometheus.Middleware)
 
 	if flags.faas == true {
 		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
