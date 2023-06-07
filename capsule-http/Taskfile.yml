@@ -183,8 +183,6 @@ tasks:
       - killport ${HTTP_PORT}
 
 
-  # These tasks are used to test the Prometheus metrics
-
   # serving capsule-http
   serve-hello-world:
     env:
