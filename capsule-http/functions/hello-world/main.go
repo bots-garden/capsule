@@ -13,6 +13,18 @@ func main() {
 }
 
 
+// OnStart function
+//export OnStart
+func OnStart() {
+	capsule.Print("🚗 OnStart")
+}
+
+// OnStop function
+//export OnStop
+func OnStop() {
+	capsule.Print("🚙 OnStop")
+}
+
 // Handle function 
 func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	

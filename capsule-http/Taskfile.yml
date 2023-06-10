@@ -31,6 +31,33 @@ tasks:
           -target wasi ./main.go 
         ls -lh *.wasm
 
+
+  start-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
+      - | 
+        echo "🚀 Testing hello-world..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+
+  call-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+
+
+
   # Testing capsule-http
   test-hello-world:
     env:
@@ -49,6 +76,8 @@ tasks:
           -H 'Content-Type: application/json; charset=utf-8' \
           -d "${JSON_DATA}"
       - killport ${HTTP_PORT}
+  
+
 
   # ----------------------------------------
   # 🐳 Testing Docker image of capsule-http
@@ -300,7 +329,7 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.3.9.txt
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.4.0.txt
       - killport ${HTTP_PORT}
 
 

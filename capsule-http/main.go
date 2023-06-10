@@ -44,7 +44,6 @@ type CapsuleFlags struct {
 	// faasToken?
 }
 
-
 func main() {
 
 	//version := string(textVersion)
@@ -136,13 +135,19 @@ func main() {
 	// -----------------------------------
 	// Load the WebAssembly module
 	// -----------------------------------
+	var wasmFile []byte // global to main to be accessible from CallOnStart and CallOnStop
+
 	if flags.wasm != "" {
-		wasmFile, err := tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
+		wasmFile, err = tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
 		if err != nil {
 			log.Println("❌📝 Error while loading the wasm file", err)
 			os.Exit(1)
 		}
 		handlers.StoreWasmFile(wasmFile)
+
+		// Call only once OnStart wasm module method
+		capsule.CallOnStart(ctx, runtime, wasmFile)
+
 	} else {
 		// the wasm file is not mandatory in faas mode
 		// otherwise it's an error
@@ -162,7 +167,6 @@ func main() {
 		handlers.SetMainCapsuleTaskPath(ex)
 
 		log.Println("🚀 faas mode activated!", "["+ex+"]", handlers.GetMainCapsuleTaskPath())
-
 
 		checkToken := func(c *fiber.Ctx) bool {
 			predicate := c.Get("CAPSULE_FAAS_TOKEN") != capsuleFaasToken
@@ -213,7 +217,7 @@ func main() {
 	// Handler to call the WASM function
 	// --------------------------------------------
 	if flags.faas == true && flags.wasm == "" {
-		
+
 		// TODO:
 		// if "/*"
 		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
@@ -222,9 +226,9 @@ func main() {
 
 		// Previous version
 		/*
-		app.All("/*", func(c *fiber.Ctx) error {
-			return c.SendString("Capsule " + tools.GetVersion() + "[faas]")
-		})
+			app.All("/*", func(c *fiber.Ctx) error {
+				return c.SendString("Capsule " + tools.GetVersion() + "[faas]")
+			})
 		*/
 
 	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
@@ -298,6 +302,12 @@ func main() {
 
 	// Listen for the interrupt signal.
 	<-ctx.Done()
+
+	// Call OnStop (when Ctr+C)
+	if wasmFile != nil {
+		// Call only once CallOnStop wasm module method
+		capsule.CallOnStop(ctx, runtime, wasmFile)
+	}
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
 	stop()
