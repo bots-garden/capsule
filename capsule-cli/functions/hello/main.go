@@ -7,6 +7,7 @@ import (
 
 func main() {
 	capsule.SetHandle(Handle)
+	
 }
 
 // Handle function
