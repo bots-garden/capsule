@@ -39,6 +39,19 @@ func OnHealthCheck() uint64 {
 	return capsule.Success([]byte(capsule.StringifyHTTPResponse(response)))
 }
 
+// OnMetrics function
+//export OnMetrics
+func OnMetrics() uint64 {
+	capsule.Print("📊 OnMetrics")
+	response :=  capsule.HTTPResponse{
+		TextBody: "xxxxxxxxxxxx",
+		Headers: `{"Content-Type": "text/plain; charset=utf-8"}`,
+		StatusCode: 200,
+	}
+	return capsule.Success([]byte(capsule.StringifyHTTPResponse(response)))
+
+}
+
 // Handle function 
 func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	

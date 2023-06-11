@@ -65,6 +65,14 @@ tasks:
       - | 
         curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/health
 
+  metrics-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/metrics
 
 
   # Testing capsule-http

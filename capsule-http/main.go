@@ -226,6 +226,7 @@ func main() {
 		// if "/*"
 		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
 		// and function name is index.page
+		app.Get("/metrics", handlers.CallWasmFunctionMetrics)
 		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
 		app.All("/*", handlers.CallExternalIndexPageFunction)
 
@@ -237,8 +238,9 @@ func main() {
 		*/
 
 	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
-	
+
 		// TODO: Question: route protection or not?
+		app.Get("/metrics", handlers.CallWasmFunctionMetrics)
 		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
 		app.All("/*", handlers.CallWasmFunction)
 	}
