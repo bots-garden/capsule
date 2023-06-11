@@ -172,12 +172,7 @@ func CallWasmFunction(c *fiber.Ctx) error {
 	return c.Send(jsonStr)
 }
 
-
-// CallWasmFunctionHealthCheck is a function that handles the execution of a WebAssembly function.
-// Route: app.All("/health", handlers.CallWasmFunctionHealthCheck)
-func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
-	//TODO: Protect the route if Token ?
-
+func callExportedFunction(exportedFunc string, c *fiber.Ctx) error {
 	mod, err := runtime.Instantiate(ctx, wasmFile)
 	if err != nil {
 		log.Println("❌ Error with the module instance", err)
@@ -185,20 +180,20 @@ func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
 		return c.SendString(err.Error())
 	}
 
-	// Get the reference to the WebAssembly function: "OnHealthCheck"
-	//! callHandle is exported by the Capsule plugin
-	handleHealthFunction := mod.ExportedFunction("OnHealthCheck")
-	if handleHealthFunction == nil {
-		log.Println("❌ Error when getting the handleHealthFunction")
+	// Get the reference to the WebAssembly function: "OnHealthCheck" or "OnMetrics"
+	//! this function is exported by the Capsule plugin
+	wasmFunction := mod.ExportedFunction(exportedFunc)
+	if wasmFunction == nil {
+		log.Println("❌ The exported function " + exportedFunc + " does not exist")
 		c.Status(http.StatusInternalServerError) // .🤔
-		return c.SendString("❌ Error when getting the handleHealthFunction")
+		return c.SendString("❌ The exported function" + exportedFunc + "does not exist")
 	}
 
-	// Now, we can call "OnHealthCheck"
+	// Now, we can call the exported function
 	// the result type is []uint64
-	result, err := handleHealthFunction.Call(ctx)
+	result, err := wasmFunction.Call(ctx)
 	if err != nil {
-		log.Println("❌ Error when calling callHandleHTTP", err)
+		log.Println("❌ Error when calling " + exportedFunc, err)
 		c.Status(http.StatusInternalServerError) // .🤔
 		return c.SendString(err.Error())
 	}
@@ -222,7 +217,6 @@ func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
 	// unmarshal the response
 	var response models.Response
 
-	//! if TextBody contains "\n" or quotes there is an error (fix something in capsule-module-sdk/hande.http.go => callHandleHTTP)
 	errMarshal := json.Unmarshal(responseFromWasmGuest, &response)
 	if errMarshal != nil {
 		log.Println("❌ Error when unmarshal the response", errMarshal)
@@ -240,8 +234,6 @@ func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
 	if len(response.TextBody) > 0 {
 		decodedStrAsByteSlice, _ := base64.StdEncoding.DecodeString(string(response.TextBody))
 
-		// send text body
-		//return c.SendString(response.TextBody)
 		return c.SendString(string(decodedStrAsByteSlice))
 	}
 	// send JSON body
@@ -254,5 +246,20 @@ func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
 
 	return c.Send(jsonStr)
 
+}
+
+// CallWasmFunctionHealthCheck is a function that handles the execution of a WebAssembly function.
+// Route: app.All("/health", handlers.CallWasmFunctionHealthCheck)
+func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
+	//TODO: Protect the route if Token ?
+	return callExportedFunction("OnHealthCheck", c)
+
+}
+
+// CallWasmFunctionMetrics is a function that handles the execution of a WebAssembly function.
+// Route: app.All("/metrics", handlers.CallWasmFunctionMetrics)
+func CallWasmFunctionMetrics(c *fiber.Ctx) error {
+	//TODO: Protect the route if Token ?
+	return callExportedFunction("OnMetrics", c)
 
 }
