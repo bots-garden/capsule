@@ -206,6 +206,10 @@ func main() {
 		app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
 		app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
 
+		app.Get("/functions/health/:function_name", handlers.CallExternalFunctionHealthCheck)
+		app.Get("/functions/health/:function_name/:function_revision", handlers.CallExternalFunctionHealthCheck)
+		app.Get("/functions/health/:function_name/:function_revision/:function_index", handlers.CallExternalFunctionHealthCheck)
+
 		// --------------------------------------------
 		// Handler to notify the main capsule process
 		// --------------------------------------------
@@ -218,10 +222,11 @@ func main() {
 	// --------------------------------------------
 	if flags.faas == true && flags.wasm == "" {
 
-		// TODO:
+		// TODO: Question: route protection or not?
 		// if "/*"
 		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
 		// and function name is index.page
+		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
 		app.All("/*", handlers.CallExternalIndexPageFunction)
 
 		// Previous version
@@ -232,6 +237,9 @@ func main() {
 		*/
 
 	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
+	
+		// TODO: Question: route protection or not?
+		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
 		app.All("/*", handlers.CallWasmFunction)
 	}
 

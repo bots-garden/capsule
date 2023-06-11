@@ -56,6 +56,15 @@ tasks:
           -H 'Content-Type: application/json; charset=utf-8' \
           -d "${JSON_DATA}"
 
+  health-hello-world:
+    env:
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/health
+
 
 
   # Testing capsule-http

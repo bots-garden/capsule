@@ -25,6 +25,20 @@ func OnStop() {
 	capsule.Print("🚙 OnStop")
 }
 
+// OnHealthCheck function
+//export OnHealthCheck
+func OnHealthCheck() uint64 {
+	capsule.Print("⛑️ OnHealthCheck")
+
+	response := capsule.HTTPResponse{
+		JSONBody: `{"message": "OK"}`,
+		Headers: `{"Content-Type": "application/json; charset=utf-8"}`,
+		StatusCode: 200,
+	}
+
+	return capsule.Success([]byte(capsule.StringifyHTTPResponse(response)))
+}
+
 // Handle function 
 func Handle(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 	
