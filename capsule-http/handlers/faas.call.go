@@ -245,6 +245,19 @@ func CallExternalFunction(c *fiber.Ctx) error {
 
 }
 
+// CallExternalFunctionHealthCheck is called by the main process of the faas mode
+/* 
+Routes: 
+  app.All("/functions/health/:function_name", handlers.CallExternalFunctionHealthCheck)
+  app.All("/functions/health/:function_name/:function_revision", handlers.CallExternalFunctionHealthCheck)
+  app.All("/functions/health/:function_name/:function_revision/:function_index", handlers.CallExternalFunctionHealthCheck)
+*/
+func CallExternalFunctionHealthCheck(c *fiber.Ctx) error {
+	return nil
+}
+
+
+
 // CallExternalIndexPageFunction is called by the main process of the faas mode
 // to call the index.page.wasm 
 // the function name is "index.page"

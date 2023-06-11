@@ -65,9 +65,8 @@ func StoreRuntime(capsuleRuntime wazero.Runtime) {
 // c is a pointer to a Fiber context.
 // error is the error returned by the function.
 func CallWasmFunction(c *fiber.Ctx) error {
-	// register the las call
+	// register the last call
 	SetLastCall(time.Now())
-
 
 	mod, err := runtime.Instantiate(ctx, wasmFile)
 	if err != nil {
@@ -174,3 +173,86 @@ func CallWasmFunction(c *fiber.Ctx) error {
 }
 
 
+// CallWasmFunctionHealthCheck is a function that handles the execution of a WebAssembly function.
+// Route: app.All("/health", handlers.CallWasmFunctionHealthCheck)
+func CallWasmFunctionHealthCheck(c *fiber.Ctx) error {
+	//TODO: Protect the route if Token ?
+
+	mod, err := runtime.Instantiate(ctx, wasmFile)
+	if err != nil {
+		log.Println("❌ Error with the module instance", err)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(err.Error())
+	}
+
+	// Get the reference to the WebAssembly function: "OnHealthCheck"
+	//! callHandle is exported by the Capsule plugin
+	handleHealthFunction := mod.ExportedFunction("OnHealthCheck")
+	if handleHealthFunction == nil {
+		log.Println("❌ Error when getting the handleHealthFunction")
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString("❌ Error when getting the handleHealthFunction")
+	}
+
+	// Now, we can call "OnHealthCheck"
+	// the result type is []uint64
+	result, err := handleHealthFunction.Call(ctx)
+	if err != nil {
+		log.Println("❌ Error when calling callHandleHTTP", err)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(err.Error())
+	}
+
+	responsePos, responseSize := capsule.UnPackPosSize(result[0])
+
+	responseBuffer, err := capsule.ReadDataFromMemory(mod, responsePos, responseSize)
+	if err != nil {
+		log.Println("❌ Error when reading the memory", err)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(err.Error())
+	}
+
+	responseFromWasmGuest, err := capsule.Result(responseBuffer)
+	if err != nil {
+		log.Println("❌ Error when getting the Result", err)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(err.Error())
+	}
+
+	// unmarshal the response
+	var response models.Response
+
+	//! if TextBody contains "\n" or quotes there is an error (fix something in capsule-module-sdk/hande.http.go => callHandleHTTP)
+	errMarshal := json.Unmarshal(responseFromWasmGuest, &response)
+	if errMarshal != nil {
+		log.Println("❌ Error when unmarshal the response", errMarshal)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(errMarshal.Error())
+	}
+
+	c.Status(response.StatusCode)
+
+	// set headers
+	for key, value := range response.Headers {
+		c.Set(key, value)
+	}
+
+	if len(response.TextBody) > 0 {
+		decodedStrAsByteSlice, _ := base64.StdEncoding.DecodeString(string(response.TextBody))
+
+		// send text body
+		//return c.SendString(response.TextBody)
+		return c.SendString(string(decodedStrAsByteSlice))
+	}
+	// send JSON body
+	jsonStr, err := json.Marshal(response.JSONBody)
+	if err != nil {
+		log.Println("❌ Error when marshal the body", err)
+		c.Status(http.StatusInternalServerError) // .🤔
+		return c.SendString(errMarshal.Error())
+	}
+
+	return c.Send(jsonStr)
+
+
+}
