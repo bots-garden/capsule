@@ -16,7 +16,7 @@ case $1 in
     ;;
 
   # ✨: sparkles
-  sparkles)
+  sparkles|sparkle|feature)
     message="Introduce new features"
     emoji="✨"
     ;;
