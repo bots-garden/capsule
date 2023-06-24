@@ -7,12 +7,14 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bots-garden/capsule-host-sdk"
 	"github.com/bots-garden/capsule-host-sdk/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/tetratelabs/wazero"
+	"github.com/tetratelabs/wazero/api"
 )
 
 var wasmFile []byte
@@ -60,6 +62,23 @@ func StoreRuntime(capsuleRuntime wazero.Runtime) {
 	runtime = capsuleRuntime
 }
 
+// store all your plugins in a normal Go hash map, protected by a Mutex
+var m sync.Mutex
+var modules = make(map[string](api.Module))
+
+// GetModule from modules map
+func GetModule(ctx context.Context, wasmFile []byte) (api.Module, error) {
+	if module, ok := modules["code"]; ok {
+		return module, nil
+	}
+	module, err := runtime.Instantiate(ctx, wasmFile)
+	if err != nil {
+		return nil, err
+	}
+	modules["code"] = module
+	return module, nil
+}
+
 // CallWasmFunction is a function that handles the execution of a WebAssembly function.
 //
 // c is a pointer to a Fiber context.
@@ -68,7 +87,13 @@ func CallWasmFunction(c *fiber.Ctx) error {
 	// register the last call
 	SetLastCall(time.Now())
 
-	mod, err := runtime.Instantiate(ctx, wasmFile)
+	 // get a lock on the mutex, ensuring no other goroutine has access to the plugin while its executing
+	m.Lock()
+	// don't forget to release the lock on the Mutex, sometimes its best to `defer m.Unlock()` right after yout get the lock
+	defer m.Unlock()
+	mod, err := GetModule(ctx, wasmFile)
+
+	//mod, err := runtime.Instantiate(ctx, wasmFile)
 	if err != nil {
 		log.Println("❌ Error with the module instance", err)
 		c.Status(http.StatusInternalServerError) // .🤔
@@ -173,12 +198,20 @@ func CallWasmFunction(c *fiber.Ctx) error {
 }
 
 func callExportedFunction(exportedFunc string, c *fiber.Ctx) error {
+	 // get a lock on the mutex, ensuring no other goroutine has access to the plugin while its executing
+	 m.Lock()
+	 // don't forget to release the lock on the Mutex, sometimes its best to `defer m.Unlock()` right after yout get the lock
+	 defer m.Unlock()
+	 mod, err := GetModule(ctx, wasmFile)
+
+	/*
 	mod, err := runtime.Instantiate(ctx, wasmFile)
 	if err != nil {
 		log.Println("❌ Error with the module instance", err)
 		c.Status(http.StatusInternalServerError) // .🤔
 		return c.SendString(err.Error())
 	}
+	*/
 
 	// Get the reference to the WebAssembly function: "OnHealthCheck" or "OnMetrics"
 	//! this function is exported by the Capsule plugin
@@ -193,7 +226,7 @@ func callExportedFunction(exportedFunc string, c *fiber.Ctx) error {
 	// the result type is []uint64
 	result, err := wasmFunction.Call(ctx)
 	if err != nil {
-		log.Println("❌ Error when calling " + exportedFunc, err)
+		log.Println("❌ Error when calling "+exportedFunc, err)
 		c.Status(http.StatusInternalServerError) // .🤔
 		return c.SendString(err.Error())
 	}

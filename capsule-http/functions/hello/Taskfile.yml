@@ -5,7 +5,7 @@ description: >
   
   - Build the wasm module: `task build-wasm`
   - Build capsule-http: `task build-capsule-http`
-  - Start Hello World: `task start`
+  - Start Hello: `task start`
   - Call the function/service: `task call`
   - Get the Metrics: `task metrics`
   - Run load test: `task stress`
@@ -17,16 +17,16 @@ description: >
   ```
 
 env:
-    HTTP_PORT: '8085'
+    HTTP_PORT: '8090'
     DOMAIN: 'localhost'
     PROTOCOL: 'http'
-    WASM_FILE: './hello-world.wasm'
+    WASM_FILE: './hello.wasm'
 
 tasks:
   build-wasm:
     cmds:
       - |
-        tinygo build -o hello-world.wasm \
+        tinygo build -o hello.wasm \
           -scheduler=none \
           --no-debug \
           -target wasi ./main.go 
@@ -40,12 +40,12 @@ tasks:
         cd ../..
         go build -ldflags="-s -w" -o capsule-http
         ls -lh capsule-http
-        mv capsule-http ./functions/hello-world
+        mv capsule-http ./functions/hello
 
   start:
     cmds:
       - | 
-        echo "🚀 Testing hello-world..."
+        echo "🚀 Testing hello..."
         ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
 
   call:
@@ -79,8 +79,6 @@ tasks:
         #hey -n 300 -c 100 -m POST \
         #hey -n 1596 -c 1 -m POST \
         #hey -n 15 -c 1 -m POST \
-        #hey -n 1596 -c 1 -m POST \
-        #hey -n 300 -c 100 -m POST \
-        hey -n 3000 -c 100 -m POST \
+        hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
         -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}

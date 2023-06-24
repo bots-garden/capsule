@@ -303,10 +303,12 @@ tasks:
       HTTP_PORT: '6666'
       DOMAIN: 'localhost'
       PROTOCOL: 'http'
-      WASM_FILE: './functions/hello-world/hello-world.wasm'
+      #WASM_FILE: './functions/hello-world/hello-world.wasm'
     cmds:
       - | 
-        hey -n 300 -c 100 -m POST \
+        #hey -n 300 -c 1 -m POST \
+        #hey -n 300 -c 100 -m POST \
+        hey -n 1596 -c 1 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
         -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}
 
@@ -346,9 +348,8 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.4.0.txt
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule_xp.http.stress.report.0.4.0.txt
       #- killport ${HTTP_PORT}
-
 
   build-hey:
     cmds:

@@ -18,9 +18,8 @@ func main() {
 		// Counter for metrics
 		counter++
 		capsule.Print("🧮 Counter: " + strconv.Itoa(counter))
+		capsule.RedisSet("counter", []byte(strconv.Itoa(counter)))
 
-		capsule.CacheSet("counter", []byte(strconv.Itoa(counter)))
-		
 		capsule.Print("📝: " + param.Body)
 		capsule.Print("🔠: " + param.Method)
 		capsule.Print("🌍: " + param.URI)
@@ -75,16 +74,16 @@ func OnHealthCheck() uint64 {
 func OnMetrics() uint64 {
 	capsule.Print("📊 OnMetrics")
 
-	counter, err := capsule.CacheGet("counter")
+	// Get the call counter from cache
+	counter, err := capsule.RedisGet("counter")
 	if err != nil {
 		counter = []byte("0")
 	}
-
 	// Generate OpenText Prometheus metric
 	counterMetrics := []string{
 		"# HELP call counter",
 		"# TYPE call_counter counter",
-		"call_counter " + string(counter),}
+		"call_counter " + string(counter)}
 
 	response := capsule.HTTPResponse{
 		TextBody:   strings.Join(counterMetrics, "\n"),

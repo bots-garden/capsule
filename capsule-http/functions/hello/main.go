@@ -9,18 +9,17 @@ import (
 	"github.com/valyala/fastjson"
 )
 
+var counter int
 
 func main() {
-	counter := 0
+	
+	counter = 0
 
 	capsule.SetHandleHTTP(func(param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
-
-		// Counter for metrics
-		counter++
-		capsule.Print("🧮 Counter: " + strconv.Itoa(counter))
-
-		capsule.CacheSet("counter", []byte(strconv.Itoa(counter)))
 		
+		counter++
+		capsule.Print("🟢 Counter: " + strconv.Itoa(counter))
+
 		capsule.Print("📝: " + param.Body)
 		capsule.Print("🔠: " + param.Method)
 		capsule.Print("🌍: " + param.URI)
@@ -48,12 +47,15 @@ func main() {
 //export OnStart
 func OnStart() {
 	capsule.Print("🚗 OnStart")
+	counter = 42
 }
 
 // OnStop function
 //export OnStop
 func OnStop() {
 	capsule.Print("🚙 OnStop")
+	capsule.Print("🟢 Counter: " + strconv.Itoa(counter))
+
 }
 
 // OnHealthCheck function
@@ -75,16 +77,11 @@ func OnHealthCheck() uint64 {
 func OnMetrics() uint64 {
 	capsule.Print("📊 OnMetrics")
 
-	counter, err := capsule.CacheGet("counter")
-	if err != nil {
-		counter = []byte("0")
-	}
-
 	// Generate OpenText Prometheus metric
 	counterMetrics := []string{
 		"# HELP call counter",
 		"# TYPE call_counter counter",
-		"call_counter " + string(counter),}
+		"call_counter " + strconv.Itoa(counter)}
 
 	response := capsule.HTTPResponse{
 		TextBody:   strings.Join(counterMetrics, "\n"),
@@ -94,5 +91,3 @@ func OnMetrics() uint64 {
 	return capsule.Success([]byte(capsule.StringifyHTTPResponse(response)))
 
 }
-
-

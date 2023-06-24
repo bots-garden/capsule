@@ -148,7 +148,13 @@ func main() {
 	// Onstart is an exported function
 	if wasmFile != nil {
 		// with FaaS mode, the wasm file could be empty
-		capsule.CallOnStart(ctx, runtime, wasmFile)
+		mod, err := handlers.GetModule(ctx, wasmFile)
+		if err != nil {
+			//TODO: display error message
+			log.Println("❌ [OnStart] Error with the module instance", err)
+			os.Exit(1)
+		}
+		capsule.CallOnStart(ctx, mod, wasmFile)
 	}
 	
 	if flags.faas == true {
@@ -209,7 +215,14 @@ func main() {
 	// Call OnStop (when Ctr+C)
 	if wasmFile != nil {
 		// Call only once CallOnStop wasm module method
-		capsule.CallOnStop(ctx, runtime, wasmFile)
+		mod, err := handlers.GetModule(ctx, wasmFile)
+		if err != nil {
+			//TODO: display error message
+			log.Println("❌ [OnStop] Error with the module instance", err)
+			os.Exit(1)
+		}
+		capsule.CallOnStop(ctx, mod, wasmFile)
+
 	}
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
