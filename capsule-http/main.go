@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"os/signal"
-	"strconv"
 
 	"syscall"
 	"time"
@@ -21,7 +20,6 @@ import (
 	"github.com/go-resty/resty/v2"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/skip"
 )
 
 // CapsuleFlags handles params for the capsule-http command
@@ -111,7 +109,9 @@ func main() {
 	// Create a new WebAssembly Runtime.
 	runtime := capsule.GetRuntime(ctx)
 
+	// -----------------------------------
 	// START: host functions
+	// -----------------------------------
 	// Get the builder and load the default host functions
 	builder := capsule.GetBuilder(runtime)
 
@@ -125,7 +125,9 @@ func main() {
 		log.Println("❌ Error with env module and host function(s):", err)
 		os.Exit(1)
 	}
+	// -----------------------------------
 	// END: host functions
+	// -----------------------------------
 
 	// This closes everything this Runtime created.
 	defer runtime.Close(ctx)
@@ -135,178 +137,77 @@ func main() {
 	// -----------------------------------
 	// Load the WebAssembly module
 	// -----------------------------------
-	var wasmFile []byte // global to main to be accessible from CallOnStart and CallOnStop
+	// wasmFile []byte is global to be accessible
+	// from CallOnStart and CallOnStop
 
-	if flags.wasm != "" {
-		wasmFile, err = tools.GetWasmFile(flags.wasm, flags.url, flags.authHeaderName, flags.authHeaderValue)
-		if err != nil {
-			log.Println("❌📝 Error while loading the wasm file", err)
-			os.Exit(1)
-		}
-		handlers.StoreWasmFile(wasmFile)
-
-		// Call only once OnStart wasm module method
-		capsule.CallOnStart(ctx, runtime, wasmFile)
-
-	} else {
-		// the wasm file is not mandatory in faas mode
-		// otherwise it's an error
-		if flags.faas != true {
-			log.Println("❌📝 Error while loading the wasm file (empty)")
-			os.Exit(1)
-		}
+	wasmFile, err := LoadWasmFile(ctx, flags, runtime)
+	if err != nil {
+		os.Exit(1)
 	}
-
-	if flags.faas == true {
-		var capsuleFaasToken = tools.GetEnv("CAPSULE_FAAS_TOKEN", "")
-
-		ex, _ := os.Executable()
-
-		// 0.3.9 handlers.SetMainCapsuleTaskPath(os.Args[0])
-		// change for 0.4.0:
-		handlers.SetMainCapsuleTaskPath(ex)
-
-		log.Println("🚀 faas mode activated!", "["+ex+"]", handlers.GetMainCapsuleTaskPath())
-
-		checkToken := func(c *fiber.Ctx) bool {
-			predicate := c.Get("CAPSULE_FAAS_TOKEN") != capsuleFaasToken
-			if predicate == true {
-				log.Println("🔴🤚 FAAS mode activated, you need to set CAPSULE_FAAS_TOKEN!")
-				//c.Status(fiber.StatusUnauthorized)
-			}
-			return predicate
+	// Call only once OnStart wasm module method
+	// Onstart is an exported function
+	if wasmFile != nil {
+		// with FaaS mode, the wasm file could be empty
+		mod, err := handlers.GetModule(ctx, wasmFile)
+		if err != nil {
+			//TODO: display error message
+			log.Println("❌ [OnStart] Error with the module instance", err)
+			os.Exit(1)
 		}
-
-		// --------------------------------------------
-		// ! This is the FAAS mode of Capsule HTTP 🚀
-		// --------------------------------------------
-		// --------------------------------------------
-		// Handler to launch a new Capsule process
-		// and create a revision for a function
-		// --------------------------------------------
-		app.Post("/functions/start", skip.New(handlers.StartNewCapsuleHTTPProcess, checkToken))
-
-		// Get the list of processes
-		app.Get("/functions/processes", skip.New(handlers.GetListOfCapsuleHTTPProcesses, checkToken))
-
-		// ???: do it with index too?
-		// Duplicate a process
-		app.Put("/functions/duplicate/:function_name/:function_revision/:new_function_revision", skip.New(handlers.DuplicateExternalFunction, checkToken))
-
-		// Stop a process
-		app.Delete("/functions/drop/:function_name", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
-		app.Delete("/functions/drop/:function_name/:function_revision", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
-		app.Delete("/functions/drop/:function_name/:function_revision/:function_index", skip.New(handlers.StopAndKillCapsuleHTTPProcess, checkToken))
-
-		// --------------------------------------------
-		// Handler to call the revision of an external
-		// function (module)
-		// --------------------------------------------
-		app.All("/functions/:function_name", handlers.CallExternalFunction)
-		app.All("/functions/:function_name/:function_revision", handlers.CallExternalFunction)
-		app.All("/functions/:function_name/:function_revision/:function_index", handlers.CallExternalFunction)
-
-		app.Get("/functions/health/:function_name", handlers.CallExternalFunctionHealthCheck)
-		app.Get("/functions/health/:function_name/:function_revision", handlers.CallExternalFunctionHealthCheck)
-		app.Get("/functions/health/:function_name/:function_revision/:function_index", handlers.CallExternalFunctionHealthCheck)
-
-		// --------------------------------------------
-		// Handler to notify the main capsule process
-		// --------------------------------------------
-		app.All("/notify/:function_name/:function_revision", handlers.NotifiedMainCapsuleHTTPProcess)
-		app.All("/notify/:function_name/:function_revision/:function_index", handlers.NotifiedMainCapsuleHTTPProcess)
+		capsule.CallOnStart(ctx, mod, wasmFile)
+	}
+	
+	if flags.faas == true {
+		// -----------------------------------
+		// Start FaaS mode
+		// and define routes
+		// -----------------------------------
+		err := StartFaasMode(app)
+		if err != nil {
+			os.Exit(1)
+		}
 	}
 
 	// --------------------------------------------
 	// Handler to call the WASM function
 	// --------------------------------------------
-	if flags.faas == true && flags.wasm == "" {
+	defineMainCapsuleProcessRoutes(app, flags)
 
-		// TODO: Question: route protection or not?
-		// if "/*"
-		// first: try a handler similar to handlers.CallExternalFunction (faas.call.go)
-		// and function name is index.page
-		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
-		app.All("/*", handlers.CallExternalIndexPageFunction)
-
-		// Previous version
-		/*
-			app.All("/*", func(c *fiber.Ctx) error {
-				return c.SendString("Capsule " + tools.GetVersion() + "[faas]")
-			})
-		*/
-
-	} else { // "normal" mode or FaaS mode loading a wasm module in the same process
-	
-		// TODO: Question: route protection or not?
-		app.Get("/health", handlers.CallWasmFunctionHealthCheck)
-		app.All("/*", handlers.CallWasmFunction)
-	}
 
 	// --------------------------------------------
-	// Start listening
+	// Start listening (HTTP Server)
 	// --------------------------------------------
 	go func() {
 
-		var httpPort string
-
-		if flags.httpPort == "" {
-			httpPort = tools.GetNewHTTPPort()
-		} else {
-			httpPort = flags.httpPort
+		err := HTTPListening(ctx, flags, version, app)
+		if err != nil {
+			os.Exit(1)
 		}
 
-		log.Println("📦 wasm module loaded:", flags.wasm)
-
-		if flags.crt != "" {
-			// certs/capsule.local.crt
-			// certs/capsule.local.key
-			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🔐🌍")
-
-			app.ListenTLS(":"+httpPort, flags.crt, flags.key)
-
-		} else {
-			log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
-
-			if tools.GetEnv("NGROK_AUTH_TOKEN", "") != "" {
-				tools.ActivateNgrokTunnel(ctx, app)
-			}
-
-			app.Listen(":" + httpPort)
-
-		}
 	}()
 
 	go func() {
+		/*
 		// Set a value for the last call
 		if flags.stopAfter == "" {
 			return
 		}
 		duration, _ := strconv.ParseFloat(flags.stopAfter, 64)
 		handlers.SetLastCall(time.Now())
+
 		for {
 			time.Sleep(1 * time.Second)
 			if time.Since(handlers.GetLastCall()).Seconds() >= duration {
 				stop()
 			}
 		}
+		*/
+		stopProcess := ShouldStopAfterDelay(flags)
+		if stopProcess {
+			stop()
+		}
 
 	}()
-
-	// It's only for debugging
-	/*
-		go func() {
-			for {
-				time.Sleep(1 * time.Second)
-				processes := data.GetAllCapsuleProcessRecords()
-				if len(processes) > 0 { // I'm the main process
-					for _, p := range processes {
-						fmt.Println("📳 ->", p.FunctionName, p.FunctionRevision, p.Index, p.Description, p.StatusDescription)
-					}
-				}
-			}
-		}()
-	*/
 
 	// Listen for the interrupt signal.
 	<-ctx.Done()
@@ -314,7 +215,14 @@ func main() {
 	// Call OnStop (when Ctr+C)
 	if wasmFile != nil {
 		// Call only once CallOnStop wasm module method
-		capsule.CallOnStop(ctx, runtime, wasmFile)
+		mod, err := handlers.GetModule(ctx, wasmFile)
+		if err != nil {
+			//TODO: display error message
+			log.Println("❌ [OnStop] Error with the module instance", err)
+			os.Exit(1)
+		}
+		capsule.CallOnStop(ctx, mod, wasmFile)
+
 	}
 
 	// Restore default behavior on the interrupt signal and notify user of shutdown.
