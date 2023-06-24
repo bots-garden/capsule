@@ -16,7 +16,7 @@ require (
 )
 
 require (
-	github.com/bots-garden/capsule-host-sdk v0.0.4
+	github.com/bots-garden/capsule-host-sdk v0.0.5
 	github.com/gofiber/fiber/v2 v2.45.0
 	github.com/tetratelabs/wazero v1.2.0
 	golang.ngrok.com/ngrok v1.0.0
