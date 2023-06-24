@@ -1,5 +1,8 @@
 version: '3'
 
+description: >
+  # Integration tests of the FaaS mode of Capsule
+
 tasks:
 
   # Build of capsule-http
@@ -14,6 +17,100 @@ tasks:
         sudo cp capsule-http  /usr/local/bin/capsule-http
         capsule-http --version
   
+  build-capsule-http:
+    description: >
+      Build capsule-http, and copy the binary to the current directory
+      `/capsule/capsule-http/tests/faas`
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd ../..
+        pwd
+        go build -ldflags="-s -w" -o capsule-http
+        ls -lh capsule-http
+        mv capsule-http  ./tests/faas
+        cd ./tests/faas
+        ./capsule-http --version
+
+  build-html-page:
+    cmds:
+    - |
+      cd functions/html-page
+      tinygo build -o html-page.wasm \
+        -scheduler=none \
+        --no-debug \
+        -target wasi ./main.go 
+      ls -lh *.wasm
+      mv html-page.wasm ../..  
+
+  build-index-page:
+    description: >
+      In "FaaS mode", if an `index.page.wasm` file exists
+      Capsule will serve it with the "/" route
+      Otherwise, Capsule will return a simple message with its version number
+    cmds:
+    - |
+      cd functions/index-page
+      tinygo build -o index.page.wasm \
+        -scheduler=none \
+        --no-debug \
+        -target wasi ./main.go 
+      ls -lh *.wasm
+      mv index.page.wasm ../..
+
+  # Start main capsule process
+  start-capsule-http-with-file:
+    description: >
+      Start Capsule HTTP with an wasm module.
+      Capsule will load and serve this wasm module,
+      but in the same process. It means that if you want to update the `index.page.wasm` module,
+      you will need to stop and start again the Capsule HTTP process.
+
+      There is another solution:
+      - start the capsule http without any file
+      - start a function name `index.page` (as any other function)
+      Then, you will be able to redeploy a version of `index.page`
+
+      See these task: `start-capsule-http` and `start-index`
+    env:
+      HTTP_PORT: '8080'
+      #WASM_FILE: './functions/index-page/index.page.wasm'
+      WASM_FILE: './html-page.wasm'
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # use --faas=true to activate the faas mode of Capsule HTTP
+        #capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} --faas=true
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} --faas=true
+        # you can use http://capsule-ide.local:8080/
+
+  start-capsule-http:
+    env:
+      HTTP_PORT: '8080'
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+    cmds:
+      - | # use --faas=true to activate the faas mode of Capsule HTTP
+        ./capsule-http --httpPort=${HTTP_PORT} --faas=true
+        # you can use http://capsule-ide.local:8080/
+
+  start-index:
+    env:
+      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+      CAPSULE_MAIN_PROCESS_URL: "http://capsule-ide.local:8080"
+    cmds:
+    - |
+      capsctl \
+          --cmd=start \
+          --name=index.page \
+          --revision=default \
+          --wasm=./index.page.wasm
+
+  todo: >
+    - redeploy of index
+
+  # =======================================
+  # Without capsctl, only the API
+  # =======================================
+
   build-hello-functions:    
     cmds:
       - | # hello-default
@@ -105,16 +202,7 @@ tasks:
              "https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
 
 
-  # Start main capsule process
-  start-capsule-http:
-    env:
-      HTTP_PORT: '8080'
-      WASM_FILE: './functions/index-page/index-page.wasm'
-      CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
-    cmds:
-      - | # use --faas=true to activate the faas mode of Capsule HTTP
-        capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} --faas=true
-        # you can use http://capsule-ide.local:8080/
+
 
   launch-hello-functions:
     cmds:
