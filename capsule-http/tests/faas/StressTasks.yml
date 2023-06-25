@@ -1,0 +1,20 @@
+version: '3'
+
+env:
+  CAPSULE_MAIN_PROCESS_URL: "http://capsule-ide.local:8080"
+
+tasks:
+
+  orange:
+      cmds:
+      - |
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "Bob Morane" ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/orange
+
+  green:
+      cmds:
+      - |
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "Bob Morane" ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/green

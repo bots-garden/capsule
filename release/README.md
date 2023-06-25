@@ -6,6 +6,7 @@
 
 👋 **be on the main branch**
 
+Last release: `v0.4.0 🌶️ [chili pepper]`
 Last release: `v0.3.9 🥒 [cucumber]`
 Last release: `v0.3.8 🥬 [leafy greens]` 
 Last release: `v0.3.7 🥦 [broccoli]`
@@ -17,7 +18,7 @@ Check every documents:
 
 ### Update version number in Go source
 
-- `capsule-http/description.txt`
+- `capsule-http/tools/description.txt`
 - `capsule-cli/description.txt`
 - `capsctl/description.txt`
 

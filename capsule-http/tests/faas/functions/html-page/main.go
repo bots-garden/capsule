@@ -1,22 +1,15 @@
-// Package main => serving an html resource
+// Package main
 package main
 
 import (
-	_ "embed"
 	capsule "github.com/bots-garden/capsule-module-sdk"
 )
 
-var (
-	//go:embed index.html
-	html []byte
-)
-
 func main() {
-
 	capsule.SetHandleHTTP(func (param capsule.HTTPRequest) (capsule.HTTPResponse, error) {
 		
 		return capsule.HTTPResponse{
-			TextBody: string(html),
+			TextBody: "<h1>👋 Hello World! 🌍</h1>",
 			Headers: `{
 				"Content-Type": "text/html; charset=utf-8",
 				"Cache-Control": "no-cache",
@@ -26,4 +19,3 @@ func main() {
 		}, nil
 	})
 }
-//TODO: make something easier for the headers (see old version of Capsule)

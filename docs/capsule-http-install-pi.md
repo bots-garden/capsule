@@ -9,7 +9,7 @@
 ssh k33g@capsulezero.local
 
 ## Install Capsule HTTP
-VERSION="v0.3.9" OS="linux" ARCH="arm64"
+VERSION="v0.3.4" OS="linux" ARCH="arm64"
 wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
 chmod +x capsule-http
 ./capsule-http --version
@@ -18,7 +18,7 @@ chmod +x capsule-http
 Or you can copy the appropriate Capsule HTTP binary from your computer to the RPI:
 
 ```bash
-scp capsule-http-v0.3.9-linux-arm64 k33g@capsulezero.local:./
+scp capsule-http-v0.3.4-linux-arm64 k33g@capsulezero.local:./
 ```
 
 ## Start Capsule HTTP FaaS mode

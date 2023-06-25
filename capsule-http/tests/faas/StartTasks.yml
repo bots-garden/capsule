@@ -1,0 +1,64 @@
+version: '3'
+
+description: >
+  `CAPSULE_FAAS_TOKEN` and `CAPSULE_MAIN_PROCESS_URL` are required
+  to run `capsctl`
+
+env:
+  CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+  CAPSULE_MAIN_PROCESS_URL: "http://capsule-ide.local:8080"
+
+tasks:
+
+  orange:
+    cmds:
+    - |
+      ./capsctl \
+          --cmd=start \
+          --name=hello \
+          --revision=orange \
+          --description="hello orange deployment" \
+          --env='["MESSAGE=🍊","GREETING=🎉"]'\
+          --wasm=./hello-orange.wasm
+    remarks: >
+      `--path`: allow to set the path to `capsule-http`
+      example: `--path=/home/ubuntu/capsule-http`
+      otherwise, the default value is used (the current path process)
+
+  green:
+    cmds:
+      - |    
+        ./capsctl \
+            --cmd=start \
+            --name=hello \
+            --revision=green \
+            --stopAfter=10 \
+            --env='["MESSAGE=🍏","GREETING=🎉"]'\
+            --description="hello green deployment" \
+            --wasm=./hello-green.wasm
+    remarks: >
+      `--stopAfter=10`: stop the function after 10 seconds
+
+  blue:
+    cmds:
+      - |   
+        ./capsctl \
+            --cmd=start \
+            --name=hello \
+            --revision=blue \
+            --stopAfter=10 \
+            --env='["MESSAGE=🦋","GREETING=🎉"]'\
+            --description="hello blue deployment" \
+            --wasm=./hello-blue.wasm
+
+  default:
+    cmds:
+      - |   
+        ./capsctl \
+            --cmd=start \
+            --name=hello \
+            --revision=default \
+            --stopAfter=10 \
+            --env='["MESSAGE=🐼","GREETING=🚀"]'\
+            --description="hello default deployment" \
+            --wasm=./hello-default.wasm

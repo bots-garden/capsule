@@ -18,5 +18,6 @@ use (
 	./capsule-http/tests/faas/functions/hello-green
 	./capsule-http/tests/faas/functions/hello-orange
 	./capsule-http/tests/faas/functions/index-page
+	./capsule-http/tests/faas/functions/html-page
 
 )

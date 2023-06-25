@@ -1,0 +1,44 @@
+version: '3'
+
+env:
+  CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+  CAPSULE_MAIN_PROCESS_URL: "http://capsule-ide.local:8080"
+
+tasks:
+
+  orange:
+    cmds:
+    - |
+      curl -X POST ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/orange \
+      -H 'Content-Type: text/plain; charset=utf-8' \
+      -d 'Bob Morane'
+
+  orange_two:
+    cmds:
+    - |
+      curl -X POST ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/orange_two \
+      -H 'Content-Type: text/plain; charset=utf-8' \
+      -d 'Bob Morane'
+
+  green:
+    cmds:
+    - |
+      curl -X POST ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/green \
+      -H 'Content-Type: text/plain; charset=utf-8' \
+      -d 'Bob Morane'
+
+  blue:
+    cmds:
+    - |
+      curl -X POST ${CAPSULE_MAIN_PROCESS_URL}/functions/hello/blue \
+      -H 'Content-Type: text/plain; charset=utf-8' \
+      -d 'Bob Morane'
+
+  default:
+    description: >
+      The `default` revision can be call without specifying `default` into the route
+    cmds:
+    - |
+      curl -X POST ${CAPSULE_MAIN_PROCESS_URL}/functions/hello \
+      -H 'Content-Type: text/plain; charset=utf-8' \
+      -d 'Bob Morane'

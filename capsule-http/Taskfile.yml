@@ -348,7 +348,7 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule_xp.http.stress.report.0.4.0.txt
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.4.0.txt
       #- killport ${HTTP_PORT}
 
   build-hey:

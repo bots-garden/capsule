@@ -1,0 +1,51 @@
+version: '3'
+
+description: >
+  `CAPSULE_FAAS_TOKEN` and `CAPSULE_MAIN_PROCESS_URL` are required
+  to run `capsctl`
+
+env:
+  CAPSULE_FAAS_TOKEN: "ILOVEPANDAS"
+  CAPSULE_MAIN_PROCESS_URL: "http://capsule-ide.local:8080"
+
+tasks:
+
+  orange:
+    cmds:
+    - |
+      ./capsctl \
+        --cmd=drop \
+        --name=hello \
+        --revision=orange
+
+  orange_two:
+    cmds:
+    - |
+      ./capsctl \
+        --cmd=drop \
+        --name=hello \
+        --revision=orange_two
+
+  green:
+    cmds:
+      - |    
+        ./capsctl \
+          --cmd=drop \
+          --name=hello \
+          --revision=green
+
+  blue:
+    cmds:
+      - |   
+        ./capsctl \
+          --cmd=drop \
+          --name=hello \
+          --revision=blue
+
+  default:
+    cmds:
+      - |   
+        ./capsctl \
+          --cmd=drop \
+          --name=hello \
+          --revision=default
