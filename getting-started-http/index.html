@@ -319,6 +319,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#write-a-wasm-capsule-module" class="md-nav__link">
+    Write a WASM Capsule module
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#serve-a-wasm-capsule-module" class="md-nav__link">
     Serve a WASM Capsule module
   </a>
@@ -328,6 +335,20 @@
         <li class="md-nav__item">
   <a href="#monitoring-the-service" class="md-nav__link">
     Monitoring the service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    Health Check
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onstart-and-onstop-functions" class="md-nav__link">
+    OnStart and OnStop functions
   </a>
   
 </li>
@@ -484,6 +505,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-ovh-deploy/" class="md-nav__link">
+        Capsule FaaS on OVH-Cloud
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -539,6 +574,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#write-a-wasm-capsule-module" class="md-nav__link">
+    Write a WASM Capsule module
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#serve-a-wasm-capsule-module" class="md-nav__link">
     Serve a WASM Capsule module
   </a>
@@ -548,6 +590,20 @@
         <li class="md-nav__item">
   <a href="#monitoring-the-service" class="md-nav__link">
     Monitoring the service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    Health Check
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onstart-and-onstop-functions" class="md-nav__link">
+    OnStart and OnStop functions
   </a>
   
 </li>
@@ -582,9 +638,55 @@
 <p>First, download the last version of the Capsule HTTP server for the appropriate OS &amp; ARCH (and release version):</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
-<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.4.0&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule-http<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-http-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule-http
+</code></pre></div></td></tr></table></div>
+<h2 id="write-a-wasm-capsule-module">Write a WASM Capsule module</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="s">&quot;github.com/bots-garden/capsule-module-sdk&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">SetHandleHTTP</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">param</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPRequest</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">        </span><span class="nx">response</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">            </span><span class="nx">JSONBody</span><span class="p">:</span><span class="w">   </span><span class="s">`{&quot;message&quot;: &quot;Hello World&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">            </span><span class="nx">Headers</span><span class="p">:</span><span class="w">    </span><span class="s">`{&quot;Content-Type&quot;: &quot;application/json; charset=utf-8&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">            </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>Build the WASM module</strong>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>tinygo<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>hello-world.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">    </span>-scheduler<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span>--no-debug<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span>-target<span class="w"> </span>wasi<span class="w"> </span>./main.go<span class="w"> </span>
 </code></pre></div></td></tr></table></div>
 <h2 id="serve-a-wasm-capsule-module">Serve a WASM Capsule module</h2>
 <p>To run a WASM Capsule module you need to set 2 flags:</p>
@@ -592,54 +694,143 @@
 <li><code>--wasm</code>: the path to the WASM module</li>
 <li><code>--params</code>: the parameter to pass to the WASM module</li>
 </ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
-<span class="normal"><a href="#__codelineno-1-2">2</a></span>
-<span class="normal"><a href="#__codelineno-1-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a>--wasm<span class="o">=</span>./functions/hello-world/hello-world.wasm<span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a>--httpPort<span class="o">=</span><span class="m">8080</span>
-</code></pre></div></td></tr></table></div>
-<p>You can query the service like this:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
-<span class="normal"><a href="#__codelineno-2-2">2</a></span>
-<span class="normal"><a href="#__codelineno-2-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">    </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;Bob Morane&quot;,&quot;age&quot;:42}&#39;</span>
-</code></pre></div></td></tr></table></div></p>
-<p>You can remotely download  the WASM module with the <code>--url</code> flag:
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
 <span class="normal"><a href="#__codelineno-3-2">2</a></span>
-<span class="normal"><a href="#__codelineno-3-3">3</a></span>
-<span class="normal"><a href="#__codelineno-3-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2"></a>--url<span class="o">=</span>http://localhost:5000/hello-world.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3"></a>--wasm<span class="o">=</span>./tmp/hello-world.wasm<span class="w"> </span>
-<a id="__codelineno-3-4" name="__codelineno-3-4"></a>--httpPort<span class="o">=</span><span class="m">8080</span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a>--wasm<span class="o">=</span>./functions/hello-world/hello-world.wasm<span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a>--httpPort<span class="o">=</span><span class="m">8080</span>
+</code></pre></div></td></tr></table></div>
+<p>You can query the service like this:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">    </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;Bob Morane&quot;,&quot;age&quot;:42}&#39;</span>
+</code></pre></div></td></tr></table></div></p>
+<p>You can remotely download  the WASM module with the <code>--url</code> flag:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>--url<span class="o">=</span>http://localhost:5000/hello-world.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>--wasm<span class="o">=</span>./tmp/hello-world.wasm<span class="w"> </span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>--httpPort<span class="o">=</span><span class="m">8080</span>
 </code></pre></div></td></tr></table></div></p>
 <blockquote>
 <p>👋 if you need to set an authentication header you can use these flags: <code>--authHeaderName</code> and <code>--authHeaderValue</code>:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
-<span class="normal"><a href="#__codelineno-4-2">2</a></span>
-<span class="normal"><a href="#__codelineno-4-3">3</a></span>
-<span class="normal"><a href="#__codelineno-4-4">4</a></span>
-<span class="normal"><a href="#__codelineno-4-5">5</a></span>
-<span class="normal"><a href="#__codelineno-4-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2"></a>--url<span class="o">=</span><span class="si">${</span><span class="nv">DOWNLOAD_URL</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3"></a>--authHeaderName<span class="o">=</span><span class="s2">&quot;PRIVATE-TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4"></a>--authHeaderValue<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5"></a>--wasm<span class="o">=</span><span class="si">${</span><span class="nv">WASM_FILE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6"></a>--httpPort<span class="o">=</span><span class="si">${</span><span class="nv">HTTP_PORT</span><span class="si">}</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span>
+<span class="normal"><a href="#__codelineno-6-5">5</a></span>
+<span class="normal"><a href="#__codelineno-6-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>--url<span class="o">=</span><span class="si">${</span><span class="nv">DOWNLOAD_URL</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a>--authHeaderName<span class="o">=</span><span class="s2">&quot;PRIVATE-TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a>--authHeaderValue<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a>--wasm<span class="o">=</span><span class="si">${</span><span class="nv">WASM_FILE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a>--httpPort<span class="o">=</span><span class="si">${</span><span class="nv">HTTP_PORT</span><span class="si">}</span>
 </code></pre></div></td></tr></table></div>
 </blockquote>
 <h2 id="monitoring-the-service">Monitoring the service</h2>
-<p>Capsule HTTP server exposes a REST API that can be used to monitor the service. It's a Prometheus route. You only need to call the <code>/metrics</code> endpoint.</p>
+<p>Capsule HTTP server exposes a REST API (<code>/metrics</code> endpoint) that can be used to monitor the service. You have to write the logic to generate the metrics and expose them to Prometheus.</p>
+<p>An HTTP request to the <code>/metrics</code> endpoint will trigger the call of the <strong>exposed</strong> <code>OnMetrics</code> function of the WASM module. You need to implement the <code>OnMetrics</code> function in your WASM module:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span>
+<span class="normal"><a href="#__codelineno-7-13">13</a></span>
+<span class="normal"><a href="#__codelineno-7-14">14</a></span>
+<span class="normal"><a href="#__codelineno-7-15">15</a></span>
+<span class="normal"><a href="#__codelineno-7-16">16</a></span>
+<span class="normal"><a href="#__codelineno-7-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="c1">//export OnMetrics</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">OnMetrics</span><span class="p">()</span><span class="w"> </span><span class="kt">uint64</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="w">    </span><span class="c1">// Generate OpenText Prometheus metric</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="w">    </span><span class="nx">counterMetrics</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="w">        </span><span class="s">&quot;# HELP call counter&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="w">        </span><span class="s">&quot;# TYPE call_counter counter&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="w">        </span><span class="s">&quot;call_counter &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">strconv</span><span class="p">.</span><span class="nx">Itoa</span><span class="p">(</span><span class="nx">counter</span><span class="p">)}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="w">    </span><span class="nx">response</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="w">        </span><span class="nx">TextBody</span><span class="p">:</span><span class="w">   </span><span class="nx">strings</span><span class="p">.</span><span class="nx">Join</span><span class="p">(</span><span class="nx">counterMetrics</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;\n&quot;</span><span class="p">),</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="w">        </span><span class="nx">Headers</span><span class="p">:</span><span class="w">    </span><span class="s">`{&quot;Content-Type&quot;: &quot;text/plain; charset=utf-8&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="w">        </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">Success</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">StringifyHTTPResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">)))</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
 <blockquote>
-<p>This feature is provided thanks to the <a href="https://github.com/ansrivas/fiberprometheus">FiberPrometheus</a> library.</p>
-</blockquote>
-<p>Following metrics are available by default:</p>
 <ul>
-<li><code>http_requests_total</code></li>
-<li><code>http_request_duration_seconds</code></li>
-<li><code>http_requests_in_progress_total</code></li>
+<li>Don't forget to expose the function: <code>//export OnMetrics</code></li>
+<li>You can find a complete sample here: <a href="https://github.com/bots-garden/capsule/blob/main/capsule-http/functions/hello-world/main.go">hello-world sample</a></li>
 </ul>
+</blockquote>
+<h2 id="health-check">Health Check</h2>
+<p>Capsule HTTP server exposes a REST API (<code>/health</code> endpoint) that can be used to teturn a health status. You have to write the logic to generate the status.</p>
+<p>An HTTP request to the <code>/health</code> endpoint will trigger the call of the <strong>exposed</strong> <code>OnHealthCheck</code> function of the WASM module. You need to implement the <code>OnHealthCheck</code> function in your WASM module:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span>
+<span class="normal"><a href="#__codelineno-8-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1">//export OnHealthCheck</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">OnHealthCheck</span><span class="p">()</span><span class="w"> </span><span class="kt">uint64</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="w">    </span><span class="nx">response</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">        </span><span class="nx">JSONBody</span><span class="p">:</span><span class="w">   </span><span class="s">`{&quot;message&quot;: &quot;OK&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="w">        </span><span class="nx">Headers</span><span class="p">:</span><span class="w">    </span><span class="s">`{&quot;Content-Type&quot;: &quot;application/json; charset=utf-8&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">        </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">Success</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">StringifyHTTPResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">)))</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<ul>
+<li>Don't forget to expose the function: <code>//export OnHealthCheck</code></li>
+<li>You can find a complete sample here: <a href="https://github.com/bots-garden/capsule/blob/main/capsule-http/functions/hello-world/main.go">hello-world sample</a></li>
+</ul>
+</blockquote>
+<h2 id="onstart-and-onstop-functions"><code>OnStart</code> and <code>OnStop</code> functions</h2>
+<p>You can add a <code>OnStart</code> and <code>OnStop</code> function to the WASM module. These functions will be called when the service starts and stops.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
+<span class="normal"><a href="#__codelineno-9-2">2</a></span>
+<span class="normal"><a href="#__codelineno-9-3">3</a></span>
+<span class="normal"><a href="#__codelineno-9-4">4</a></span>
+<span class="normal"><a href="#__codelineno-9-5">5</a></span>
+<span class="normal"><a href="#__codelineno-9-6">6</a></span>
+<span class="normal"><a href="#__codelineno-9-7">7</a></span>
+<span class="normal"><a href="#__codelineno-9-8">8</a></span>
+<span class="normal"><a href="#__codelineno-9-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1">//export OnStart</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">OnStart</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;🚗 OnStart&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="p">}</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="c1">//export OnStop</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">OnStop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;🚙 OnStop&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<ul>
+<li>Don't forget to expose the functions</li>
+<li>You can find a complete sample here: <a href="https://github.com/bots-garden/capsule/blob/main/capsule-http/functions/hello-world/main.go">hello-world sample</a></li>
+</ul>
+</blockquote>
 <h2 id="develop-a-wasm-capsule-module">Develop a WASM Capsule module</h2>
 <p>Have a look to these samples:</p>
 <ul>

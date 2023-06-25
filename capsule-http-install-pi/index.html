@@ -18,7 +18,7 @@
         <link rel="prev" href="../capsule-http-serve-html/">
       
       
-        <link rel="next" href="../capsule-http-enterprise/">
+        <link rel="next" href="../capsule-http-ovh-deploy/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.9">
@@ -484,6 +484,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capsule-http-ovh-deploy/" class="md-nav__link">
+        Capsule FaaS on OVH-Cloud
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -593,13 +607,13 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>ssh<span class="w"> </span>k33g@capsulezero.local
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="c1">## Install Capsule HTTP</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.9&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.3.4&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsule-http<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsule-http-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsule-http
 <a id="__codelineno-0-8" name="__codelineno-0-8"></a>./capsule-http<span class="w"> </span>--version
 </code></pre></div></td></tr></table></div>
 <p>Or you can copy the appropriate Capsule HTTP binary from your computer to the RPI:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>scp<span class="w"> </span>capsule-http-v0.3.9-linux-arm64<span class="w"> </span>k33g@capsulezero.local:./
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>scp<span class="w"> </span>capsule-http-v0.3.4-linux-arm64<span class="w"> </span>k33g@capsulezero.local:./
 </code></pre></div></td></tr></table></div>
 <h2 id="start-capsule-http-faas-mode">Start Capsule HTTP FaaS mode</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>ssh<span class="w"> </span>k33g@capsulezero.local<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;./capsule-http --httpPort=8080 --faas=true&quot;</span>
