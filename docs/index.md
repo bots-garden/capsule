@@ -1,6 +1,7 @@
 # Capsule Project: the nano wasm runners
 
 !!! info "What's new?"
+	- `v0.4.0 🌶️ [chili pepper]`: update of [HDK 0.0.4 then 0.0.5](https://github.com/bots-garden/capsule-host-sdk/releases/tag/v0.0.5), (🎉 performances: more than x 2 🚀). **capsule-http**: add of 2 endpoints (`/metrics`and `/health`) triggering the `OnMetrics` and `OnHealthCheck` functions of the WASM module. 
     - `v0.3.9 🥒 [cucumber]`: update of [HDK 0.0.3](https://github.com/bots-garden/capsule-host-sdk) with [Wazero 1.2.0](https://github.com/tetratelabs/wazero/releases/tag/v1.2.0) and [MDK 0.0.3](https://github.com/bots-garden/capsule-module-sdk) (encoding of the HTML string into JSON string, then it's easier to serve HTML)
     - `v0.3.8 🥬 [leafy greens]`: 🐛 fixes of the **FaaS** mode
     - `v0.3.7 🥦 [broccoli]`: 🚀 **FaaS** mode (documentation in progress) + **NGrok** integration
@@ -64,7 +65,6 @@ func Handle(params []byte) ([]byte, error) {
 	
 	return []byte("👋 Hello " + string(params)), nil
 }
-
 ```
 
 ### WASM Module for the Capsule HTTP server

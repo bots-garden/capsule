@@ -1,4 +1,6 @@
 tmp/*.wasm
 *.wasm
+capsctl
+capsule-http
 
 

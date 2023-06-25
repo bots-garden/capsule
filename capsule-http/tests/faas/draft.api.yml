@@ -1,0 +1,264 @@
+
+  # =======================================
+  # Without capsctl, only the API
+  # 🚧 WIP
+  # =======================================
+
+  launch-hello-functions:
+    cmds:
+      - | 
+        FUNCTION_NAME="hello"
+        FUNCTION_REVISION="default"
+        WASM_FILE="./functions/hello-default/hello-default.wasm"
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${FUNCTION_REVISION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}"],
+            "env": []
+        }
+        EOF
+      - | # 👋 the hello blue function stops after 30 seconds
+        FUNCTION_NAME="hello"
+        FUNCTION_REVISION="blue"
+        WASM_FILE="./functions/hello-blue/hello-blue.wasm"
+        DURATION=30
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${FUNCTION_REVISION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-stopAfter=${DURATION}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        FUNCTION_REVISION="green"
+        WASM_FILE="./functions/hello-green/hello-green.wasm"
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${FUNCTION_REVISION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        FUNCTION_REVISION="orange"
+        WASM_FILE="./functions/hello-orange/hello-orange.wasm"
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${FUNCTION_REVISION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}"],
+            "env": []
+        }
+        EOF
+
+  launch-remote-hello-functions:
+    env:
+      GITLAB_WASM_PROJECT_ID: "45020306"
+      WASM_PACKAGE: "capsule"
+    cmds:
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="default"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | # 👋 the hello blue function stops after 30 seconds
+        FUNCTION_NAME="hello"
+        WASM_VERSION="blue"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        DURATION=30
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-stopAfter=${DURATION}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="green"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+      - | 
+        FUNCTION_NAME="hello"
+        WASM_VERSION="orange"
+        WASM_MODULE="${FUNCTION_NAME}-${WASM_VERSION}.wasm"
+        WASM_FILE="./tmp/${WASM_MODULE}"
+        DOWNLOAD_URL="https://gitlab.com/api/v4/projects/${GITLAB_WASM_PROJECT_ID}/packages/generic/${WASM_PACKAGE}/${WASM_VERSION}/${WASM_MODULE}"
+
+        curl -X POST localhost:8080/functions/start \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d @- << EOF
+        {
+            "name":"${FUNCTION_NAME}",
+            "revision":"${WASM_VERSION}",
+            "description":"hello function",
+            "path":"/usr/local/bin/capsule-http",
+            "args": ["", "-wasm=${WASM_FILE}", "-url=${DOWNLOAD_URL}"],
+            "env": []
+        }
+        EOF
+
+
+  call-hello-functions:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/default \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/blue \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/green \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello/orange \
+        -H 'Content-Type: text/plain; charset=utf-8' \
+        -d "${DATA}"
+        echo ""
+        echo ""
+
+  kill-hello-default-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/default
+        echo ""
+
+  kill-hello-blue-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/blue
+        echo ""
+
+  kill-hello-green-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/green
+        echo ""
+
+  kill-hello-orange-process:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X DELETE ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/stop/hello/orange
+        echo ""
+
+  stress-average-hello:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        hey -n 300 -c 100 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello
+
+  stress-high-hello:
+    env:
+      DATA: 'Bob Morane'
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        hey -n 10000 -c 6000 -m POST \
+        -H "Content-Type: text/plain; charset=utf-8" \
+        -d "${DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/hello
+
+  processes-list:
+    env:
+      HTTP_PORT: '8080'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+    cmds:
+      - | 
+        curl -X GET ${PROTOCOL}://${DOMAIN}:${HTTP_PORT}/functions/processes
+
+

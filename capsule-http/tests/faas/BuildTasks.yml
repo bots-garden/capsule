@@ -1,0 +1,80 @@
+version: '3'
+
+tasks:
+
+  hello-functions:    
+    cmds:
+      - | # hello-default
+        cd functions/hello-default
+        tinygo build -o hello-default.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+        mv hello-default.wasm ../..
+      - | # hello-blue
+        cd functions/hello-blue
+        tinygo build -o hello-blue.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+        mv hello-blue.wasm ../..
+      - | # hello-green
+        cd functions/hello-green
+        tinygo build -o hello-green.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+        mv hello-green.wasm ../..
+      - | # hello-orange
+        cd functions/hello-orange
+        tinygo build -o hello-orange.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+        mv hello-orange.wasm ../..
+
+  capsctl:
+    description: >
+      Build capsctl, and copy the binary to the current directory
+      `/capsule/capsule-http/tests/faas`
+    cmds:
+      - |
+        echo "📦 Building capsctl..."
+        cd ../../../capsctl
+        pwd
+        go build -ldflags="-s -w" -o capsctl
+        ls -lh capsctl
+        mv capsctl  ../capsule-http/tests/faas
+        cd ../capsule-http/tests/faas
+        ./capsctl --version
+
+  capsule-http:
+    description: >
+      Build capsule-http, and copy the binary to the current directory
+      `/capsule/capsule-http/tests/faas`
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd ../..
+        pwd
+        go build -ldflags="-s -w" -o capsule-http
+        ls -lh capsule-http
+        mv capsule-http  ./tests/faas
+        cd ./tests/faas
+        ./capsule-http --version
+
+  # Build of capsule-http
+  install-capsule-http:
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd ../..
+        pwd
+        go build -ldflags="-s -w" -o capsule-http
+        ls -lh capsule-http
+        sudo cp capsule-http  /usr/local/bin/capsule-http
+        capsule-http --version
