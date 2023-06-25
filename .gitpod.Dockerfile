@@ -15,7 +15,7 @@ RUN curl -fsSL https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz | tar
 # ------------------------------------
 # Install TinyGo
 # ------------------------------------
-ARG TINYGO_VERSION="0.27.0"
+ARG TINYGO_VERSION="0.28.1"
 RUN wget https://github.com/tinygo-org/tinygo/releases/download/v${TINYGO_VERSION}/tinygo_${TINYGO_VERSION}_amd64.deb
 RUN sudo dpkg -i tinygo_${TINYGO_VERSION}_amd64.deb
 RUN rm tinygo_${TINYGO_VERSION}_amd64.deb
