@@ -60,6 +60,19 @@ If you open this URL https://faas.capsule.foundation/ on your browser, you shoul
 Capsule [HTTP] v0.4.0 🌶️ [chili pepper][faas]
 ```
 
+### Install the last version of CapsCtl
+
+**CapsCtl** is a CLI to send commands to the Capsule HTTP server when it is unning in **FaaS** mode.
+
+```bash
+VERSION="v0.4.0" OS="linux" ARCH="arm64"
+wget -O capsctl https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsctl-${VERSION}-${OS}-${ARCH}
+chmod +x capsctl
+sudo cp capsctl  /usr/local/bin/capsctl
+rm capsctl
+capsctl --version
+```
+
 ## Add a start page to Capsule HTTP
 
 We need to add a start page to Capsule HTTP by creating a new WASM function (module).
