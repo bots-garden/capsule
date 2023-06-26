@@ -490,6 +490,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#install-the-last-version-of-capsctl" class="md-nav__link">
+    Install the last version of CapsCtl
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -676,6 +683,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#install-the-last-version-of-capsctl" class="md-nav__link">
+    Install the last version of CapsCtl
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -856,257 +870,271 @@
 <p>If you open this URL https://faas.capsule.foundation/ on your browser, you should see the following message:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>Capsule<span class="w"> </span><span class="o">[</span>HTTP<span class="o">]</span><span class="w"> </span>v0.4.0<span class="w"> </span>🌶️<span class="w"> </span><span class="o">[</span>chili<span class="w"> </span>pepper<span class="o">][</span>faas<span class="o">]</span>
 </code></pre></div></td></tr></table></div>
+<h3 id="install-the-last-version-of-capsctl">Install the last version of CapsCtl</h3>
+<p><strong>CapsCtl</strong> is a CLI to send commands to the Capsule HTTP server when it is unning in <strong>FaaS</strong> mode.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span>
+<span class="normal"><a href="#__codelineno-6-5">5</a></span>
+<span class="normal"><a href="#__codelineno-6-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;v0.4.0&quot;</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>wget<span class="w"> </span>-O<span class="w"> </span>capsctl<span class="w"> </span>https://github.com/bots-garden/capsule/releases/download/<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/capsctl-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>capsctl
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a>sudo<span class="w"> </span>cp<span class="w"> </span>capsctl<span class="w">  </span>/usr/local/bin/capsctl
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a>rm<span class="w"> </span>capsctl
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a>capsctl<span class="w"> </span>--version
+</code></pre></div></td></tr></table></div>
 <h2 id="add-a-start-page-to-capsule-http">Add a start page to Capsule HTTP</h2>
 <p>We need to add a start page to Capsule HTTP by creating a new WASM function (module).</p>
 <h3 id="indexhtml"><code>index.html</code></h3>
 <p>Create a file named <code>index.html</code> in a directory:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-6-10">10</a></span>
-<span class="normal"><a href="#__codelineno-6-11">11</a></span>
-<span class="normal"><a href="#__codelineno-6-12">12</a></span>
-<span class="normal"><a href="#__codelineno-6-13">13</a></span>
-<span class="normal"><a href="#__codelineno-6-14">14</a></span>
-<span class="normal"><a href="#__codelineno-6-15">15</a></span>
-<span class="normal"><a href="#__codelineno-6-16">16</a></span>
-<span class="normal"><a href="#__codelineno-6-17">17</a></span>
-<span class="normal"><a href="#__codelineno-6-18">18</a></span>
-<span class="normal"><a href="#__codelineno-6-19">19</a></span>
-<span class="normal"><a href="#__codelineno-6-20">20</a></span>
-<span class="normal"><a href="#__codelineno-6-21">21</a></span>
-<span class="normal"><a href="#__codelineno-6-22">22</a></span>
-<span class="normal"><a href="#__codelineno-6-23">23</a></span>
-<span class="normal"><a href="#__codelineno-6-24">24</a></span>
-<span class="normal"><a href="#__codelineno-6-25">25</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2"></a>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Wasm is fantastic 😍<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5"></a>      <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="p">&gt;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6"></a>      <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">        </span><span class="p">.</span><span class="nc">container</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">min-height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">vh</span><span class="p">;</span><span class="w"> </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span><span class="w"> </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="k">align-items</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="k">text-align</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="w">        </span><span class="p">.</span><span class="nc">title</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Source Sans Pro&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Helvetica Neue&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arial</span><span class="p">,</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span><span class="w"> </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">block</span><span class="p">;</span><span class="w"> </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span><span class="w"> </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#35495e</span><span class="p">;</span><span class="w"> </span><span class="k">letter-spacing</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">        </span><span class="p">.</span><span class="nc">subtitle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Source Sans Pro&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Helvetica Neue&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arial</span><span class="p">,</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span><span class="w"> </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span><span class="w"> </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#526488</span><span class="p">;</span><span class="w"> </span><span class="k">word-spacing</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">padding-bottom</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">        </span><span class="p">.</span><span class="nc">links</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">padding-top</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12"></a>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14"></a>  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15"></a>    <span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;container&quot;</span><span class="p">&gt;</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16"></a>      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17"></a>        <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;title&quot;</span><span class="p">&gt;</span>👋 Hello World 🌍<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>Served with 💜 by Capsule 💊 [HTTP] v0.4.0 🌶️ [chili pepper] <span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>🎉 Hosted on OVH Cloud [🚀 Faas mode]<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>🥰 With the help of @titimoby<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21"></a>      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22"></a>    <span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23"></a>  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24"></a>
-<a id="__codelineno-6-25" name="__codelineno-6-25"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span>
+<span class="normal"><a href="#__codelineno-7-13">13</a></span>
+<span class="normal"><a href="#__codelineno-7-14">14</a></span>
+<span class="normal"><a href="#__codelineno-7-15">15</a></span>
+<span class="normal"><a href="#__codelineno-7-16">16</a></span>
+<span class="normal"><a href="#__codelineno-7-17">17</a></span>
+<span class="normal"><a href="#__codelineno-7-18">18</a></span>
+<span class="normal"><a href="#__codelineno-7-19">19</a></span>
+<span class="normal"><a href="#__codelineno-7-20">20</a></span>
+<span class="normal"><a href="#__codelineno-7-21">21</a></span>
+<span class="normal"><a href="#__codelineno-7-22">22</a></span>
+<span class="normal"><a href="#__codelineno-7-23">23</a></span>
+<span class="normal"><a href="#__codelineno-7-24">24</a></span>
+<span class="normal"><a href="#__codelineno-7-25">25</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a>    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a>    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Wasm is fantastic 😍<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a>      <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a>      <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="w">        </span><span class="p">.</span><span class="nc">container</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">min-height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">vh</span><span class="p">;</span><span class="w"> </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span><span class="w"> </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="k">align-items</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="k">text-align</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="w">        </span><span class="p">.</span><span class="nc">title</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Source Sans Pro&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Helvetica Neue&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arial</span><span class="p">,</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span><span class="w"> </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">block</span><span class="p">;</span><span class="w"> </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span><span class="w"> </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#35495e</span><span class="p">;</span><span class="w"> </span><span class="k">letter-spacing</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="w">        </span><span class="p">.</span><span class="nc">subtitle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Source Sans Pro&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Helvetica Neue&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arial</span><span class="p">,</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span><span class="w"> </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span><span class="w"> </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#526488</span><span class="p">;</span><span class="w"> </span><span class="k">word-spacing</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">padding-bottom</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="w">        </span><span class="p">.</span><span class="nc">links</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">padding-top</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12"></a>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14"></a>  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;container&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16"></a>      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;title&quot;</span><span class="p">&gt;</span>👋 Hello World 🌍<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>Served with 💜 by Capsule 💊 [HTTP] v0.4.0 🌶️ [chili pepper] <span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>🎉 Hosted on OVH Cloud [🚀 Faas mode]<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;subtitle&quot;</span><span class="p">&gt;</span>🥰 With the help of @titimoby<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21"></a>      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22"></a>    <span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23"></a>  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
 <h3 id="maingo"><code>main.go</code></h3>
 <p>Into the same directory, create a file named <code>main.go</code> and add the following code:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
-<span class="normal"><a href="#__codelineno-7-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>go<span class="w"> </span>mod<span class="w"> </span>init<span class="w"> </span>index.page
-<a id="__codelineno-7-2" name="__codelineno-7-2"></a>touch<span class="w"> </span>main.go
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>go<span class="w"> </span>mod<span class="w"> </span>init<span class="w"> </span>index.page
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a>touch<span class="w"> </span>main.go
 </code></pre></div></td></tr></table></div>
 <blockquote>
 <p>main.go
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-8-10">10</a></span>
-<span class="normal"><a href="#__codelineno-8-11">11</a></span>
-<span class="normal"><a href="#__codelineno-8-12">12</a></span>
-<span class="normal"><a href="#__codelineno-8-13">13</a></span>
-<span class="normal"><a href="#__codelineno-8-14">14</a></span>
-<span class="normal"><a href="#__codelineno-8-15">15</a></span>
-<span class="normal"><a href="#__codelineno-8-16">16</a></span>
-<span class="normal"><a href="#__codelineno-8-17">17</a></span>
-<span class="normal"><a href="#__codelineno-8-18">18</a></span>
-<span class="normal"><a href="#__codelineno-8-19">19</a></span>
-<span class="normal"><a href="#__codelineno-8-20">20</a></span>
-<span class="normal"><a href="#__codelineno-8-21">21</a></span>
-<span class="normal"><a href="#__codelineno-8-22">22</a></span>
-<span class="normal"><a href="#__codelineno-8-23">23</a></span>
-<span class="normal"><a href="#__codelineno-8-24">24</a></span>
-<span class="normal"><a href="#__codelineno-8-25">25</a></span>
-<span class="normal"><a href="#__codelineno-8-26">26</a></span>
-<span class="normal"><a href="#__codelineno-8-27">27</a></span>
-<span class="normal"><a href="#__codelineno-8-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1">// Package main =&gt; serving an html resource</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">    </span><span class="nx">_</span><span class="w"> </span><span class="s">&quot;embed&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="w">    </span><span class="nx">capsule</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule-module-sdk&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="p">)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="kd">var</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="w">    </span><span class="c1">//go:embed index.html</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="w">    </span><span class="nx">html</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12"></a><span class="p">)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13"></a>
-<a id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">SetHandleHTTP</span><span class="p">(</span><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">param</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPRequest</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17"></a>
-<a id="__codelineno-8-18" name="__codelineno-8-18"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19"></a><span class="w">            </span><span class="nx">TextBody</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">html</span><span class="p">),</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20"></a><span class="w">            </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="s">`{</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21"></a><span class="s">                &quot;Content-Type&quot;: &quot;text/html; charset=utf-8&quot;,</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22"></a><span class="s">                &quot;Cache-Control&quot;: &quot;no-cache&quot;,</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23"></a><span class="s">                &quot;X-Powered-By&quot;: &quot;capsule-module-sdk&quot;</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24"></a><span class="s">            }`</span><span class="p">,</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25"></a><span class="w">            </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26"></a><span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27"></a><span class="w">    </span><span class="p">})</span>
-<a id="__codelineno-8-28" name="__codelineno-8-28"></a><span class="p">}</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span>
+<span class="normal"><a href="#__codelineno-9-15">15</a></span>
+<span class="normal"><a href="#__codelineno-9-16">16</a></span>
+<span class="normal"><a href="#__codelineno-9-17">17</a></span>
+<span class="normal"><a href="#__codelineno-9-18">18</a></span>
+<span class="normal"><a href="#__codelineno-9-19">19</a></span>
+<span class="normal"><a href="#__codelineno-9-20">20</a></span>
+<span class="normal"><a href="#__codelineno-9-21">21</a></span>
+<span class="normal"><a href="#__codelineno-9-22">22</a></span>
+<span class="normal"><a href="#__codelineno-9-23">23</a></span>
+<span class="normal"><a href="#__codelineno-9-24">24</a></span>
+<span class="normal"><a href="#__codelineno-9-25">25</a></span>
+<span class="normal"><a href="#__codelineno-9-26">26</a></span>
+<span class="normal"><a href="#__codelineno-9-27">27</a></span>
+<span class="normal"><a href="#__codelineno-9-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1">// Package main =&gt; serving an html resource</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="w">    </span><span class="nx">_</span><span class="w"> </span><span class="s">&quot;embed&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="w">    </span><span class="nx">capsule</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule-module-sdk&quot;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="p">)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="kd">var</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="w">    </span><span class="c1">//go:embed index.html</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="w">    </span><span class="nx">html</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="p">)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">SetHandleHTTP</span><span class="p">(</span><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">param</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPRequest</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19"></a><span class="w">            </span><span class="nx">TextBody</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">html</span><span class="p">),</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20"></a><span class="w">            </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="s">`{</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21"></a><span class="s">                &quot;Content-Type&quot;: &quot;text/html; charset=utf-8&quot;,</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22"></a><span class="s">                &quot;Cache-Control&quot;: &quot;no-cache&quot;,</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23"></a><span class="s">                &quot;X-Powered-By&quot;: &quot;capsule-module-sdk&quot;</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24"></a><span class="s">            }`</span><span class="p">,</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25"></a><span class="w">            </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26"></a><span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28"></a><span class="p">}</span>
 </code></pre></div></td></tr></table></div></p>
 </blockquote>
 <h3 id="build-the-wasm-module">Build the WASM module</h3>
 <p>Use the following command to build the WASM module:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
-<span class="normal"><a href="#__codelineno-9-2">2</a></span>
-<span class="normal"><a href="#__codelineno-9-3">3</a></span>
-<span class="normal"><a href="#__codelineno-9-4">4</a></span>
-<span class="normal"><a href="#__codelineno-9-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>go<span class="w"> </span>mod<span class="w"> </span>tidy
-<a id="__codelineno-9-2" name="__codelineno-9-2"></a>tinygo<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>index.page.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="w">    </span>-scheduler<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="w">    </span>--no-debug<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="w">    </span>-target<span class="w"> </span>wasi<span class="w"> </span>./main.go<span class="w"> </span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
+<span class="normal"><a href="#__codelineno-10-2">2</a></span>
+<span class="normal"><a href="#__codelineno-10-3">3</a></span>
+<span class="normal"><a href="#__codelineno-10-4">4</a></span>
+<span class="normal"><a href="#__codelineno-10-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>go<span class="w"> </span>mod<span class="w"> </span>tidy
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a>tinygo<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>index.page.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="w">    </span>-scheduler<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="w">    </span>--no-debug<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">    </span>-target<span class="w"> </span>wasi<span class="w"> </span>./main.go<span class="w"> </span>
 </code></pre></div></td></tr></table></div></p>
 <h3 id="deploy-the-wasm-module-on-the-ovh-cloud-instance">Deploy the WASM module on the OVH Cloud instance</h3>
 <p>From your computer, run the following command:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>scp<span class="w"> </span>-i<span class="w"> </span>./keys/capsule<span class="w"> </span>./index-page/index.page.wasm<span class="w"> </span>ubuntu@<span class="si">${</span><span class="nv">OVH_IP</span><span class="si">}</span>:./
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>scp<span class="w"> </span>-i<span class="w"> </span>./keys/capsule<span class="w"> </span>./index-page/index.page.wasm<span class="w"> </span>ubuntu@<span class="si">${</span><span class="nv">OVH_IP</span><span class="si">}</span>:./
 </code></pre></div></td></tr></table></div></p>
 <h3 id="start-the-indexpage-function">Start the <code>index.page</code> function</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
-<span class="normal"><a href="#__codelineno-11-2">2</a></span>
-<span class="normal"><a href="#__codelineno-11-3">3</a></span>
-<span class="normal"><a href="#__codelineno-11-4">4</a></span>
-<span class="normal"><a href="#__codelineno-11-5">5</a></span>
-<span class="normal"><a href="#__codelineno-11-6">6</a></span>
-<span class="normal"><a href="#__codelineno-11-7">7</a></span>
-<span class="normal"><a href="#__codelineno-11-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;https://faas.capsule.foundation&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="w">    </span>--name<span class="o">=</span>index.page<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="w">    </span>--wasm<span class="o">=</span>./index.page.wasm
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span>
+<span class="normal"><a href="#__codelineno-12-2">2</a></span>
+<span class="normal"><a href="#__codelineno-12-3">3</a></span>
+<span class="normal"><a href="#__codelineno-12-4">4</a></span>
+<span class="normal"><a href="#__codelineno-12-5">5</a></span>
+<span class="normal"><a href="#__codelineno-12-6">6</a></span>
+<span class="normal"><a href="#__codelineno-12-7">7</a></span>
+<span class="normal"><a href="#__codelineno-12-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_FAAS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ILOVEPANDAS&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="o">=</span><span class="s2">&quot;https://faas.capsule.foundation&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a><span class="w">    </span>--name<span class="o">=</span>index.page<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8"></a><span class="w">    </span>--wasm<span class="o">=</span>./index.page.wasm
 </code></pre></div></td></tr></table></div>
 <p>You should get this output:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span>
-<span class="normal"><a href="#__codelineno-12-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>✅<span class="w"> </span>index.page/default<span class="w"> </span>is<span class="w"> </span>started
-<a id="__codelineno-12-2" name="__codelineno-12-2"></a>ℹ️<span class="w"> </span>url:<span class="w"> </span>https://faas.capsule.foundation/functions/index.page/default
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a>✅<span class="w"> </span>index.page/default<span class="w"> </span>is<span class="w"> </span>started
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a>ℹ️<span class="w"> </span>url:<span class="w"> </span>https://faas.capsule.foundation/functions/index.page/default
 </code></pre></div></td></tr></table></div></p>
 <p>Now you can call the function:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://faas.capsule.foundation/functions/index.page/default&quot;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://faas.capsule.foundation/functions/index.page/default&quot;</span>
 </code></pre></div></td></tr></table></div></p>
 <h3 id="indexpage-function-name-is-mapped-to-the-root"><code>index.page</code> function name is mapped to the <code>/</code> root</h3>
 <p>If you open this URL: <a href="https://faas.capsule.foundation">https://faas.capsule.foundation</a> in your browser, you will reach the <code>index.page</code> function.</p>
 <p>It's a specific case of Capsule FaaS, and it's only possible because you name the function <code>index.page</code> when you started it with this command:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span>
-<span class="normal"><a href="#__codelineno-14-2">2</a></span>
-<span class="normal"><a href="#__codelineno-14-3">3</a></span>
-<span class="normal"><a href="#__codelineno-14-4">4</a></span>
-<span class="normal"><a href="#__codelineno-14-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="w">    </span>--name<span class="o">=</span>index.page<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5"></a><span class="w">    </span>--wasm<span class="o">=</span>./index.page.wasm
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span>
+<span class="normal"><a href="#__codelineno-15-3">3</a></span>
+<span class="normal"><a href="#__codelineno-15-4">4</a></span>
+<span class="normal"><a href="#__codelineno-15-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="w">    </span>--name<span class="o">=</span>index.page<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="w">    </span>--revision<span class="o">=</span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="w">    </span>--wasm<span class="o">=</span>./index.page.wasm
 </code></pre></div></td></tr></table></div>
 <h2 id="create-and-deploy-a-new-function">Create and Deploy a new function</h2>
 <h3 id="maingo_1"><code>main.go</code></h3>
 <p>Into the a directory, create a file named <code>main.go</code> and add the following code:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
-<span class="normal"><a href="#__codelineno-15-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a>go<span class="w"> </span>mod<span class="w"> </span>init<span class="w"> </span>hello
-<a id="__codelineno-15-2" name="__codelineno-15-2"></a>touch<span class="w"> </span>main.go
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1">1</a></span>
+<span class="normal"><a href="#__codelineno-16-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a>go<span class="w"> </span>mod<span class="w"> </span>init<span class="w"> </span>hello
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a>touch<span class="w"> </span>main.go
 </code></pre></div></td></tr></table></div>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-16-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-16-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-16-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-16-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-16-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-16-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-16-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-16-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-16-10">10</a></span>
-<span class="normal"><a href="#__codelineno-16-11">11</a></span>
-<span class="normal"><a href="#__codelineno-16-12">12</a></span>
-<span class="normal"><a href="#__codelineno-16-13">13</a></span>
-<span class="normal"><a href="#__codelineno-16-14">14</a></span>
-<span class="normal"><a href="#__codelineno-16-15">15</a></span>
-<span class="normal"><a href="#__codelineno-16-16">16</a></span>
-<span class="normal"><a href="#__codelineno-16-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2"></a>
-<a id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4"></a><span class="w">    </span><span class="nx">capsule</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule-module-sdk&quot;</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5"></a><span class="p">)</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">SetHandleHTTP</span><span class="p">(</span><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">param</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPRequest</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11"></a><span class="w">            </span><span class="nx">TextBody</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;🍊 👋 Hey &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">param</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="o">+</span><span class="s">&quot; !&quot;</span><span class="p">,</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12"></a><span class="w">            </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="s">`{&quot;Content-Type&quot;: &quot;text/plain; charset=utf-8&quot;}`</span><span class="p">,</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13"></a><span class="w">            </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14"></a><span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15"></a>
-<a id="__codelineno-16-16" name="__codelineno-16-16"></a><span class="w">    </span><span class="p">})</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17"></a><span class="p">}</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-17-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-17-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-17-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-17-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-17-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-17-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-17-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-17-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-17-10">10</a></span>
+<span class="normal"><a href="#__codelineno-17-11">11</a></span>
+<span class="normal"><a href="#__codelineno-17-12">12</a></span>
+<span class="normal"><a href="#__codelineno-17-13">13</a></span>
+<span class="normal"><a href="#__codelineno-17-14">14</a></span>
+<span class="normal"><a href="#__codelineno-17-15">15</a></span>
+<span class="normal"><a href="#__codelineno-17-16">16</a></span>
+<span class="normal"><a href="#__codelineno-17-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="w">    </span><span class="nx">capsule</span><span class="w"> </span><span class="s">&quot;github.com/bots-garden/capsule-module-sdk&quot;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5"></a><span class="p">)</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="w">    </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">SetHandleHTTP</span><span class="p">(</span><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">param</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPRequest</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">capsule</span><span class="p">.</span><span class="nx">HTTPResponse</span><span class="p">{</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11"></a><span class="w">            </span><span class="nx">TextBody</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;🍊 👋 Hey &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">param</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="o">+</span><span class="s">&quot; !&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12"></a><span class="w">            </span><span class="nx">Headers</span><span class="p">:</span><span class="w"> </span><span class="s">`{&quot;Content-Type&quot;: &quot;text/plain; charset=utf-8&quot;}`</span><span class="p">,</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13"></a><span class="w">            </span><span class="nx">StatusCode</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14"></a><span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17"></a><span class="p">}</span>
 </code></pre></div></td></tr></table></div>
 <h3 id="build-the-wasm-module_1">Build the WASM module</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span>
-<span class="normal"><a href="#__codelineno-17-2">2</a></span>
-<span class="normal"><a href="#__codelineno-17-3">3</a></span>
-<span class="normal"><a href="#__codelineno-17-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a>tinygo<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>hello.wasm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="w">    </span>-scheduler<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="w">    </span>--no-debug<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="w">    </span>-target<span class="w"> </span>wasi<span class="w"> </span>./main.go<span class="w"> </span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span>
+<span class="normal"><a href="#__codelineno-18-2">2</a></span>
+<span class="normal"><a href="#__codelineno-18-3">3</a></span>
+<span class="normal"><a href="#__codelineno-18-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a>tinygo<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>hello.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="w">    </span>-scheduler<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="w">    </span>--no-debug<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="w">    </span>-target<span class="w"> </span>wasi<span class="w"> </span>./main.go<span class="w"> </span>
 </code></pre></div></td></tr></table></div>
 <h3 id="deploy-the-wasm-module-on-the-ovh-cloud-instance_1">Deploy the WASM module on the OVH Cloud instance</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a>scp<span class="w"> </span>-i<span class="w"> </span>./keys/capsule<span class="w"> </span>./hello/hello.wasm<span class="w"> </span>ubuntu@<span class="si">${</span><span class="nv">OVH_IP</span><span class="si">}</span>:./
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a>scp<span class="w"> </span>-i<span class="w"> </span>./keys/capsule<span class="w"> </span>./hello/hello.wasm<span class="w"> </span>ubuntu@<span class="si">${</span><span class="nv">OVH_IP</span><span class="si">}</span>:./
 </code></pre></div></td></tr></table></div>
 <h3 id="start-the-hello-function-with-a-revision-named-orange">Start the <code>hello</code> function with a revision named <code>orange</code></h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
-<span class="normal"><a href="#__codelineno-19-2">2</a></span>
-<span class="normal"><a href="#__codelineno-19-3">3</a></span>
-<span class="normal"><a href="#__codelineno-19-4">4</a></span>
-<span class="normal"><a href="#__codelineno-19-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a>capsctl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="w">    </span>--revision<span class="o">=</span>orange<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5"></a><span class="w">    </span>--wasm<span class="o">=</span>./hello.wasm
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span>
+<span class="normal"><a href="#__codelineno-20-2">2</a></span>
+<span class="normal"><a href="#__codelineno-20-3">3</a></span>
+<span class="normal"><a href="#__codelineno-20-4">4</a></span>
+<span class="normal"><a href="#__codelineno-20-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a>capsctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="w">    </span>--cmd<span class="o">=</span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="w">    </span>--name<span class="o">=</span>hello<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="w">    </span>--revision<span class="o">=</span>orange<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="w">    </span>--wasm<span class="o">=</span>./hello.wasm
 </code></pre></div></td></tr></table></div>
 <p>You should get this output:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span>
-<span class="normal"><a href="#__codelineno-20-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a>✅<span class="w"> </span>hello/orange<span class="w"> </span>is<span class="w"> </span>started
-<a id="__codelineno-20-2" name="__codelineno-20-2"></a>ℹ️<span class="w"> </span>url:<span class="w"> </span>https://faas.capsule.foundation/functions/hello/orange
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
+<span class="normal"><a href="#__codelineno-21-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>✅<span class="w"> </span>hello/orange<span class="w"> </span>is<span class="w"> </span>started
+<a id="__codelineno-21-2" name="__codelineno-21-2"></a>ℹ️<span class="w"> </span>url:<span class="w"> </span>https://faas.capsule.foundation/functions/hello/orange
 </code></pre></div></td></tr></table></div></p>
 <p>Now you can call the function:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
-<span class="normal"><a href="#__codelineno-21-2">2</a></span>
-<span class="normal"><a href="#__codelineno-21-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="si">${</span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="si">}</span>/functions/hello/orange<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3"></a>-d<span class="w"> </span><span class="s1">&#39;Bob Morane&#39;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span>
+<span class="normal"><a href="#__codelineno-22-2">2</a></span>
+<span class="normal"><a href="#__codelineno-22-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="si">${</span><span class="nv">CAPSULE_MAIN_PROCESS_URL</span><span class="si">}</span>/functions/hello/orange<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: text/plain; charset=utf-8&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3"></a>-d<span class="w"> </span><span class="s1">&#39;Bob Morane&#39;</span>
 </code></pre></div></td></tr></table></div></p>
 <p>You should get this output:
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a>🍊 👋 Hey Bob Morane !
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-23-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1"></a>🍊 👋 Hey Bob Morane !
 </code></pre></div></td></tr></table></div></p>
 
 
