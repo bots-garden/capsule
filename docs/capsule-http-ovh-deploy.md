@@ -17,7 +17,8 @@ ssh -i ./keys/capsule ubuntu@${OVH_IP}
 
 ```bash
 VERSION="v0.4.0" OS="linux" ARCH="amd64"
-wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARC>
+wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
+
 chmod +x capsule-http
 sudo cp capsule-http  /usr/local/bin/capsule-http
 rm capsule-http
