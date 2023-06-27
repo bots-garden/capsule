@@ -13,6 +13,7 @@ use (
 	./capsule-http/functions/hey
 	./capsule-http/functions/index-html
 	./capsule-http/functions/tests
+	./capsule-http/functions/gitlab-webhook
 	./capsule-http/tests/faas/functions/hello-blue
 	./capsule-http/tests/faas/functions/hello-default
 	./capsule-http/tests/faas/functions/hello-green

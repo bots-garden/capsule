@@ -25,6 +25,17 @@ And you can access the wasm service with this url: `https://d298-88-173-112-231.
 
 👋 You can retrieve the ngrok url in this file `ngrok.url`
 
+If you own a Ngrok subscription, you can set your ngrok domain like this:
+
+```bash
+NGROK_DOMAIN="${YOUR_NGROK_DOMAIN}" \ # something like that "capsule.ngrok.dev"
+NGROK_AUTHTOKEN="${YOUR_NGROK_AUTHTOKEN}" \
+./capsule-http \
+--wasm=./functions/hello-world/hello-world.wasm \
+--httpPort=6666
+```
+
+
 !!! info "Ngrok and ngrok-go"
     - [Ngrok](https://ngrok.com/)
     - [ngrok-go](https://ngrok.com/blog-post/ngrok-go)

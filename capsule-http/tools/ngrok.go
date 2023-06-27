@@ -26,8 +26,16 @@ func ActivateNgrokTunnel(ctx context.Context, app *fiber.App) {
 	// Ngrok support: https://ngrok.com
 	// https://ngrok.com/blog-post/ngrok-go
 
+	var configHTTPEndPoint config.Tunnel
+	var ngrokDomain = GetEnv("NGROK_DOMAIN", "")
+	if ngrokDomain != "" {
+		configHTTPEndPoint = config.HTTPEndpoint(config.WithDomain(ngrokDomain))
+	} else {
+		configHTTPEndPoint = config.HTTPEndpoint()
+	}
+
 	tun, err := ngrok.Listen(ctx,
-		config.HTTPEndpoint(),
+		configHTTPEndPoint,
 		ngrok.WithAuthtokenFromEnv(),
 	)
 	if err != nil {

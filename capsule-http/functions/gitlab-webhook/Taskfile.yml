@@ -1,0 +1,67 @@
+version: '3'
+
+description: >
+  # Integration tests
+  
+  ```bash
+  task build-wasm build-capsule-http start
+
+  ```
+
+env:
+    HTTP_PORT: '8090'
+    DOMAIN: 'localhost'
+    PROTOCOL: 'http'
+    WASM_FILE: './glwebhook.wasm'
+
+tasks:
+  build-wasm:
+    cmds:
+      - |
+        tinygo build -o glwebhook.wasm \
+          -scheduler=none \
+          --no-debug \
+          -target wasi ./main.go 
+        ls -lh *.wasm
+
+  # Build of capsule-http
+  build-capsule-http:
+    cmds:
+      - |
+        echo "📦 Building capsule-http..."
+        cd ../..
+        go build -ldflags="-s -w" -o capsule-http
+        ls -lh capsule-http
+        mv capsule-http ./functions/gitlab-webhook
+
+  start:
+    cmds:
+      - | 
+        echo "🚀 Testing hello..."
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+  start-ngrok:
+    cmds:
+      - | 
+        NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN=}" \
+        ./capsule-http \
+        --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+  start-ngrok-domain:
+    cmds:
+      - | 
+        NGROK_DOMAIN="capsule.ngrok.dev" \
+        NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN=}" \
+        ./capsule-http \
+        --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+  call:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+    cmds:
+      - | 
+        curl -X POST ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} \
+          -H 'Content-Type: application/json; charset=utf-8' \
+          -d "${JSON_DATA}"
+        echo ""
+

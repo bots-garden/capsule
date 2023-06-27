@@ -36,7 +36,7 @@ func HTTPListening(ctx context.Context, flags CapsuleFlags, version string, app 
 
 	log.Println("💊 Capsule", version, "http server is listening on:", httpPort, "🌍")
 
-	if tools.GetEnv("NGROK_AUTH_TOKEN", "") != "" {
+	if tools.GetEnv("NGROK_AUTHTOKEN", "") != "" {
 		tools.ActivateNgrokTunnel(ctx, app)
 	}
 
