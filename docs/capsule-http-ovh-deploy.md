@@ -62,7 +62,7 @@ Capsule [HTTP] v0.4.0 🌶️ [chili pepper][faas]
 
 ### Install the last version of CapsCtl
 
-**CapsCtl** is a CLI to send commands to the Capsule HTTP server when it is unning in **FaaS** mode.
+**CapsCtl** is a CLI to send commands to the Capsule HTTP server when it is running in **FaaS** mode.
 
 ```bash
 VERSION="v0.4.0" OS="linux" ARCH="arm64"
