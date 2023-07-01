@@ -5,6 +5,7 @@ description: >
   
   ```bash
   task build-wasm build-capsule-http start
+  task build-wasm build-capsule-http start-ngrok-domain
 
   ```
 
@@ -48,8 +49,15 @@ tasks:
         --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
 
   start-ngrok-domain:
+    description: >
+      Header: X-Gitlab-Token (ilovepandas)
+
     cmds:
       - | 
+        WEBHOOK_TOKEN="ilovepanda" \
+        GITLAB_API_URL="https://gitlab.com/api/v4" \
+        GITLAB_BOT_TOKEN="${GITLAB_BOT_TOKEN}" \
+        GITLAB_BOT_NAME="${GITLAB_BOT_NAME}" \
         NGROK_DOMAIN="capsule.ngrok.dev" \
         NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN=}" \
         ./capsule-http \
@@ -64,4 +72,3 @@ tasks:
           -H 'Content-Type: application/json; charset=utf-8' \
           -d "${JSON_DATA}"
         echo ""
-
