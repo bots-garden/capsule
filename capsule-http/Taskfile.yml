@@ -109,7 +109,7 @@ tasks:
       GOOS: "linux" 
       GOARCH: "arm64"
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.4.0"
+      IMAGE_TAG: "0.4.1"
     cmds:
       - | 
         IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
@@ -332,8 +332,9 @@ tasks:
 
   # task build-capsule-http
   # task build-hello-world
+  # task start-hello-world-for-stress
   # task stress-hello-world
-  stress-hello-world:
+  start-hello-world-for-stress:
     env:
       JSON_DATA: '{"name":"Bob Morane","age":42}'
       HTTP_PORT: '6666'
@@ -343,12 +344,21 @@ tasks:
     cmds:
       - | 
         echo "🚀 Stressing hello-world..."
-        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT} &
-        sleep 1
+        NGROK_AUTHTOKEN=""
+        ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
+
+  stress-hello-world:
+    env:
+      JSON_DATA: '{"name":"Bob Morane","age":42}'
+      HTTP_PORT: '6666'
+      DOMAIN: 'localhost'
+      PROTOCOL: 'http'
+      WASM_FILE: './functions/hello-world/hello-world.wasm'
+    cmds:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.4.0.txt
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.5.0.txt
       #- killport ${HTTP_PORT}
 
   build-hey:
