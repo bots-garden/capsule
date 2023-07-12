@@ -563,10 +563,10 @@
 
 <h1 id="capsule-http-docker-image">🐳 Capsule HTTP Docker image</h1>
 <div class="admonition info">
-<p class="admonition-title">Capsule HTTP Docker images v0.4.0 🌶️ [chili pepper]</p>
+<p class="admonition-title">Capsule HTTP Docker images v0.4.1 🫑 [pepper]</p>
 <ul>
-<li><code>botsgarden/capsule-http-linux-arm64:0.4.0</code></li>
-<li><code>botsgarden/capsule-http-linux-amd64:0.4.0</code></li>
+<li><code>botsgarden/capsule-http-linux-arm64:0.4.1</code></li>
+<li><code>botsgarden/capsule-http-linux-amd64:0.4.1</code></li>
 </ul>
 </div>
 <blockquote>
@@ -586,7 +586,7 @@
 <span class="normal"><a href="#__codelineno-0-10">10</a></span>
 <span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nv">GOOS</span><span class="o">=</span><span class="s2">&quot;linux&quot;</span><span class="w"> </span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nv">GOARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;0.4.0&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="s2">&quot;0.4.1&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="nv">IMAGE_NAME</span><span class="o">=</span><span class="s2">&quot;botsgarden/capsule-http-</span><span class="si">${</span><span class="nv">GOOS</span><span class="si">}</span><span class="s2">-</span><span class="si">${</span><span class="nv">GOARCH</span><span class="si">}</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
@@ -601,7 +601,7 @@
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
 <span class="normal"><a href="#__codelineno-1-2">2</a></span>
 <span class="normal"><a href="#__codelineno-1-3">3</a></span>
-<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">botsgarden/capsule-http-linux-arm64:0.4.0</span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">botsgarden/capsule-http-linux-arm64:0.4.1</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">COPY</span><span class="w"> </span>hello-world.wasm<span class="w"> </span>.
 <a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/capsule-http&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--wasm=./hello-world.wasm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--httpPort=8080&quot;</span><span class="p">]</span>

@@ -563,12 +563,23 @@
 <p>The ouput will be like this:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
 <span class="normal"><a href="#__codelineno-1-2">2</a></span>
-<span class="normal"><a href="#__codelineno-1-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="m">2023</span>/05/18<span class="w"> </span><span class="m">11</span>:25:36<span class="w"> </span>💊<span class="w"> </span>Capsule<span class="w"> </span>v0.4.0<span class="w"> </span>🌶️<span class="w"> </span><span class="o">[</span>chili<span class="w"> </span>pepper<span class="o">]</span><span class="w"> </span>http<span class="w"> </span>server<span class="w"> </span>is<span class="w"> </span>listening<span class="w"> </span>on:<span class="w"> </span><span class="m">6666</span><span class="w"> </span>🌍
+<span class="normal"><a href="#__codelineno-1-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="m">2023</span>/05/18<span class="w"> </span><span class="m">11</span>:25:36<span class="w"> </span>💊<span class="w"> </span>Capsule<span class="w"> </span>v0.4.1<span class="w"> </span>🫑<span class="w"> </span><span class="o">[</span>pepper<span class="o">]</span><span class="w"> </span>http<span class="w"> </span>server<span class="w"> </span>is<span class="w"> </span>listening<span class="w"> </span>on:<span class="w"> </span><span class="m">6666</span><span class="w"> </span>🌍
 <a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="m">2023</span>/05/18<span class="w"> </span><span class="m">11</span>:25:37<span class="w"> </span>👋<span class="w"> </span>Ngrok<span class="w"> </span>tunnel<span class="w"> </span>created:<span class="w"> </span>https://d298-88-173-112-231.ngrok-free.app
 <a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="m">2023</span>/05/18<span class="w"> </span><span class="m">11</span>:25:37<span class="w"> </span>🤚<span class="w"> </span>Ngrok<span class="w"> </span>URL:<span class="w"> </span>/home/ubuntu/workspaces/capsule/capsule-http/ngrok.url
 </code></pre></div></td></tr></table></div>
 <p>And you can access the wasm service with this url: <code>https://d298-88-173-112-231.ngrok-free.app</code> (the ngrok url is generated and different each time).</p>
 <p>👋 You can retrieve the ngrok url in this file <code>ngrok.url</code></p>
+<p>If you own a Ngrok subscription, you can set your ngrok domain like this:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span>
+<span class="normal"><a href="#__codelineno-2-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nv">NGROK_DOMAIN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">YOUR_NGROK_DOMAIN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\ </span><span class="c1"># something like that &quot;capsule.ngrok.dev&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nv">NGROK_AUTHTOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">YOUR_NGROK_AUTHTOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a>./capsule-http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>--wasm<span class="o">=</span>./functions/hello-world/hello-world.wasm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a>--httpPort<span class="o">=</span><span class="m">6666</span>
+</code></pre></div></td></tr></table></div>
 <div class="admonition info">
 <p class="admonition-title">Ngrok and ngrok-go</p>
 <ul>

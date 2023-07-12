@@ -318,6 +318,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#history" class="md-nav__link">
+    History
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -647,6 +654,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#history" class="md-nav__link">
+    History
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -668,17 +682,12 @@
 <h1 id="capsule-project-the-nano-wasm-runners">Capsule Project: the nano wasm runners</h1>
 <div class="admonition info">
 <p class="admonition-title">What's new?</p>
-<ul>
-<li><code>v0.4.0 🌶️ [chili pepper]</code>: update of <a href="https://github.com/bots-garden/capsule-host-sdk/releases/tag/v0.0.5">HDK 0.0.4 then 0.0.5</a>, (🎉 performances: more than x 2 🚀). <strong>capsule-http</strong>: add of 2 endpoints (<code>/metrics</code>and <code>/health</code>) triggering the <code>OnMetrics</code> and <code>OnHealthCheck</code> functions of the WASM module. </li>
-<li><code>v0.3.9 🥒 [cucumber]</code>: update of <a href="https://github.com/bots-garden/capsule-host-sdk">HDK 0.0.3</a> with <a href="https://github.com/tetratelabs/wazero/releases/tag/v1.2.0">Wazero 1.2.0</a> and <a href="https://github.com/bots-garden/capsule-module-sdk">MDK 0.0.3</a> (encoding of the HTML string into JSON string, then it's easier to serve HTML)</li>
-<li><code>v0.3.8 🥬 [leafy greens]</code>: 🐛 fixes of the <strong>FaaS</strong> mode</li>
-<li><code>v0.3.7 🥦 [broccoli]</code>: 🚀 <strong>FaaS</strong> mode (documentation in progress) + <strong>NGrok</strong> integration</li>
-<li><code>v0.3.6 🫐 [blueberries]</code>: Prometheus metrics + 🐳 Docker images</li>
-<li><code>v0.3.5 🍓 [strawberry]</code>: Update with HDK &amp; MDK <code>v0.0.2</code></li>
-<li><code>v0.3.4 🍋 [lemon]</code>: Capsule next generation (performances: x 10 🚀)</li>
-<li>🌍 Downloads: <a href="https://github.com/bots-garden/capsule/releases/tag/v0.3.5">https://github.com/bots-garden/capsule/releases/tag/v0.3.8</a></li>
-<li>🤚 With the previous version of the project, Capsule was an only one application to run as an HTTP server, a CLI, a NATS subscriber and publisher and a MQTT subscriber and publisher. In the future, we will reintroduce the capabilities of NATS and MQTT, but with separate runners.</li>
-</ul>
+<p><code>v0.4.1 🫑 [pepper]</code>: 
+- Update with the last version of <a href="https://github.com/tetratelabs/wazero/releases/tag/v1.3.0">Wazero v1.3.0</a>.
+- More "practical" sample: <a href="https://github.com/bots-garden/capsule/tree/main/capsule-http/functions/gitlab-webhook">GitLab webhook sample</a>.
+- Capsule HTTP is faster thanks to the Wazero optimisations.
+- Capsule HDK: <code>v0.0.6</code>
+- Capsule MDK: <code>v0.0.5</code></p>
 </div>
 <h2 id="what-is-the-capsule-project">What is the <strong>Capsule</strong> project?</h2>
 <p>Capsule is a set of <strong>WASM runners</strong>. Right now, the Capsule project is composed of:</p>
@@ -846,6 +855,22 @@
 <li>🖐 Issues: <a href="https://github.com/bots-garden/capsule/issues">https://github.com/bots-garden/capsule/issues</a></li>
 <li>🚧 Milestones: <a href="https://github.com/bots-garden/capsule/milestones">https://github.com/bots-garden/capsule/milestones</a></li>
 <li>📦 Releases: <a href="https://github.com/bots-garden/capsule/releases">https://github.com/bots-garden/capsule/releases</a></li>
+</ul>
+</div>
+<h2 id="history">History</h2>
+<div class="admonition info">
+<p class="admonition-title">Releases</p>
+<ul>
+<li><code>v0.4.1 🫑 [pepper]</code>: update with the last version of <a href="https://github.com/tetratelabs/wazero/releases/tag/v1.3.0">Wazero v1.3.0</a> + <a href="https://github.com/bots-garden/capsule/tree/main/capsule-http/functions/gitlab-webhook">GitLab webhook sample</a></li>
+<li><code>v0.4.0 🌶️ [chili pepper]</code>: update of <a href="https://github.com/bots-garden/capsule-host-sdk/releases/tag/v0.0.5">HDK 0.0.4 then 0.0.5</a>, (🎉 performances: more than x 2 🚀). <strong>capsule-http</strong>: add of 2 endpoints (<code>/metrics</code>and <code>/health</code>) triggering the <code>OnMetrics</code> and <code>OnHealthCheck</code> functions of the WASM module. </li>
+<li><code>v0.3.9 🥒 [cucumber]</code>: update of <a href="https://github.com/bots-garden/capsule-host-sdk">HDK 0.0.3</a> with <a href="https://github.com/tetratelabs/wazero/releases/tag/v1.2.0">Wazero 1.2.0</a> and <a href="https://github.com/bots-garden/capsule-module-sdk">MDK 0.0.3</a> (encoding of the HTML string into JSON string, then it's easier to serve HTML)</li>
+<li><code>v0.3.8 🥬 [leafy greens]</code>: 🐛 fixes of the <strong>FaaS</strong> mode</li>
+<li><code>v0.3.7 🥦 [broccoli]</code>: 🚀 <strong>FaaS</strong> mode (documentation in progress) + <strong>NGrok</strong> integration</li>
+<li><code>v0.3.6 🫐 [blueberries]</code>: Prometheus metrics + 🐳 Docker images</li>
+<li><code>v0.3.5 🍓 [strawberry]</code>: Update with HDK &amp; MDK <code>v0.0.2</code></li>
+<li><code>v0.3.4 🍋 [lemon]</code>: Capsule next generation (performances: x 10 🚀)</li>
+<li>🌍 Downloads: <a href="https://github.com/bots-garden/capsule/releases/tag/v0.3.5">https://github.com/bots-garden/capsule/releases/tag/v0.3.8</a></li>
+<li>🤚 With the previous version of the project, Capsule was an only one application to run as an HTTP server, a CLI, a NATS subscriber and publisher and a MQTT subscriber and publisher. In the future, we will reintroduce the capabilities of NATS and MQTT, but with separate runners.</li>
 </ul>
 </div>
 
