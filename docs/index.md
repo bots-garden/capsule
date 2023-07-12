@@ -2,6 +2,7 @@
 
 !!! info "What's new?"
     `v0.4.1 🫑 [pepper]`: 
+	
 	- Update with the last version of [Wazero v1.3.0](https://github.com/tetratelabs/wazero/releases/tag/v1.3.0).
 	- More "practical" sample: [GitLab webhook sample](https://github.com/bots-garden/capsule/tree/main/capsule-http/functions/gitlab-webhook).
 	- Capsule HTTP is faster thanks to the Wazero optimisations.
