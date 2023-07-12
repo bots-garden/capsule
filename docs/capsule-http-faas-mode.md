@@ -10,7 +10,7 @@ A Capsule HTTP server can start/spawn other Capsule HTTP server processes.
 ### Install the last version of Capsule HTTP
 
 ```bash
-VERSION="v0.4.0" OS="linux" ARCH="arm64"
+VERSION="v0.4.1" OS="linux" ARCH="arm64"
 wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
 chmod +x capsule-http
 sudo cp capsule-http  /usr/local/bin/capsule-http
@@ -24,7 +24,7 @@ capsule-http --version
 **CapsCtl** is a CLI to send commands to the Capsule HTTP server when it is unning in **FaaS** mode.
 
 ```bash
-VERSION="v0.4.0" OS="linux" ARCH="arm64"
+VERSION="v0.4.1" OS="linux" ARCH="arm64"
 wget -O capsctl https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsctl-${VERSION}-${OS}-${ARCH}
 chmod +x capsctl
 sudo cp capsctl  /usr/local/bin/capsctl
@@ -51,7 +51,7 @@ You should get an output like this:
 ```
 2023/05/29 15:12:18 🚀 faas mode activated!
 2023/05/29 15:12:18 📦 wasm module loaded: ./functions/index-page/index-page.wasm
-2023/05/29 15:12:18 💊 Capsule [HTTP] v0.4.0 🌶️ [chili pepper]
+2023/05/29 15:12:18 💊 Capsule [HTTP] v0.4.1 🫑 [pepper]
  http server is listening on: 8080 🌍
 ```
 

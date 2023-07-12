@@ -20,7 +20,7 @@
     <section class="container">
       <div>
         <h1 class="title">👋 Hello World 🌍</h1>
-        <h2 class="subtitle">Served with 💜 by Capsule [HTTP] v0.3.9 🥒 [cucumber] 💊</h2>
+        <h2 class="subtitle">Served with 💜 by Capsule [HTTP] v0.4.1 🫑 [pepper] 💊</h2>
         <h2 class="subtitle">🎉 Happily built thanks to Wazero</h2>
       </div>
     </section>
