@@ -5,6 +5,8 @@
 	- Update with the last version of [Wazero v1.3.0](https://github.com/tetratelabs/wazero/releases/tag/v1.3.0).
 	- More "practical" sample: [GitLab webhook sample](https://github.com/bots-garden/capsule/tree/main/capsule-http/functions/gitlab-webhook).
 	- Capsule HTTP is faster thanks to the Wazero optimisations.
+	- Capsule HDK: `v0.0.6`
+    - Capsule MDK: `v0.0.5`
 
 ## What is the **Capsule** project?
 
