@@ -2,10 +2,10 @@ module github.com/bots-garden/capsule/capsule-cli
 
 go 1.20
 
-require github.com/tetratelabs/wazero v1.1.0 // indirect
+require github.com/tetratelabs/wazero v1.3.0 // indirect
 
 require (
-	github.com/bots-garden/capsule-host-sdk v0.0.5
+	github.com/bots-garden/capsule-host-sdk v0.0.6
 	github.com/gofiber/fiber/v2 v2.44.0
 )
 

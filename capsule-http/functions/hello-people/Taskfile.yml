@@ -51,6 +51,7 @@ tasks:
     cmds:
       - | 
         echo "🚀 Testing hello-people..."
+        NGROK_AUTHTOKEN=""
         ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
 
   call:

@@ -6,8 +6,9 @@ description: >
   ```bash
   task build-wasm build-capsule-http start
   task build-wasm build-capsule-http start-ngrok-domain
-
   ```
+
+  GitLab project: https://gitlab.com/bots-garden/capsule-hook
 
 env:
     HTTP_PORT: '8090'
@@ -44,6 +45,10 @@ tasks:
   start-ngrok:
     cmds:
       - | 
+        WEBHOOK_TOKEN="ilovepanda" \
+        GITLAB_API_URL="https://gitlab.com/api/v4" \
+        GITLAB_BOT_TOKEN="${GITLAB_BOT_TOKEN}" \
+        GITLAB_BOT_NAME="${GITLAB_BOT_NAME}" \
         NGROK_AUTHTOKEN="${NGROK_AUTHTOKEN=}" \
         ./capsule-http \
         --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}

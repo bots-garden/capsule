@@ -15,7 +15,7 @@ NGROK_AUTHTOKEN="${YOUR_NGROK_AUTHTOKEN}" \
 The ouput will be like this:
 
 ```bash
-2023/05/18 11:25:36 💊 Capsule v0.4.0 🌶️ [chili pepper] http server is listening on: 6666 🌍
+2023/05/18 11:25:36 💊 Capsule v0.4.1 🫑 [pepper] http server is listening on: 6666 🌍
 2023/05/18 11:25:37 👋 Ngrok tunnel created: https://d298-88-173-112-231.ngrok-free.app
 2023/05/18 11:25:37 🤚 Ngrok URL: /home/ubuntu/workspaces/capsule/capsule-http/ngrok.url
 ```
