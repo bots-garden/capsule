@@ -16,7 +16,7 @@ ssh -i ./keys/capsule ubuntu@${OVH_IP}
 ## Install the last version of Capsule HTTP on the OVH Cloud instance
 
 ```bash
-VERSION="v0.4.1" OS="linux" ARCH="amd64"
+VERSION="v0.4.2" OS="linux" ARCH="amd64"
 wget -O capsule-http https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsule-http-${VERSION}-${OS}-${ARCH}
 
 chmod +x capsule-http
@@ -57,7 +57,7 @@ sudo apt-get install iptables-persistent
 If you open this URL https://faas.capsule.foundation/ on your browser, you should see the following message:
 
 ```bash
-Capsule [HTTP] v0.4.1 🫑 [pepper][faas]
+Capsule [HTTP] v0.4.2 ⛱️ [beach umbrella]
 ```
 
 ### Install the last version of CapsCtl
@@ -65,7 +65,7 @@ Capsule [HTTP] v0.4.1 🫑 [pepper][faas]
 **CapsCtl** is a CLI to send commands to the Capsule HTTP server when it is running in **FaaS** mode.
 
 ```bash
-VERSION="v0.4.1" OS="linux" ARCH="arm64"
+VERSION="v0.4.2" OS="linux" ARCH="arm64"
 wget -O capsctl https://github.com/bots-garden/capsule/releases/download/${VERSION}/capsctl-${VERSION}-${OS}-${ARCH}
 chmod +x capsctl
 sudo cp capsctl  /usr/local/bin/capsctl
@@ -99,7 +99,7 @@ Create a file named `index.html` in a directory:
     <section class="container">
       <div>
         <h1 class="title">👋 Hello World 🌍</h1>
-        <h2 class="subtitle">Served with 💜 by Capsule 💊 [HTTP] v0.4.1 🫑 [pepper] </h2>
+        <h2 class="subtitle">Served with 💜 by Capsule 💊 [HTTP] v0.4.2 ⛱️ [beach umbrella] </h2>
         <h2 class="subtitle">🎉 Hosted on OVH Cloud [🚀 Faas mode]</h2>
         <h2 class="subtitle">🥰 With the help of @titimoby</h2>
       </div>

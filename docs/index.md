@@ -1,6 +1,13 @@
 # Capsule Project: the nano wasm runners
 
 !!! info "What's new?"
+    `v0.4.2 ⛱️ [beach umbrella]`: 
+	
+	- Update with the last version of [Wazero v1.4.0](https://github.com/tetratelabs/wazero/releases/tag/v1.4.0).
+	- Capsule HTTP is faster thanks to the Wazero optimisations.
+	- Capsule HDK: `v0.0.7` (🐞 fix with Redis + Wazero v1.4.0)
+    - Capsule MDK: `v0.0.6` (🐞 fix with Redis)
+
     `v0.4.1 🫑 [pepper]`: 
 	
 	- Update with the last version of [Wazero v1.3.0](https://github.com/tetratelabs/wazero/releases/tag/v1.3.0).
@@ -119,6 +126,8 @@ Capsule applications bring superpowers to the WASM modules with **host functions
 ## History
 
 !!! info "Releases"
+
+    - `v0.4.2 ⛱️ [beach umbrella]`: update with the last version of [Wazero v1.4.0](https://github.com/tetratelabs/wazero/releases/tag/v1.4.0) + 🐞 fix with Redis.
     - `v0.4.1 🫑 [pepper]`: update with the last version of [Wazero v1.3.0](https://github.com/tetratelabs/wazero/releases/tag/v1.3.0) + [GitLab webhook sample](https://github.com/bots-garden/capsule/tree/main/capsule-http/functions/gitlab-webhook)
 	- `v0.4.0 🌶️ [chili pepper]`: update of [HDK 0.0.4 then 0.0.5](https://github.com/bots-garden/capsule-host-sdk/releases/tag/v0.0.5), (🎉 performances: more than x 2 🚀). **capsule-http**: add of 2 endpoints (`/metrics`and `/health`) triggering the `OnMetrics` and `OnHealthCheck` functions of the WASM module. 
     - `v0.3.9 🥒 [cucumber]`: update of [HDK 0.0.3](https://github.com/bots-garden/capsule-host-sdk) with [Wazero 1.2.0](https://github.com/tetratelabs/wazero/releases/tag/v1.2.0) and [MDK 0.0.3](https://github.com/bots-garden/capsule-module-sdk) (encoding of the HTML string into JSON string, then it's easier to serve HTML)
