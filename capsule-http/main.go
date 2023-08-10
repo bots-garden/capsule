@@ -43,7 +43,7 @@ type CapsuleFlags struct {
 }
 
 func main() {
-
+	
 	//version := string(textVersion)
 	version := tools.GetVersion()
 

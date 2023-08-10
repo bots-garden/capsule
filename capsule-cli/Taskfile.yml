@@ -99,9 +99,9 @@ tasks:
       - sudo systemctl start redis-server
       - | 
         echo "🚀 Testing redis..."
-        REDIS_ADDR="localhost:6379" \
-        REDIS_PWD="" \
+        #REDIS_ADDR="localhost:6379" \
+        #REDIS_PWD="" \
+        REDIS_URI="redis://localhost:6379/0" \
         ./capsule --wasm=${WASM_FILE}
       - sudo systemctl stop redis-server
       
-

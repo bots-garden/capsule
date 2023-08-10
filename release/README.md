@@ -6,6 +6,7 @@
 
 👋 **be on the main branch**
 
+Last release: `v0.4.2 ⛱️ [beach umbrella]`
 Last release: `v0.4.1 🫑 [pepper]`
 Last release: `v0.4.0 🌶️ [chili pepper]`
 Last release: `v0.3.9 🥒 [cucumber]`

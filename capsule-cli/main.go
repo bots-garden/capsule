@@ -30,6 +30,10 @@ var textVersion []byte
 
 func main() {
 
+	// I use this to check if I use the appropriate package version of capsule-host-sdk
+	// See capsule-host-sdk/capsule.dk.go
+	//fmt.Println(capsule.TestMe())
+
 	version := string(textVersion)
 	args := os.Args[1:]
 

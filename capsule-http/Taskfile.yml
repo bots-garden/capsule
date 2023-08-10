@@ -109,7 +109,7 @@ tasks:
       GOOS: "linux" 
       GOARCH: "arm64"
       IMAGE_BASE_NAME: "capsule-http"
-      IMAGE_TAG: "0.4.1"
+      IMAGE_TAG: "0.4.2"
     cmds:
       - | 
         IMAGE_NAME="${IMAGE_BASE_NAME}-${GOOS}-${GOARCH}"
@@ -344,7 +344,7 @@ tasks:
     cmds:
       - | 
         echo "🚀 Stressing hello-world..."
-        NGROK_AUTHTOKEN=""
+        #NGROK_AUTHTOKEN=""
         ./capsule-http --wasm=${WASM_FILE} --httpPort=${HTTP_PORT}
 
   stress-hello-world:
@@ -358,7 +358,7 @@ tasks:
       - | 
         hey -n 300 -c 100 -m POST \
         -H "Content-Type: application/json; charset=utf-8" \
-        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.5.0.txt
+        -d "${JSON_DATA}" ${PROTOCOL}://${DOMAIN}:${HTTP_PORT} > capsule.http.stress.report.0.4.2.txt
       #- killport ${HTTP_PORT}
 
   build-hey:

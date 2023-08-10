@@ -10,15 +10,15 @@ require (
 	github.com/inconshreveable/log15 v3.0.0-testing.3+incompatible // indirect
 	github.com/inconshreveable/log15/v3 v3.0.0-testing.5 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
-	github.com/redis/go-redis/v9 v9.0.4 // indirect
-	golang.org/x/term v0.7.0 // indirect
+	github.com/redis/go-redis/v9 v9.0.5 // indirect
+	golang.org/x/term v0.11.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )
 
 require (
-	github.com/bots-garden/capsule-host-sdk v0.0.6
+	github.com/bots-garden/capsule-host-sdk v0.0.7
 	github.com/gofiber/fiber/v2 v2.45.0
-	github.com/tetratelabs/wazero v1.3.0
+	github.com/tetratelabs/wazero v1.4.0
 	golang.ngrok.com/ngrok v1.0.0
 )
 
@@ -38,8 +38,8 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.47.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
 )
 
 replace github.com/bots-garden/capsule-host-sdk => ../../capsule-host-sdk

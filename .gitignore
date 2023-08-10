@@ -6,3 +6,8 @@ capsule-http/.fuse*
 capsule-cli/capsule
 site
 tmp
+._.*
+._*.*
+.fuse_*
+
+
