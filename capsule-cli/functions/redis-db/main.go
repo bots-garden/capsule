@@ -13,6 +13,7 @@ func main() {
 func Handle(params []byte) ([]byte, error) {
 
 	capsule.RedisSet("one", []byte("👋"))
+	capsule.RedisSet("one", []byte("👋"))
 	capsule.RedisSet("two", []byte("hello"))
 	capsule.RedisSet("three", []byte("world"))
 	capsule.RedisSet("four", []byte("🌍"))
